@@ -18,6 +18,7 @@
     
     /*
      * The internal directory set in nginx config file
+     * or the same directory as calibre_directory with X-Sendfile
      */
     $config['calibre_internal_directory'] = '/Calibre/'; 
 
@@ -31,4 +32,12 @@
      */
     $config['cops_title_default'] = "Sebastien's COPS"; 
 
+    
+    /*
+     * Wich header to use when downloading books outside the web directory
+     * Possible values are :
+     *   X-Accel-Redirect : For Nginx
+     *   X-Sendfile : For Lightttpd or Apache (with mod_xsendfile)
+     */
+    $config['cops_x_accel_redirect'] = "X-Accel-Redirect"; 
 ?>

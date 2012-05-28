@@ -7,6 +7,8 @@
  */
 
 require_once('base.php');
+require_once('serie.php');
+require_once('author.php');
 
 class Book extends Base {
     const ALL_BOOKS_ID = "calibre:books";
@@ -23,6 +25,12 @@ class Book extends Base {
     public $authors = NULL;
     public $serie = NULL;
     public $tags = NULL;
+    public static $mimetypes = array(
+        'epub'   => 'application/epub+zip',
+        'mobi'   => 'application/x-mobipocket-ebook',
+        'pdf'    => 'application/pdf'
+    );
+
         
     public function __construct($pid, $ptitle, $ptimestamp, $ppubdate, $ppath, $pseriesIndex, $pcomment) {
         global $config;
@@ -121,14 +129,17 @@ class Book extends Base {
                     }
                     array_push ($linkArray, new Link ("fetch.php?id=$this->id&width=50", "image/jpeg", "http://opds-spec.org/image/thumbnail"));
                 }
-                if (preg_match ('/epub$/', $file)) {
-                    if (preg_match ('/^\//', $config['calibre_directory']))
-                    {
-                        array_push ($linkArray, new Link ("fetch.php?id=$this->id&type=epub", "application/epub+zip", "http://opds-spec.org/acquisition", "Download"));
-                    }
-                    else
-                    {
-                        array_push ($linkArray, new Link (rawurlencode ($this->path."/".$file), "application/epub+zip", "http://opds-spec.org/acquisition", "Download"));
+                foreach (self::$mimetypes as $ext => $mime)
+                {
+                    if (preg_match ('/'. $ext .'$/', $file)) {
+                        if (preg_match ('/^\//', $config['calibre_directory']))
+                        {
+                            array_push ($linkArray, new Link ("fetch.php?id=$this->id&type=" . $ext, $mime, "http://opds-spec.org/acquisition", "Download"));
+                        }
+                        else
+                        {
+                            array_push ($linkArray, new Link (rawurlencode ($this->path."/".$file), $mime, "http://opds-spec.org/acquisition", "Download"));
+                        }
                     }
                 }
             }
@@ -148,21 +159,26 @@ class Book extends Base {
 
     
     public function getEntry () {    
-        parent::addEntryClass (new EntryBook ($this->getTitle (), $this->getEntryId (), 
+        return new EntryBook ($this->getTitle (), $this->getEntryId (), 
             $this->getComment (), "text/html", 
-            $this->getLinkArray (), $this));
+            $this->getLinkArray (), $this);
     }
 
     public static function getCount() {
+        global $config;
         $nBooks = parent::getDb ()->query('select count(*) from books')->fetchColumn();
-        parent::addEntryClass (new Entry ("Books", 
+        $result = array();
+        $entry = new Entry ("Books", 
                           self::ALL_BOOKS_ID, 
                           "Alphabetical index of the $nBooks books", "text", 
-                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_BOOKS))));
-        parent::addEntryClass (new Entry ("Recents books", 
+                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_BOOKS)));
+        array_push ($result, $entry);
+        $entry = new Entry ("Recents books", 
                           self::ALL_RECENT_BOOKS_ID, 
-                          "Alphabetical index of the 50 most recent books", "text", 
-                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_RECENT_BOOKS))));
+                          "Alphabetical index of the " . $config['cops_recentbooks_limit'] . " most recent books", "text", 
+                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_RECENT_BOOKS)));
+        array_push ($result, $entry);
+        return $result;
     }
         
     public static function getBooksByAuthor($authorId) {
@@ -171,12 +187,14 @@ from books_authors_link, books left outer join comments on comments.book = books
 where books_authors_link.book = books.id
 and author = ?
 order by pubdate');
+        $entryArray = array();
         $result->execute (array ($authorId));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post->id, $post->title,  $post->timestamp, $post->pubdate, $post->path, $post->series_index, $post->comment);
-            $book->getEntry ();
+            array_push ($entryArray, $book->getEntry ());
         }
+        return $entryArray;
     }
 
     
@@ -185,18 +203,21 @@ order by pubdate');
 from books_series_link, books left outer join comments on comments.book = books.id
 where books_series_link.book = books.id and series = ?
 order by series_index');
+        $entryArray = array();
         $result->execute (array ($serieId));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post->id, $post->title,  $post->timestamp, $post->pubdate, $post->path, $post->series_index, $post->comment);
-            $book->getEntry ();
+            array_push ($entryArray, $book->getEntry ());
         }
+        return $entryArray;
     }
     
     public static function getBookById($bookId) {
         $result = parent::getDb ()->prepare('select books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index
 from books left outer join comments on book = books.id
 where books.id = ?');
+        $entryArray = array();
         $result->execute (array ($bookId));
         while ($post = $result->fetchObject ())
         {
@@ -211,13 +232,15 @@ where books.id = ?');
 from books left outer join comments on book = books.id
 where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?)
 or title like ?");
+        $entryArray = array();
         $queryLike = "%" . $query . "%";
         $result->execute (array ($queryLike, $queryLike));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post->id, $post->title,  $post->timestamp, $post->pubdate, $post->path, $post->series_index, $post->comment);
-            $book->getEntry ();
+            array_push ($entryArray, $book->getEntry ());
         }
+        return $entryArray;
     }
     
     public static function getAllBooks() {
@@ -225,25 +248,29 @@ or title like ?");
 from books
 group by substr (upper (sort), 1, 1)
 order by substr (upper (sort), 1, 1)");
+        $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            parent::addEntryClass (new Entry ($post->title, "allbooks_" . $post->title, 
+            array_push ($entryArray, new Entry ($post->title, "allbooks_" . $post->title, 
                 "$post->count books", "text", 
                 array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=".$post->title))));
         }
+        return $entryArray;
     }
     
     public static function getBooksByStartingLetter($letter) {
         $result = parent::getDb ()->prepare('select books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index
 from books left outer join comments on book = books.id
 where upper (books.sort) like ?');
+        $entryArray = array();
         $queryLike = $letter . "%";
         $result->execute (array ($queryLike));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post->id, $post->title,  $post->timestamp, $post->pubdate, $post->path, $post->series_index, $post->comment);
-            $book->getEntry ();
+            array_push ($entryArray, $book->getEntry ());
         }
+        return $entryArray;
     }
 
     
@@ -252,11 +279,13 @@ where upper (books.sort) like ?');
         $result = parent::getDb ()->query("select books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index
 from books left outer join comments on book = books.id
 order by timestamp desc limit " . $config['cops_recentbooks_limit']);
+        $entryArray = array();
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post->id, $post->title,  $post->timestamp, $post->pubdate, $post->path, $post->series_index, $post->comment);
-            $book->getEntry ();
+            array_push ($entryArray, $book->getEntry ());
         }
+        return $entryArray;
     }
 
 }

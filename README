@@ -8,7 +8,7 @@ http://opds-validator.appspot.com/
 = Why ? =
 
 In my opinion Calibre is a marvelous tool but is too big and has too much 
-dependancies to be used for its content server.
+dependencies to be used for its content server.
 
 That's the main reason why I coded this OPDS server. I needed a simple 
 tool to be installed on a small server (Seagate Dockstar in my case).
@@ -17,7 +17,7 @@ I initially thought of Calibre2OPDS but as it generate static file no
 search was possible.
 
 So COPS's main advantages are :
- * No need for many dependancies.
+ * No need for many dependencies.
  * No need for a lot of CPU or RAM.
  * Not much code.
  * Search is available.
@@ -77,8 +77,8 @@ application/epub+zip epub;
 = Known problems =
 
  * Only tested with Nginx.
- * Contain Nginx specific code.
- * Only works with EPUB (not MOBI or PDF).
+ * Contain Nginx specific code (that could be changed with a config item).
+ * Only works with EPUB, MOBI and PDF.
  * certainly many many more.
 
 = Disclaimer =
@@ -87,6 +87,8 @@ I only tested on Debian with Nginx so I have stricly no idea if it works
 with Apache or any other web server.
 
 On the OPDS client side I mainly tested with FBReader and Aldiko on Android.
+
+It also seems to work with Stanza.
 
 = Copyright & License =
 

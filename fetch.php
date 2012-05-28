@@ -7,17 +7,13 @@
  */
     
     require_once ("config.php");
-    require_once('book.php');
+    require_once ("book.php");
      
     global $config;
     $bookId = $_GET["id"];
     $book = Book::getBookById($bookId);
-    $type = "jpg";
+    $type = getURLParam ("type", "jpg");
      
-    if (!empty ($_GET) && isset($_GET["type"])) {
-        $type = $_GET["type"];
-    }
-    
     switch ($type)
     {
         case "jpg":
@@ -48,11 +44,11 @@
                 return;
             }
             break;
-        case "epub":
-            header("Content-type: application/epub+zip");
+        default:
+            header("Content-type: " . Book::$mimetypes[$type]);
             break;
     }
     $file = $book->getFilePath ($type, true);
     header('Content-Disposition: attachement; filename="' . basename ($file) . '"');
-    header ("X-Accel-Redirect: " . $config['calibre_internal_directory'] . $file);
+    header ($config['cops_x_accel_redirect'] . ": " . $config['calibre_internal_directory'] . $file);
 ?>

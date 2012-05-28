@@ -1,2 +1,8 @@
+0.0.2 - 20120411
+ * Add support for MOBI and PDF
+ * Major refactoring to prepare something nice for the future ;)
+ * Add a config item to make use of X-Sendfile instead of X-Accel-Redirect 
+   if needed
+
 0.0.1 - 20120302
  * First public release

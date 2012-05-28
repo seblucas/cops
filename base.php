@@ -6,6 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+function getURLParam ($name, $default = NULL) {
+    if (!empty ($_GET) && isset($_GET[$name])) {
+        return $_GET[$name];
+    }
+    return $default;
+}
 
 class Link
 {
@@ -19,19 +25,6 @@ class Link
         $this->type = $ptype;
         $this->rel = $prel;
         $this->title = $ptitle;
-    }
-    
-    public function render ($xml) {
-        $xml->startElement ("link");
-            $xml->writeAttribute ("href", $this->href);
-            $xml->writeAttribute ("type", $this->type);
-            if (!is_null ($this->rel)) {
-                $xml->writeAttribute ("rel", $this->rel);
-            }
-            if (!is_null ($this->title)) {
-                $xml->writeAttribute ("title", $this->title);
-            }
-        $xml->endElement ();
     }
 }
 
@@ -72,36 +65,6 @@ class Entry
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
     }
-    
-    public function renderContent ($xml) {
-        $xml->startElement ("title");
-            $xml->text ($this->title);
-        $xml->endElement ();
-        $xml->startElement ("updated");
-            $xml->text (self::getUpdatedTime ());
-        $xml->endElement ();
-        $xml->startElement ("id");
-            $xml->text ($this->id);
-        $xml->endElement ();
-        $xml->startElement ("content");
-            $xml->writeAttribute ("type", $this->contentType);
-            if ($this->contentType == "text") {
-                $xml->text ($this->content);
-            } else {
-                $xml->writeRaw ($this->content);
-            }
-        $xml->endElement ();
-        foreach ($this->linkArray as $link) {
-            $link->render ($xml);
-        }
-    }
-    
-    public function render ($xml) {
-        $xml->startElement ("entry");
-            self::renderContent ($xml);
-        $xml->endElement ();
-    }
-
 }
 
 class EntryBook extends Entry
@@ -113,39 +76,127 @@ class EntryBook extends Entry
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
     }
+}
+
+class Page
+{
+    public $title;
+    public $idPage;
+    public $idGet;
+    public $query;
+    public $entryArray = array();
     
-    public function renderContent ($xml) {
-        parent::renderContent ($xml);
-        foreach ($this->book->getAuthors () as $author) {
-            $xml->startElement ("author");
-                $xml->startElement ("name");
-                    $xml->text ($author->name);
-                $xml->endElement ();
-                $xml->startElement ("uri");
-                    $xml->text ($author->getUri ());
-                $xml->endElement ();
-            $xml->endElement ();
-        }
-        foreach ($this->book->getTags () as $category) {
-            $xml->startElement ("category");
-                $xml->writeAttribute ("term", $category);
-                $xml->writeAttribute ("label", $category);
-            $xml->endElement ();
-        }
-        if (!is_null ($this->book->pubdate)) {
-            $xml->startElement ("dcterms:issued");
-                $xml->text (date ("Y-m-d", $this->book->pubdate));
-            $xml->endElement ();
+    public static function getPage ($pageId, $id, $query)
+    {
+        switch ($pageId) {
+            case Base::PAGE_ALL_AUTHORS :
+                return new PageAllAuthors ($id, $query);
+            case Base::PAGE_AUTHOR_DETAIL :
+                return new PageAuthorDetail ($id, $query);
+            case Base::PAGE_ALL_SERIES :
+                return new PageAllSeries ($id, $query);
+            case Base::PAGE_ALL_BOOKS :
+                return new PageAllBooks ($id, $query);
+            case Base::PAGE_ALL_BOOKS_LETTER:
+                return new PageAllBooksLetter ($id, $query);
+            case Base::PAGE_ALL_RECENT_BOOKS :
+                return new PageRecentBooks ($id, $query);
+            case Base::PAGE_SERIE_DETAIL : 
+                return new PageSerieDetail ($id, $query);
+            case Base::PAGE_OPENSEARCH_QUERY :
+                return new PageQueryResult ($id, $query);
+                break;
+            default:
+                return new Page ($id, $query);
         }
     }
     
-    /* Polymorphism is strange with PHP */
-    public function render ($xml) {
-        $xml->startElement ("entry");
-            self::renderContent ($xml);
-        $xml->endElement ();
+    public function __construct($pid, $pquery) {
+        $this->idGet = $pid;
+        $this->query = $pquery;
+    }    
+    
+    public function InitializeContent () 
+    {
+        global $config;
+        $this->title = $config['cops_title_default'];
+        array_push ($this->entryArray, Author::getCount());
+        array_push ($this->entryArray, Serie::getCount());
+        $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
 
+}
+
+class PageAllAuthors extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "All authors";
+        $this->entryArray = Author::getAllAuthors();
+    }
+}
+
+class PageAuthorDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = Author::getAuthorName ($this->idGet);
+        $this->entryArray = Book::getBooksByAuthor ($this->idGet);
+    }
+}
+
+class PageAllSeries extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "All series";
+        $this->entryArray = Serie::getAllSeries();
+    }
+}
+
+class PageSerieDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "Series : " . Serie::getSerieById ($this->idGet)->name;
+        $this->entryArray = Book::getBooksBySeries ($this->idGet);
+    }
+}
+
+class PageAllBooks extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "All books by starting letter";
+        $this->entryArray = Book::getAllBooks ();
+    }
+}
+
+class PageAllBooksLetter extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "All books starting by " . $this->idGet;
+        $this->entryArray = Book::getBooksByStartingLetter ($this->idGet);
+    }
+}
+
+class PageRecentBooks extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "Most recent books";
+        $this->entryArray = Book::getAllRecentBooks ();
+    }
+}
+
+class PageQueryResult extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "Search result for query <" . $this->query . ">";
+        $this->entryArray = Book::getBooksByQuery ($this->query);
+    }
 }
 
 abstract class Base
@@ -164,15 +215,6 @@ abstract class Base
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
     private static $db = NULL;
-    private static $xmlStream = NULL;
-    private static $updated = NULL;
-    
-    public static function getUpdatedTime () {
-        if (is_null (self::$updated)) {
-            self::$updated = time();
-        }
-        return date (DATE_ATOM, self::$updated);
-    }
     
     public static function getDb () {
         global $config;
@@ -185,93 +227,6 @@ abstract class Base
             }
         }
         return self::$db;
-    }
-    
-    public static function getXmlStream () {
-        if (is_null (self::$xmlStream)) {
-            self::$xmlStream = new XMLWriter();
-            self::$xmlStream->openMemory();
-            self::$xmlStream->setIndent (true);
-        }
-        return self::$xmlStream;
-    }
-    
-    public static function getOpenSearch () {
-        $xml = new XMLWriter ();
-        $xml->openMemory ();
-        $xml->setIndent (true);
-        $xml->startDocument('1.0','UTF-8');
-            $xml->startElement ("OpenSearchDescription");
-                $xml->startElement ("ShortName");
-                    $xml->text ("My catalog");
-                $xml->endElement ();
-                $xml->startElement ("InputEncoding");
-                    $xml->text ("UTF-8");
-                $xml->endElement ();
-                $xml->startElement ("OutputEncoding");
-                    $xml->text ("UTF-8");
-                $xml->endElement ();
-                $xml->startElement ("Image");
-                    $xml->text ("favicon.ico");
-                $xml->endElement ();
-                $xml->startElement ("Url");
-                    $xml->writeAttribute ("type", 'application/atom+xml');
-                    $xml->writeAttribute ("template", 'feed.php?page=' . self::PAGE_OPENSEARCH_QUERY . '&query={searchTerms}');
-                $xml->endElement ();
-            $xml->endElement ();
-        $xml->endDocument();
-        return $xml->outputMemory(true);
-    }
-    
-    public static function startXmlDocument ($title) {
-        self::getXmlStream ()->startDocument('1.0','UTF-8');
-        self::getXmlStream ()->startElement ("feed");
-            self::getXmlStream ()->writeAttribute ("xmlns", "http://www.w3.org/2005/Atom");
-            self::getXmlStream ()->writeAttribute ("xmlns:xhtml", "http://www.w3.org/1999/xhtml");
-            self::getXmlStream ()->writeAttribute ("xmlns:opds", "http://opds-spec.org/2010/catalog");
-            self::getXmlStream ()->writeAttribute ("xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
-            self::getXmlStream ()->writeAttribute ("xmlns:dcterms", "http://purl.org/dc/terms/");
-            self::getXmlStream ()->startElement ("title");
-                self::getXmlStream ()->text ($title);
-            self::getXmlStream ()->endElement ();
-            self::getXmlStream ()->startElement ("id");
-                self::getXmlStream ()->text ($_SERVER['REQUEST_URI']);
-            self::getXmlStream ()->endElement ();
-            self::getXmlStream ()->startElement ("updated");
-                self::getXmlStream ()->text (self::getUpdatedTime ());
-            self::getXmlStream ()->endElement ();
-            self::getXmlStream ()->startElement ("icon");
-                self::getXmlStream ()->text ("favicon.ico");
-            self::getXmlStream ()->endElement ();
-            self::getXmlStream ()->startElement ("author");
-                self::getXmlStream ()->startElement ("name");
-                    self::getXmlStream ()->text (utf8_encode ("Sébastien Lucas"));
-                self::getXmlStream ()->endElement ();
-                self::getXmlStream ()->startElement ("uri");
-                    self::getXmlStream ()->text ("http://blog.slucas.fr");
-                self::getXmlStream ()->endElement ();
-                self::getXmlStream ()->startElement ("email");
-                    self::getXmlStream ()->text ("sebastien@slucas.fr");
-                self::getXmlStream ()->endElement ();
-            self::getXmlStream ()->endElement ();
-            $link = new LinkNavigation ("feed.php", "start", "Home");
-            $link->render (self::getXmlStream ());
-            $link = new LinkNavigation ($_SERVER['REQUEST_URI'], "self");
-            $link->render (self::getXmlStream ());
-            $link = new Link ("feed.php?page=" . self::PAGE_OPENSEARCH, "application/opensearchdescription+xml", "search", "Search here");
-            $link->render (self::getXmlStream ());
-            $link = new LinkNavigation ("feed.php?page=7&id=9", "http://opds-spec.org/shelf", "Biblio");
-            $link->render (self::getXmlStream ());
-    }
-    
-    public static function addEntryClass ($entry) {
-        $entry->render (self::getXmlStream ());
-    }
-    
-    public static function endXmlDocument () {
-        self::getXmlStream ()->endElement ();
-        self::getXmlStream ()->endDocument ();
-        return self::getXmlStream ()->outputMemory(true);
     }    
 }
 ?>
