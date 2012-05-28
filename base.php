@@ -15,6 +15,11 @@ function getURLParam ($name, $default = NULL) {
 
 class Link
 {
+    const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
+    const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
+    const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
+    const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
+    
     public $href;
     public $type;
     public $rel;
@@ -34,10 +39,8 @@ class Link
 
 class LinkNavigation extends Link
 {
-    const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
-
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
-        parent::__construct ($phref, self::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
+        parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
     }
 }
@@ -53,6 +56,15 @@ class Entry
     public $localUpdated;
     private static $updated = NULL;
     
+    public static $icons = array(
+        Author::ALL_AUTHORS_ID    => 'images/author.png',
+        Serie::ALL_SERIES_ID      => 'images/serie.png',
+        Book::ALL_RECENT_BOOKS_ID => 'images/recent.png',
+        Tag::ALL_TAGS_ID          => 'images/tag.png',
+        "calibre:books$"          => 'images/allbook.png',
+        "calibre:books:letter"    => 'images/allbook.png'
+    );
+    
     public function getUpdatedTime () {
         if (!is_null ($this->localUpdated)) {
             return date (DATE_ATOM, $this->localUpdated);
@@ -64,11 +76,23 @@ class Entry
     }
  
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
+        global $config;
         $this->title = $ptitle;
         $this->id = $pid;
         $this->content = $pcontent;
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
+        
+        if ($config['cops_show_icons'] == 1)
+        {
+            foreach (self::$icons as $reg => $image)
+            {
+                if (preg_match ("/" . $reg . "/", $pid)) {
+                    array_push ($this->linkArray, new Link ($image, "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -84,7 +108,15 @@ class EntryBook extends Entry
     
     public function getCoverThumbnail () {
         foreach ($this->linkArray as $link) {
-            if ($link->rel == "http://opds-spec.org/image/thumbnail")
+            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE)
+                return $link->hrefXhtml ();
+        }
+        return null;
+    }
+    
+    public function getCover () {
+        foreach ($this->linkArray as $link) {
+            if ($link->rel == Link::OPDS_IMAGE_TYPE)
                 return $link->hrefXhtml ();
         }
         return null;
@@ -106,6 +138,10 @@ class Page
                 return new PageAllAuthors ($id, $query);
             case Base::PAGE_AUTHOR_DETAIL :
                 return new PageAuthorDetail ($id, $query);
+            case Base::PAGE_ALL_TAGS :
+                return new PageAllTags ($id, $query);
+            case Base::PAGE_TAG_DETAIL :
+                return new PageTagDetail ($id, $query);
             case Base::PAGE_ALL_SERIES :
                 return new PageAllSeries ($id, $query);
             case Base::PAGE_ALL_BOOKS :
@@ -120,7 +156,9 @@ class Page
                 return new PageQueryResult ($id, $query);
                 break;
             default:
-                return new Page ($id, $query);
+                $page = new Page ($id, $query);
+                $page->idPage = "cops:catalog";
+                return $page;
         }
     }
     
@@ -135,6 +173,7 @@ class Page
         $this->title = $config['cops_title_default'];
         array_push ($this->entryArray, Author::getCount());
         array_push ($this->entryArray, Serie::getCount());
+        array_push ($this->entryArray, Tag::getCount());
         $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
 
@@ -146,6 +185,7 @@ class PageAllAuthors extends Page
     {
         $this->title = "All authors";
         $this->entryArray = Author::getAllAuthors();
+        $this->idPage = Author::ALL_AUTHORS_ID;
     }
 }
 
@@ -153,8 +193,31 @@ class PageAuthorDetail extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = Author::getAuthorName ($this->idGet);
+        $author = Author::getAuthorById ($this->idGet);
+        $this->idPage = $author->getEntryId ();
+        $this->title = $author->name;
         $this->entryArray = Book::getBooksByAuthor ($this->idGet);
+    }
+}
+
+class PageAllTags extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "All tags";
+        $this->entryArray = Tag::getAllTags();
+        $this->idPage = Tag::ALL_TAGS_ID;
+    }
+}
+
+class PageTagDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $tag = Tag::getTagById ($this->idGet);
+        $this->idPage = $tag->getEntryId ();
+        $this->title = $tag->name;
+        $this->entryArray = Book::getBooksByTag ($this->idGet);
     }
 }
 
@@ -164,6 +227,7 @@ class PageAllSeries extends Page
     {
         $this->title = "All series";
         $this->entryArray = Serie::getAllSeries();
+        $this->idPage = Serie::ALL_SERIES_ID;
     }
 }
 
@@ -171,8 +235,10 @@ class PageSerieDetail extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Series : " . Serie::getSerieById ($this->idGet)->name;
+        $serie = Serie::getSerieById ($this->idGet);
+        $this->title = "Series : " . $serie->name;
         $this->entryArray = Book::getBooksBySeries ($this->idGet);
+        $this->idPage = $serie->getEntryId ();
     }
 }
 
@@ -182,6 +248,7 @@ class PageAllBooks extends Page
     {
         $this->title = "All books by starting letter";
         $this->entryArray = Book::getAllBooks ();
+        $this->idPage = Book::ALL_BOOKS_ID;
     }
 }
 
@@ -191,6 +258,7 @@ class PageAllBooksLetter extends Page
     {
         $this->title = "All books starting by " . $this->idGet;
         $this->entryArray = Book::getBooksByStartingLetter ($this->idGet);
+        $this->idPage = Book::getEntryIdByLetter ($this->idGet);
     }
 }
 
@@ -200,6 +268,7 @@ class PageRecentBooks extends Page
     {
         $this->title = "Most recent books";
         $this->entryArray = Book::getAllRecentBooks ();
+        $this->idPage = Book::ALL_RECENT_BOOKS_ID;
     }
 }
 
@@ -207,7 +276,7 @@ class PageQueryResult extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Search result for query <" . $this->query . ">";
+        $this->title = "Search result for query *" . $this->query . "*";
         $this->entryArray = Book::getBooksByQuery ($this->query);
     }
 }
@@ -225,6 +294,9 @@ abstract class Base
     const PAGE_OPENSEARCH = "8";
     const PAGE_OPENSEARCH_QUERY = "9";
     const PAGE_ALL_RECENT_BOOKS = "10";
+    const PAGE_ALL_TAGS = "11";
+    const PAGE_TAG_DETAIL = "12";
+
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
     private static $db = NULL;

@@ -22,6 +22,10 @@ class Serie extends Base {
     public function getUri () {
         return "?page=".parent::PAGE_SERIE_DETAIL."&id=$this->id";
     }
+    
+    public function getEntryId () {
+        return self::ALL_SERIES_ID.":".$this->id;
+    }
 
     public static function getCount() {
         $nSeries = parent::getDb ()->query('select count(*) from series')->fetchColumn();
@@ -60,9 +64,10 @@ order by series.sort');
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            array_push ($entryArray, new Entry ($post->sort, self::ALL_SERIES_ID.":".$post->id, 
+            $serie = new Serie ($post->id, $post->sort);
+            array_push ($entryArray, new Entry ($serie->name, $serie->getEntryId (), 
                 "$post->count books", "text", 
-                array ( new LinkNavigation ("?page=".parent::PAGE_SERIE_DETAIL."&id=$post->id"))));
+                array ( new LinkNavigation ($serie->getUri ()))));
         }
         return $entryArray;
     }

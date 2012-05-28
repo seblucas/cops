@@ -49,4 +49,21 @@
      *   X-Sendfile : For Lightttpd or Apache (with mod_xsendfile)
      */
     $config['cops_x_accel_redirect'] = "X-Accel-Redirect";
+    
+    /*
+     * Height of thumbnail image for OPDS
+     */
+    $config['cops_opds_thumbnail_height'] = "40";
+    
+    /*
+     * Height of thumbnail image for HTML
+     */
+    $config['cops_html_thumbnail_height'] = "70";
+    
+    /*
+     * Show icon for authors, series, tags and books on OPDS feed
+     *  1 : enable
+     *  0 : disable
+     */
+    $config['cops_show_icons'] = "1";
 ?>

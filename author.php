@@ -54,10 +54,10 @@ order by sort');
         return $entryArray;
     }
         
-    public static function getAuthorName ($authorId) {
+    public static function getAuthorById ($authorId) {
         $result = parent::getDb ()->prepare('select sort from authors where id = ?');
         $result->execute (array ($authorId));
-        return $result->fetchColumn ();
+        return new Author ($authorId, $result->fetchColumn ());
     }
     
     public static function getAuthorByBookId ($bookId) {

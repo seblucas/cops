@@ -68,7 +68,7 @@ class OPDSRenderer
         return $xml->outputMemory(true);
     }
     
-    private function startXmlDocument ($title) {
+    private function startXmlDocument ($title, $idPage) {
         self::getXmlStream ()->startDocument('1.0','UTF-8');
         self::getXmlStream ()->startElement ("feed");
             self::getXmlStream ()->writeAttribute ("xmlns", "http://www.w3.org/2005/Atom");
@@ -80,7 +80,14 @@ class OPDSRenderer
                 self::getXmlStream ()->text ($title);
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("id");
-                self::getXmlStream ()->text ($_SERVER['REQUEST_URI']);
+                if ($idPage)
+                {
+                    self::getXmlStream ()->text ($idPage);
+                }
+                else
+                {
+                    self::getXmlStream ()->text ($_SERVER['REQUEST_URI']);
+                }
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("updated");
                 self::getXmlStream ()->text (self::getUpdatedTime ());
@@ -159,7 +166,7 @@ class OPDSRenderer
                     self::getXmlStream ()->text ($author->name);
                 self::getXmlStream ()->endElement ();
                 self::getXmlStream ()->startElement ("uri");
-                    self::getXmlStream ()->text ($author->getUri ());
+                    self::getXmlStream ()->text ("feed.php" . $author->getUri ());
                 self::getXmlStream ()->endElement ();
             self::getXmlStream ()->endElement ();
         }
@@ -173,12 +180,15 @@ class OPDSRenderer
             self::getXmlStream ()->startElement ("dcterms:issued");
                 self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate));
             self::getXmlStream ()->endElement ();
+            self::getXmlStream ()->startElement ("published");
+                self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate) . "T08:08:08Z");
+            self::getXmlStream ()->endElement ();
         }
 
     }
     
     public function render ($page) {
-        self::startXmlDocument ($page->title);
+        self::startXmlDocument ($page->title, $page->idPage);
         if ($page->query)
         {
             self::getXmlStream ()->startElement ("opensearch:totalResults");
