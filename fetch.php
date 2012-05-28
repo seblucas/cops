@@ -10,6 +10,10 @@
     require_once ("book.php");
      
     global $config;
+    $expires = 60*60*24*14;
+    header("Pragma: public");
+    header("Cache-Control: maxage=".$expires);
+    header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
     $bookId = $_GET["id"];
     $book = Book::getBookById($bookId);
     $type = getURLParam ("type", "jpg");
@@ -28,6 +32,31 @@
                     //set new size
                     $nw = $_GET["width"];
                     $nh = ($nw*$h)/$w;
+                }
+                else{
+                    //set new size
+                    $nw = "160";
+                    $nh = "120";
+                }
+                //draw the image
+                $src_img = imagecreatefromjpeg($file);
+                $dst_img = imagecreatetruecolor($nw,$nh);
+                imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
+                imagejpeg($dst_img,"",100);
+                imagedestroy($src_img);
+                imagedestroy($dst_img);
+                return;
+            }
+            if (isset($_GET["height"]))
+            {
+                $file = $book->getFilePath ($type);
+                // get image size
+                if($size = GetImageSize($file)){
+                    $w = $size[0];
+                    $h = $size[1];
+                    //set new size
+                    $nh = $_GET["height"];
+                    $nw = ($nh*$w)/$h;
                 }
                 else{
                     //set new size

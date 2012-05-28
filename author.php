@@ -21,7 +21,7 @@ class Author extends Base {
     }
     
     public function getUri () {
-        return "feed.php?page=".parent::PAGE_AUTHOR_DETAIL."&id=$this->id";
+        return "?page=".parent::PAGE_AUTHOR_DETAIL."&id=$this->id";
     }
     
     public function getEntryId () {
@@ -33,7 +33,7 @@ class Author extends Base {
         $nAuthors = parent::getDb ()->query('select count(*) from authors')->fetchColumn();
         $entry = new Entry ("Authors", self::ALL_AUTHORS_ID, 
             "Alphabetical index of the $nAuthors authors", "text", 
-            array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_AUTHORS)));
+            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));
         return $entry;
     }
     

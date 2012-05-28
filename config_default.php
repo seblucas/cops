@@ -6,13 +6,15 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-    $config = array();
+    if (!isset($config))
+        $config = array();
   
     /*
      * The directory containing calibre's metadata.db file, with sub-directories
      * containing all the formats.
      * If this directory starts with a / EPUB download will only work with Nginx
-     * and if the calibre_internal_directory is set
+     * and the calibre_internal_directory has to be set properly
+     * BEWARE : it has to end with a /
      */
     $config['calibre_directory'] = './';
     
@@ -23,7 +25,14 @@
     $config['calibre_internal_directory'] = '/Calibre/'; 
 
     /*
-     * Number of books
+     * Full URL prefix (with trailing /)
+     * usefull especially for Opensearch where a full URL is sometimes required
+     * For example Mantano requires it.
+     */
+    $config['cops_full_url'] = ''; 
+    
+    /*
+     * Number of recent books to show
      */
     $config['cops_recentbooks_limit'] = '50'; 
     
@@ -39,5 +48,5 @@
      *   X-Accel-Redirect : For Nginx
      *   X-Sendfile : For Lightttpd or Apache (with mod_xsendfile)
      */
-    $config['cops_x_accel_redirect'] = "X-Accel-Redirect"; 
+    $config['cops_x_accel_redirect'] = "X-Accel-Redirect";
 ?>

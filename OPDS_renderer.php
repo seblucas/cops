@@ -11,6 +11,7 @@ require_once ("base.php");
 class OPDSRenderer
 {
     const PAGE_OPENSEARCH = "8";
+    const PAGE_OPENSEARCH_QUERY = "9";
 
     private $xmlStream = NULL;
     private $updated = NULL;
@@ -32,11 +33,13 @@ class OPDSRenderer
     }
     
     public function getOpenSearch () {
+        global $config;
         $xml = new XMLWriter ();
         $xml->openMemory ();
         $xml->setIndent (true);
         $xml->startDocument('1.0','UTF-8');
             $xml->startElement ("OpenSearchDescription");
+                $xml->writeAttribute ("xmlns", "http://a9.com/-/spec/opensearch/1.1/");
                 $xml->startElement ("ShortName");
                     $xml->text ("My catalog");
                 $xml->endElement ();
@@ -47,11 +50,18 @@ class OPDSRenderer
                     $xml->text ("UTF-8");
                 $xml->endElement ();
                 $xml->startElement ("Image");
+                    $xml->writeAttribute ("type", "image/x-icon");
+                    $xml->writeAttribute ("width", "16");
+                    $xml->writeAttribute ("height", "16");
                     $xml->text ("favicon.ico");
                 $xml->endElement ();
                 $xml->startElement ("Url");
                     $xml->writeAttribute ("type", 'application/atom+xml');
-                    $xml->writeAttribute ("template", 'feed.php?page=' . self::PAGE_OPENSEARCH_QUERY . '&query={searchTerms}');
+                    $xml->writeAttribute ("template", $config['cops_full_url'] . 'feed.php?query={searchTerms}');
+                $xml->endElement ();
+                $xml->startElement ("Query");
+                    $xml->writeAttribute ("role", "example");
+                    $xml->writeAttribute ("searchTerms", "robot");
                 $xml->endElement ();
             $xml->endElement ();
         $xml->endDocument();
@@ -89,9 +99,9 @@ class OPDSRenderer
                     self::getXmlStream ()->text ("sebastien@slucas.fr");
                 self::getXmlStream ()->endElement ();
             self::getXmlStream ()->endElement ();
-            $link = new LinkNavigation ("feed.php", "start", "Home");
+            $link = new LinkNavigation ("", "start", "Home");
             self::renderLink ($link);
-            $link = new LinkNavigation ($_SERVER['REQUEST_URI'], "self");
+            $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
             self::renderLink ($link);
             $link = new Link ("feed.php?page=" . self::PAGE_OPENSEARCH, "application/opensearchdescription+xml", "search", "Search here");
             self::renderLink ($link);
@@ -169,6 +179,18 @@ class OPDSRenderer
     
     public function render ($page) {
         self::startXmlDocument ($page->title);
+        if ($page->query)
+        {
+            self::getXmlStream ()->startElement ("opensearch:totalResults");
+                self::getXmlStream ()->text (count($page->entryArray));
+            self::getXmlStream ()->endElement ();
+            self::getXmlStream ()->startElement ("opensearch:itemsPerPage");
+                self::getXmlStream ()->text (count($page->entryArray));
+            self::getXmlStream ()->endElement ();
+            self::getXmlStream ()->startElement ("opensearch:startIndex");
+                self::getXmlStream ()->text ("1");
+            self::getXmlStream ()->endElement ();
+        }
         foreach ($page->entryArray as $entry) {
             self::getXmlStream ()->startElement ("entry");
                 self::renderEntry ($entry);

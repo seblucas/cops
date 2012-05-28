@@ -1,8 +1,17 @@
+0.0.3 - 20120507
+  * Fixed many things blocking opensearch from working
+   * There was a bug introduced in 0.0.2
+   * The URL can't be relative for Mantano reader, so I added a configuration item.
+  * I continued the refactoring to bring HTML to COPS
+  * Thumbnails have bigger size (I'll add a configuration item later)
+  * Add headers to help caching image and thumbnail to the browser
+  * 
+
 0.0.2 - 20120411
- * Add support for MOBI and PDF
- * Major refactoring to prepare something nice for the future ;)
- * Add a config item to make use of X-Sendfile instead of X-Accel-Redirect 
-   if needed
+  * Add support for MOBI and PDF
+  * Major refactoring to prepare something nice for the future ;)
+  * Add a config item to make use of X-Sendfile instead of X-Accel-Redirect if needed
 
 0.0.1 - 20120302
- * First public release
+  * First public release
+    

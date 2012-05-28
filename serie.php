@@ -20,14 +20,14 @@ class Serie extends Base {
     }
     
     public function getUri () {
-        return "feed.php?page=".parent::PAGE_SERIE_DETAIL."&id=$this->id";
+        return "?page=".parent::PAGE_SERIE_DETAIL."&id=$this->id";
     }
 
     public static function getCount() {
         $nSeries = parent::getDb ()->query('select count(*) from series')->fetchColumn();
         $entry = new Entry ("Series", self::ALL_SERIES_ID, 
             "Alphabetical index of the $nSeries series", "text", 
-            array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_SERIES)));
+            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_SERIES)));
         return $entry;
     }
     
@@ -62,7 +62,7 @@ order by series.sort');
         {
             array_push ($entryArray, new Entry ($post->sort, self::ALL_SERIES_ID.":".$post->id, 
                 "$post->count books", "text", 
-                array ( new LinkNavigation ("feed.php?page=".parent::PAGE_SERIE_DETAIL."&id=$post->id"))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_SERIE_DETAIL."&id=$post->id"))));
         }
         return $entryArray;
     }

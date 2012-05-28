@@ -25,6 +25,7 @@ class Book extends Base {
     public $authors = NULL;
     public $serie = NULL;
     public $tags = NULL;
+    public $format = array ();
     public static $mimetypes = array(
         'epub'   => 'application/epub+zip',
         'mobi'   => 'application/x-mobipocket-ebook',
@@ -59,6 +60,20 @@ class Book extends Base {
         return $this->authors;
     }
     
+    public function getAuthorsName () {
+        $authorList = null;
+        foreach ($this->getAuthors () as $author) {
+            if ($authorList) {
+                $authorList = $authorList . ", " . $author->name;
+            }
+            else
+            {
+                $authorList = $author->name;
+            }
+        }
+        return $authorList;
+    }
+    
     public function getSerie () {
         if (is_null ($this->serie)) {
             $this->serie = Serie::getSerieByBookId ($this->id);
@@ -82,6 +97,20 @@ class Book extends Base {
             }
         }
         return $this->tags;
+    }
+    
+    public function getTagsName () {
+        $tagList = null;
+        foreach ($this->getTags () as $tag) {
+            if ($tagList) {
+                $tagList = $tagList . ", " . $tag;
+            }
+            else
+            {
+                $tagList = $tag;
+            }
+        }
+        return $tagList;
     }
     
     public function getComment () {
@@ -125,20 +154,21 @@ class Book extends Base {
                     }
                     else
                     {
-                        array_push ($linkArray, new Link (rawurlencode ($this->path."/".$file), "image/jpeg", "http://opds-spec.org/image"));
+                        array_push ($linkArray, new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$file)), "image/jpeg", "http://opds-spec.org/image"));
                     }
-                    array_push ($linkArray, new Link ("fetch.php?id=$this->id&width=50", "image/jpeg", "http://opds-spec.org/image/thumbnail"));
+                    array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=70", "image/jpeg", "http://opds-spec.org/image/thumbnail"));
                 }
                 foreach (self::$mimetypes as $ext => $mime)
                 {
                     if (preg_match ('/'. $ext .'$/', $file)) {
+                        $this->format [$ext] = $file;
                         if (preg_match ('/^\//', $config['calibre_directory']))
                         {
                             array_push ($linkArray, new Link ("fetch.php?id=$this->id&type=" . $ext, $mime, "http://opds-spec.org/acquisition", "Download"));
                         }
                         else
                         {
-                            array_push ($linkArray, new Link (rawurlencode ($this->path."/".$file), $mime, "http://opds-spec.org/acquisition", "Download"));
+                            array_push ($linkArray, new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$file)), $mime, "http://opds-spec.org/acquisition", "Download"));
                         }
                     }
                 }
@@ -171,12 +201,12 @@ class Book extends Base {
         $entry = new Entry ("Books", 
                           self::ALL_BOOKS_ID, 
                           "Alphabetical index of the $nBooks books", "text", 
-                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_BOOKS)));
+                          array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
         $entry = new Entry ("Recents books", 
                           self::ALL_RECENT_BOOKS_ID, 
                           "Alphabetical index of the " . $config['cops_recentbooks_limit'] . " most recent books", "text", 
-                          array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_RECENT_BOOKS)));
+                          array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
         array_push ($result, $entry);
         return $result;
     }
@@ -253,7 +283,7 @@ order by substr (upper (sort), 1, 1)");
         {
             array_push ($entryArray, new Entry ($post->title, "allbooks_" . $post->title, 
                 "$post->count books", "text", 
-                array ( new LinkNavigation ("feed.php?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=".$post->title))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=".$post->title))));
         }
         return $entryArray;
     }

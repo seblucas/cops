@@ -26,6 +26,10 @@ class Link
         $this->rel = $prel;
         $this->title = $ptitle;
     }
+    
+    public function hrefXhtml () {
+        return str_replace ("&", "&amp;", $this->href);
+    }
 }
 
 class LinkNavigation extends Link
@@ -34,6 +38,7 @@ class LinkNavigation extends Link
 
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, self::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
+        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
     }
 }
 
@@ -75,6 +80,14 @@ class EntryBook extends Entry
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
+    }
+    
+    public function getCoverThumbnail () {
+        foreach ($this->linkArray as $link) {
+            if ($link->rel == "http://opds-spec.org/image/thumbnail")
+                return $link->hrefXhtml ();
+        }
+        return null;
     }
 }
 
