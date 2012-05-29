@@ -29,8 +29,8 @@ class Serie extends Base {
 
     public static function getCount() {
         $nSeries = parent::getDb ()->query('select count(*) from series')->fetchColumn();
-        $entry = new Entry ("Series", self::ALL_SERIES_ID, 
-            "Alphabetical index of the $nSeries series", "text", 
+        $entry = new Entry (localize("series.title"), self::ALL_SERIES_ID, 
+            str_format (localize("series.alphabetical"), $nSeries), "text", 
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_SERIES)));
         return $entry;
     }
@@ -66,7 +66,7 @@ order by series.sort');
         {
             $serie = new Serie ($post->id, $post->sort);
             array_push ($entryArray, new Entry ($serie->name, $serie->getEntryId (), 
-                "$post->count books", "text", 
+                str_format (localize("bookword.many"), $post->count), "text", 
                 array ( new LinkNavigation ($serie->getUri ()))));
         }
         return $entryArray;

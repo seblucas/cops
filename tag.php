@@ -29,8 +29,8 @@ class tag extends Base {
 
     public static function getCount() {
         $nTags = parent::getDb ()->query('select count(*) from tags')->fetchColumn();
-        $entry = new Entry ("Tags", self::ALL_TAGS_ID, 
-            "Alphabetical index of the $nTags tags", "text", 
+        $entry = new Entry (localize("tags.title"), self::ALL_TAGS_ID, 
+            str_format (localize("tags.alphabetical"), $nTags), "text", 
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_TAGS)));
         return $entry;
     }
@@ -55,7 +55,7 @@ order by tags.name');
         {
             $tag = new Tag ($post->id, $post->name);
             array_push ($entryArray, new Entry ($tag->name, $tag->getEntryId (), 
-                "$post->count books", "text", 
+                str_format (localize("bookword.many"), $post->count), "text", 
                 array ( new LinkNavigation ($tag->getUri ()))));
         }
         return $entryArray;

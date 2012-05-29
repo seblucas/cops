@@ -121,7 +121,7 @@ class Book extends Base {
         $addition = "";
         $se = $this->getSerie ();
         if (!is_null ($se)) {
-            $addition = $addition . "<strong>Series : </strong>Book $this->seriesIndex in $se->name<br />\n";
+            $addition = $addition . "<strong>" . localize("content.series") . "</strong>" . str_format (localize ("content.series.data"), $this->seriesIndex, $se->name) . "<br />\n";
         }
         return $addition . strip_tags ($this->comment, '<div>');
     }
@@ -188,12 +188,12 @@ class Book extends Base {
         }
         
         foreach ($this->getAuthors () as $author) {
-            array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", "Other books by $author->name"));
+            array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
         
         $serie = $this->getSerie ();
         if (!is_null ($serie)) {
-            array_push ($linkArray, new LinkNavigation ($serie->getUri (), "related", "Other books by the serie $serie->name"));
+            array_push ($linkArray, new LinkNavigation ($serie->getUri (), "related", str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name)));
         }
         
         return $linkArray;
@@ -210,14 +210,14 @@ class Book extends Base {
         global $config;
         $nBooks = parent::getDb ()->query('select count(*) from books')->fetchColumn();
         $result = array();
-        $entry = new Entry ("Books", 
+        $entry = new Entry (localize ("allbooks.title"), 
                           self::ALL_BOOKS_ID, 
-                          "Alphabetical index of the $nBooks books", "text", 
+                          str_format (localize ("allbooks.alphabetical"), $nBooks), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
-        $entry = new Entry ("Recents books", 
+        $entry = new Entry (localize ("recent.title"), 
                           self::ALL_RECENT_BOOKS_ID, 
-                          "Alphabetical index of the " . $config['cops_recentbooks_limit'] . " most recent books", "text", 
+                          str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
         array_push ($result, $entry);
         return $result;
@@ -309,7 +309,7 @@ order by substr (upper (sort), 1, 1)");
         while ($post = $result->fetchObject ())
         {
             array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
-                "$post->count books", "text", 
+                str_format (localize("bookword.many"), $post->count), "text", 
                 array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=".$post->title))));
         }
         return $entryArray;

@@ -13,6 +13,56 @@ function getURLParam ($name, $default = NULL) {
     return $default;
 }
 
+/**
+ * This method is a direct copy-paste from
+ * http://tmont.com/blargh/2010/1/string-format-in-php
+ */
+function str_format($format) {
+    $args = func_get_args();
+    $format = array_shift($args);
+    
+    preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
+    $offset = 0;
+    foreach ($matches[1] as $data) {
+        $i = $data[0];
+        $format = substr_replace($format, @$args[$i], $offset + $data[1] - 1, 2 + strlen($i));
+        $offset += strlen(@$args[$i]) - 2 - strlen($i);
+    }
+    
+    return $format;
+}
+
+/**
+ * This method is based on this page
+ * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+ */
+function localize($phrase) {
+    /* Static keyword is used to ensure the file is loaded only once */
+    static $translations = NULL;
+    /* If no instance of $translations has occured load the language file */
+    if (is_null($translations)) {
+        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $lang_file_en = NULL;
+        $lang_file = 'lang/Localization_' . $lang . '.json';
+        if (!file_exists($lang_file)) {
+            $lang_file = 'lang/' . 'Localization_en.json';
+        }
+        elseif ($lang != "en") {
+            $lang_file_en = 'lang/' . 'Localization_en.json';
+        }
+        $lang_file_content = file_get_contents($lang_file);
+        /* Load the language file as a JSON object and transform it into an associative array */
+        $translations = json_decode($lang_file_content, true);
+        if ($lang_file_en)
+        {
+            $lang_file_content = file_get_contents($lang_file_en);
+            $translations_en = json_decode($lang_file_content, true);
+            $translations = array_merge ($translations_en, $translations);
+        }
+    }
+    return $translations[$phrase];
+}
+
 class Link
 {
     const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
@@ -183,7 +233,7 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "All authors";
+        $this->title = localize("authors.title");
         $this->entryArray = Author::getAllAuthors();
         $this->idPage = Author::ALL_AUTHORS_ID;
     }
@@ -204,7 +254,7 @@ class PageAllTags extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "All tags";
+        $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
     }
@@ -225,7 +275,7 @@ class PageAllSeries extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "All series";
+        $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();
         $this->idPage = Serie::ALL_SERIES_ID;
     }
@@ -236,7 +286,7 @@ class PageSerieDetail extends Page
     public function InitializeContent () 
     {
         $serie = Serie::getSerieById ($this->idGet);
-        $this->title = "Series : " . $serie->name;
+        $this->title = $serie->name;
         $this->entryArray = Book::getBooksBySeries ($this->idGet);
         $this->idPage = $serie->getEntryId ();
     }
@@ -246,7 +296,7 @@ class PageAllBooks extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "All books by starting letter";
+        $this->title = localize ("allbooks.title");
         $this->entryArray = Book::getAllBooks ();
         $this->idPage = Book::ALL_BOOKS_ID;
     }
@@ -256,7 +306,7 @@ class PageAllBooksLetter extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "All books starting by " . $this->idGet;
+        $this->title = str_format (localize ("splitByLetter.letter"), localize ("bookword.title"), $this->idGet);
         $this->entryArray = Book::getBooksByStartingLetter ($this->idGet);
         $this->idPage = Book::getEntryIdByLetter ($this->idGet);
     }
@@ -266,7 +316,7 @@ class PageRecentBooks extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Most recent books";
+        $this->title = localize ("recent.title");
         $this->entryArray = Book::getAllRecentBooks ();
         $this->idPage = Book::ALL_RECENT_BOOKS_ID;
     }
@@ -276,7 +326,7 @@ class PageQueryResult extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Search result for query *" . $this->query . "*";
+        $this->title = "Search result for query *" . $this->query . "*"; // TODO I18N
         $this->entryArray = Book::getBooksByQuery ($this->query);
     }
 }

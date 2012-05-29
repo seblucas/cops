@@ -31,8 +31,8 @@ class Author extends Base {
 
     public static function getCount() {
         $nAuthors = parent::getDb ()->query('select count(*) from authors')->fetchColumn();
-        $entry = new Entry ("Authors", self::ALL_AUTHORS_ID, 
-            "Alphabetical index of the $nAuthors authors", "text", 
+        $entry = new Entry (localize("authors.title"), self::ALL_AUTHORS_ID, 
+            str_format (localize("authors.alphabetical"), $nAuthors), "text", 
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));
         return $entry;
     }
@@ -48,7 +48,7 @@ order by sort');
         {
             $author = new Author ($post->id, $post->sort);
             array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (), 
-                "$post->count books", "text", 
+                str_format (localize("bookword.many"), $post->count), "text", 
                 array ( new LinkNavigation ($author->getUri ()))));
         }
         return $entryArray;

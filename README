@@ -98,6 +98,13 @@ On the OPDS client side I mainly tested with FBReader and Aldiko on Android.
 
 It also seems to work with Stanza.
 
+= Credits = 
+
+ * All localization informations come from Calibre2OPDS (http://calibre2opds.com/)
+ * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+ * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
+ * All testers
+
 = Copyright & License =
 
 COPS - 2012 (c) Sébastien Lucas <sebastien@slucas.fr>
