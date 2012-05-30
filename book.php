@@ -123,7 +123,14 @@ class Book extends Base {
         if (!is_null ($se)) {
             $addition = $addition . "<strong>" . localize("content.series") . "</strong>" . str_format (localize ("content.series.data"), $this->seriesIndex, $se->name) . "<br />\n";
         }
-        return $addition . strip_tags ($this->comment, '<div>');
+        if (preg_match ("/<\/(div|p)>/", $this->comment))
+        {
+            return $addition . str_replace ("<br>", "<br />", $this->comment);
+        }
+        else
+        {
+            return $addition . htmlspecialchars ($this->comment);
+        }
     }
     
     public function getFilePath ($extension, $relative = false)
