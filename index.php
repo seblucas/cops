@@ -31,8 +31,8 @@
     <title><?php echo $currentPage->title ?></title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.0.6"></script>
-	<link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.0.6" media="screen" />
-    <link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.0.6" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
@@ -70,11 +70,11 @@
     <div class="head">
         <div class="headleft">
             <a href="<?php echo $_SERVER["SCRIPT_NAME"] ?>">
-                <img src="images/home.png" alt="Home" />
+                <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="Home" />
             </a>
         </div>
         <div class="headright">
-            <a class="fancysearch" href="#search"><img src="images/search.png" alt="Search" /></a>
+            <a class="fancysearch" href="#search"><img src="<?php echo getUrlWithVersion("images/search.png") ?>" alt="Search" /></a>
         </div>
         <div class="headcenter">
             <p><?php echo $currentPage->title ?></p>

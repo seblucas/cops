@@ -6,11 +6,17 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+define ("VERSION", "0.0.4");
+ 
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name])) {
         return $_GET[$name];
     }
     return $default;
+}
+
+function getUrlWithVersion ($url) {
+    return $url . "?v=" . VERSION;
 }
 
 /**
@@ -138,7 +144,7 @@ class Entry
             foreach (self::$icons as $reg => $image)
             {
                 if (preg_match ("/" . $reg . "/", $pid)) {
-                    array_push ($this->linkArray, new Link ($image, "image/png", Link::OPDS_THUMBNAIL_TYPE));
+                    array_push ($this->linkArray, new Link (getUrlWithVersion ($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
                     break;
                 }
             }
