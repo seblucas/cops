@@ -1,3 +1,8 @@
+0.1.0 - XX
+  * Add localization support (thanks to Calibre2Opds)
+  * Hopefully fixed an issue with & in comment
+  * HTML catalog is in the sources with no support (WIP)
+
 0.0.4 - 20120523
   * More code refactoring to simplify code.
   * Changed OPDS Page id to match Calibre2Opds
