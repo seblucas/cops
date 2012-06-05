@@ -1,4 +1,4 @@
-0.1.0 - XX
+0.1.0 - 20120605
   * Add localization support (thanks to Calibre2Opds)
   * Hopefully fixed an issue with & in comment
   * HTML catalog is in the sources with no support (WIP)
