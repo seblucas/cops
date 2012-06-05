@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.0.4");
+define ("VERSION", "0.1.0");
  
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name])) {
