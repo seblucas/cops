@@ -84,7 +84,7 @@ any other custom OPDS catalog.
 
 = Known problems =
 
- * Only tested with Nginx.
+ * Only tested by me with Nginx but confirmed to work with Apache.
  * Contain Nginx specific code (that could be changed with a config item).
  * Only works with EPUB, MOBI and PDF.
  * certainly many many more.
