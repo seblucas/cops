@@ -82,7 +82,7 @@
     </div>
     <div class="clearer" />
     <div id="search" style="display: none;">
-        <form action="kobo.php?page=9" method="get">
+        <form action="index.php?page=9" method="get">
             <input type="text" name="query" /><br />
             <input type="hidden" name="page" value="9" /><br />
             <input type="submit" value="Search" />
