@@ -9,6 +9,7 @@
 require_once('base.php');
 require_once('serie.php');
 require_once('author.php');
+require_once('tag.php');
 
 class Book extends Base {
     const ALL_BOOKS_ID = "calibre:books";
@@ -89,7 +90,7 @@ class Book extends Base {
         if (is_null ($this->tags)) {
             $this->tags = array ();
             
-            $result = parent::getDb ()->prepare('select name
+            $result = parent::getDb ()->prepare('select tags.id as id, name
                 from books_tags_link, tags
                 where tag = tags.id
                 and book = ?
@@ -97,7 +98,7 @@ class Book extends Base {
             $result->execute (array ($this->id));
             while ($post = $result->fetchObject ())
             {
-                array_push ($this->tags, $post->name);
+                array_push ($this->tags, new Tag ($post->id, $post->name));
             }
         }
         return $this->tags;
@@ -107,11 +108,11 @@ class Book extends Base {
         $tagList = null;
         foreach ($this->getTags () as $tag) {
             if ($tagList) {
-                $tagList = $tagList . ", " . $tag;
+                $tagList = $tagList . ", " . $tag->name;
             }
             else
             {
-                $tagList = $tag;
+                $tagList = $tag->name;
             }
         }
         return $tagList;

@@ -12,6 +12,7 @@ require_once ("book.php");
 
 $book = Book::getBookById($_GET["id"]);
 $authors = $book->getAuthors ();
+$tags = $book->getTags ();
  
 ?>
 <div class="bookpopup">
@@ -26,15 +27,26 @@ $authors = $book->getAuthors ();
         foreach ($authors as $author) {
             if ($i > 0) echo ", ";
 ?>
-            <a href="kobo.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo $author->name ?></a>
+            <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo $author->name ?></a>
+<?php
+        }
+?>
+        </div>
+        <div class="tags">
+<?php
+        $i = 0;
+        foreach ($tags as $tag) {
+            if ($i > 0) echo ", ";
+?>
+            <a href="index.php<?php echo str_replace ("&", "&amp;", $tag->getUri ()) ?>"><?php echo $tag->name ?></a>
 <?php
         }
 ?>
         </div>
     </div>
     <div class="clearer" />
-    <div><?php echo localize("content.summary") ?></div>
     <hr />
+    <div><?php echo localize("content.summary") ?></div>
     <?php echo $book->getComment () ?>
     <hr />
 </div>
