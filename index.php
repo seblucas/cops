@@ -133,13 +133,13 @@
             <div class="bookdetail">
                 <a class="navigation" href="bookdetail.php?id=<?php echo $entry->book->id ?>" />
                 <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
-                <div class="entryContent"><?php echo "Author : " . $entry->book->getAuthorsName () ?></div>
-                <div class="entryContent"><?php echo "Tags : " . htmlentities ($entry->book->getTagsName ()) ?></div>
+                <div class="entryContent"><?php echo localize("authors.title") . " : " . $entry->book->getAuthorsName () ?></div>
+                <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlentities ($entry->book->getTagsName ()) ?></div>
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
             ?>
-                <div class="entryContent"><?php echo "Serie : " . $serie->name . " (" . $entry->book->seriesIndex . ")" ?></div>
+                <div class="entryContent"><?php echo localize("series.title") . " : " . $serie->name . " (" . $entry->book->seriesIndex . ")" ?></div>
             <?php
                 }
             ?>
