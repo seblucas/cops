@@ -131,8 +131,6 @@ margin:2px;
 display: table-cell;
 vertical-align: middle;
 text-align: center;
-text-decoration:none;
-color:#EEE;
 }
 
 #loading 
@@ -159,7 +157,7 @@ margin-bottom: 8px;
 }
 
 
-.tags a, .authors a, .buttonEffect
+.buttonEffect a
 {
 border-radius: 6px;
 background: -moz-radial-gradient(#666, black);  
@@ -168,7 +166,7 @@ text-decoration : none;
 font-weight: bold;
 }
 
-.tags a, .authors a
+.pad6 a
 {
 padding: 6px;
 }

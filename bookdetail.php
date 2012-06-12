@@ -22,7 +22,7 @@ $tags = $book->getTags ();
         </div>
         <div class="entryTitle"><?php echo htmlspecialchars ($book->title) ?></div>
         <div class="entrySection"><?php echo localize("authors.title") ?></div>
-        <div class="authors">
+        <div class="buttonEffect pad6">
 <?php
         $i = 0;
         foreach ($authors as $author) {
@@ -34,7 +34,7 @@ $tags = $book->getTags ();
 ?>
         </div>
         <div class="entrySection"><?php echo localize("tags.title") ?></div>
-        <div class="tags">
+        <div class="buttonEffect pad6">
 <?php
         $i = 0;
         foreach ($tags as $tag) {
