@@ -119,14 +119,12 @@ float:right;
 
 .button
 {
-border-radius: 6px;
-background-color:darkgray;
-text-shadow: 0 3px 3px rgba(0, 0, 0, 0.7);
 height:36px;
 display: table;
 width:80px;
 margin:2px;
 }
+
 
 .button p, .button a
 {
@@ -134,7 +132,7 @@ display: table-cell;
 vertical-align: middle;
 text-align: center;
 text-decoration:none;
-color:white;
+color:#EEE;
 }
 
 #loading 
@@ -161,12 +159,17 @@ margin-bottom: 8px;
 }
 
 
-.tags a, .authors a
+.tags a, .authors a, .buttonEffect
 {
 border-radius: 6px;
 background: -moz-radial-gradient(#666, black);  
-padding: 6px;
 color: #EEE;
 text-decoration : none;
 font-weight: bold;
 }
+
+.tags a, .authors a
+{
+padding: 6px;
+}
+

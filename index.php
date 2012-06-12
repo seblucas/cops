@@ -118,14 +118,14 @@
             <?php
                 if (array_key_exists("epub", $entry->book->format)) {
             ?>    
-                <div class="button"><a href="<?php echo "download/" . $entry->book->id . "/" . urlencode ($entry->book->format ["epub"]) ?>">EPUB</a></div>
+                <div class="button buttonEffect"><a href="<?php echo "download/" . $entry->book->id . "/" . urlencode ($entry->book->format ["epub"]) ?>">EPUB</a></div>
             <?php
                 }
             ?>
             <?php
                 if (array_key_exists("pdf", $entry->book->format)) {
             ?>    
-                <div class="button"><a href="<?php echo "download/" . $entry->book->id . "/" . urlencode ($entry->book->format ["pdf"]) ?>">PDF</a></div>
+                <div class="button buttonEffect"><a href="<?php echo "download/" . $entry->book->id . "/" . urlencode ($entry->book->format ["pdf"]) ?>">PDF</a></div>
             <?php
                 }
             ?>
