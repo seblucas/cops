@@ -172,8 +172,8 @@ class OPDSRenderer
         }
         foreach ($entry->book->getTags () as $category) {
             self::getXmlStream ()->startElement ("category");
-                self::getXmlStream ()->writeAttribute ("term", $category);
-                self::getXmlStream ()->writeAttribute ("label", $category);
+                self::getXmlStream ()->writeAttribute ("term", $category->name);
+                self::getXmlStream ()->writeAttribute ("label", $category->name);
             self::getXmlStream ()->endElement ();
         }
         if (!is_null ($entry->book->pubdate)) {
