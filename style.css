@@ -152,11 +152,21 @@ text-align: center;
 padding-top: 120px;
 }
 
-.tags a
+.entrySection
+{
+font-style:italic;
+font-size: 1em;
+margin-top: 8px;
+margin-bottom: 8px;
+}
+
+
+.tags a, .authors a
 {
 border-radius: 6px;
-background: #333 url(images/tag16.png) left center no-repeat;
-padding: 0 2px 1px 18px;
-color: white;
+background: -moz-radial-gradient(#666, black);  
+padding: 6px;
+color: #EEE;
 text-decoration : none;
+font-weight: bold;
 }

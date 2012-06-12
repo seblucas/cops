@@ -21,6 +21,7 @@ $tags = $book->getTags ();
             <img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" />
         </div>
         <div class="entryTitle"><?php echo htmlspecialchars ($book->title) ?></div>
+        <div class="entrySection"><?php echo localize("authors.title") ?></div>
         <div class="authors">
 <?php
         $i = 0;
@@ -32,6 +33,7 @@ $tags = $book->getTags ();
         }
 ?>
         </div>
+        <div class="entrySection"><?php echo localize("tags.title") ?></div>
         <div class="tags">
 <?php
         $i = 0;
