@@ -1,6 +1,6 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) main script
+ * COPS (Calibre OPDS PHP Server) book detail script
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -53,6 +53,6 @@ $tags = $book->getTags ();
     <div class="clearer" />
     <hr />
     <div><?php echo localize("content.summary") ?></div>
-    <?php echo $book->getComment () ?>
+    <?php echo $book->getComment (false) ?>
     <hr />
 </div>

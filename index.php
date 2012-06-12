@@ -1,6 +1,6 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) main script
+ * COPS (Calibre OPDS PHP Server) HTML main script
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
