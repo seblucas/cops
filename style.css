@@ -151,3 +151,12 @@ opacity: 0.70;
 text-align: center;
 padding-top: 120px;
 }
+
+.tags a
+{
+border-radius: 6px;
+background: #333 url(images/tag16.png) left center no-repeat;
+padding: 0 2px 1px 18px;
+color: white;
+text-decoration : none;
+}
