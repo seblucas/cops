@@ -150,10 +150,14 @@ padding-top: 120px;
 
 .entrySection
 {
+margin-top: 8px;
+margin-bottom: 18px;
+}
+
+.entrySection span
+{
 font-style:italic;
 font-size: 1em;
-margin-top: 8px;
-margin-bottom: 8px;
 }
 
 
@@ -171,3 +175,7 @@ font-weight: bold;
 padding: 6px;
 }
 
+.pad6
+{
+display: inline;
+}
