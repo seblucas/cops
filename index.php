@@ -55,7 +55,7 @@
                 if ($("#search").is(":hidden")) {
                     $("#search").slideDown("slow");
                 } else {
-                    $("#search").hide();
+                    $("#search").slideUp();
                 }
             });
             
@@ -91,11 +91,12 @@
     <div class="clearer" />
     <div id="search" class="search">
         <form action="index.php?page=9" method="get">
-            <input type="text" name="query" />
+            <input type="text" style="width: 200px" name="query" />
             <input type="hidden" name="page" value="9" />
             <input type="submit" value="Search" />
         </form> 
     </div>
+    <div class="clearer" />
     <div id="content" style="display: none;"></div>
     <div class="entries">
         <?php

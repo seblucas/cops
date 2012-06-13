@@ -186,12 +186,13 @@ display: inline;
 
 .search
 {
-background-color:black;
-border-top:1px solid white;
 display:none;
 }
 
-.search input, .search form
+.search form
 {
-text-align: center;
+background-color: black;
+border-top: 1px solid white;
+float: right;
+padding: 6px 10px;
 }
