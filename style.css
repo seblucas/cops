@@ -164,7 +164,11 @@ font-size: 1em;
 .buttonEffect a
 {
 border-radius: 6px;
-background: -moz-radial-gradient(#666, black);  
+background: darkgray;  
+background: -moz-radial-gradient(#666, black);
+background: -webkit-radial-gradient(#666, black);
+background: -ms-radial-gradient(#666, black);
+background: radial-gradient(#666, black);
 color: #EEE;
 text-decoration : none;
 font-weight: bold;
