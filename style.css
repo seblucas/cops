@@ -192,7 +192,13 @@ display:none;
 .search form
 {
 background-color: black;
-border-top: 1px solid white;
+margin-top: 3px;
 float: right;
 padding: 6px 10px;
+border-radius: 6px;
+}
+
+.bookpopup
+{
+min-width: 400px;
 }
