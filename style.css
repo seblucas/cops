@@ -183,3 +183,15 @@ padding: 6px;
 {
 display: inline;
 }
+
+.search
+{
+background-color:black;
+border-top:1px solid white;
+display:none;
+}
+
+.search input, .search form
+{
+text-align: center;
+}

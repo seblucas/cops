@@ -50,7 +50,15 @@
                     overlay : null
                 }
             });
-            $(".fancysearch").fancybox();
+            
+            $("#searchImage").click(function(){
+                if ($("#search").is(":hidden")) {
+                    $("#search").slideDown("slow");
+                } else {
+                    $("#search").hide();
+                }
+            });
+            
             $(".bookdetail").click(function(){
                 var url = $(this).find("a").attr("href");
                 $('#content').load(url, function(data, stat, req){
@@ -74,17 +82,17 @@
             </a>
         </div>
         <div class="headright">
-            <a class="fancysearch" href="#search"><img src="<?php echo getUrlWithVersion("images/search.png") ?>" alt="Search" /></a>
+            <img id="searchImage" src="<?php echo getUrlWithVersion("images/search.png") ?>" alt="Search" />
         </div>
         <div class="headcenter">
             <p><?php echo $currentPage->title ?></p>
         </div>
     </div>
     <div class="clearer" />
-    <div id="search" style="display: none;">
+    <div id="search" class="search">
         <form action="index.php?page=9" method="get">
-            <input type="text" name="query" /><br />
-            <input type="hidden" name="page" value="9" /><br />
+            <input type="text" name="query" />
+            <input type="hidden" name="page" value="9" />
             <input type="submit" value="Search" />
         </form> 
     </div>
