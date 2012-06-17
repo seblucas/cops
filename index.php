@@ -89,12 +89,22 @@
         </div>
     </div>
     <div class="clearer" />
-    <div id="search" class="search">
-        <form action="index.php?page=9" method="get">
-            <input type="text" style="width: 200px" name="query" />
-            <input type="hidden" name="page" value="9" />
-            <input type="submit" value="Search" />
-        </form> 
+    <div class="menu">
+        <div id="search" class="search">
+            <form action="index.php?page=9" method="get">
+                <input type="text" style="width: 50%" name="query" />
+                <input type="hidden" name="page" value="9" />
+                <input type="submit" value="Search" />
+            </form>
+            <form action="index.php?page=9" method="get">
+                <select>
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select> 
+            </form>
+        </div>
     </div>
     <div class="clearer" />
     <div id="content" style="display: none;"></div>
@@ -104,8 +114,8 @@
                 if (get_class ($entry) != "EntryBook") {
         ?>
         <div class="entry">
-            <div class="entryTitle"><?php echo $entry->title ?></div>
-            <div class="entryContent"><?php echo $entry->content ?></div>
+            <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
+            <div class="entryContent"><?php echo htmlspecialchars ($entry->content) ?></div>
         <?php
             foreach ($entry->linkArray as $link) {
         ?>

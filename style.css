@@ -186,16 +186,24 @@ padding: 6px;
 display: inline;
 }
 
+.menu
+{
+float: right;
+width : 300px;
+}
+
 .search
 {
 display:none;
+width : 300px;
+position: absolute;
+background: white;
 }
 
 .search form
 {
 background-color: black;
 margin-top: 3px;
-float: right;
 padding: 6px 10px;
 border-radius: 6px;
 }
