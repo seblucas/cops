@@ -13,6 +13,7 @@ require_once ("book.php");
 $book = Book::getBookById($_GET["id"]);
 $authors = $book->getAuthors ();
 $tags = $book->getTags ();
+$serie = $book->getSerie ();
  
 ?>
 <div class="bookpopup">
@@ -49,6 +50,19 @@ $tags = $book->getTags ();
 ?>
             </div>
         </div>
+<?php
+        if (!is_null ($serie))
+        {
+?>
+        <div class="entrySection">
+            <div class="buttonEffect pad6">
+                <a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>
+            </div>
+            <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, $serie->name) ?>
+        </div>
+<?php
+        }
+?>
     </div>
     <div class="clearer" />
     <hr />
