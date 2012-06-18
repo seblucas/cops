@@ -30,7 +30,7 @@ $serie = $book->getSerie ();
             foreach ($authors as $author) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo $author->name ?></a>
+                <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo htmlspecialchars ($author->name) ?></a>
 <?php
             }
 ?>
@@ -44,7 +44,7 @@ $serie = $book->getSerie ();
             foreach ($tags as $tag) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $tag->getUri ()) ?>"><?php echo $tag->name ?></a>
+                <a href="index.php<?php echo str_replace ("&", "&amp;", $tag->getUri ()) ?>"><?php echo htmlspecialchars ($tag->name) ?></a>
 <?php
             }
 ?>
@@ -58,7 +58,7 @@ $serie = $book->getSerie ();
             <div class="buttonEffect pad6">
                 <a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>
             </div>
-            <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, $serie->name) ?>
+            <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
         </div>
 <?php
         }
