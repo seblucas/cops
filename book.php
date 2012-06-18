@@ -122,7 +122,7 @@ class Book extends Base {
         $addition = "";
         $se = $this->getSerie ();
         if (!is_null ($se) && $withSerie) {
-            $addition = $addition . "<strong>" . localize("content.series") . "</strong>" . str_format (localize ("content.series.data"), $this->seriesIndex, $se->name) . "<br />\n";
+            $addition = $addition . "<strong>" . localize("content.series") . "</strong>" . str_format (localize ("content.series.data"), $this->seriesIndex, htmlspecialchars ($se->name)) . "<br />\n";
         }
         if (preg_match ("/<\/(div|p|a)>/", $this->comment))
         {
