@@ -206,7 +206,25 @@ background-color: black;
 margin-top: 3px;
 padding: 6px 10px;
 border-radius: 6px;
+display: table;
 }
+
+.search input
+{
+display: table-cell;
+vertical-align: middle;
+}
+
+.search input[type=text], .search select
+{
+width: 242px;
+}
+
+.search select
+{
+width: 248px;
+}
+
 
 .bookpopup
 {

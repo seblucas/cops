@@ -82,7 +82,7 @@
             </a>
         </div>
         <div class="headright">
-            <img id="searchImage" src="<?php echo getUrlWithVersion("images/search.png") ?>" alt="Search" />
+            <img id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         </div>
         <div class="headcenter">
             <p><?php echo $currentPage->title ?></p>
@@ -92,9 +92,9 @@
     <div class="menu">
         <div id="search" class="search">
             <form action="index.php?page=9" method="get">
-                <input type="text" style="width: 50%" name="query" />
+                <input type="text" name="query" />
                 <input type="hidden" name="page" value="9" />
-                <input type="submit" value="Search" />
+                <input type="image" src="images/search32.png" alt="Search" />
             </form>
             <form action="index.php?page=9" method="get">
                 <select>
@@ -103,6 +103,7 @@
                     <option value="mercedes">Mercedes</option>
                     <option value="audi">Audi</option>
                 </select> 
+                <input type="image" src="images/search32.png" alt="Search" />
             </form>
         </div>
     </div>
