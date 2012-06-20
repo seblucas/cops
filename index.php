@@ -45,7 +45,12 @@
             
             $("#sort").click(function(){
                 $('.book').sortElements(function(a, b){
-                    return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? 1 : -1;
+                    var test = 1;
+                    if ($("#sortorder").val() == "desc")
+                    {
+                        test = -1;
+                    }
+                    return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
                 });
                 $("#search").slideUp();
             });
@@ -105,11 +110,15 @@
                 <input type="image" src="images/search32.png" alt="Search" />
             </form>
             <form action="index.php?page=9" method="get">
-                <select id="sortchoice">
+                <select id="sortchoice" style="width: 183px">
                     <option value="st"><?php echo localize("bookword.title") ?></option>
                     <option value="sa"><?php echo localize("authors.title") ?></option>
                     <option value="ss"><?php echo localize("series.title") ?></option>
                     <option value="sp"><?php echo localize("content.published") ?></option>
+                </select>
+                <select id="sortorder" style="width: 60px">
+                    <option value="asc">Asc</option>
+                    <option value="desc">Desc</option>
                 </select> 
                 <img id="sort" src="images/sort32.png" alt="Sort" />
             </form>
