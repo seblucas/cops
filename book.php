@@ -12,15 +12,17 @@ require_once('author.php');
 require_once('tag.php');
 
 class Book extends Base {
+    const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "calibre:books";
     const ALL_RECENT_BOOKS_ID = "calibre:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index";
+    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid";
     
     public $id;
     public $title;
     public $timestamp;
     public $pubdate;
     public $path;
+    public $uuid;
     public $relativePath;
     public $seriesIndex;
     public $comment;
@@ -44,10 +46,11 @@ class Book extends Base {
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;
+        $this->uuid = $line->uuid;
     }
         
     public function getEntryId () {
-        return self::ALL_BOOKS_ID.":".$this->id;
+        return self::ALL_BOOKS_UUID.":".$this->uuid;
     }
     
     public static function getEntryIdByLetter ($startingLetter) {
