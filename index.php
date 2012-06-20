@@ -31,6 +31,7 @@
     <title><?php echo $currentPage->title ?></title>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.0.6"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.0.6" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
     <script type="text/javascript">
@@ -40,6 +41,12 @@
                 $("#loading").show();
                 window.location=$(this).find("a").attr("href");
                 return false;
+            });
+            
+            $("#sort").click(function(){
+                $('.book').sortElements(function(a, b){
+                    return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? 1 : -1;
+                });
             });
             
             $(".fancycover").fancybox({
@@ -97,13 +104,11 @@
                 <input type="image" src="images/search32.png" alt="Search" />
             </form>
             <form action="index.php?page=9" method="get">
-                <select>
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                <select id="sortchoice">
+                    <option value="st"><?php echo localize("bookword.title") ?></option>
+                    <option value="sa"><?php echo localize("authors.title") ?></option>
                 </select> 
-                <input type="image" src="images/search32.png" alt="Search" />
+                <img id="sort" src="images/sort32.png" alt="Sort" />
             </form>
         </div>
     </div>
@@ -152,8 +157,8 @@
             </div>
             <div class="bookdetail">
                 <a class="navigation" href="bookdetail.php?id=<?php echo $entry->book->id ?>" />
-                <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
-                <div class="entryContent"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
+                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?></div>
+                <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
                 <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
             <?php
                 $serie = $entry->book->getSerie ();

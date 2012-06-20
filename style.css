@@ -209,13 +209,13 @@ border-radius: 6px;
 display: table;
 }
 
-.search input
+.search input, .search img, .search img
 {
 display: table-cell;
 vertical-align: middle;
 }
 
-.search input[type=text], .search select
+.search input[type=text]
 {
 width: 242px;
 }
