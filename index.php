@@ -47,6 +47,7 @@
                 $('.book').sortElements(function(a, b){
                     return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? 1 : -1;
                 });
+                $("#search").slideUp();
             });
             
             $(".fancycover").fancybox({
@@ -107,6 +108,8 @@
                 <select id="sortchoice">
                     <option value="st"><?php echo localize("bookword.title") ?></option>
                     <option value="sa"><?php echo localize("authors.title") ?></option>
+                    <option value="ss"><?php echo localize("series.title") ?></option>
+                    <option value="sp"><?php echo localize("content.published") ?></option>
                 </select> 
                 <img id="sort" src="images/sort32.png" alt="Sort" />
             </form>
@@ -157,14 +160,14 @@
             </div>
             <div class="bookdetail">
                 <a class="navigation" href="bookdetail.php?id=<?php echo $entry->book->id ?>" />
-                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?></div>
+                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?> <span class="sp">(<?php echo date ('Y', $entry->book->pubdate) ?>)</span></div>
                 <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
                 <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
             ?>
-                <div class="entryContent"><?php echo localize("series.title") . " : " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></div>
+                <div class="entryContent ss"><?php echo localize("series.title") . " : " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></div>
             <?php
                 }
             ?>
