@@ -201,6 +201,7 @@ from data where book = ?');
             if (array_key_exists ($ext, self::$mimetypes))
             {
                 array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), "Download"));
+                $this->format [$ext] = $post->name . "." . strtolower ($post->format);
             }
         }
                 
