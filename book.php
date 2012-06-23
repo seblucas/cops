@@ -15,7 +15,7 @@ class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "calibre:books";
     const ALL_RECENT_BOOKS_ID = "calibre:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid";
+    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover";
     
     public $id;
     public $title;
@@ -23,6 +23,7 @@ class Book extends Base {
     public $pubdate;
     public $path;
     public $uuid;
+    public $hasCover;
     public $relativePath;
     public $seriesIndex;
     public $comment;
@@ -47,6 +48,7 @@ class Book extends Base {
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
+        $this->hasCover = $line->has_cover;
     }
         
     public function getEntryId () {
@@ -156,43 +158,46 @@ class Book extends Base {
         return NULL;
     }
     
+    private function getLink ($type, $mime, $rel, $filename, $title = NULL)
+    {
+        global $config;
+        
+        if (preg_match ('/^\//', $config['calibre_directory']))
+        {
+            return new Link ("fetch.php?id=$this->id&type=" . $type, $mime, $rel, $title);
+        }
+        else
+        {
+            return new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$filename)), $mime, $rel, $title);
+        }
+    }
+    
     public function getLinkArray ()
     {
         global $config;
         $linkArray = array();
+        
+        if ($this->hasCover)
+        {
+            array_push ($linkArray, $this->getLink ("jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg"));
+            $height = "50";
+            if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+                $height = $config['cops_opds_thumbnail_height'];
+            }
+            else
+            {
+                $height = $config['cops_html_thumbnail_height'];
+            }
+            array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
+        }
+        
         if ($handle = opendir($this->path)) {
             while (false !== ($file = readdir($handle))) {
-                if (preg_match ('/jpg$/', $file)) {
-                    if (preg_match ('/^\//', $config['calibre_directory']))
-                    {
-                        array_push ($linkArray, new Link ("fetch.php?id=$this->id", "image/jpeg", Link::OPDS_IMAGE_TYPE));
-                    }
-                    else
-                    {
-                        array_push ($linkArray, new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$file)), "image/jpeg", Link::OPDS_IMAGE_TYPE));
-                    }
-                    $height = "50";
-                    if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                        $height = $config['cops_opds_thumbnail_height'];
-                    }
-                    else
-                    {
-                        $height = $config['cops_html_thumbnail_height'];
-                    }
-                    array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
-                }
                 foreach (self::$mimetypes as $ext => $mime)
                 {
                     if (preg_match ('/'. $ext .'$/', $file)) {
                         $this->format [$ext] = $file;
-                        if (preg_match ('/^\//', $config['calibre_directory']))
-                        {
-                            array_push ($linkArray, new Link ("fetch.php?id=$this->id&type=" . $ext, $mime, Link::OPDS_ACQUISITION_TYPE, "Download"));
-                        }
-                        else
-                        {
-                            array_push ($linkArray, new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$file)), $mime, Link::OPDS_ACQUISITION_TYPE, "Download"));
-                        }
+                        array_push ($linkArray, $this->getLink ($ext, $mime, Link::OPDS_ACQUISITION_TYPE, $file, "Download"));
                     }
                 }
             }
