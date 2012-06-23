@@ -191,18 +191,19 @@ class Book extends Base {
             array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
         }
         
-        if ($handle = opendir($this->path)) {
-            while (false !== ($file = readdir($handle))) {
-                foreach (self::$mimetypes as $ext => $mime)
-                {
-                    if (preg_match ('/'. $ext .'$/', $file)) {
-                        $this->format [$ext] = $file;
-                        array_push ($linkArray, $this->getLink ($ext, $mime, Link::OPDS_ACQUISITION_TYPE, $file, "Download"));
-                    }
-                }
+        $result = parent::getDb ()->prepare('select id, format, name
+from data where book = ?');
+        $result->execute (array ($this->id));
+        
+        while ($post = $result->fetchObject ())
+        {
+            $ext = strtolower (str_replace ("ORIGINAL_", "", $post->format));
+            if (array_key_exists ($ext, self::$mimetypes))
+            {
+                array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), "Download"));
             }
         }
-        
+                
         foreach ($this->getAuthors () as $author) {
             array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
