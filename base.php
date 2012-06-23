@@ -7,6 +7,7 @@
  */
 
 define ("VERSION", "0.1.0");
+date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name])) {

@@ -66,4 +66,11 @@
      *  0 : disable
      */
     $config['cops_show_icons'] = "1";
+    
+    /*
+     * Default timezone 
+     * Check following link for other timezones :
+     * http://www.php.net/manual/en/timezones.php
+     */
+    $config['default_timezone'] = "Europe/Paris";
 ?>
