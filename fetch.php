@@ -17,6 +17,7 @@
     $bookId = $_GET["id"];
     $book = Book::getBookById($bookId);
     $type = getURLParam ("type", "jpg");
+    $idData = getURLParam ("data", NULL);
      
     switch ($type)
     {
@@ -77,7 +78,7 @@
             header("Content-type: " . Book::$mimetypes[$type]);
             break;
     }
-    $file = $book->getFilePath ($type, true);
+    $file = $book->getFilePath ($type, $idData, true);
     header('Content-Disposition: attachement; filename="' . basename ($file) . '"');
     header ($config['cops_x_accel_redirect'] . ": " . $config['calibre_internal_directory'] . $file);
 ?>

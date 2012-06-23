@@ -139,32 +139,48 @@ class Book extends Base {
         }
     }
     
-    public function getFilePath ($extension, $relative = false)
+    public function getFilePath ($extension, $idData = NULL, $relative = false)
     {
-        if ($handle = opendir($this->path)) {
-            while (false !== ($file = readdir($handle))) {
-                if (preg_match ('/' . $extension . '$/', $file)) {
-                    if ($relative)
-                    {
-                        return $this->relativePath."/".$file;
-                    }
-                    else
-                    {
-                        return $this->path."/".$file;
-                    }
-                }
+        $file = NULL;
+        if ($extension == "jpg")
+        {
+            $file = "cover.jpg";
+        }
+        else
+        {
+            $result = parent::getDb ()->prepare('select format, name
+    from data where id = ?');
+            $result->execute (array ($idData));
+            
+            while ($post = $result->fetchObject ())
+            {
+                $file = $post->name . "." . strtolower ($post->format);
             }
         }
-        return NULL;
+
+        if ($relative)
+        {
+            return $this->relativePath."/".$file;
+        }
+        else
+        {
+            return $this->path."/".$file;
+        }
     }
     
-    private function getLink ($type, $mime, $rel, $filename, $title = NULL)
+    private function getLink ($type, $mime, $rel, $filename, $idData, $title = NULL)
     {
         global $config;
         
+        $textData = "";
+        if (!is_null ($idData))
+        {
+            $textData = "&data=" . $idData;
+        }
+        
         if (preg_match ('/^\//', $config['calibre_directory']))
         {
-            return new Link ("fetch.php?id=$this->id&type=" . $type, $mime, $rel, $title);
+            return new Link ("fetch.php?id=$this->id" . $textData . "&type=" . $type, $mime, $rel, $title);
         }
         else
         {
@@ -179,7 +195,7 @@ class Book extends Base {
         
         if ($this->hasCover)
         {
-            array_push ($linkArray, $this->getLink ("jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg"));
+            array_push ($linkArray, $this->getLink ("jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
             $height = "50";
             if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
                 $height = $config['cops_opds_thumbnail_height'];
@@ -200,7 +216,7 @@ from data where book = ?');
             $ext = strtolower (str_replace ("ORIGINAL_", "", $post->format));
             if (array_key_exists ($ext, self::$mimetypes))
             {
-                array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), "Download"));
+                array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), $post->id, "Download"));
                 $this->format [$ext] = $post->name . "." . strtolower ($post->format);
             }
         }
