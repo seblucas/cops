@@ -14,12 +14,23 @@ $book = Book::getBookById($_GET["id"]);
 $authors = $book->getAuthors ();
 $tags = $book->getTags ();
 $serie = $book->getSerie ();
+$book->getLinkArray ();
  
 ?>
 <div class="bookpopup">
     <div class="booke">
         <div class="cover">
             <img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" />
+        </div>
+        <div class="download">
+<?php
+            foreach ($config['cops_prefered_format'] as $format)
+            {
+?>    
+                <div class="button buttonEffect"><a href="<?php echo "download/" . $entry->book->format [$format][0] . "/" . urlencode ($entry->book->format [$format][1]) ?>"><?php echo $format ?></a></div>
+<?php
+            }
+?>
         </div>
         <div class="entryTitle"><?php echo htmlspecialchars ($book->title) ?></div>
         <div class="entrySection">
