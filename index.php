@@ -149,7 +149,13 @@
         ?>
         <div class="book">
             <div class="cover">
+            <?php
+                if ($entry->book->hasCover) {
+            ?>
                 <a class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="cover" /></a>
+            <?php
+                }
+            ?>
             </div>
             <div class="download">
             <?php
