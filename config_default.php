@@ -73,4 +73,11 @@
      * http://www.php.net/manual/en/timezones.php
      */
     $config['default_timezone'] = "Europe/Paris";
+    
+    /*
+     * Prefered format for HTML catalog
+     * The two first will be displayed in book entries
+     * The other only appear in book detail
+     */
+    $config['cops_prefered_format'] = array ("EPUB", "PDF"); 
 ?>

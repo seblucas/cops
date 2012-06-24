@@ -217,7 +217,7 @@ from data where book = ?');
             if (array_key_exists ($ext, self::$mimetypes))
             {
                 array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), $post->id, "Download"));
-                $this->format [$ext] = $post->name . "." . strtolower ($post->format);
+                $this->format [$post->format] = array ($post->id, $post->name . "." . strtolower ($post->format));
             }
         }
                 
@@ -310,6 +310,20 @@ from books left outer join comments on book = books.id
 where books.id = ?');
         $entryArray = array();
         $result->execute (array ($bookId));
+        while ($post = $result->fetchObject ())
+        {
+            $book = new Book ($post);
+            return $book;
+        }
+        return NULL;
+    }
+    
+    public static function getBookByDataId($dataId) {
+        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
+from data, books left outer join comments on comments.book = books.id
+where data.book = books.id and data.id = ?');
+        $entryArray = array();
+        $result->execute (array ($dataId));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post);

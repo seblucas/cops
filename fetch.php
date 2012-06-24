@@ -14,10 +14,17 @@
     header("Pragma: public");
     header("Cache-Control: maxage=".$expires);
     header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
-    $bookId = $_GET["id"];
-    $book = Book::getBookById($bookId);
+    $bookId = getURLParam ("id", NULL);
     $type = getURLParam ("type", "jpg");
     $idData = getURLParam ("data", NULL);
+    if (is_null ($bookId))
+    {
+        $book = Book::getBookByDataId($idData);
+    }
+    else
+    {
+        $book = Book::getBookById($bookId);
+    }
      
     switch ($type)
     {
