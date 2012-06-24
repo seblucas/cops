@@ -24,10 +24,10 @@ $book->getLinkArray ();
         </div>
         <div class="download">
 <?php
-            foreach ($config['cops_prefered_format'] as $format)
+            foreach ($book->format as $key => $format)
             {
 ?>    
-                <div class="button buttonEffect"><a href="<?php echo "download/" . $entry->book->format [$format][0] . "/" . urlencode ($entry->book->format [$format][1]) ?>"><?php echo $format ?></a></div>
+                <div class="button buttonEffect"><a href="<?php echo "download/" . $format[0] . "/" . urlencode ($format[1]) ?>"><?php echo $key ?></a></div>
 <?php
             }
 ?>
