@@ -79,5 +79,5 @@
      * The two first will be displayed in book entries
      * The other only appear in book detail
      */
-    $config['cops_prefered_format'] = array ("EPUB", "PDF"); 
+    $config['cops_prefered_format'] = array ("EPUB", "PDF", "MOBI", "CBR", "CBZ"); 
 ?>
