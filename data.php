@@ -17,9 +17,31 @@ class Data extends Base {
     public $book;
     
     public static $mimetypes = array(
-        'epub'   => 'application/epub+zip',
-        'mobi'   => 'application/x-mobipocket-ebook',
-        'pdf'    => 'application/pdf'
+        'azw'   => 'application/x-mobipocket-ebook',
+        'cbz'   => 'application/x-cbz',
+        'cbr'   => 'application/x-cbr',
+        'doc'   => 'application/msword',
+        'epub'  => 'application/epub+zip',
+        'fb2'   => 'text/fb2+xml',
+        'kobo'  => 'application/x-koboreader-ebook',
+        'mobi'  => 'application/x-mobipocket-ebook',
+        'lit'   => 'application/x-ms-reader',
+        'lrs'   => 'text/x-sony-bbeb+xml',
+        'lrf'   => 'application/x-sony-bbeb',
+        'lrx'   => 'application/x-sony-bbeb',
+        'ncx'   => 'application/x-dtbncx+xml',
+        'opf'   => 'application/oebps-package+xml',
+        'otf'   => 'application/x-font-opentype',
+        'pdb'   => 'application/vnd.palm',
+        'pdf'   => 'application/pdf',
+        'prc'   => 'application/x-mobipocket-ebook',
+        'rtf'   => 'application/rtf',
+        'svg'   => 'image/svg+xml',
+        'ttf'   => 'application/x-font-truetype',
+        'wmf'   => 'image/wmf',
+        'xhtml' => 'application/xhtml+xml',
+        'xpgt'  => 'application/adobe-page-template+xml',
+        'zip'   => 'application/zip'
     );
     
     public function __construct($post, $book = null) {
