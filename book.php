@@ -154,6 +154,17 @@ class Book extends Base {
         }
     }
     
+    public function getDataFormat ($format) {
+        foreach ($this->getDatas () as $data)
+        {
+            if ($data->format == $format)
+            {
+                return $data;
+            }
+        }
+        return NULL;
+    }
+    
     public function getFilePath ($extension, $idData = NULL, $relative = false)
     {
         $file = NULL;

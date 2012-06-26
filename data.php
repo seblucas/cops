@@ -47,6 +47,10 @@ class Data extends Base {
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
     }
     
+    public function getHtmlLink () {
+        return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+    }
+    
     public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL)
     {
         global $config;

@@ -161,9 +161,9 @@
             <?php
                 foreach ($config['cops_prefered_format'] as $format)
                 {
-                    if (array_key_exists($format, $entry->book->format)) {
+                    if ($data = $entry->book->getDataFormat ($format)) {
             ?>    
-                <div class="button buttonEffect"><a href="<?php echo "download/" . $entry->book->format [$format][0] . "/" . urlencode ($entry->book->format [$format][1]) ?>"><?php echo $format ?></a></div>
+                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></div>
             <?php
                     }
                 }

@@ -24,10 +24,10 @@ $book->getLinkArray ();
         </div>
         <div class="download">
 <?php
-            foreach ($book->format as $key => $format)
+            foreach ($book->getDatas() as $data)
             {
 ?>    
-                <div class="button buttonEffect"><a href="<?php echo "download/" . $format[0] . "/" . urlencode ($format[1]) ?>"><?php echo $key ?></a></div>
+                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></div>
 <?php
             }
 ?>
