@@ -10,6 +10,7 @@ require_once('base.php');
 require_once('serie.php');
 require_once('author.php');
 require_once('tag.php');
+require_once('data.php');
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
@@ -27,15 +28,12 @@ class Book extends Base {
     public $relativePath;
     public $seriesIndex;
     public $comment;
+    public $datas = NULL;
     public $authors = NULL;
     public $serie = NULL;
     public $tags = NULL;
     public $format = array ();
-    public static $mimetypes = array(
-        'epub'   => 'application/epub+zip',
-        'mobi'   => 'application/x-mobipocket-ebook',
-        'pdf'    => 'application/pdf'
-    );
+
     
     public function __construct($line) {
         global $config;
@@ -109,6 +107,23 @@ class Book extends Base {
         return $this->tags;
     }
     
+    public function getDatas ()
+    {
+        if (is_null ($this->datas)) {
+            $this->datas = array ();
+        
+            $result = parent::getDb ()->prepare('select id, format, name
+    from data where book = ?');
+            $result->execute (array ($this->id));
+            
+            while ($post = $result->fetchObject ())
+            {
+                array_push ($this->datas, new Data ($post, $this));
+            }
+        }
+        return $this->datas;
+    }
+    
     public function getTagsName () {
         $tagList = null;
         foreach ($this->getTags () as $tag) {
@@ -168,26 +183,6 @@ class Book extends Base {
         }
     }
     
-    private function getLink ($type, $mime, $rel, $filename, $idData, $title = NULL)
-    {
-        global $config;
-        
-        $textData = "";
-        if (!is_null ($idData))
-        {
-            $textData = "&data=" . $idData;
-        }
-        
-        if (preg_match ('/^\//', $config['calibre_directory']))
-        {
-            return new Link ("fetch.php?id=$this->id" . $textData . "&type=" . $type, $mime, $rel, $title);
-        }
-        else
-        {
-            return new Link (str_replace('%2F','/',rawurlencode ($this->path."/".$filename)), $mime, $rel, $title);
-        }
-    }
-    
     public function getLinkArray ()
     {
         global $config;
@@ -195,7 +190,7 @@ class Book extends Base {
         
         if ($this->hasCover)
         {
-            array_push ($linkArray, $this->getLink ("jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
+            array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
             $height = "50";
             if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
                 $height = $config['cops_opds_thumbnail_height'];
@@ -207,17 +202,11 @@ class Book extends Base {
             array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
         }
         
-        $result = parent::getDb ()->prepare('select id, format, name
-from data where book = ?');
-        $result->execute (array ($this->id));
-        
-        while ($post = $result->fetchObject ())
+        foreach ($this->getDatas () as $data)
         {
-            $ext = strtolower (str_replace ("ORIGINAL_", "", $post->format));
-            if (array_key_exists ($ext, self::$mimetypes))
+            if ($data->isKnownType ())
             {
-                array_push ($linkArray, $this->getLink ($ext, self::$mimetypes [$ext], Link::OPDS_ACQUISITION_TYPE, $post->name . "." . strtolower ($post->format), $post->id, "Download"));
-                $this->format [$post->format] = array ($post->id, $post->name . "." . strtolower ($post->format));
+                array_push ($linkArray, $data->getDataLink (Link::OPDS_ACQUISITION_TYPE, "Download"));
             }
         }
                 
