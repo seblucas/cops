@@ -70,7 +70,16 @@ class Data extends Base {
     }
     
     public function getHtmlLink () {
-        return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+        global $config;
+        
+        if ($config['cops_use_url_rewriting'] == "1")
+        {
+            return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+        }
+        else
+        {
+            return str_replace ("&", "&amp;", "fetch.php?id=" . $this->book->id . "&data=" . $this->id . "&type=" . $this->extension);
+        }
     }
     
     public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL)

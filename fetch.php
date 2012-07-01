@@ -8,6 +8,7 @@
     
     require_once ("config.php");
     require_once ("book.php");
+    require_once ("data.php");
      
     global $config;
     $expires = 60*60*24*14;
@@ -82,7 +83,7 @@
             }
             break;
         default:
-            header("Content-type: " . Book::$mimetypes[$type]);
+            header("Content-type: " . Data::$mimetypes[$type]);
             break;
     }
     $file = $book->getFilePath ($type, $idData, true);
