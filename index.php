@@ -110,13 +110,13 @@
                 <input type="image" src="images/search32.png" alt="Search" />
             </form>
             <form action="index.php?page=9" method="get">
-                <select id="sortchoice" style="width: 183px">
+                <select id="sortchoice">
                     <option value="st"><?php echo localize("bookword.title") ?></option>
                     <option value="sa"><?php echo localize("authors.title") ?></option>
                     <option value="ss"><?php echo localize("series.title") ?></option>
                     <option value="sp"><?php echo localize("content.published") ?></option>
                 </select>
-                <select id="sortorder" style="width: 60px">
+                <select id="sortorder">
                     <option value="asc">Asc</option>
                     <option value="desc">Desc</option>
                 </select> 

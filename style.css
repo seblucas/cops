@@ -190,13 +190,13 @@ display: inline;
 .menu
 {
 float: right;
-width : 300px;
+width : 250px;
 }
 
 .search
 {
 display:none;
-width : 300px;
+width : 250px;
 position: absolute;
 background: white;
 }
@@ -205,20 +205,20 @@ background: white;
 {
 background-color: black;
 margin-top: 3px;
-padding: 6px 10px;
 border-radius: 6px;
-display: table;
 }
 
-.search input, .search img, .search img
+.search input[type=text], .search select
 {
-display: table-cell;
 vertical-align: middle;
+margin: 8px 10px;
 }
 
-.search input[type=text]
+.search input[type=image], .search img
 {
-width: 242px;
+vertical-align: middle;
+float:right;
+padding: 3px 2px;
 }
 
 .bookpopup
