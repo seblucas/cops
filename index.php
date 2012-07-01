@@ -159,9 +159,12 @@
             </div>
             <div class="download">
             <?php
+                $i = 0;
                 foreach ($config['cops_prefered_format'] as $format)
                 {
+                    if ($i == 2) { break; }
                     if ($data = $entry->book->getDataFormat ($format)) {
+                        $i++;
             ?>    
                 <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></div>
             <?php
