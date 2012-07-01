@@ -78,7 +78,7 @@ class Data extends Base {
         }
         else
         {
-            return str_replace ("&", "&amp;", "fetch.php?id=" . $this->book->id . "&data=" . $this->id . "&type=" . $this->extension);
+            return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title)->href;
         }
     }
     
