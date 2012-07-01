@@ -62,7 +62,7 @@ class Data extends Base {
     }
     
     public function getFilename () {
-        $this->name . "." . strtolower ($this->format);
+        return $this->name . "." . strtolower ($this->format);
     }
     
     public function getDataLink ($rel, $title = NULL) {
