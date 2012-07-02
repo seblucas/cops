@@ -84,7 +84,7 @@ the internal location of nginx has to split like that.
 
 I use a Kobo eReader Touch and its browser cannot download through php file (the 
 extension has to be known). To allow downloading on my ereader I added some
-url rewriting (location /download/).
+url rewriting (location /download/). More on rewriting later.
 
 If your Calibre database is inside your web directory then there is no need for
 an internal location.
@@ -100,6 +100,28 @@ able to make it work with FBReader and Mantano Reader.
 
 It seems that Aldiko didn't implement it properly so it won't work with COPS or
 any other custom OPDS catalog.
+
+= URL rewriting =
+
+ * Nginx :
+ 
+    location /download/ {
+      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?id=$1&type=$2 last;
+      break;
+    }
+    
+ * Apache (Thanks to gaspine : http://www.mobileread.com/forums/showpost.php?p=2120724&postcount=48) :
+    the .htaccess :
+        RewriteEngine on
+        RewriteOptions inherit
+        RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?id=$1&type=$2 [L]
+    if you have not mod_xsendfile, in the config file simply set :
+        $config['cops_x_accel_redirect'] = "location"; 
+ 
+ * Cherokee (Thanks to Christophe) :
+   * Add a Behavior of type Regular Expression : /cops/download/(.*)/.*\.(.*)$
+   * Choose the handler Redirection
+   * Add the substitution regexp : "/cops/download/(.*)/.*\.(.*)$" --> "/cops/fetch.php?id=$1&type=$2"
 
 = Known problems =
 
