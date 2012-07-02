@@ -38,7 +38,6 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             $(".entry").click(function(){
-                $("#loading").show();
                 window.location=$(this).find("a").attr("href");
                 return false;
             });
