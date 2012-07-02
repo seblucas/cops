@@ -1,5 +1,5 @@
-0.1.1 - 20120701
-  * A lot of bug fix in HTML catalog
+0.1.1 - 20120702
+  * A lot of bug fixes in HTML catalog
   * Fixed the book comment in OPDS (broken in some rare case)
   * Fixed handling of HTML reserved characters
   * Changed book OPDS id to use an UUID (thanks to ilovejedd for the bug report)
@@ -7,6 +7,7 @@
   * Better handling of missing covers
   * Should support every book format supported by Calibre (thanks to Artem)
   * URL rewriting is off by default for the HTML catalog
+  * Add some documentation about URL rewriting (thanks to gaspine and Christophe)
   * Tested and ready to use with PHP5.4
 
 0.1.0 - 20120605
