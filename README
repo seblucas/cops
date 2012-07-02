@@ -1,6 +1,6 @@
 = COPS =
 
-COPS stands for Calibre OPDS Php Server.
+COPS stands for Calibre OPDS (and HTML) Php Server.
 
 COPS output is valid the unofficial OPDS validator : 
 http://opds-validator.appspot.com/
@@ -16,19 +16,21 @@ tool to be installed on a small server (Seagate Dockstar in my case).
 I initially thought of Calibre2OPDS but as it generate static file no
 search was possible.
 
+Later I added an HTML catalog.
+
 So COPS's main advantages are :
  * No need for many dependencies.
  * No need for a lot of CPU or RAM.
  * Not much code.
  * Search is available.
- * With Dropbox it's very easy to have an up to date OPDS server.
+ * With Dropbox / owncloud it's very easy to have an up to date OPDS server.
  * It was fun to code.
 
 = Prerequisites =
 
-1. 	PHP 5.3 with GD image processing & SQLite3 support.
-2. 	A web server with PHP support. I only tested with Nginx 1.1.14. For now
-    there is support for X-Accel-Redirect which is Nginx specific.
+1. 	PHP 5.3 or 5.4 with GD image processing & SQLite3 support.
+2. 	A web server with PHP support. I only tested with various version of Nginx.
+    Other people reported it working with Apache and Cherokee.
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
 On any Debian base Linux you can use :
@@ -52,6 +54,19 @@ server {
     root   /var/www/opds;
     index feed.php;
 
+    location /download/ {
+      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?id=$1&type=$2 last;
+      break;
+    }
+
+    location ~ ^/images.*\.(gif|png|ico|jpg)$ {
+            expires 31d;
+    }
+
+    location ~ .(js|css)$ {
+            expires 31d;
+    }
+    
     location ~ \.php$ {
        include /etc/nginx/fastcgi_params;
        fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
@@ -66,6 +81,10 @@ server {
 
 Beware in this case my Calibre database is in /home/calibre/Dropbox/Calibre/ so
 the internal location of nginx has to split like that.
+
+I use a Kobo eReader Touch and its browser cannot download through php file (the 
+extension has to be known). To allow downloading on my ereader I added some
+url rewriting (location /download/).
 
 If your Calibre database is inside your web directory then there is no need for
 an internal location.
@@ -84,9 +103,8 @@ any other custom OPDS catalog.
 
 = Known problems =
 
- * Only tested by me with Nginx but confirmed to work with Apache.
+ * Only tested by me with Nginx but confirmed to work with Apache and Cherokee.
  * Contain Nginx specific code (that could be changed with a config item).
- * Only works with EPUB, MOBI and PDF.
  * certainly many many more.
 
 = Disclaimer =
