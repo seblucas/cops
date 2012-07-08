@@ -55,7 +55,7 @@ server {
     index feed.php;
 
     location /download/ {
-      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?id=$1&type=$2 last;
+      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
       break;
     }
 
@@ -106,7 +106,7 @@ any other custom OPDS catalog.
  * Nginx :
  
     location /download/ {
-      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?id=$1&type=$2 last;
+      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
       break;
     }
     
@@ -114,14 +114,14 @@ any other custom OPDS catalog.
     the .htaccess :
         RewriteEngine on
         RewriteOptions inherit
-        RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?id=$1&type=$2 [L]
+        RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
     if you have not mod_xsendfile, in the config file simply set :
         $config['cops_x_accel_redirect'] = "location"; 
  
  * Cherokee (Thanks to Christophe) :
    * Add a Behavior of type Regular Expression : /cops/download/(.*)/.*\.(.*)$
    * Choose the handler Redirection
-   * Add the substitution regexp : "/cops/download/(.*)/.*\.(.*)$" --> "/cops/fetch.php?id=$1&type=$2"
+   * Add the substitution regexp : "/cops/download/(.*)/.*\.(.*)$" --> "/cops/fetch.php?data=$1&type=$2"
 
 = Known problems =
 
