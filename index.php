@@ -21,6 +21,7 @@
     
     $currentPage = Page::getPage ($page, $qid, $query);
     $currentPage->InitializeContent (); 
+    $isEink = preg_match ("/(Kobo Touch|Kindle\/3.0)/", $_SERVER['HTTP_USER_AGENT']);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
@@ -56,11 +57,7 @@
             
             $(".fancycover").fancybox({
                 'type' : 'image',
-                openEffect  : 'none',
-                closeEffect	: 'none',
-                helpers : {
-                    overlay : null
-                }
+                <?php if ($isEink) echo "openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
             $("#searchImage").click(function(){
@@ -74,7 +71,11 @@
             $(".bookdetail").click(function(){
                 var url = $(this).find("a").attr("href");
                 $('#content').load(url, function(data, stat, req){
-                    $.fancybox( {content: data, maxWidth : '700' } );
+                    $.fancybox( {
+                        content: data, 
+                        maxWidth : '700',
+                        <?php if ($isEink) echo "margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+                    } );
                 });
 
                 return false;
