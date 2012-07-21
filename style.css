@@ -224,4 +224,10 @@ padding: 3px 2px;
 .bookpopup
 {
 min-width: 400px;
+color:black;
+}
+
+.content
+{
+line-height: 110%;
 }

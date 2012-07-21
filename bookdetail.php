@@ -78,6 +78,6 @@ $book->getLinkArray ();
     <div class="clearer" />
     <hr />
     <div><?php echo localize("content.summary") ?></div>
-    <?php echo $book->getComment (false) ?>
+    <div class="content"><?php echo $book->getComment (false) ?></div>
     <hr />
 </div>
