@@ -94,7 +94,8 @@ class Data extends Base {
         
         if (preg_match ('/^\//', $config['calibre_directory']))
         {
-            return new Link ("fetch.php?id=$book->id" . $textData . "&type=" . $type, $mime, $rel, $title);
+            if ($type != "jpg") $textData .= "&type=" . $type;
+            return new Link ("fetch.php?id=$book->id" . $textData, $mime, $rel, $title);
         }
         else
         {
