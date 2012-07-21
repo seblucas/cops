@@ -57,6 +57,8 @@
             
             $(".fancycover").fancybox({
                 'type' : 'image',
+                prevEffect		: 'none',
+                nextEffect		: 'none',
                 <?php if ($isEink) echo "openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
@@ -152,7 +154,7 @@
             <?php
                 if ($entry->book->hasCover) {
             ?>
-                <a class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="cover" /></a>
+                <a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="cover" /></a>
             <?php
                 }
             ?>
