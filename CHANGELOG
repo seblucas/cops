@@ -1,3 +1,9 @@
+0.2.0 - 20120722
+  * Fix all rewriting rule I forgot to change it in last release
+  * Fix <hr> in book comment (thanks to jillmess)
+  * Fix cover zoom in HTML catalog (you can also navigate through cover with keyboard)
+  * Simplify Fancybox transition for e-Ink devices (for now Kobo and Kindle)
+
 0.1.1 - 20120702
   * A lot of bug fixes in HTML catalog
   * Fixed the book comment in OPDS (broken in some rare case)

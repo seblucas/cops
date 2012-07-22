@@ -16,7 +16,7 @@ tool to be installed on a small server (Seagate Dockstar in my case).
 I initially thought of Calibre2OPDS but as it generate static file no
 search was possible.
 
-Later I added an HTML catalog.
+Later I added an simple HTML catalog that should be usable on my Kobo.
 
 So COPS's main advantages are :
  * No need for many dependencies.
