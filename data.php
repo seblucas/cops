@@ -78,7 +78,7 @@ class Data extends Base {
         }
         else
         {
-            return str_replace ("&", "&amp;", self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title)->href);
+            return str_replace ("&", "&amp;", self::getLink ($this->book, $this->extension, $this->getMimeType (), NULL, $this->getFilename (), $this->id, NULL)->href);
         }
     }
     
