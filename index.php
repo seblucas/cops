@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) HTML main script
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  *
  */
  
@@ -21,7 +21,27 @@
     
     $currentPage = Page::getPage ($page, $qid, $query);
     $currentPage->InitializeContent (); 
-    $isEink = preg_match ("/(Kobo Touch|Kindle\/3.0)/", $_SERVER['HTTP_USER_AGENT']);
+
+/* Test to see if pages are opened on an Eink screen 
+ * First test Kindle or Kobo Touch */
+
+	if (preg_match("/(Kobo Touch|Kindle\/3.0)", $_SERVER['HTTP_USER_AGENT'])) {
+		$isEink = 1;
+
+/* Test Sony PRS-T1 Ereader. 
+   HTTP_USER_AGENT = "Mozilla/5.0 (Linux; U; en-us; EBRD1101; EXT) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+
+*/
+	
+	} else if (preg_match("/EBRD1101/i", $_SERVER['HTTP_USER_AGENT'])) {
+		$isEink = 1;
+	
+/* No Eink screens found */
+	} else {
+		$isEink = 0;
+	}
+
+
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
