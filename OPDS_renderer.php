@@ -43,6 +43,9 @@ class OPDSRenderer
                 $xml->startElement ("ShortName");
                     $xml->text ("My catalog");
                 $xml->endElement ();
+                $xml->startElement ("Description");
+                    $xml->text ("Search for ebooks");
+                $xml->endElement ();
                 $xml->startElement ("InputEncoding");
                     $xml->text ("UTF-8");
                 $xml->endElement ();
@@ -69,6 +72,7 @@ class OPDSRenderer
     }
     
     private function startXmlDocument ($title, $idPage) {
+        global $config;
         self::getXmlStream ()->startDocument('1.0','UTF-8');
         self::getXmlStream ()->startElement ("feed");
             self::getXmlStream ()->writeAttribute ("xmlns", "http://www.w3.org/2005/Atom");
@@ -110,7 +114,7 @@ class OPDSRenderer
             self::renderLink ($link);
             $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
             self::renderLink ($link);
-            $link = new Link ("feed.php?page=" . self::PAGE_OPENSEARCH, "application/opensearchdescription+xml", "search", "Search here");
+            $link = new Link ($config['cops_full_url'] . 'feed.php?query={searchTerms}', "application/atom+xml", "search", "Search here");
             self::renderLink ($link);
     }
         
