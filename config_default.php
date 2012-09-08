@@ -88,4 +88,14 @@
      *  0 : disable
      */
     $config['cops_use_url_rewriting'] = "0";
+    
+    /*
+     * generate a invalid OPDS stream to allow bad OPDS client to use search
+     * Example of non compliant OPDS client : FBReader (was working in May 2012), Moon+ Reader
+     * Example of good OPDS client : Mantano
+     *  1 : enable support for non compliant OPDS client
+     *  0 : always generate valid OPDS code
+     */
+    $config['cops_generate_invalid_opds_stream'] = "0"; 
+     
 ?>
