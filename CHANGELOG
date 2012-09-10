@@ -1,3 +1,9 @@
+0.2.1 - XXXX
+  * Fix one last error (hopefully) in link generation (thanks to gaspine)
+  * Add Sony PRS-T1 to the list of E-Ink device (thanks to Northguy)
+  * Fix another HTML special characters problem (thanks to NeilBryant)
+  * Add an ugly config parameter to allow search in non-compliant OPDS reader (thanks to Don Caruana and David Lee)
+
 0.2.0 - 20120722
   * Fix all rewriting rule I forgot to change it in last release
   * Fix <hr> in book comment (thanks to jillmess)
