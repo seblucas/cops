@@ -1,4 +1,4 @@
-0.2.1 - XXXX
+0.2.1 - 20120916
   * Fix one last error (hopefully) in link generation (thanks to gaspine)
   * Add Sony PRS-T1 to the list of E-Ink device (thanks to Northguy)
   * Fix another HTML special characters problem (thanks to NeilBryant)
