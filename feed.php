@@ -18,6 +18,7 @@
     header ("Content-Type:application/xml");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
+    $n = getURLParam ("n", "1");
     if ($query)
         $page = Base::PAGE_OPENSEARCH_QUERY;
     $qid = getURLParam ("id");
@@ -29,7 +30,7 @@
             echo $OPDSRender->getOpenSearch ();
             return;
         default:
-            $currentPage = Page::getPage ($page, $qid, $query);
+            $currentPage = Page::getPage ($page, $qid, $query, $n);
             $currentPage->InitializeContent ();
             echo $OPDSRender->render ($currentPage);
             return;

@@ -363,19 +363,17 @@ order by substr (upper (sort), 1, 1)");
         return $entryArray;
     }
     
-    public static function getBooksByStartingLetter($letter) {
-        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
+    public static function getBooksByStartingLetter($letter, $n) {
+        list ($totalNumber, $result) = parent::executeQuery ('select {0} 
 from books left outer join comments on book = books.id
-where upper (books.sort) like ?');
+where upper (books.sort) like ?', self::BOOK_COLUMNS, array ($letter . "%"), $n);
         $entryArray = array();
-        $queryLike = $letter . "%";
-        $result->execute (array ($queryLike));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post);
             array_push ($entryArray, $book->getEntry ());
         }
-        return $entryArray;
+        return array ($entryArray, $totalNumber);
     }
 
     

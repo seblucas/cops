@@ -97,5 +97,11 @@
      *  0 : always generate valid OPDS code
      */
     $config['cops_generate_invalid_opds_stream'] = "0"; 
+    
+    /*
+     * Max number of items per page
+     */
+    $config['cops_max_item_per_page'] = "2"; 
+
      
 ?>

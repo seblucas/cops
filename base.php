@@ -80,6 +80,7 @@ class Link
     const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
     const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
     const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
+    const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
     
     public $href;
     public $type;
@@ -190,43 +191,46 @@ class Page
     public $idPage;
     public $idGet;
     public $query;
+    public $n;
+    public $totalNumber = -1;
     public $entryArray = array();
     
-    public static function getPage ($pageId, $id, $query)
+    public static function getPage ($pageId, $id, $query, $n)
     {
         switch ($pageId) {
             case Base::PAGE_ALL_AUTHORS :
-                return new PageAllAuthors ($id, $query);
+                return new PageAllAuthors ($id, $query, $n);
             case Base::PAGE_AUTHOR_DETAIL :
-                return new PageAuthorDetail ($id, $query);
+                return new PageAuthorDetail ($id, $query, $n);
             case Base::PAGE_ALL_TAGS :
-                return new PageAllTags ($id, $query);
+                return new PageAllTags ($id, $query, $n);
             case Base::PAGE_TAG_DETAIL :
-                return new PageTagDetail ($id, $query);
+                return new PageTagDetail ($id, $query, $n);
             case Base::PAGE_ALL_SERIES :
-                return new PageAllSeries ($id, $query);
+                return new PageAllSeries ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS :
-                return new PageAllBooks ($id, $query);
+                return new PageAllBooks ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS_LETTER:
-                return new PageAllBooksLetter ($id, $query);
+                return new PageAllBooksLetter ($id, $query, $n);
             case Base::PAGE_ALL_RECENT_BOOKS :
-                return new PageRecentBooks ($id, $query);
+                return new PageRecentBooks ($id, $query, $n);
             case Base::PAGE_SERIE_DETAIL : 
-                return new PageSerieDetail ($id, $query);
+                return new PageSerieDetail ($id, $query, $n);
             case Base::PAGE_OPENSEARCH_QUERY :
-                return new PageQueryResult ($id, $query);
+                return new PageQueryResult ($id, $query, $n);
                 break;
             default:
-                $page = new Page ($id, $query);
+                $page = new Page ($id, $query, $n);
                 $page->idPage = "cops:catalog";
                 return $page;
         }
     }
     
-    public function __construct($pid, $pquery) {
+    public function __construct($pid, $pquery, $pn) {
         $this->idGet = $pid;
         $this->query = $pquery;
-    }    
+        $this->n = $pn;
+    }
     
     public function InitializeContent () 
     {
@@ -318,7 +322,7 @@ class PageAllBooksLetter extends Page
     public function InitializeContent () 
     {
         $this->title = str_format (localize ("splitByLetter.letter"), localize ("bookword.title"), $this->idGet);
-        $this->entryArray = Book::getBooksByStartingLetter ($this->idGet);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByStartingLetter ($this->idGet, $this->n);
         $this->idPage = Book::getEntryIdByLetter ($this->idGet);
     }
 }
@@ -373,6 +377,28 @@ abstract class Base
             }
         }
         return self::$db;
-    }    
+    }
+    
+    public static function executeQuery($query, $columns, $params, $n) {
+        global $config;
+        $totalResult = -1;
+        
+        if ($config['cops_max_item_per_page'] != -1)
+        {
+            // First check total number of results
+            $result = self::getDb ()->prepare (str_format ($query, "count(*)"));
+            $result->execute ($params);
+            $totalResult = $result->fetchColumn ();
+            
+            // Next modify the query and params
+            $query .= " limit ?, ?";
+            array_push ($params, ($n - 1) * $config['cops_max_item_per_page'], $config['cops_max_item_per_page']);
+        }
+        
+        $result = self::getDb ()->prepare(str_format ($query, $columns));
+        $result->execute ($params);
+        return array ($totalResult, $result);
+    }
+
 }
 ?>
