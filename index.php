@@ -18,8 +18,9 @@
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $qid = getURLParam ("id");
+    $n = getURLParam ("n", "1");
     
-    $currentPage = Page::getPage ($page, $qid, $query);
+    $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent (); 
 
 /* Test to see if pages are opened on an Eink screen 
