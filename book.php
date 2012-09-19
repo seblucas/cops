@@ -18,6 +18,8 @@ class Book extends Base {
     const ALL_RECENT_BOOKS_ID = "calibre:recentbooks";
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover";
     
+    const SQL_BOOKS_BY_FIRST_LETTER = "select {0} from books left outer join comments on book = books.id where upper (books.sort) like ?";
+    
     public $id;
     public $title;
     public $timestamp;
@@ -364,9 +366,11 @@ order by substr (upper (sort), 1, 1)");
     }
     
     public static function getBooksByStartingLetter($letter, $n) {
-        list ($totalNumber, $result) = parent::executeQuery ('select {0} 
-from books left outer join comments on book = books.id
-where upper (books.sort) like ?', self::BOOK_COLUMNS, array ($letter . "%"), $n);
+        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
+    }
+    
+    public static function getEntryArray ($query, $params, $n) {
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, $params, $n);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
