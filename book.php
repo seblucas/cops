@@ -19,6 +19,10 @@ class Book extends Base {
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover";
     
     const SQL_BOOKS_BY_FIRST_LETTER = "select {0} from books left outer join comments on book = books.id where upper (books.sort) like ?";
+    const SQL_BOOKS_BY_AUTHOR = "select {0} from books_authors_link, books left outer join comments on comments.book = books.id where books_authors_link.book = books.id and author = ? order by pubdate";
+    const SQL_BOOKS_BY_SERIE = "select {0} from books_series_link, books left outer join comments on comments.book = books.id where books_series_link.book = books.id and series = ? order by series_index";
+    const SQL_BOOKS_BY_TAG = "select {0} from books_tags_link, books left outer join comments on comments.book = books.id where books_tags_link.book = books.id and tag = ? order by sort";
+    const SQL_BOOKS_QUERY = "select {0} from books left outer join comments on book = books.id where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?";
     
     public $id;
     public $title;
@@ -259,51 +263,17 @@ class Book extends Base {
         return $result;
     }
         
-    public static function getBooksByAuthor($authorId) {
-        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
-from books_authors_link, books left outer join comments on comments.book = books.id
-where books_authors_link.book = books.id
-and author = ?
-order by pubdate');
-        $entryArray = array();
-        $result->execute (array ($authorId));
-        while ($post = $result->fetchObject ())
-        {
-            $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
-        }
-        return $entryArray;
+    public static function getBooksByAuthor($authorId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR, array ($authorId), $n);
     }
 
     
-    public static function getBooksBySeries($serieId) {
-        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
-from books_series_link, books left outer join comments on comments.book = books.id
-where books_series_link.book = books.id and series = ?
-order by series_index');
-        $entryArray = array();
-        $result->execute (array ($serieId));
-        while ($post = $result->fetchObject ())
-        {
-            $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
-        }
-        return $entryArray;
+    public static function getBooksBySeries($serieId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_SERIE, array ($serieId), $n);
     }
     
-    public static function getBooksByTag($tagId) {
-        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
-from books_tags_link, books left outer join comments on comments.book = books.id
-where books_tags_link.book = books.id and tag = ?
-order by sort');
-        $entryArray = array();
-        $result->execute (array ($tagId));
-        while ($post = $result->fetchObject ())
-        {
-            $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
-        }
-        return $entryArray;
+    public static function getBooksByTag($tagId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_TAG, array ($tagId), $n);
     }
     
     public static function getBookById($bookId) {
@@ -334,20 +304,8 @@ where data.book = books.id and data.id = ?');
         return NULL;
     }
     
-    public static function getBooksByQuery($query) {
-        $result = parent::getDb ()->prepare("select " . self::BOOK_COLUMNS . "
-from books left outer join comments on book = books.id
-where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?)
-or title like ?");
-        $entryArray = array();
-        $queryLike = "%" . $query . "%";
-        $result->execute (array ($queryLike, $queryLike));
-        while ($post = $result->fetchObject ())
-        {
-            $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
-        }
-        return $entryArray;
+    public static function getBooksByQuery($query, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n);
     }
     
     public static function getAllBooks() {

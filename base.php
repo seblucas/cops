@@ -261,7 +261,7 @@ class PageAuthorDetail extends Page
         $author = Author::getAuthorById ($this->idGet);
         $this->idPage = $author->getEntryId ();
         $this->title = $author->name;
-        $this->entryArray = Book::getBooksByAuthor ($this->idGet);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
     }
 }
 
@@ -282,7 +282,7 @@ class PageTagDetail extends Page
         $tag = Tag::getTagById ($this->idGet);
         $this->idPage = $tag->getEntryId ();
         $this->title = $tag->name;
-        $this->entryArray = Book::getBooksByTag ($this->idGet);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByTag ($this->idGet, $this->n);
     }
 }
 
@@ -302,7 +302,7 @@ class PageSerieDetail extends Page
     {
         $serie = Serie::getSerieById ($this->idGet);
         $this->title = $serie->name;
-        $this->entryArray = Book::getBooksBySeries ($this->idGet);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksBySeries ($this->idGet, $this->n);
         $this->idPage = $serie->getEntryId ();
     }
 }
@@ -342,7 +342,7 @@ class PageQueryResult extends Page
     public function InitializeContent () 
     {
         $this->title = "Search result for query *" . $this->query . "*"; // TODO I18N
-        $this->entryArray = Book::getBooksByQuery ($this->query);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
     }
 }
 
