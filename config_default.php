@@ -101,7 +101,7 @@
     /*
      * Max number of items per page
      */
-    $config['cops_max_item_per_page'] = "2"; 
+    $config['cops_max_item_per_page'] = "-1"; 
 
      
 ?>
