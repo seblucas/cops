@@ -50,7 +50,7 @@
     <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.0.6"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.0.6" media="screen" />
