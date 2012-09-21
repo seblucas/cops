@@ -242,6 +242,12 @@ class Page
         $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
     
+    public function isPaginated ()
+    {
+        global $config;
+        return ($config['cops_max_item_per_page'] != -1 && $this->totalNumber != -1);
+    }
+    
     public function getNextLink ()
     {
         global $config;

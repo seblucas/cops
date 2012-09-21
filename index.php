@@ -219,7 +219,7 @@
         ?>
     </div>
 <?php
-    if ($config['cops_max_item_per_page'] != -1 && $currentPage->totalNumber != -1) {
+    if ($currentPage->isPaginated ()) {
         $prevLink = $currentPage->getPrevLink ();
         $nextLink = $currentPage->getNextLink ();
 ?> 

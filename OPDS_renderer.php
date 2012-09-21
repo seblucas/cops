@@ -202,7 +202,7 @@ class OPDSRenderer
     public function render ($page) {
         global $config;
         self::startXmlDocument ($page->title, $page->idPage);
-        if ($config['cops_max_item_per_page'] != -1 && $page->totalNumber != -1)
+        if ($page->isPaginated ())
         {
             self::getXmlStream ()->startElement ("opensearch:totalResults");
                 self::getXmlStream ()->text ($page->totalNumber);
@@ -213,13 +213,13 @@ class OPDSRenderer
             self::getXmlStream ()->startElement ("opensearch:startIndex");
                 self::getXmlStream ()->text (($page->n - 1) * $config['cops_max_item_per_page'] + 1);
             self::getXmlStream ()->endElement ();
-            $currentUrl = $_SERVER['QUERY_STRING'];
-            $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
-            if ($page->n > 1) {
-                self::renderLink (new LinkNavigation ($currentUrl . "&n=" . ($page->n - 1), "previous", "Page precedente"));
+            $prevLink = $page->getPrevLink ();
+            $nextLink = $page->getNextLink ();
+            if (!is_null ($prevLink)) {
+                self::renderLink ($prevLink);
             }
-            if (($page->n + 1) * $config['cops_max_item_per_page'] < $page->totalNumber) {
-                self::renderLink (new LinkNavigation ($currentUrl . "&n=" . ($page->n + 1), "next", "Page suivante"));
+            if (!is_null ($nextLink)) {
+                self::renderLink ($nextLink);
             }
         }
         foreach ($page->entryArray as $entry) {
