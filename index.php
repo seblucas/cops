@@ -218,6 +218,30 @@
             }
         ?>
     </div>
+<?php
+    if ($config['cops_max_item_per_page'] != -1 && $currentPage->totalNumber != -1) {
+        $prevLink = $currentPage->getPrevLink ();
+        $nextLink = $currentPage->getNextLink ();
+?> 
+    <div>
+        <?php
+            if (!is_null ($prevLink)) {
+        ?>
+        <a href="<?php echo $prevLink->hrefXhtml () ?>" >Prev</a>
+        <?php
+            }
+        ?>
+        <?php
+            if (!is_null ($nextLink)) {
+        ?>
+        <a href="<?php echo $nextLink->hrefXhtml () ?>" >Next</a>
+        <?php
+            }
+        ?>
+    </div>
+<?php
+    }
+?>
 </div>
 </body>
 </html>

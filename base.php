@@ -241,6 +241,28 @@ class Page
         array_push ($this->entryArray, Tag::getCount());
         $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
+    
+    public function getNextLink ()
+    {
+        global $config;
+        $currentUrl = $_SERVER['QUERY_STRING'];
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        if (($this->n) * $config['cops_max_item_per_page'] < $this->totalNumber) {
+            return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", "Page suivante");
+        }
+        return NULL;
+    }
+    
+    public function getPrevLink ()
+    {
+        global $config;
+        $currentUrl = $_SERVER['QUERY_STRING'];
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        if ($this->n > 1) {
+            return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", "Page precedente");
+        }
+        return NULL;
+    }
 
 }
 
