@@ -280,7 +280,6 @@ class Book extends Base {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
 from books left outer join comments on book = books.id
 where books.id = ?');
-        $entryArray = array();
         $result->execute (array ($bookId));
         while ($post = $result->fetchObject ())
         {
@@ -294,7 +293,6 @@ where books.id = ?');
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
 from data, books left outer join comments on comments.book = books.id
 where data.book = books.id and data.id = ?');
-        $entryArray = array();
         $result->execute (array ($dataId));
         while ($post = $result->fetchObject ())
         {
