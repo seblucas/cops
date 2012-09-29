@@ -200,6 +200,8 @@ class Page
         switch ($pageId) {
             case Base::PAGE_ALL_AUTHORS :
                 return new PageAllAuthors ($id, $query, $n);
+            case Base::PAGE_AUTHORS_FIRST_LETTER :
+                return new PageAllAuthorsLetter ($id, $query, $n);
             case Base::PAGE_AUTHOR_DETAIL :
                 return new PageAuthorDetail ($id, $query, $n);
             case Base::PAGE_ALL_TAGS :
@@ -276,9 +278,27 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent () 
     {
+        global $config;
+        
         $this->title = localize("authors.title");
-        $this->entryArray = Author::getAllAuthors();
+        if ($config['cops_author_split_first_letter'] == 1) {
+            $this->entryArray = Author::getAllAuthorsByFirstLetter();
+        }
+        else {
+            $this->entryArray = Author::getAllAuthors();
+        }
         $this->idPage = Author::ALL_AUTHORS_ID;
+    }
+}
+
+class PageAllAuthorsLetter extends Page
+{
+    public function InitializeContent () 
+    {
+        global $config;
+        
+        $this->idPage = Author::getEntryIdByLetter ($this->idGet);
+        $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
     }
 }
 

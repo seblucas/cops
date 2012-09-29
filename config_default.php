@@ -100,8 +100,14 @@
     
     /*
      * Max number of items per page
+     * -1 unlimited
      */
     $config['cops_max_item_per_page'] = "-1"; 
 
-     
+    /*
+     * split authors by first letter
+     * 1 : Yes
+     * 0 : No
+     */
+    $config['cops_author_split_first_letter'] = "1";  
 ?>

@@ -27,7 +27,10 @@ class Author extends Base {
     public function getEntryId () {
         return self::ALL_AUTHORS_ID.":".$this->id;
     }
-
+    
+    public static function getEntryIdByLetter ($startingLetter) {
+        return self::ALL_AUTHORS_ID.":letter:".$startingLetter;
+    }
 
     public static function getCount() {
         $nAuthors = parent::getDb ()->query('select count(*) from authors')->fetchColumn();
@@ -35,6 +38,39 @@ class Author extends Base {
             str_format (localize("authors.alphabetical"), $nAuthors), "text", 
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));
         return $entry;
+    }
+    
+    public static function getAllAuthorsByFirstLetter() {
+        $result = parent::getDb ()->query('select substr (upper (sort), 1, 1) as title, count(*) as count
+from authors
+group by substr (upper (sort), 1, 1)
+order by substr (upper (sort), 1, 1)');
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title), 
+                str_format (localize("authorword.many"), $post->count), "text", 
+                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=".$post->title))));
+        }
+        return $entryArray;
+    }
+    
+    public static function getAuthorsByStartingLetter($letter) {
+        $result = parent::getDb ()->prepare('select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count
+from authors, books_authors_link
+where author = authors.id and upper (authors.sort) like ?
+group by authors.id, authors.name, authors.sort
+order by sort');
+        $entryArray = array();
+        $result->execute (array ($letter . "%"));
+        while ($post = $result->fetchObject ())
+        {
+            $author = new Author ($post->id, $post->sort);
+            array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (), 
+                str_format (localize("bookword.many"), $post->count), "text", 
+                array ( new LinkNavigation ($author->getUri ()))));
+        }
+        return $entryArray;
     }
     
     public static function getAllAuthors() {
