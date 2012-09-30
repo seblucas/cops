@@ -11,6 +11,10 @@ require_once('base.php');
 class Author extends Base {
     const ALL_AUTHORS_ID = "calibre:authors";
     
+    const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
+    const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
+    
     public $id;
     public $name;
     public $sort;
@@ -56,29 +60,15 @@ order by substr (upper (sort), 1, 1)');
     }
     
     public static function getAuthorsByStartingLetter($letter) {
-        $result = parent::getDb ()->prepare('select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count
-from authors, books_authors_link
-where author = authors.id and upper (authors.sort) like ?
-group by authors.id, authors.name, authors.sort
-order by sort');
-        $entryArray = array();
-        $result->execute (array ($letter . "%"));
-        while ($post = $result->fetchObject ())
-        {
-            $author = new Author ($post->id, $post->sort);
-            array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (), 
-                str_format (localize("bookword.many"), $post->count), "text", 
-                array ( new LinkNavigation ($author->getUri ()))));
-        }
-        return $entryArray;
+        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER, array ($letter . "%"));
     }
     
     public static function getAllAuthors() {
-        $result = parent::getDb ()->query('select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count
-from authors, books_authors_link
-where author = authors.id
-group by authors.id, authors.name, authors.sort
-order by sort');
+        return self::getEntryArray (self::SQL_ALL_AUTHORS, array ());
+    }
+    
+    public static function getEntryArray ($query, $params) {
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

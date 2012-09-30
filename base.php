@@ -431,7 +431,7 @@ abstract class Base
         global $config;
         $totalResult = -1;
         
-        if ($config['cops_max_item_per_page'] != -1)
+        if ($config['cops_max_item_per_page'] != -1 && $n != -1)
         {
             // First check total number of results
             $result = self::getDb ()->prepare (str_format ($query, "count(*)"));
