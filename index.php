@@ -52,7 +52,7 @@
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.1.0"></script>
+    <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.0"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.0" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
