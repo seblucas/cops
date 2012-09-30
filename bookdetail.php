@@ -78,6 +78,6 @@ $book->getLinkArray ();
     <div class="clearer" />
     <hr />
     <div><?php echo localize("content.summary") ?></div>
-    <div class="content"><?php echo $book->getComment (false) ?></div>
+    <div class="content" style="max-width:700px;"><?php echo $book->getComment (false) ?></div>
     <hr />
 </div>

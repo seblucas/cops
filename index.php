@@ -52,9 +52,9 @@
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
-    <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.0.6"></script>
+    <script type="text/javascript" src="fancybox/jquery.fancybox.js?v=2.1.0"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.0.6" media="screen" />
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.0" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
     <script type="text/javascript">
         $(document).ready(function() {
@@ -79,8 +79,8 @@
             $(".fancycover").fancybox({
                 'type' : 'image',
                 prevEffect		: 'none',
-                nextEffect		: 'none',
-                <?php if ($isEink) echo "openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+                nextEffect		: 'none'
+                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
             $("#searchImage").click(function(){
@@ -95,9 +95,9 @@
                 var url = $(this).find("a").attr("href");
                 $('#content').load(url, function(data, stat, req){
                     $.fancybox( {
-                        content: data, 
-                        maxWidth : '700',
-                        <?php if ($isEink) echo "margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+                        content: data,
+                        autoSize: true
+                        <?php if ($isEink) echo ", margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
                     } );
                 });
 
