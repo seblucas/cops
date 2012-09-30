@@ -316,7 +316,7 @@ order by substr (upper (sort), 1, 1)");
         {
             array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
                 str_format (localize("bookword.many"), $post->count), "text", 
-                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=".$post->title))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
     }

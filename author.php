@@ -54,7 +54,7 @@ order by substr (upper (sort), 1, 1)');
         {
             array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title), 
                 str_format (localize("authorword.many"), $post->count), "text", 
-                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=".$post->title))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
     }
