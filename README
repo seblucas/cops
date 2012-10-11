@@ -96,10 +96,13 @@ application/epub+zip epub;
 = Notes on Opensearch =
 
 Opensearch allow searching through an OPDS catalog. After many tests, I've been 
-able to make it work with FBReader and Mantano Reader.
+able to make it work Mantano Reader.
 
 It seems that Aldiko didn't implement it properly so it won't work with COPS or
 any other custom OPDS catalog.
+
+FBReader and Moon+ Reader will only work if you change the default 
+configuration (cops_generate_invalid_opds_stream).
 
 = URL rewriting =
 
