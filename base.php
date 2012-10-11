@@ -247,7 +247,9 @@ class Page
     public function isPaginated ()
     {
         global $config;
-        return ($config['cops_max_item_per_page'] != -1 && $this->totalNumber != -1);
+        return ($config['cops_max_item_per_page'] != -1 && 
+                $this->totalNumber != -1 && 
+                $this->totalNumber > $config['cops_max_item_per_page']);
     }
     
     public function getNextLink ()
@@ -270,6 +272,12 @@ class Page
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", "Page precedente");
         }
         return NULL;
+    }
+    
+    public function getMaxPage ()
+    {
+        global $config;
+        return ceil ($this->totalNumber / $config['cops_max_item_per_page']);
     }
 
 }

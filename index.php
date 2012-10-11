@@ -223,21 +223,24 @@
         $prevLink = $currentPage->getPrevLink ();
         $nextLink = $currentPage->getNextLink ();
 ?> 
-    <div>
+    <div class="foot">
+        <div class="footcenter">
         <?php
             if (!is_null ($prevLink)) {
         ?>
-        <a href="<?php echo $prevLink->hrefXhtml () ?>" >Prev</a>
+        <a href="<?php echo $prevLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/previous.png") ?>" alt="Previous" /></a>
         <?php
             }
         ?>
+        <p><?php echo "&nbsp;" . $currentPage->n . " / " . $currentPage->getMaxPage () . "&nbsp;" ?></p>
         <?php
             if (!is_null ($nextLink)) {
         ?>
-        <a href="<?php echo $nextLink->hrefXhtml () ?>" >Next</a>
+        <a href="<?php echo $nextLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/next.png") ?>" alt="Next" /></a>
         <?php
             }
         ?>
+        </div>
     </div>
 <?php
     }
