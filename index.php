@@ -104,6 +104,26 @@
                 return false;
             });
         });
+
+<?php
+    if ($currentPage->isPaginated ()) {
+        $prevLink = $currentPage->getPrevLink ();
+        $nextLink = $currentPage->getNextLink ();
+?>
+        $(document).keydown(function(e){
+<?php
+        if (!is_null ($prevLink)) {
+            echo "if (e.keyCode == 37) {\$(location).attr('href','" . $prevLink->hrefXhtml () . "');}"; 
+        }
+        if (!is_null ($nextLink)) {
+            echo "if (e.keyCode == 39) {\$(location).attr('href','" . $nextLink->hrefXhtml () . "');}"; 
+        }
+
+?>
+        });
+<?php
+    }
+?> 
     </script>
 </head>
 <body>
@@ -220,8 +240,6 @@
     </div>
 <?php
     if ($currentPage->isPaginated ()) {
-        $prevLink = $currentPage->getPrevLink ();
-        $nextLink = $currentPage->getNextLink ();
 ?> 
     <div class="foot">
         <div class="footcenter">
