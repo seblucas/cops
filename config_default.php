@@ -37,7 +37,7 @@
     $config['cops_recentbooks_limit'] = '50'; 
     
     /*
-     * The internal directory set in nginx config file
+     * Catalog's title
      */
     $config['cops_title_default'] = "Sebastien's COPS"; 
 
