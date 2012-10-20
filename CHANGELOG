@@ -1,3 +1,11 @@
+0.2.2 - 20121020
+  * Changed JQuery URL to https (thanks to Dan Greve for the patch)
+  * Added paging to both OPDS and HTML catalog (use new config item cops_max_item_per_page)
+  * lots of code refactoring
+  * Authors are now splitted by first letter, this is the new default. You can go back to the old way with the config item cops_author_split_first_letter (reported by Northguy)
+  * Fix the link to books starting by special characters (reported by vinpel)
+  * Upgrade to Fancyapps 2.1.0. I had to adapt the CSS so maybe it'll display better in PRS-T1
+
 0.2.1 - 20120916
   * Fix one last error (hopefully) in link generation (thanks to gaspine)
   * Add Sony PRS-T1 to the list of E-Ink device (thanks to Northguy)
