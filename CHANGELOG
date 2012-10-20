@@ -5,6 +5,7 @@
   * Authors are now splitted by first letter, this is the new default. You can go back to the old way with the config item cops_author_split_first_letter (reported by Northguy)
   * Fix the link to books starting by special characters (reported by vinpel)
   * Upgrade to Fancyapps 2.1.0. I had to adapt the CSS so maybe it'll display better in PRS-T1
+  * Add an about box on the HTML catalog which show the current version
 
 0.2.1 - 20120916
   * Fix one last error (hopefully) in link generation (thanks to gaspine)
