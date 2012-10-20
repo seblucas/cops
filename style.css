@@ -50,6 +50,13 @@ float:right;
 height:64px;
 }
 
+.footright
+{
+float:right;
+height:32px;
+}
+
+
 .headcenter
 {
 margin:auto;

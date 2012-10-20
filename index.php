@@ -83,6 +83,14 @@
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
+            $(".fancyabout").fancybox({
+                'type' : 'ajax',
+                title           : 'COPS <?php echo VERSION ?>',
+                prevEffect		: 'none',
+                nextEffect		: 'none'
+                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+            });
+            
             $("#searchImage").click(function(){
                 if ($("#search").is(":hidden")) {
                     $("#search").slideDown("slow");
@@ -238,10 +246,14 @@
             }
         ?>
     </div>
+    <div class="foot">
+        <div class="footright">
+            <a class="fancyabout" href="about.xml"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
+        </div>
 <?php
     if ($currentPage->isPaginated ()) {
 ?> 
-    <div class="foot">
+
         <div class="footcenter">
         <?php
             if (!is_null ($prevLink)) {
@@ -259,10 +271,10 @@
             }
         ?>
         </div>
-    </div>
 <?php
     }
 ?>
+    </div>
 </div>
 </body>
 </html>

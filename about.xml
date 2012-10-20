@@ -1,0 +1,20 @@
+﻿<div class="entryTitle">Authors</div>
+<div class="content" style="max-width:700px;">
+<p>COPS is developped and maintained by Sébastien Lucas.</p>
+
+<p>See full history on <a href="https://github.com/seblucas">Github</a> to check all authors.</p>
+
+<p>COPS use some external librairies, check README for the details.</p>
+</div>
+<div class="entryTitle">Copyright</div>
+<div class="content" style="max-width:700px;">
+<p>This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License version 2 as published by the Free Software Foundation.</p>
+
+<p>The complete content of license is provided in file COPYING within distribution and also available <a href="http://www.gnu.org/licenses/gpl-2.0.html">online</a>.</p>
+</div>
+<div class="entryTitle">Contact</div>
+<div class="content" style="max-width:700px;">
+<p>For more info please visit <a href="http://blog.slucas.fr/en/oss/calibre-opds-php-server">COPS Home Page</a></p>
+
+<p>You can also check <a href="http://www.mobileread.com/forums/showthread.php?t=170903">COPS's topic on MobileRead forum</a>.</p>
+</div>
