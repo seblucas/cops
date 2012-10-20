@@ -146,7 +146,12 @@ It also seems to work with Stanza.
  * All localization informations come from Calibre2OPDS (http://calibre2opds.com/)
  * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
+ * All icons come from the package Web0 by naf1971 : http://naf1971.deviantart.com/art/Web0-182067054
  * All testers
+ 
+External libraries used : 
+ * JQuery : http://jquery.com/
+ * Fancyapps : http://fancyapps.com/fancybox/
 
 = Copyright & License =
 
