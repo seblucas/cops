@@ -1,0 +1,6 @@
+<Files fetch.php>
+	XSendFile on
+</Files>
+
+RewriteEngine on
+RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
