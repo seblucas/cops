@@ -69,6 +69,10 @@ class Data extends Base {
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
     }
     
+    public function getLocalPath () {
+        return $this->book->path . "/" . $this->getFilename ();
+    }
+    
     public function getHtmlLink () {
         global $config;
         
