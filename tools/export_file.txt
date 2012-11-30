@@ -37,7 +37,7 @@ Sub Export_File(sType, iCol As Integer)
             iBlankLines = iBlankLines + 1
         Else
             iBlankLines = 0
-            If Not isComment(sTemp) And Not sTemp Like "config*" And Not sTemp Like "gui*" And Not sTemp Like "error*" And Not sTemp Like "info*" And Not sTemp Like "stats*" Then
+            If Not isComment(sTemp) And (Not (sTemp Like "config*") Or sTemp Like "config.Language*") And Not sTemp Like "gui*" And Not sTemp Like "error*" And Not sTemp Like "info*" And Not sTemp Like "stats*" Then
                 sOut = """" & sTemp & """" & ":"
 '                Print #oFile, "=";
                 sTemp = shSheet.Cells(iRow, iCol).Value
