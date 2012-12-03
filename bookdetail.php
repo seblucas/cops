@@ -74,6 +74,10 @@ $book->getLinkArray ();
 <?php
         }
 ?>
+        <div class="entrySection">
+            <span><?php echo localize("config.Language.label") ?></span>
+            <?php echo $book->getLanguages () ?>
+        </div>
     </div>
     <div class="clearer" />
     <hr />

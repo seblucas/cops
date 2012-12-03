@@ -95,6 +95,21 @@ class Book extends Base {
         return $this->serie;
     }
     
+    public function getLanguages () {
+        $lang = array ();
+        $result = parent::getDb ()->prepare('select languages.lang_code
+                from books_languages_link, languages
+                where books_languages_link.lang_code = languages.id
+                and book = ?
+                order by item_order');
+        $result->execute (array ($this->id));
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($lang, $post->lang_code);
+        }
+        return implode (", ", $lang);
+    }
+    
     public function getTags () {
         if (is_null ($this->tags)) {
             $this->tags = array ();
