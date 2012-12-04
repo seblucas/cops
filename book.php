@@ -12,37 +12,36 @@ require_once('author.php');
 require_once('tag.php');
 require_once('data.php');
 
+// Silly thing because PHP forbid string concatenation in class const
+define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
+                                left outer join books_ratings_link on books_ratings_link.book = books.id 
+                                left outer join ratings on books_ratings_link.rating = ratings.id ");
+define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where upper (books.sort) like ?");
+define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_authors_link.book = books.id and author = ? order by pubdate");
+define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_series_link.book = books.id and series = ? order by series_index");
+define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_tags_link.book = books.id and tag = ? order by sort");
+define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?");
+define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    order by timestamp desc limit ");
+
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "calibre:books";
     const ALL_RECENT_BOOKS_ID = "calibre:recentbooks";
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
     
-    const SQL_BOOKS_BY_FIRST_LETTER = "select {0} from books 
-                                                    left outer join comments on comments.book = books.id 
-                                                    left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                                    left outer join ratings on books_ratings_link.rating = ratings.id
-                                                    where upper (books.sort) like ?";
-    const SQL_BOOKS_BY_AUTHOR = "select {0} from books_authors_link, books 
-                                                    left outer join comments on comments.book = books.id 
-                                                    left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                                    left outer join ratings on books_ratings_link.rating = ratings.id
-                                                    where books_authors_link.book = books.id and author = ? order by pubdate";
-    const SQL_BOOKS_BY_SERIE = "select {0} from books_series_link, books 
-                                                    left outer join comments on comments.book = books.id 
-                                                    left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                                    left outer join ratings on books_ratings_link.rating = ratings.id
-                                                    where books_series_link.book = books.id and series = ? order by series_index";
-    const SQL_BOOKS_BY_TAG = "select {0} from books_tags_link, books 
-                                                    left outer join comments on comments.book = books.id 
-                                                    left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                                    left outer join ratings on books_ratings_link.rating = ratings.id
-                                                    where books_tags_link.book = books.id and tag = ? order by sort";
-    const SQL_BOOKS_QUERY = "select {0} from books 
-                                                    left outer join comments on comments.book = books.id 
-                                                    left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                                    left outer join ratings on books_ratings_link.rating = ratings.id
-                                                    where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?";
+    const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
+    const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
+    const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
+    const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
+    const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
+    const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
+    const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     
     public $id;
     public $title;
@@ -329,10 +328,7 @@ class Book extends Base {
     
     public static function getBookById($bookId) {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
-from books 
-left outer join comments on comments.book = books.id
-left outer join books_ratings_link on books_ratings_link.book = books.id 
-left outer join ratings on books_ratings_link.rating = ratings.id
+from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute (array ($bookId));
         while ($post = $result->fetchObject ())
@@ -345,10 +341,7 @@ where books.id = ?');
     
     public static function getBookByDataId($dataId) {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
-from data, books 
-left outer join comments on comments.book = books.id
-left outer join books_ratings_link on books_ratings_link.book = books.id 
-left outer join ratings on books_ratings_link.rating = ratings.id
+from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
         $result->execute (array ($dataId));
         while ($post = $result->fetchObject ())
@@ -396,18 +389,7 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllRecentBooks() {
         global $config;
-        $result = parent::getDb ()->query("select " . self::BOOK_COLUMNS . "
-from books 
-left outer join comments on comments.book = books.id 
-left outer join books_ratings_link on books_ratings_link.book = books.id 
-left outer join ratings on books_ratings_link.rating = ratings.id
-order by timestamp desc limit " . $config['cops_recentbooks_limit']);
-        $entryArray = array();
-        while ($post = $result->fetchObject ())
-        {
-            $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
-        }
+        list ($entryArray, $totalNumber) = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
         return $entryArray;
     }
 
