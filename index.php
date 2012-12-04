@@ -225,7 +225,7 @@
             </div>
             <div class="bookdetail">
                 <a class="navigation" href="bookdetail.php?id=<?php echo $entry->book->id ?>" />
-                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?> <span class="sp">(<?php echo date ('Y', $entry->book->pubdate) ?>)</span></div>
+                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?> <span class="sp">(<?php echo date ('Y', $entry->book->pubdate) ?>)</span> <span class="sr"><?php echo $entry->book->getRating () ?></span></div>
                 <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
                 <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
             <?php

@@ -34,6 +34,7 @@ class Book extends Base {
     public $relativePath;
     public $seriesIndex;
     public $comment;
+    public $rating;
     public $datas = NULL;
     public $authors = NULL;
     public $serie = NULL;
@@ -157,6 +158,20 @@ class Book extends Base {
             }
         }
         return $tagList;
+    }
+    
+    public function getRating () {
+        if (is_null ($this->rating) || $this->rating == 0) {
+            return "";
+        }
+        $retour = "";
+        for ($i = 0; $i < $this->rating / 2; $i++) {
+            $retour .= "&#9733;";
+        }
+        for ($i = 0; $i < 5 - $this->rating / 2; $i++) {
+            $retour .= "&#9734;";
+        }
+        return $retour;
     }
     
     public function getComment ($withSerie = true) {
@@ -354,13 +369,17 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllRecentBooks() {
         global $config;
-        $result = parent::getDb ()->query("select " . self::BOOK_COLUMNS . "
-from books left outer join comments on book = books.id
+        $result = parent::getDb ()->query("select " . self::BOOK_COLUMNS . ", ratings.rating
+from books 
+left outer join comments on comments.book = books.id 
+left outer join books_ratings_link on books_ratings_link.book = books.id 
+left outer join ratings on books_ratings_link.rating = ratings.id
 order by timestamp desc limit " . $config['cops_recentbooks_limit']);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post);
+            $book->rating = $post->rating;
             array_push ($entryArray, $book->getEntry ());
         }
         return $entryArray;
