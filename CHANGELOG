@@ -1,8 +1,8 @@
-0.2.3 -
-  * Add a .htaccess to mkae it easier to use with Apache
-  * Fix download of books. Reported by jillmess
+0.2.3 - 20121205
+  * Add a .htaccess to make it easier to use with Apache
+  * Fix a typo in book download. Reported by jillmess
   * Update localization (thanks to Calibre2Opds)
-  * Add some missing information from Calibre (language, rating, publisher). Reported by mcister
+  * Add some missing information from Calibre (language, rating for now). Reported by mcister
   * Upgrade Fancybox to 2.1.3
   
 
