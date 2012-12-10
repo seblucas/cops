@@ -2,5 +2,21 @@
 	XSendFile on
 </Files>
 
+###########################################
+# If the notation above don't work, you can try that one
+# Disclaimer : I'm no apache expert it can be bad security wise :(
+###########################################
+#XSendFile On
+#XSendFileAllowAbove on
+
 RewriteEngine on
 RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
+
+###########################################
+# Uncomment if you wish to protect acces with a password
+###########################################
+#AuthUserFile /path/to/file
+#AuthGroupFile /dev/null
+#AuthName "Acces securise"
+#AuthType Basic
+#Require valid-user
