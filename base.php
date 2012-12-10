@@ -220,7 +220,8 @@ class Page
                 return new PageSerieDetail ($id, $query, $n);
             case Base::PAGE_OPENSEARCH_QUERY :
                 return new PageQueryResult ($id, $query, $n);
-                break;
+            case Base::PAGE_BOOK_DETAIL :
+                return new PageBookDetail ($id, $query, $n);
             default:
                 $page = new Page ($id, $query, $n);
                 $page->idPage = "cops:catalog";
@@ -402,6 +403,14 @@ class PageQueryResult extends Page
     }
 }
 
+class PageBookDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "Book";
+    }
+}
+
 abstract class Base
 {
     const PAGE_INDEX = "index";
@@ -417,6 +426,7 @@ abstract class Base
     const PAGE_ALL_RECENT_BOOKS = "10";
     const PAGE_ALL_TAGS = "11";
     const PAGE_TAG_DETAIL = "12";
+    const PAGE_BOOK_DETAIL = "13";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

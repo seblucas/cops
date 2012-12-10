@@ -76,12 +76,14 @@
                 $("#search").slideUp();
             });
             
+<?php if ($config['cops_use_fancyapps'] == 1) { ?>
             $(".fancycover").fancybox({
                 'type' : 'image',
                 prevEffect		: 'none',
                 nextEffect		: 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
+<?php } ?>
             
             $(".fancyabout").fancybox({
                 'type' : 'ajax',
@@ -101,6 +103,9 @@
             
             $(".bookdetail").click(function(){
                 var url = $(this).find("a").attr("href");
+<?php if ($config['cops_use_fancyapps'] == 0) { ?>
+                window.location = url;
+<?php } else { ?>
                 $('#content').load(url, function(data, stat, req){
                     $.fancybox( {
                         content: data,
@@ -108,7 +113,7 @@
                         <?php if ($isEink) echo ", margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
                     } );
                 });
-
+<?php } ?>
                 return false;
             });
         });
@@ -179,6 +184,10 @@
     <div id="content" style="display: none;"></div>
     <div class="entries">
         <?php
+            if ($page == Base::PAGE_BOOK_DETAIL)
+            {
+                include ("bookdetail.php");
+            }
             foreach ($currentPage->entryArray as $entry) {
                 if (get_class ($entry) != "EntryBook") {
         ?>
@@ -224,7 +233,7 @@
             ?>
             </div>
             <div class="bookdetail">
-                <a class="navigation" href="bookdetail.php?id=<?php echo $entry->book->id ?>" />
+                <a class="navigation" href="<?php if ($config['cops_use_fancyapps'] == 0) { echo 'index.php?page=13&amp;id=' . $entry->book->id; } else { echo 'bookdetail.php?id=' . $entry->book->id; } ?>" />
                 <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?> <span class="sp">(<?php echo date ('Y', $entry->book->pubdate) ?>)</span> <span class="sr"><?php echo $entry->book->getRating () ?></span></div>
                 <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
                 <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
