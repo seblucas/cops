@@ -7,6 +7,11 @@ margin:0px;
 background-color:lightgray;
 }
 
+body
+{
+margin-top:0px;
+}
+
 .container
 {
 margin:auto;
@@ -47,6 +52,7 @@ height:64px;
 {
 float:right;
 height:64px;
+cursor:pointer;
 }
 
 .footright
@@ -88,6 +94,7 @@ line-height: 100%;
 .clearer 
 {
 clear:both;
+display:none;
 }
 
 .entries
