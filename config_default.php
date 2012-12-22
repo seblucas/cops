@@ -39,7 +39,7 @@
     /*
      * Catalog's title
      */
-    $config['cops_title_default'] = "Sebastien's COPS"; 
+    $config['cops_title_default'] = "My library"; 
 
     /*
      * Catalog's subtitle
