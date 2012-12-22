@@ -83,6 +83,12 @@ class OPDSRenderer
             self::getXmlStream ()->startElement ("title");
                 self::getXmlStream ()->text ($page->title);
             self::getXmlStream ()->endElement ();
+            if ($page->subtitle != "")
+            {
+                self::getXmlStream ()->startElement ("subtitle");
+                    self::getXmlStream ()->text ($page->subtitle);
+                self::getXmlStream ()->endElement ();
+            }
             self::getXmlStream ()->startElement ("id");
                 if ($page->idPage)
                 {

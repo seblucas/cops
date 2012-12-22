@@ -188,6 +188,7 @@ class EntryBook extends Entry
 class Page
 {
     public $title;
+    public $subtitle = "";
     public $idPage;
     public $idGet;
     public $query;
@@ -243,6 +244,7 @@ class Page
     {
         global $config;
         $this->title = $config['cops_title_default'];
+        $this->subtitle = $config['cops_subtitle_default'];
         array_push ($this->entryArray, Author::getCount());
         array_push ($this->entryArray, Serie::getCount());
         array_push ($this->entryArray, Tag::getCount());

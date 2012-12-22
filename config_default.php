@@ -41,6 +41,10 @@
      */
     $config['cops_title_default'] = "Sebastien's COPS"; 
 
+    /*
+     * Catalog's subtitle
+     */
+    $config['cops_subtitle_default'] = ""; 
     
     /*
      * Wich header to use when downloading books outside the web directory
