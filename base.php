@@ -191,6 +191,7 @@ class Page
     public $idPage;
     public $idGet;
     public $query;
+    public $favicon;
     public $n;
     public $totalNumber = -1;
     public $entryArray = array();
@@ -230,9 +231,12 @@ class Page
     }
     
     public function __construct($pid, $pquery, $pn) {
+        global $config;
+        
         $this->idGet = $pid;
         $this->query = $pquery;
         $this->n = $pn;
+        $this->favicon = $config['cops_icon'];
     }
     
     public function InitializeContent () 

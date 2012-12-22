@@ -56,7 +56,7 @@ class OPDSRenderer
                     $xml->writeAttribute ("type", "image/x-icon");
                     $xml->writeAttribute ("width", "16");
                     $xml->writeAttribute ("height", "16");
-                    $xml->text ("favicon.ico");
+                    $xml->text ($config['cops_icon']);
                 $xml->endElement ();
                 $xml->startElement ("Url");
                     $xml->writeAttribute ("type", 'application/atom+xml');
@@ -71,7 +71,7 @@ class OPDSRenderer
         return $xml->outputMemory(true);
     }
     
-    private function startXmlDocument ($title, $idPage) {
+    private function startXmlDocument ($page) {
         global $config;
         self::getXmlStream ()->startDocument('1.0','UTF-8');
         self::getXmlStream ()->startElement ("feed");
@@ -81,12 +81,12 @@ class OPDSRenderer
             self::getXmlStream ()->writeAttribute ("xmlns:opensearch", "http://a9.com/-/spec/opensearch/1.1/");
             self::getXmlStream ()->writeAttribute ("xmlns:dcterms", "http://purl.org/dc/terms/");
             self::getXmlStream ()->startElement ("title");
-                self::getXmlStream ()->text ($title);
+                self::getXmlStream ()->text ($page->title);
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("id");
-                if ($idPage)
+                if ($page->idPage)
                 {
-                    self::getXmlStream ()->text ($idPage);
+                    self::getXmlStream ()->text ($page->idPage);
                 }
                 else
                 {
@@ -97,7 +97,7 @@ class OPDSRenderer
                 self::getXmlStream ()->text (self::getUpdatedTime ());
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("icon");
-                self::getXmlStream ()->text ("favicon.ico");
+                self::getXmlStream ()->text ($page->favicon);
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("author");
                 self::getXmlStream ()->startElement ("name");
@@ -201,7 +201,7 @@ class OPDSRenderer
     
     public function render ($page) {
         global $config;
-        self::startXmlDocument ($page->title, $page->idPage);
+        self::startXmlDocument ($page);
         if ($page->isPaginated ())
         {
             self::getXmlStream ()->startElement ("opensearch:totalResults");

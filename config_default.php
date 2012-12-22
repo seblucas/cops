@@ -59,7 +59,13 @@
      * Height of thumbnail image for HTML
      */
     $config['cops_html_thumbnail_height'] = "70";
-    
+
+    /*
+     * Icon for both OPDS and HTML catalog
+     * Note that this has to be a real icon (.ico)
+     */
+    $config['cops_icon'] = "favicon.ico";
+
     /*
      * Show icon for authors, series, tags and books on OPDS feed
      *  1 : enable
