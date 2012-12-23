@@ -202,6 +202,13 @@ class OPDSRenderer
                 self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate) . "T08:08:08Z");
             self::getXmlStream ()->endElement ();
         }
+        
+        $lang = $entry->book->getLanguages ();
+        if (!is_null ($lang)) {
+            self::getXmlStream ()->startElement ("dcterms:language");
+                self::getXmlStream ()->text ($lang);
+            self::getXmlStream ()->endElement ();
+        }
 
     }
     
