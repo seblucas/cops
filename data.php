@@ -58,7 +58,11 @@ class Data extends Base {
     }
     
     public function getMimeType () {
-        return self::$mimetypes [$this->extension];
+        if ($this->isKnownType ()) {
+            return self::$mimetypes [$this->extension];
+        } else {
+            return "application/octet-stream";
+        }
     }
     
     public function getFilename () {

@@ -166,6 +166,17 @@ class Book extends Base {
         return $this->datas;
     }
     
+    public function getDataById ($idData)
+    {
+        foreach ($this->getDatas () as $data) {
+            if ($data->id == $idData) {
+                return $data;
+            }
+        }
+        return NULL;
+    }
+
+    
     public function getTagsName () {
         $tagList = null;
         foreach ($this->getTags () as $tag) {
@@ -230,14 +241,8 @@ class Book extends Base {
         }
         else
         {
-            $result = parent::getDb ()->prepare('select format, name
-    from data where id = ?');
-            $result->execute (array ($idData));
-            
-            while ($post = $result->fetchObject ())
-            {
-                $file = $post->name . "." . strtolower ($post->format);
-            }
+            $data = $this->getDataById ($idData);
+            $file = $data->name . "." . strtolower ($data->format);
         }
 
         if ($relative)
@@ -340,13 +345,16 @@ where books.id = ?');
     }
     
     public static function getBookByDataId($dataId) {
-        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
+        $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
         $result->execute (array ($dataId));
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post);
+            $data = new Data ($post, $book);
+            $data->id = $dataId;
+            $book->datas = array ($data);
             return $book;
         }
         return NULL;
