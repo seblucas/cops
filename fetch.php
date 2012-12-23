@@ -30,7 +30,7 @@
     switch ($type)
     {
         case "jpg":
-            header("Content-type: image/jpeg");
+            header("Content-Type: image/jpeg");
             if (isset($_GET["width"]))
             {
                 $file = $book->getFilePath ($type);
@@ -83,11 +83,10 @@
             }
             break;
         default:
-            header("Content-type: " . Data::$mimetypes[$type]);
+            header("Content-Type: " . Data::$mimetypes[$type]);
             break;
     }
     $file = $book->getFilePath ($type, $idData, true);
-    header('Content-Type: ' . $book->getDataById ($idData)->getMimeType ());
     header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
     header ($config['cops_x_accel_redirect'] . ": " . $config['calibre_internal_directory'] . $file);
 ?>
