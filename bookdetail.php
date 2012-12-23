@@ -20,7 +20,13 @@ $book->getLinkArray ();
 <div class="bookpopup">
     <div class="booke">
         <div class="cover">
+            <?php
+                if ($book->hasCover) {
+            ?>
             <img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" />
+            <?php
+                }
+            ?>
         </div>
         <div class="download">
 <?php

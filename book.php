@@ -73,6 +73,10 @@ class Book extends Base {
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
+        if (!file_exists ($this->getFilePath ("jpg"))) {
+            // double check
+            $this->hasCover = 0;
+        }
         $this->rating = $line->rating;
     }
         
