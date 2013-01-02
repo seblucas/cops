@@ -101,7 +101,7 @@ able to make it work Mantano Reader.
 It seems that Aldiko didn't implement it properly so it won't work with COPS or
 any other custom OPDS catalog.
 
-FBReader and Moon+ Reader will only work if you change the default 
+Moon+ Reader will only work if you change the default 
 configuration (cops_generate_invalid_opds_stream).
 
 = URL rewriting =
@@ -155,7 +155,7 @@ External libraries used :
 
 = Copyright & License =
 
-COPS - 2012 (c) Sébastien Lucas <sebastien@slucas.fr>
+COPS - 2012-2013 (c) Sébastien Lucas <sebastien@slucas.fr>
 
 See COPYING and file headers for license info
 

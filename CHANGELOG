@@ -1,3 +1,11 @@
+0.3.0 - 
+  * Add a config item to avoid using Fancyapps (pop-ups). Reported by mcister and Northguy.
+  * Update documentation of .htaccess. Thanks to Stephane.
+  * Add a config item to specify a custom icon. Based on a patch by Tyler J. Wagner.
+  * Better handling of content type for book. Reported by Morg.
+  * Upped the size of thumbnails for OPDS. They look way better with Mantano.
+  * Add language in OPDS feed (show in Mantano for example).
+
 0.2.3 - 20121205
   * Add a .htaccess to make it easier to use with Apache
   * Fix a typo in book download. Reported by jillmess
