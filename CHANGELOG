@@ -5,6 +5,7 @@
   * Better handling of content type for book. Reported by Morg.
   * Upped the size of thumbnails for OPDS. They look way better with Mantano.
   * Add language in OPDS feed (show in Mantano for example).
+  * Update metadata on downloaded epub. Disabled by default (check config item cops_update_epub-metadata).
 
 0.2.3 - 20121205
   * Add a .htaccess to make it easier to use with Apache

@@ -11,6 +11,7 @@ require_once('serie.php');
 require_once('author.php');
 require_once('tag.php');
 require_once('data.php');
+require_once('php-epub-meta/epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
@@ -256,6 +257,36 @@ class Book extends Base {
         else
         {
             return $this->path."/".$file;
+        }
+    }
+    
+    public function getUpdatedEpub ($idData)
+    {
+        $data = $this->getDataById ($idData);
+            
+        try
+        {
+            $epub = new EPub ($data->getLocalPath ());
+            
+            $epub->Title ($this->title);
+            $authorArray = array ();
+            foreach ($this->getAuthors() as $author) {
+                $authorArray [$author->sort] = $author->name;
+            }
+            $epub->Authors ($authorArray);
+            $epub->Language ($this->getLanguages ());
+            $epub->Description ($this->getComment (false));
+            $epub->Subjects ($this->getTagsName ());
+            $se = $this->getSerie ();
+            if (!is_null ($se)) {
+                $epub->Serie ($se->name);
+                $epub->SerieIndex ($this->seriesIndex);
+            }
+            $epub->download ($data->getFilename ());
+        }
+        catch (Exception $e)
+        {
+            echo "Exception : " . $e->getMessage();
         }
     }
     

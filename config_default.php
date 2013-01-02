@@ -127,4 +127,11 @@
      * 0 : No
      */
     $config['cops_use_fancyapps'] = "1";  
+    
+    /*
+     * Update Epub metadata before download
+     * 1 : Yes (enable)
+     * 0 : No
+     */
+    $config['cops_update_epub-metadata'] = "1";  
 ?>

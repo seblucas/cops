@@ -147,11 +147,14 @@ It also seems to work with Stanza.
  * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
  * All icons come from the package Web0 by naf1971 : http://naf1971.deviantart.com/art/Web0-182067054
- * All testers
+ * Thanks to all testers
  
 External libraries used : 
  * JQuery : http://jquery.com/
  * Fancyapps : http://fancyapps.com/fancybox/
+ * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me
+                   https://github.com/seblucas/php-epub-meta
+ * TbsZip : http://www.tinybutstrong.com/apps/tbszip/tbszip_help.html
 
 = Copyright & License =
 
