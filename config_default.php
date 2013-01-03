@@ -133,5 +133,5 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_update_epub-metadata'] = "1";  
+    $config['cops_update_epub-metadata'] = "0";  
 ?>
