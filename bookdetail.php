@@ -23,7 +23,7 @@ $book->getLinkArray ();
             <?php
                 if ($book->hasCover) {
             ?>
-            <img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" />
+            <a href="fetch.php?id=<?php echo $book->id ?>"><img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" /></a>
             <?php
                 }
             ?>
@@ -38,7 +38,7 @@ $book->getLinkArray ();
             }
 ?>
         </div>
-        <div class="entryTitle"><?php echo htmlspecialchars ($book->title) ?></div>
+        <div class="entryTitle"><a rel="bookmark" href="<?php echo 'index.php' . $book->getUri () ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></div>
         <div class="entrySection">
             <span><?php echo localize("authors.title") ?></span>
             <div class="buttonEffect pad6">

@@ -413,7 +413,8 @@ class PageBookDetail extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Book";
+        $book = Book::getBookById ($this->idGet);
+        $this->title = $book->title;
     }
 }
 

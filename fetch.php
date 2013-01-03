@@ -92,7 +92,10 @@
         $book->getUpdatedEpub ($idData);
         return;
     }
-    
-    header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
+    if ($type == "jpg") {
+        header('Content-Disposition: filename="' . basename ($file) . '"');
+    } else {
+        header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
+    }
     header ($config['cops_x_accel_redirect'] . ": " . $config['calibre_internal_directory'] . $file);
 ?>

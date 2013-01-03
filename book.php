@@ -89,6 +89,19 @@ class Book extends Base {
         return self::ALL_BOOKS_ID.":letter:".$startingLetter;
     }
     
+    public function getUri () {
+        return "?page=".parent::PAGE_BOOK_DETAIL."&amp;id=$this->id";
+    }
+    
+    public function getDetailUrl () {
+        global $config;
+        if ($config['cops_use_fancyapps'] == 0) { 
+            return 'index.php' . $this->getUri (); 
+        } else { 
+            return 'bookdetail.php?id=' . $this->id; 
+        }
+    }
+    
     public function getTitle () {
         return $this->title;
     }
