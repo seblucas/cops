@@ -319,9 +319,9 @@ class PageAllAuthorsLetter extends Page
     {
         global $config;
         
-        $this->title = str_format (localize ("splitByLetter.letter"), localize ("authorword.title"), $this->idGet);
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
+        $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
     }
 }
 
@@ -392,9 +392,14 @@ class PageAllBooksLetter extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = str_format (localize ("splitByLetter.letter"), localize ("bookword.title"), $this->idGet);
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByStartingLetter ($this->idGet, $this->n);
         $this->idPage = Book::getEntryIdByLetter ($this->idGet);
+        
+        $count = $this->totalNumber;
+        if ($count == -1)
+            $count = count ($this->entryArray);
+        
+        $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("bookword", $count), $count), $this->idGet);
     }
 }
 
