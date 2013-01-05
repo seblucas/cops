@@ -421,7 +421,7 @@ order by substr (upper (sort), 1, 1)");
         while ($post = $result->fetchObject ())
         {
             array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
-                str_format (localize("bookword.many"), $post->count), "text", 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
                 array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;

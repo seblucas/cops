@@ -66,7 +66,7 @@ order by series.sort');
         {
             $serie = new Serie ($post->id, $post->sort);
             array_push ($entryArray, new Entry ($serie->name, $serie->getEntryId (), 
-                str_format (localize("bookword.many"), $post->count), "text", 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
                 array ( new LinkNavigation ($serie->getUri ()))));
         }
         return $entryArray;

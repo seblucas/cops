@@ -43,7 +43,14 @@ function str_format($format) {
  * This method is based on this page
  * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  */
-function localize($phrase) {
+function localize($phrase, $count=-1) {
+    if ($count == 0)
+        $phrase .= ".none";
+    if ($count == 1)
+        $phrase .= ".one";
+    if ($count > 1)
+        $phrase .= ".many";
+
     /* Static keyword is used to ensure the file is loaded only once */
     static $translations = NULL;
     /* If no instance of $translations has occured load the language file */
@@ -312,6 +319,7 @@ class PageAllAuthorsLetter extends Page
     {
         global $config;
         
+        $this->title = str_format (localize ("splitByLetter.letter"), localize ("authorword.title"), $this->idGet);
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
     }

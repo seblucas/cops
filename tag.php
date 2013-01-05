@@ -55,7 +55,7 @@ order by tags.name');
         {
             $tag = new Tag ($post->id, $post->name);
             array_push ($entryArray, new Entry ($tag->name, $tag->getEntryId (), 
-                str_format (localize("bookword.many"), $post->count), "text", 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
                 array ( new LinkNavigation ($tag->getUri ()))));
         }
         return $entryArray;
