@@ -439,14 +439,19 @@ abstract class Base
     
     private static $db = NULL;
     
+    public static function getDbFileName () {
+        global $config;
+        return $config['calibre_directory'] .'metadata.db';
+    }
+    
     public static function getDb () {
         global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. $config['calibre_directory'] .'metadata.db');
+                self::$db = new PDO('sqlite:'. self::getDbFileName ());
             } catch (Exception $e) {
-                echo $e;
-                die($e);
+                header("location: checkconfig.php");
+                exit();
             }
         }
         return self::$db;
