@@ -11,6 +11,14 @@
     require_once ("base.php");
     
     header ("Content-Type:application/xhtml+xml");
+    
+    $err = getURLParam ("err", -1);
+    $error = NULL;
+    switch ($err) {
+        case 1 :
+            $error = "Database error";
+            break;
+    }
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -32,6 +40,16 @@
     <div class="clearer" />
     <div id="content" style="display: none;"></div>
     <div class="entries">
+        <?php
+        if (!is_null ($error)) {
+        ?>
+        <div class="entry">
+            <div class="entryTitle">You've been redirected because COPS is not configured properly</div>
+            <div class="entryContent"><?php echo $error ?></div>
+        </div>
+        <?php
+        }
+        ?>
         <div class="entry">
             <div class="entryTitle">Check if GD is properly installed and loaded</div>
             <div class="entryContent">

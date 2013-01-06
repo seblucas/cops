@@ -463,7 +463,7 @@ abstract class Base
             try {
                 self::$db = new PDO('sqlite:'. self::getDbFileName ());
             } catch (Exception $e) {
-                header("location: checkconfig.php");
+                header("location: checkconfig.php?err=1");
                 exit();
             }
         }
