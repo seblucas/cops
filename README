@@ -25,6 +25,8 @@ So COPS's main advantages are :
  * Search is available.
  * With Dropbox / owncloud it's very easy to have an up to date OPDS server.
  * It was fun to code.
+ 
+If you want to use the OPDS feed don't forget to specify feed.php at the end of your URL.
 
 = Prerequisites =
 
