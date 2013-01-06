@@ -1,4 +1,4 @@
-0.3.0 - 
+0.3.0 - 20130106
   * Add a config item to avoid using Fancyapps (pop-ups). Reported by mcister and Northguy.
   * Update documentation of .htaccess. Thanks to Stephane.
   * Add a config item to specify a custom icon. Based on a patch by Tyler J. Wagner.
