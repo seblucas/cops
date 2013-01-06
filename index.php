@@ -214,7 +214,7 @@
             <?php
                 if ($entry->book->hasCover) {
             ?>
-                <a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="cover" /></a>
+                <a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a>
             <?php
                 }
             ?>

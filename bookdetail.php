@@ -23,7 +23,7 @@ $book->getLinkArray ();
             <?php
                 if ($book->hasCover) {
             ?>
-            <a href="fetch.php?id=<?php echo $book->id ?>"><img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="cover" /></a>
+            <a href="fetch.php?id=<?php echo $book->id ?>"><img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="<?php echo localize("i18n.coversection") ?>" /></a>
             <?php
                 }
             ?>
