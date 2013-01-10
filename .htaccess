@@ -1,6 +1,8 @@
+<IfModule mod_xsendfile.c>
 <Files fetch.php>
 	XSendFile on
 </Files>
+</IfModule>
 
 ###########################################
 # If the notation above don't work, you can try that one
