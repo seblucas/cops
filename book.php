@@ -20,15 +20,15 @@ define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = book
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ?");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_authors_link.book = books.id and author = ? order by pubdate");
+                                                    where books_authors_link.book = books.id and author = ? {1} order by pubdate");
 define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_series_link.book = books.id and series = ? order by series_index");
+                                                    where books_series_link.book = books.id and series = ? {1} order by series_index");
 define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_tags_link.book = books.id and tag = ? order by sort");
+                                                    where books_tags_link.book = books.id and tag = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?");
+                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?) {1}");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    order by timestamp desc limit ");
+                                                    where 1=1 {1} order by timestamp desc limit ");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
@@ -111,6 +111,25 @@ class Book extends Base {
             $this->authors = Author::getAuthorByBookId ($this->id);
         }
         return $this->authors;
+    }
+    
+    public function getFilterString () {
+        $filter = getURLParam ("tag", NULL);
+        if (is_null ($filter)) return "";
+        
+        $exists = true;
+        if (preg_match ("/^!(.*)$/", $filter, $matches)) {
+            $exists = false;
+            $filter = $matches[1];    
+        }
+        
+        $result = "exists (select null from books_tags_link, tags where books_tags_link.book = books.id and books_tags_link.tag = tags.id and tags.name = '" . $filter . "')";
+        
+        if (!$exists) {
+            $result = "not " . $result;
+        }
+    
+        return "and " . $result;
     }
     
     public function getAuthorsName () {
@@ -432,7 +451,7 @@ order by substr (upper (sort), 1, 1)");
     }
     
     public static function getEntryArray ($query, $params, $n) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, $params, $n);
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

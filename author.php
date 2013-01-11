@@ -68,7 +68,7 @@ order by substr (upper (sort), 1, 1)');
     }
     
     public static function getEntryArray ($query, $params) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, $params, -1);
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

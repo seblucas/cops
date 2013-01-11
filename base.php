@@ -93,12 +93,16 @@ class Link
     public $type;
     public $rel;
     public $title;
+    public $facetGroup;
+    public $activeFacet;
     
-    public function __construct($phref, $ptype, $prel = NULL, $ptitle = NULL) {
+    public function __construct($phref, $ptype, $prel = NULL, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
         $this->href = $phref;
         $this->type = $ptype;
         $this->rel = $prel;
         $this->title = $ptitle;
+        $this->facetGroup = $pfacetGroup;
+        $this->activeFacet = $pactiveFacet;
     }
     
     public function hrefXhtml () {
@@ -114,6 +118,13 @@ class LinkNavigation extends Link
     }
 }
 
+class LinkFacet extends Link
+{
+    public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
+        parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
+        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+    }
+}
 
 class Entry
 {
@@ -293,6 +304,13 @@ class Page
         global $config;
         return ceil ($this->totalNumber / $config['cops_max_item_per_page']);
     }
+    
+    public function containsBook ()
+    {
+        if (count ($this->entryArray) == 0) return false;
+        if (get_class ($this->entryArray [1]) == "EntryBook") return true;
+        return false;
+    }
 
 }
 
@@ -470,14 +488,14 @@ abstract class Base
         return self::$db;
     }
     
-    public static function executeQuery($query, $columns, $params, $n) {
+    public static function executeQuery($query, $columns, $filter, $params, $n) {
         global $config;
         $totalResult = -1;
         
         if ($config['cops_max_item_per_page'] != -1 && $n != -1)
         {
             // First check total number of results
-            $result = self::getDb ()->prepare (str_format ($query, "count(*)"));
+            $result = self::getDb ()->prepare (str_format ($query, "count(*)", $filter));
             $result->execute ($params);
             $totalResult = $result->fetchColumn ();
             
@@ -486,7 +504,7 @@ abstract class Base
             array_push ($params, ($n - 1) * $config['cops_max_item_per_page'], $config['cops_max_item_per_page']);
         }
         
-        $result = self::getDb ()->prepare(str_format ($query, $columns));
+        $result = self::getDb ()->prepare(str_format ($query, $columns, $filter));
         $result->execute ($params);
         return array ($totalResult, $result);
     }

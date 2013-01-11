@@ -133,5 +133,10 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_update_epub-metadata'] = "0";  
+    $config['cops_update_epub-metadata'] = "0";
+    
+    /*
+     * Filter on tags to book list
+     */
+    $config['cops_books_filter'] = array ("Non lus" => "!Read", "lus" => "Read");  
 ?>

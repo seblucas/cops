@@ -130,6 +130,13 @@ class OPDSRenderer
                 $link = new Link ($config['cops_full_url'] . 'feed.php?query={searchTerms}', "application/atom+xml", "search", "Search here");
             }
             self::renderLink ($link);
+            if ($page->containsBook () && !is_null ($config['cops_books_filter']) && count ($config['cops_books_filter']) > 0) {
+                $Urlfilter = getURLParam ("tag", "");
+                foreach ($config['cops_books_filter'] as $lib => $filter) {
+                    $link = new LinkFacet ("?" . $_SERVER['QUERY_STRING'] . "&tag=" . $filter, $lib, localize ("tagword.title"), $filter == $Urlfilter);
+                    self::renderLink ($link);
+                }
+            }
     }
         
     private function endXmlDocument () {
@@ -147,6 +154,12 @@ class OPDSRenderer
             }
             if (!is_null ($link->title)) {
                 self::getXmlStream ()->writeAttribute ("title", $link->title);
+            }
+            if (!is_null ($link->facetGroup)) {
+                self::getXmlStream ()->writeAttribute ("opds:facetGroup", $link->facetGroup);
+            }
+            if ($link->activeFacet) {
+                self::getXmlStream ()->writeAttribute ("opds:activeFacet", "true");
             }
         self::getXmlStream ()->endElement ();
     }
