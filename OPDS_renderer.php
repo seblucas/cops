@@ -120,7 +120,7 @@ class OPDSRenderer
             self::renderLink ($link);
             $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
             self::renderLink ($link);
-            if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader)/", $_SERVER['HTTP_USER_AGENT'])) {
+            if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
                 // Good and compliant way of handling search
                 $link = new Link ("feed.php?page=" . self::PAGE_OPENSEARCH, "application/opensearchdescription+xml", "search", "Search here");
             }
