@@ -128,6 +128,7 @@ class Entry
     public static $icons = array(
         Author::ALL_AUTHORS_ID    => 'images/author.png',
         Serie::ALL_SERIES_ID      => 'images/serie.png',
+	Genre::ALL_GENRES_ID      => 'images/serie.png',
         Book::ALL_RECENT_BOOKS_ID => 'images/recent.png',
         Tag::ALL_TAGS_ID          => 'images/tag.png',
         "calibre:books$"          => 'images/allbook.png',
@@ -219,6 +220,8 @@ class Page
                 return new PageTagDetail ($id, $query, $n);
             case Base::PAGE_ALL_SERIES :
                 return new PageAllSeries ($id, $query, $n);
+	    case Base::PAGE_ALL_GENRES :
+                return new PageAllGenres ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS :
                 return new PageAllBooks ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS_LETTER:
@@ -227,6 +230,8 @@ class Page
                 return new PageRecentBooks ($id, $query, $n);
             case Base::PAGE_SERIE_DETAIL : 
                 return new PageSerieDetail ($id, $query, $n);
+	    case Base::PAGE_GENRE_DETAIL :
+                return new PageGenreDetail ($id, $query, $n);
             case Base::PAGE_OPENSEARCH_QUERY :
                 return new PageQueryResult ($id, $query, $n);
             case Base::PAGE_BOOK_DETAIL :
@@ -254,6 +259,7 @@ class Page
         $this->subtitle = $config['cops_subtitle_default'];
         array_push ($this->entryArray, Author::getCount());
         array_push ($this->entryArray, Serie::getCount());
+	array_push ($this->entryArray, Genre::getCount());
         array_push ($this->entryArray, Tag::getCount());
         $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
@@ -378,6 +384,27 @@ class PageSerieDetail extends Page
     }
 }
 
+class PageAllGenres extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("genres.title");
+        $this->entryArray = Genre::getAllGenres();
+        $this->idPage = Genre::ALL_GENRES_ID;
+    }
+}
+
+class PageGenreDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        $genre = Genre::getGenreById ($this->idGet);
+        $this->idPage = $genre->getEntryId ();
+        $this->title = $genre->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByGenres ($this->idGet, $this->n);
+    }
+}
+
 class PageAllBooks extends Page
 {
     public function InitializeContent () 
@@ -447,6 +474,8 @@ abstract class Base
     const PAGE_ALL_TAGS = "11";
     const PAGE_TAG_DETAIL = "12";
     const PAGE_BOOK_DETAIL = "13";
+    const PAGE_ALL_GENRES = "14";
+    const PAGE_GENRE_DETAIL = "15";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

@@ -17,6 +17,7 @@
      * BEWARE : it has to end with a /
      */
     $config['calibre_directory'] = '';
+    $config['genre_table'] = '';
     
     /*
      * The internal directory set in nginx config file

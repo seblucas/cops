@@ -117,5 +117,17 @@
 "intro.team.list5":"Jane Litte - Beta Tests und moralische Unterstützung",
 "intro.thanks.1":"Speziellen Dank an Kb Sriram, der nicht nur Trook, eine exzellente und OPDS kompatible ",
 "intro.thanks.2":"Bibliotheksverwaltung programmierte, sondern auch einen Nook spendete!",
-"fin":"fin"
+"fin":"fin",
+"genresword.title":"Genres",
+"genresword.none":"Kein Genre",
+"genresword.one":"1 Genre",
+"genresword.many":"{0} Genres",
+"content.genres":"Genres: ",
+"content.genres.data":"Buch {0} der {1} - Reihe",
+"bookentry.genres":"Buch {0} der {1} - Reihe",
+"authors.genres.title":"Genres: {0}",
+"genres.title":"Genres",
+"genres.alphabetical":"Alphabetischer Index der {0} Genres",
+"genres.alphabetical.single":"Alphabetischer Index der Genres - äußerst nützlich ;)",
+"splitByLetter.genres.other":"Andere Genres"
 }

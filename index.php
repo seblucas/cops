@@ -12,6 +12,7 @@
     require_once ("author.php");
     require_once ("serie.php");
     require_once ("tag.php");
+    require_once ("genre.php");
     require_once ("book.php");
     
     header ("Content-Type:application/xhtml+xml");
@@ -172,6 +173,7 @@
                     <option value="st"><?php echo localize("bookword.title") ?></option>
                     <option value="sa"><?php echo localize("authors.title") ?></option>
                     <option value="ss"><?php echo localize("series.title") ?></option>
+		    <option value="sg"><?php echo localize("genres.title") ?></option>
                     <option value="sp"><?php echo localize("content.published") ?></option>
                 </select>
                 <select id="sortorder">
