@@ -17,6 +17,7 @@
      * BEWARE : it has to end with a /
      */
     $config['calibre_directory'] = '/mnt/HD/HD_a2/Share/Calibre/';
+    $config['genre_table'] = 'custom_column_7';
     
     /*
      * The internal directory set in nginx config file

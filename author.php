@@ -46,9 +46,9 @@ class Author extends Base {
     
     public static function getAllAuthorsByFirstLetter() {
         $result = parent::getDb ()->query('select substr (upper (sort), 1, 1) as title, count(*) as count
-from authors
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)');
+	from authors
+	group by substr (upper (sort), 1, 1)
+	order by substr (upper (sort), 1, 1)');
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

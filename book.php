@@ -23,6 +23,8 @@ define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQ
                                                     where books_authors_link.book = books.id and author = ? order by pubdate");
 define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_series_link.book = books.id and series = ? order by series_index");
+define ('SQL_BOOKS_BY_GENRE', "select {0} from books_" . $config['genre_table'] . "_link, books " . SQL_BOOKS_LEFT_JOIN . " 
+                                                    where books_" . $config['genre_table'] . "_link.book = books.id and value = ? order by books.sort");
 define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_tags_link.book = books.id and tag = ? order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
@@ -40,6 +42,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
+    const SQL_BOOKS_BY_GENRE = SQL_BOOKS_BY_GENRE;
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
@@ -373,6 +376,10 @@ class Book extends Base {
     
     public static function getBooksBySeries($serieId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_SERIE, array ($serieId), $n);
+    }
+
+    public static function getBooksByGenres($genreId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_GENRE, array ($genreId), $n);
     }
     
     public static function getBooksByTag($tagId, $n) {
