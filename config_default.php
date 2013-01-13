@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
     if (!isset($config))
@@ -16,7 +16,7 @@
      * and the calibre_internal_directory has to be set properly
      * BEWARE : it has to end with a /
      */
-    $config['calibre_directory'] = '/mnt/HD/HD_a2/Share/Calibre/';
+    $config['calibre_directory'] = '';
     
     /*
      * The internal directory set in nginx config file
