@@ -48,10 +48,17 @@ class CustomColumn extends Base {
     public static function getUriAllCustoms ($customId) {
         return "?page=" . parent::PAGE_ALL_CUSTOMS . "&custom={$customId}";
     }
+    
+    public static function getAllTitle ($customId) {
+        $result = parent::getDb ()->prepare('select name from custom_columns where id = ?');
+        $result->execute (array ($customId));
+        $post = $result->fetchObject ();
+        return $post->name;
+    }
 
     public static function getCount($customId) {
         $nCustoms = parent::getDb ()->query('select count(*) from ' . self::getTableName ($customId))->fetchColumn();
-        $entry = new Entry (localize("tags.title"), self::getAllCustomsId ($customId), 
+        $entry = new Entry (self::getAllTitle ($customId), self::getAllCustomsId ($customId), 
             str_format (localize("tags.alphabetical"), $nCustoms), "text", 
             array ( new LinkNavigation (self::getUriAllCustoms ($customId))));
         return $entry;
