@@ -18,6 +18,7 @@ class Data extends Base {
     
     public static $mimetypes = array(
         'azw'   => 'application/x-mobipocket-ebook',
+        'azw3'  => 'application/x-mobipocket-ebook',
         'cbz'   => 'application/x-cbz',
         'cbr'   => 'application/x-cbr',
         'doc'   => 'application/msword',
