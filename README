@@ -121,7 +121,7 @@ configuration (cops_generate_invalid_opds_stream).
         RewriteOptions inherit
         RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
     if you have not mod_xsendfile, in the config file simply set :
-        $config['cops_x_accel_redirect'] = "location"; 
+        $config['cops_x_accel_redirect'] = "location"; or $config['cops_x_accel_redirect'] = ""; 
  
  * Cherokee (Thanks to Christophe) :
    * Add a Behavior of type Regular Expression : /cops/download/(.*)/.*\.(.*)$

@@ -49,10 +49,11 @@
     /*
      * Wich header to use when downloading books outside the web directory
      * Possible values are :
-     *   X-Accel-Redirect : For Nginx
-     *   X-Sendfile : For Lightttpd or Apache (with mod_xsendfile)
+     *   X-Accel-Redirect   : For Nginx
+     *   X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
+     *   No value (default) : Let PHP handle the download
      */
-    $config['cops_x_accel_redirect'] = "X-Accel-Redirect";
+    $config['cops_x_accel_redirect'] = "";
     
     /*
      * Height of thumbnail image for OPDS
