@@ -140,4 +140,14 @@
      * Filter on tags to book list
      */
     $config['cops_books_filter'] = array ("Non lus" => "!Read", "lus" => "Read");  
+    
+    /*
+     * Custom Columns to add  as an array containing the lookup names 
+     * configured in Calibre
+     *
+     * For example : array ("genre", "mycolumn");  
+     *
+     * Note that for now only the first, second and forth type of custom columns are supported
+     */
+    $config['cops_calibre_custom_column'] = array ("genre", "type2");
 ?>

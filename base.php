@@ -137,12 +137,13 @@ class Entry
     private static $updated = NULL;
     
     public static $icons = array(
-        Author::ALL_AUTHORS_ID    => 'images/author.png',
-        Serie::ALL_SERIES_ID      => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID => 'images/recent.png',
-        Tag::ALL_TAGS_ID          => 'images/tag.png',
-        "calibre:books$"          => 'images/allbook.png',
-        "calibre:books:letter"    => 'images/allbook.png'
+        Author::ALL_AUTHORS_ID       => 'images/author.png',
+        Serie::ALL_SERIES_ID         => 'images/serie.png',
+        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
+        Tag::ALL_TAGS_ID             => 'images/tag.png',
+        CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
+        "calibre:books$"             => 'images/allbook.png',
+        "calibre:books:letter"       => 'images/allbook.png'
     );
     
     public function getUpdatedTime () {
@@ -228,6 +229,10 @@ class Page
                 return new PageAllTags ($id, $query, $n);
             case Base::PAGE_TAG_DETAIL :
                 return new PageTagDetail ($id, $query, $n);
+            case Base::PAGE_ALL_CUSTOMS :
+                return new PageAllCustoms ($id, $query, $n);
+            case Base::PAGE_CUSTOM_DETAIL :
+                return new PageCustomDetail ($id, $query, $n);
             case Base::PAGE_ALL_SERIES :
                 return new PageAllSeries ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS :
@@ -266,6 +271,12 @@ class Page
         array_push ($this->entryArray, Author::getCount());
         array_push ($this->entryArray, Serie::getCount());
         array_push ($this->entryArray, Tag::getCount());
+        foreach ($config['cops_calibre_custom_column'] as $lookup) {
+            $customId = CustomColumn::getCustomId ($lookup);
+            if (!is_null ($customId)) {
+                array_push ($this->entryArray, CustomColumn::getCount($customId));
+            }
+        }
         $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
     
@@ -361,6 +372,29 @@ class PageAllTags extends Page
         $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();
         $this->idPage = Tag::ALL_TAGS_ID;
+    }
+}
+
+class PageCustomDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $customId = getURLParam ("custom", NULL);
+        $custom = CustomColumn::getCustomById ($customId, $this->idGet);
+        $this->idPage = $custom->getEntryId ();
+        $this->title = $custom->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($customId, $this->idGet, $this->n);
+    }
+}
+
+class PageAllCustoms extends Page
+{
+    public function InitializeContent () 
+    {
+        $customId = getURLParam ("custom", NULL);
+        $this->title = CustomColumn::getAllTitle ($customId);
+        $this->entryArray = CustomColumn::getAllCustoms($customId);
+        $this->idPage = CustomColumn::getAllCustomsId ($customId);
     }
 }
 
@@ -465,6 +499,8 @@ abstract class Base
     const PAGE_ALL_TAGS = "11";
     const PAGE_TAG_DETAIL = "12";
     const PAGE_BOOK_DETAIL = "13";
+    const PAGE_ALL_CUSTOMS = "14";
+    const PAGE_CUSTOM_DETAIL = "15";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

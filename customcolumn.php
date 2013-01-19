@@ -55,6 +55,15 @@ class CustomColumn extends Base {
         $post = $result->fetchObject ();
         return $post->name;
     }
+    
+    public static function getCustomId ($lookup) {
+        $result = parent::getDb ()->prepare('select id from custom_columns where label = ?');
+        $result->execute (array ($lookup));
+        if ($post = $result->fetchObject ()) {
+            return $post->id;
+        }
+        return NULL;
+    }
 
     public static function getCount($customId) {
         $nCustoms = parent::getDb ()->query('select count(*) from ' . self::getTableName ($customId))->fetchColumn();
