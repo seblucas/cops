@@ -38,7 +38,7 @@
     /*
      * Catalog's title
      */
-    $config['cops_title_default'] = "My library"; 
+    $config['cops_title_default'] = "COPS";
 
     /*
      * Catalog's subtitle
