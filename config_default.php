@@ -12,17 +12,16 @@
     /*
      * The directory containing calibre's metadata.db file, with sub-directories
      * containing all the formats.
-     * If this directory starts with a / EPUB download will only work with Nginx
-     * and the calibre_internal_directory has to be set properly
      * BEWARE : it has to end with a /
      */
     $config['calibre_directory'] = './';
     
     /*
+     * SPECIFIC TO NGINX
      * The internal directory set in nginx config file
-     * or the same directory as calibre_directory with X-Sendfile
+     * Leave empty if you don't know what you're doing
      */
-    $config['calibre_internal_directory'] = '/Calibre/'; 
+    $config['calibre_internal_directory'] = ''; 
 
     /*
      * Full URL prefix (with trailing /)

@@ -98,13 +98,18 @@
         header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
     }
     
+    $dir = $config['calibre_internal_directory'];
+    if (empty ($config['calibre_internal_directory'])) {
+        $dir = $config['calibre_directory'];
+    }
+    
     if (empty ($config['cops_x_accel_redirect'])) {
-        $filename = $config['calibre_internal_directory'] . $file;
+        $filename = $dir . $file;
         $fp = fopen($filename, 'rb');
         header("Content-Length: " . filesize($filename));
         fpassthru($fp);
     }
     else {
-        header ($config['cops_x_accel_redirect'] . ": " . $config['calibre_internal_directory'] . $file);
+        header ($config['cops_x_accel_redirect'] . ": " . $dir . $file);
     }
 ?>
