@@ -81,6 +81,17 @@ function localize($phrase, $count=-1) {
     return $translations[$phrase];
 }
 
+function addURLParameter($urlParams, $paramName, $paramValue) {
+    $params = array();
+    parse_str($urlParams, $params);
+    if (empty ($paramValue)) {
+        unset ($params[$paramName]);
+    } else {
+        $params[$paramName] = $paramValue;   
+    }
+    return http_build_query($params);
+}
+
 class Link
 {
     const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";

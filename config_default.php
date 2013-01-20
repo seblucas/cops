@@ -139,7 +139,7 @@
     /*
      * Filter on tags to book list
      */
-    $config['cops_books_filter'] = array ("Non lus" => "!Read", "lus" => "Read");  
+    $config['cops_books_filter'] = array ("Tout" => "", "Non lus" => "!Read", "lus" => "Read");  
     
     /*
      * Custom Columns to add  as an array containing the lookup names 

@@ -119,7 +119,7 @@ class Book extends Base {
     
     public function getFilterString () {
         $filter = getURLParam ("tag", NULL);
-        if (is_null ($filter)) return "";
+        if (empty ($filter)) return "";
         
         $exists = true;
         if (preg_match ("/^!(.*)$/", $filter, $matches)) {

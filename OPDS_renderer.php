@@ -133,7 +133,7 @@ class OPDSRenderer
             if ($page->containsBook () && !is_null ($config['cops_books_filter']) && count ($config['cops_books_filter']) > 0) {
                 $Urlfilter = getURLParam ("tag", "");
                 foreach ($config['cops_books_filter'] as $lib => $filter) {
-                    $link = new LinkFacet ("?" . $_SERVER['QUERY_STRING'] . "&tag=" . $filter, $lib, localize ("tagword.title"), $filter == $Urlfilter);
+                    $link = new LinkFacet ("?" . addURLParameter ($_SERVER['QUERY_STRING'], "tag", $filter), $lib, localize ("tagword.title"), $filter == $Urlfilter);
                     self::renderLink ($link);
                 }
             }
