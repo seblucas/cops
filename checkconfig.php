@@ -82,7 +82,14 @@
             if (is_readable (Base::getDbFileName ())) {
                 echo "OK";
             } else {
-                echo "File " . Base::getDbFileName () . " not found, check open_dir or the access rights";
+                echo "File " . Base::getDbFileName () . " not found, 
+Please check 
+<ul>
+<li>Value of \$config['calibre_directory'] in config_local.php</li>
+<li>Value of <a href='http://php.net/manual/en/ini.core.php#ini.open-basedir'>open_basedir</a> in your php.ini</li>
+<li>The access rights of the Calibre Database</li>
+<li>Synology users please read <a href='https://github.com/seblucas/cops/wiki/Howto---Synology'>this</a></li>
+</ul>";
             }
             ?>
             </div>
