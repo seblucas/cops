@@ -101,7 +101,9 @@ class Data extends Base {
             $textData = "&data=" . $idData;
         }
         
-        if (preg_match ('/^\//', $config['calibre_directory']) || ($type == "epub" && $config['cops_update_epub-metadata']))
+        if (preg_match ('/^\//', $config['calibre_directory']) || // Linux /
+            preg_match ('/^\w\:/', $config['calibre_directory']) || // Windows X:
+            ($type == "epub" && $config['cops_update_epub-metadata']))
         {
             if ($type != "jpg") $textData .= "&type=" . $type;
             return new Link ("fetch.php?id=$book->id" . $textData, $mime, $rel, $title);
