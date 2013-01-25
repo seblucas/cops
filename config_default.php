@@ -137,6 +137,10 @@
     
     /*
      * Filter on tags to book list
+     * Only works with the OPDS catalog for now
+     * Usage : array ("I only want to see books using the tag : Tag1"     => "Tag1", 
+     *                "I only want to see books not using the tag : Tag1" => "!Tag1",
+     *                "I only want to see every books"                    => "",
      */
     $config['cops_books_filter'] = array ("Tout" => "", "Non lus" => "!Read", "lus" => "Read");  
     
