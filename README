@@ -41,107 +41,27 @@ On any Debian base Linux you can use :
 = Install =
 
 1.  Extract the zip file to a folder in web space (visible to the web server).
-2.  If a first-time install, copy config_default.php to config_local.php
+2.  If a first-time install, copy config_local.php.example to config_local.php
 3.  Edit config_local.php to match your config.
-
-In my case I installed COPS in a subdomain. Here is my nginx config file :
-server {
-
-    listen [::]:80;
-
-    server_name opds.mydomain.com;
-
-    access_log  /var/log/nginx/opds.access.log;
-    error_log /var/log/nginx/opds.error.log;
-    root   /var/www/opds;
-    index feed.php;
-
-    location /download/ {
-      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
-      break;
-    }
-
-    location ~ ^/images.*\.(gif|png|ico|jpg)$ {
-            expires 31d;
-    }
-
-    location ~ .(js|css)$ {
-            expires 31d;
-    }
-    
-    location ~ \.php$ {
-       include /etc/nginx/fastcgi_params;
-       fastcgi_param   SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-       fastcgi_pass    unix:/tmp/fcgi.sock;
-    }
-
-    location /Calibre {
-        root /home/calibre/Dropbox;
-        internal;
-    }
-}
-
-Beware in this case my Calibre database is in /home/calibre/Dropbox/Calibre/ so
-the internal location of nginx has to split like that.
-
-I use a Kobo eReader Touch and its browser cannot download through php file (the 
-extension has to be known). To allow downloading on my ereader I added some
-url rewriting (location /download/). More on rewriting later.
-
-If your Calibre database is inside your web directory then there is no need for
-an internal location.
+4.  If needed add other configuration item from config_default.php
 
 If you choose to put your Calibre directory inside your web directory then you
 will have to edit /etc/nginx/mime.types to add this line :
 application/epub+zip epub;
 
-= Notes on Opensearch =
-
-Opensearch allow searching through an OPDS catalog. After many tests, I've been 
-able to make it work Mantano Reader.
-
-It seems that Aldiko didn't implement it properly so it won't work with COPS or
-any other custom OPDS catalog.
-
-Moon+ Reader will only work if you change the default 
-configuration (cops_generate_invalid_opds_stream).
-
-= URL rewriting =
-
- * Nginx :
- 
-    location /download/ {
-      rewrite ^/download/(\d+)/.*\.(.*)$ /fetch.php?data=$1&type=$2 last;
-      break;
-    }
-    
- * Apache (Thanks to gaspine : http://www.mobileread.com/forums/showpost.php?p=2120724&postcount=48) :
-    the .htaccess :
-        RewriteEngine on
-        RewriteOptions inherit
-        RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
-    if you have not mod_xsendfile, in the config file simply set :
-        $config['cops_x_accel_redirect'] = "location"; or $config['cops_x_accel_redirect'] = ""; 
- 
- * Cherokee (Thanks to Christophe) :
-   * Add a Behavior of type Regular Expression : /cops/download/(.*)/.*\.(.*)$
-   * Choose the handler Redirection
-   * Add the substitution regexp : "/cops/download/(.*)/.*\.(.*)$" --> "/cops/fetch.php?data=$1&type=$2"
-
 = Known problems =
 
- * Only tested by me with Nginx but confirmed to work with Apache and Cherokee.
- * Contain Nginx specific code (that could be changed with a config item).
- * certainly many many more.
+Not a lot ;)
+
+Please see https://github.com/seblucas/cops/issues for open issues
+
+= Need help =
+
+Please read https://github.com/seblucas/cops/wiki
 
 = Disclaimer =
 
-I only tested on Debian with Nginx so I have stricly no idea if it works
-with Apache or any other web server.
-
-On the OPDS client side I mainly tested with FBReader and Aldiko on Android.
-
-It also seems to work with Stanza.
+It's tested by me and many other users but there's still some little bugs around ;)
 
 = Credits = 
 
