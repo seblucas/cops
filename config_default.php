@@ -140,9 +140,11 @@
      * Only works with the OPDS catalog for now
      * Usage : array ("I only want to see books using the tag : Tag1"     => "Tag1", 
      *                "I only want to see books not using the tag : Tag1" => "!Tag1",
-     *                "I only want to see every books"                    => "",
+     *                "I want to see every books"                         => "",
+     *
+     * Example : array ("All" => "", "Unread" => "!Read", "Read" => "Read")
      */
-    $config['cops_books_filter'] = array ("Tout" => "", "Non lus" => "!Read", "lus" => "Read");  
+    $config['cops_books_filter'] = array ();
     
     /*
      * Custom Columns to add  as an array containing the lookup names 
@@ -152,5 +154,5 @@
      *
      * Note that for now only the first, second and forth type of custom columns are supported
      */
-    $config['cops_calibre_custom_column'] = array ("genre", "type2");
+    $config['cops_calibre_custom_column'] = array ();
 ?>
