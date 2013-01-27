@@ -11,8 +11,10 @@
 #XSendFile On
 #XSendFileAllowAbove on
 
+<IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
+</IfModule>
 
 ###########################################
 # Uncomment if you wish to protect acces with a password
