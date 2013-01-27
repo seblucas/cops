@@ -1,4 +1,4 @@
-0.3.1 - 20130126
+0.3.1 - 20130127
   * Add Facets to the OPDS catalog (check config item cops_books_filter).
     So far the only OPDS client that support facets are Mantano Reader and Bluefire
   * Fix book sort in some list. Patch provided by Tyler J. Wagner.
@@ -7,7 +7,7 @@
   * Usage of X-Accel-Redirect / X-Sendfile is not necessary anymore. Warning all Nginx users 
     who wants to still use X-Accel-Redirect must add 
     $config['cops_x_accel_redirect'] = "X-Accel-Redirect" in their config_local.php
-  * Fix COPS for IIS. Reported by Kevnancy.
+  * Fix COPS on IIS / Windows. Reported by Kevnancy.
   * Simplified config_default.php
   * Add a new config_local.php.example with the minimal configuration item to change.
   
