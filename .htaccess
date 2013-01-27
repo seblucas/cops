@@ -17,7 +17,7 @@ RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
 </IfModule>
 
 ###########################################
-# Uncomment if you wish to protect acces with a password
+# Uncomment if you wish to protect access with a password
 ###########################################
 #AuthUserFile /path/to/file
 #AuthGroupFile /dev/null
