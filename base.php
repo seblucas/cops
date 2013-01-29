@@ -330,7 +330,7 @@ class Page
     public function containsBook ()
     {
         if (count ($this->entryArray) == 0) return false;
-        if (get_class ($this->entryArray [1]) == "EntryBook") return true;
+        if (get_class ($this->entryArray [0]) == "EntryBook") return true;
         return false;
     }
 
