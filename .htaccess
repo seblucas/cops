@@ -11,6 +11,12 @@
 #XSendFile On
 #XSendFileAllowAbove on
 
+###########################################
+# On WAMP one user had to add this line in his httpd.conf
+# None of the abose was working
+###########################################
+#XSendFilePath <YourCalibrePath>
+
 <IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
