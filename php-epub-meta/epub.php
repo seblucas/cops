@@ -259,6 +259,15 @@ class EPub {
     public function Amazon($amazon=false){
         return $this->getset('dc:identifier',$amazon,'opf:scheme','AMAZON');
     }
+    
+    /**
+     * Set or get the Calibre UUID of the book
+     *
+     * @param string $uuid
+     */
+    public function Calibre($uuid=false){
+        return $this->getset('dc:identifier',$uuid,'opf:scheme','calibre');
+    }
 
     /**
      * Set or get the Serie of the book

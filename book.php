@@ -313,6 +313,7 @@ class Book extends Base {
             $epub->Language ($this->getLanguages ());
             $epub->Description ($this->getComment (false));
             $epub->Subjects ($this->getTagsName ());
+            $epub->Calibre ($this->uuid);
             $se = $this->getSerie ();
             if (!is_null ($se)) {
                 $epub->Serie ($se->name);
