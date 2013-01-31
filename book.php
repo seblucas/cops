@@ -313,6 +313,7 @@ class Book extends Base {
             $epub->Language ($this->getLanguages ());
             $epub->Description ($this->getComment (false));
             $epub->Subjects ($this->getTagsName ());
+            $epub->Cover2 ($this->getFilePath ("jpg"), "image/jpeg");
             $epub->Calibre ($this->uuid);
             $se = $this->getSerie ();
             if (!is_null ($se)) {
