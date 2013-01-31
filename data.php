@@ -70,6 +70,18 @@ class Data extends Base {
         return $this->name . "." . strtolower ($this->format);
     }
     
+    public function getUpdatedFilename () {
+        return $this->book->getAuthorsName () . " - " . $this->book->title;
+    }
+
+    public function getUpdatedFilenameEpub () {
+        return $this->getUpdatedFilename () . ".epub";
+    }
+
+    public function getUpdatedFilenameKepub () {
+        return $this->getUpdatedFilename () . ".kepub.epub";
+    }
+    
     public function getDataLink ($rel, $title = NULL) {
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
     }

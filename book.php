@@ -318,7 +318,7 @@ class Book extends Base {
                 $epub->Serie ($se->name);
                 $epub->SerieIndex ($this->seriesIndex);
             }
-            $epub->download ($data->getFilename ());
+            $epub->download ($data->getUpdatedFilenameEpub ());
         }
         catch (Exception $e)
         {
