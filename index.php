@@ -27,7 +27,7 @@
 /* Test to see if pages are opened on an Eink screen 
  * First test Kindle or Kobo Touch */
 
-	if (preg_match("/(Kobo Touch|Kindle\/3.0)/", $_SERVER['HTTP_USER_AGENT'])) {
+	if (preg_match("/(Kobo|Kindle\/3.0)/", $_SERVER['HTTP_USER_AGENT'])) {
 		$isEink = 1;
 
 /* Test Sony PRS-T1 Ereader. 
