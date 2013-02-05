@@ -95,7 +95,11 @@ class Data extends Base {
         
         if ($config['cops_use_url_rewriting'] == "1")
         {
-            return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+            if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
+                return "download/" . $this->id . "/" . urlencode ($this->getUpdatedFilenameKepub ());
+            } else {
+                return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+            }
         }
         else
         {

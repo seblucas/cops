@@ -393,30 +393,37 @@ class EPub {
         );
     }
     
+    public function getCoverItem () {
+        $nodes = $this->xpath->query('//opf:metadata/opf:meta[@name="cover"]');
+        if(!$nodes->length) return NULL;
+        
+        $coverid = (String) $nodes->item(0)->attr('opf:content');
+        if(!$coverid) return NULL;
+
+        $nodes = $this->xpath->query('//opf:manifest/opf:item[@id="'.$coverid.'"]');
+        if(!$nodes->length) return NULL;
+
+        return $nodes->item(0);
+    }
+    
+    public function updateForKepub () {
+        $item = $this->getCoverItem ();
+        if (!is_null ($item)) {
+            $item->attr('opf:properties', 'cover-image');
+        }
+    }
+    
     
     public function Cover2($path=false, $mime=false){
         $hascover = true;
-        $item;
-        // load cover
-        $nodes = $this->xpath->query('//opf:metadata/opf:meta[@name="cover"]');
-        if(!$nodes->length){
+        $item = $this->getCoverItem ();
+        if (is_null ($item)) {
             $hascover = false;
-        } else{
-            $coverid = (String) $nodes->item(0)->attr('opf:content');
-            if(!$coverid){
-            $hascover = false;
-            } else{
-                $nodes = $this->xpath->query('//opf:manifest/opf:item[@id="'.$coverid.'"]');
-                if(!$nodes->length){
-                    $hascover = false;
-                } else{
-                    $item = $nodes->item(0);
-                    $mime = $item->attr('opf:media-type');
-                    $this->coverpath = $item->attr('opf:href');
-                    $this->coverpath = dirname('/'.$this->meta).'/'.$this->coverpath; // image path is relative to meta file
-                    $this->coverpath = ltrim($this->coverpath,'/');
-                }
-            }
+        } else {
+            $mime = $item->attr('opf:media-type');
+            $this->coverpath = $item->attr('opf:href');
+            $this->coverpath = dirname('/'.$this->meta).'/'.$this->coverpath; // image path is relative to meta file
+            $this->coverpath = ltrim($this->coverpath,'/');
         }
         
         // set cover

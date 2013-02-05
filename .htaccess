@@ -19,6 +19,7 @@
 
 <IfModule mod_rewrite.c>
 RewriteEngine on
+RewriteRule ^download/(.*)/.*\.kepub\.epub$ fetch.php?data=$1&type=epub [L]
 RewriteRule ^download/(.*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
 </IfModule>
 

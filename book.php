@@ -298,6 +298,7 @@ class Book extends Base {
     
     public function getUpdatedEpub ($idData)
     {
+        global $config;
         $data = $this->getDataById ($idData);
             
         try
@@ -319,6 +320,9 @@ class Book extends Base {
             if (!is_null ($se)) {
                 $epub->Serie ($se->name);
                 $epub->SerieIndex ($this->seriesIndex);
+            }
+            if ($config['cops_provide_kepub'] == "1") {
+                $epub->updateForKepub ();
             }
             $epub->download ($data->getUpdatedFilenameEpub ());
         }

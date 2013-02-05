@@ -155,4 +155,11 @@
      * Note that for now only the first, second and forth type of custom columns are supported
      */
     $config['cops_calibre_custom_column'] = array ();
+    
+    /*
+     * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
+     * The ebook will then be recognized a Kepub so with chaptered paging, statistics, ...
+     * You have to enable URL rewriting if you want to enable kepup.epub download
+     */
+    $config['cops_provide_kepub'] = "1";
 ?>
