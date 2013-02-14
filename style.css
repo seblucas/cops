@@ -253,13 +253,19 @@ float:right;
 padding: 3px 2px;
 }
 
+.bookdetail
+{
+color:black;
+}
+
+
 .bookpopup
 {
 min-width: 400px;
 color:black;
 }
 
-.entries > .bookpopup
+.entries > .bookpopup, .entries > .bookdetail
 {
 background-color: white;
 margin-bottom: 5px;

@@ -17,7 +17,17 @@ $serie = $book->getSerie ();
 $book->getLinkArray ();
  
 ?>
+<?php
+    if (isset ($page) &&  $page == Base::PAGE_BOOK_DETAIL) {
+?>
+<div class="bookdetail">
+<?php
+    } else {
+?>
 <div class="bookpopup">
+<?php
+    }
+?>
     <div class="booke">
         <div class="cover">
             <?php
@@ -88,6 +98,6 @@ $book->getLinkArray ();
     <div class="clearer" />
     <hr />
     <div><?php echo localize("content.summary") ?></div>
-    <div class="content" style="max-width:700px;"><?php echo $book->getComment (false) ?></div>
+    <div class="content" <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?>><?php echo $book->getComment (false) ?></div>
     <hr />
 </div>
