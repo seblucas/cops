@@ -20,6 +20,24 @@ function getUrlWithVersion ($url) {
     return $url . "?v=" . VERSION;
 }
 
+function xml2xhtml($xml) {
+    return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', create_function('$m', '
+        $xhtml_tags = array("br", "hr", "input", "frame", "img", "area", "link", "col", "base", "basefont", "param");
+        return in_array($m[1], $xhtml_tags) ? "<$m[1]$m[2] />" : "<$m[1]$m[2]></$m[1]>";
+    '), $xml);
+}
+
+function html2xhtml ($html) {
+    $doc = new DOMDocument();
+    $doc->loadHTML($html); // Load the HTML
+    $output = utf8_decode($doc->saveXML($doc->documentElement)); // Transform to an Ansi xml stream
+    $output = xml2xhtml($output); // Fix the br / hr ...
+    if (preg_match ("/<html><body>(.*)<\/body><\/html>/", $output, $matches)) {
+        $output = $matches [1]; // Remove <html><body>
+    }
+    return $output;
+}
+
 /**
  * This method is a direct copy-paste from
  * http://tmont.com/blargh/2010/1/string-format-in-php

@@ -254,7 +254,7 @@ class Book extends Base {
         }
         if (preg_match ("/<\/(div|p|a)>/", $this->comment))
         {
-            return $addition . preg_replace ("/<(br|hr)>/", "<$1 />", $this->comment);
+            return $addition . html2xhtml ($this->comment);
         }
         else
         {
