@@ -63,6 +63,9 @@ $book->getLinkArray ();
 ?>
             </div>
         </div>
+<?php
+        if (count ($tags) > 0) {
+?>
         <div class="entrySection">
             <span><?php echo localize("tags.title") ?></span>
             <div class="buttonEffect pad6">
@@ -78,6 +81,7 @@ $book->getLinkArray ();
             </div>
         </div>
 <?php
+        }
         if (!is_null ($serie))
         {
 ?>
