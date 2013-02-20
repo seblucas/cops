@@ -7,6 +7,7 @@
 "title.nextpage":"next page ({0} of {1})",
 "title.lastpage":"next page (last)",
 "title.numberOfPages":"{0} ({1} pages)",
+"pubdate.title":"Publication year"
 "bookword.title":"Books",
 "bookword.none":"No book",
 "bookword.one":"1 book",
