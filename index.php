@@ -237,7 +237,17 @@
             </div>
             <div class="bookdetail">
                 <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" />
-                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?> <span class="sp">(<?php echo date ('Y', $entry->book->pubdate) ?>)</span> <span class="sr"><?php echo $entry->book->getRating () ?></span></div>
+                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?>
+            <?php
+                if ($entry->book->getPubDate() != "")
+                {
+            ?>
+                    <span class="sp">(<?php echo $entry->book->getPubDate() ?>)</span>
+            <?php
+                }
+            ?>
+                    <span class="sr"><?php echo $entry->book->getRating () ?></span>
+                </div>
                 <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
                 <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
             <?php

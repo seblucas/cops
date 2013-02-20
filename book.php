@@ -245,6 +245,15 @@ class Book extends Base {
         }
         return $retour;
     }
+     
+    public function getPubDate () {
+        if (is_null ($this->pubdate) || ($this->pubdate <= -58979926800)) {
+            return "";
+        }
+        else {
+            return date ("Y", $this->pubdate);
+        }
+    }
     
     public function getComment ($withSerie = true) {
         $addition = "";
