@@ -98,8 +98,8 @@ $book->getLinkArray ();
         </div>
 <?php
         }
-	if ($book->getLanguages () != "")
-	{
+        if ($book->getLanguages () != "")
+        {
 ?>
         <div class="entrySection">
             <span><?php echo localize("config.Language.label") ?></span>
