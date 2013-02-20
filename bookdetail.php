@@ -89,8 +89,8 @@ $book->getLinkArray ();
         </div>
 <?php
         }
-	if ($book->getPubDate() != "")
-	{
+        if ($book->getPubDate() != "")
+        {
 ?>
         <div class="entrySection">
             <span><?php echo localize("pubdate.title") ?></span>
