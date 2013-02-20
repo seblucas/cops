@@ -207,7 +207,7 @@ class OPDSRenderer
                 self::getXmlStream ()->writeAttribute ("label", $category->name);
             self::getXmlStream ()->endElement ();
         }
-        if (!is_null ($entry->book->pubdate)) {
+        if ($entry->book->getPubDate () != "") {
             self::getXmlStream ()->startElement ("dcterms:issued");
                 self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate));
             self::getXmlStream ()->endElement ();
