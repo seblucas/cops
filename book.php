@@ -247,7 +247,7 @@ class Book extends Base {
     }
      
     public function getPubDate () {
-        if (is_null ($this->pubdate) || ($this->pubdate <= -58979926800)) {
+        if (is_null ($this->pubdate) || ($this->pubdate <= -58979923200)) {
             return "";
         }
         else {
