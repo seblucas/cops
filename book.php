@@ -330,7 +330,7 @@ class Book extends Base {
                 $epub->Serie ($se->name);
                 $epub->SerieIndex ($this->seriesIndex);
             }
-            if ($config['cops_provide_kepub'] == "1") {
+            if ($config['cops_provide_kepub'] == "1"  && preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
                 $epub->updateForKepub ();
             }
             $epub->download ($data->getUpdatedFilenameEpub ());
