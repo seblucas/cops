@@ -15,6 +15,11 @@
     require_once ("customcolumn.php");
     require_once ("book.php");
     
+    // If we detect that an OPDS reader try to connect try to redirect to feed.php
+    if (preg_match("/(MantanoReader|FBReader|Stanza|Aldiko|Moon+ Reader)/", $_SERVER['HTTP_USER_AGENT'])) {
+        header("location: feed.php");
+    }
+    
     header ("Content-Type:application/xhtml+xml");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
