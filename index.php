@@ -30,20 +30,12 @@
     $currentPage->InitializeContent (); 
 
 /* Test to see if pages are opened on an Eink screen 
- * First test Kindle or Kobo Touch */
+ * test Kindle, Kobo Touch and Sony PRS-T1 Ereader. 
+ * HTTP_USER_AGENT = "Mozilla/5.0 (Linux; U; en-us; EBRD1101; EXT) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
+ */
 
-	if (preg_match("/(Kobo|Kindle\/3.0)/", $_SERVER['HTTP_USER_AGENT'])) {
+	if (preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
 		$isEink = 1;
-
-/* Test Sony PRS-T1 Ereader. 
-   HTTP_USER_AGENT = "Mozilla/5.0 (Linux; U; en-us; EBRD1101; EXT) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
-
-*/
-	
-	} else if (preg_match("/EBRD1101/i", $_SERVER['HTTP_USER_AGENT'])) {
-		$isEink = 1;
-	
-/* No Eink screens found */
 	} else {
 		$isEink = 0;
 	}
