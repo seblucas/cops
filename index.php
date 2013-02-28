@@ -59,6 +59,7 @@
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.3" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
 	<link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' rel='stylesheet' type='text/css' />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
@@ -255,7 +256,7 @@
         ?>
     </section>
     <footer>
-            <a href="about.xml"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
+            <a class="fancyabout" href="about.html"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
 <?php
     if ($currentPage->isPaginated ()) {
 ?> 
