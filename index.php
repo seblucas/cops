@@ -225,7 +225,7 @@
                 }
             ?>
             
-            <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" />
+            <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
                 <h2><?php echo htmlspecialchars ($entry->title) ?>
             <?php
                 if ($entry->book->getPubDate() != "")
@@ -235,7 +235,7 @@
             <?php
                 }
             ?>
-                    <?php echo $entry->book->getRating () ?></h2>
+                    <?php echo $entry->book->getRating () ?></h2></a>
                 <h4><?php echo localize("authors.title") . " : </h4>" . htmlspecialchars ($entry->book->getAuthorsName ()) ?><br />
                 <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($entry->book->getTagsName ()) ?><br />
             <?php
