@@ -47,12 +47,14 @@ a:hover { color:#000; text-decoration: underline; }
 .frontpage a:hover { display:inline-block; width: 100%; background-color: #778899;}
 
 /* =============================================================================
-   Main container stuff goes here
+   Main container stuff goes here and other globals
    ========================================================================== */
 .container{
  background: #414141; border:1px solid #000; border-radius:10px;
 	max-width:800px;width:95%;margin:0 auto;position:relative; }
 
+	
+.fancyabout { font-weight:400; text-decoration: none; }
 /* =============================================================================
    Header stuff goes here
    ========================================================================== */
@@ -90,6 +92,7 @@ background-color: #fff;
 
 article {
 border-bottom: 1px solid black;
+max-width:800px;
 }
 
 /*-------------frontpage article-------------*/
@@ -136,6 +139,31 @@ border-bottom: 1px solid black;
 	font-style: italic;
 }
 
+/*-------------books popup article-------------*/
+.bookpopup h2{
+	margin: 15px 15px; 
+}
+
+.bookpopup h3{
+	display:inline;
+}
+
+.bookpopup p{
+	display:inline;	
+}
+
+.bookpopup h4{
+	border-top: 1px solid black;
+}
+
+.popupless a{
+	font-weight: 100;
+	border-radius: 6px;
+	background: darkgray;  
+	background: radial-gradient(#666, black);
+	color: #EEE;
+	padding: 0 5px 0;
+}
 /* =============================================================================
    Footer stuff goes here
    ========================================================================== */

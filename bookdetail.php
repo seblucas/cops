@@ -20,16 +20,15 @@ $book->getLinkArray ();
 <?php
     if (isset ($page) &&  $page == Base::PAGE_BOOK_DETAIL) {
 ?>
-<div class="bookdetail">
+<div>
 <?php
     } else {
 ?>
-<div class="bookpopup">
+<article class="bookpopup">
 <?php
     }
 ?>
-    <div class="booke">
-        <div class="cover">
+			<span class="cover">
             <?php
                 if ($book->hasCover) {
             ?>
@@ -37,38 +36,34 @@ $book->getLinkArray ();
             <?php
                 }
             ?>
-        </div>
-        <div class="download">
+			</span>
 <?php
             foreach ($book->getDatas() as $data)
             {
 ?>    
-                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></div>
+				<h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></h2>
 <?php
             }
 ?>
-        </div>
-        <div class="entryTitle"><a rel="bookmark" href="<?php echo 'index.php' . $book->getUri () ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></div>
-        <div class="entrySection">
-            <span><?php echo localize("authors.title") ?></span>
-            <div class="buttonEffect pad6">
+		<h1><a rel="bookmark" href="<?php echo 'index.php' . $book->getUri () ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
+			
+			<h3><?php echo localize("authors.title") ?>: </h3>
+			<p class="popupless">
 <?php
             $i = 0;
             foreach ($authors as $author) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo htmlspecialchars ($author->name) ?></a>
+               <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo htmlspecialchars ($author->name) ?></a>
 <?php
             }
 ?>
-            </div>
-        </div>
+</p><br />
 <?php
         if (count ($tags) > 0) {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("tags.title") ?></span>
-            <div class="buttonEffect pad6">
+<h3><?php echo localize("tags.title") ?>: </h3>
+<p class="popupless">
 <?php
             $i = 0;
             foreach ($tags as $tag) {
@@ -78,44 +73,36 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-            </div>
-        </div>
+</p><br />
 <?php
         }
         if (!is_null ($serie))
         {
 ?>
-        <div class="entrySection">
-            <div class="buttonEffect pad6">
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>
-            </div>
+				<h3><a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
-        </div>
+<br />
 <?php
         }
         if ($book->getPubDate() != "")
         {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("pubdate.title") ?></span>
+
+<h3><?php echo localize("pubdate.title") ?>: </h3>
             <?php echo $book->getPubDate() ?>
-        </div>
+
 <?php
         }
         if ($book->getLanguages () != "")
         {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("config.Language.label") ?></span>
+<br />
+<h3><?php echo localize("config.Language.label") ?>: </h3>
             <?php echo $book->getLanguages () ?>
-        </div>
-<?php
+ <?php
         }
 ?>
-    </div>
-    <div class="clearer" />
-    <hr />
-    <div><?php echo localize("content.summary") ?></div>
-    <div class="content" <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?>><?php echo $book->getComment (false) ?></div>
-    <hr />
-</div>
+<br />
+<p><h4><?php echo localize("content.summary") ?></h4>
+<?php if (!isset ($page)) ?><?php echo $book->getComment (false) ?></p>
+</article>
