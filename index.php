@@ -45,10 +45,9 @@
 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
@@ -59,6 +58,7 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.3" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
+	<link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
@@ -147,21 +147,14 @@
   <p><img src="images/ajax-loader.gif" alt="waiting" /> Please Wait</p>
 </div>
 <div class="container">
-    <div class="head">
-        <div class="headleft">
-            <a href="<?php echo $_SERVER["SCRIPT_NAME"] ?>">
+    <header>
+        <a class="headleft" href="<?php echo $_SERVER["SCRIPT_NAME"] ?>">
                 <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="Home" />
-            </a>
-        </div>
-        <div class="headright">
-            <img id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
-        </div>
-        <div class="headcenter">
-            <p><?php echo htmlspecialchars ($currentPage->title) ?></p>
-        </div>
-    </div>
-    <div class="clearer" />
-    <div class="menu">
+        </a>
+        <img class="headright" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
+        <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
+    </header>
+    <aside>
         <div id="search" class="search">
             <form action="index.php?page=9" method="get">
                 <input type="text" name="query" />
@@ -182,10 +175,10 @@
                 <img id="sort" src="images/sort32.png" alt="Sort" />
             </form>
         </div>
-    </div>
-    <div class="clearer" />
-    <div id="content" style="display: none;"></div>
-    <div class="entries">
+    </aside>
+	
+	<div id="content" style="display: none;"></div>
+    <section>
         <?php
             if ($page == Base::PAGE_BOOK_DETAIL)
             {
@@ -194,33 +187,29 @@
             foreach ($currentPage->entryArray as $entry) {
                 if (get_class ($entry) != "EntryBook") {
         ?>
-        <div class="entry">
-            <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
-            <div class="entryContent"><?php echo htmlspecialchars ($entry->content) ?></div>
-        <?php
-            foreach ($entry->linkArray as $link) {
-        ?>
-            <a href="<?php echo $link->hrefXhtml () ?>" class="navigation">nav</a>
-        <?php
-            }
-        ?>
-        </div>
+        <article>
+			<div class="frontpage">
+			<?php foreach ($entry->linkArray as $link) {?> <a href="<?php echo $link->hrefXhtml () ?>">
+					<h2><?php echo htmlspecialchars ($entry->title) ?></h2>
+					<?php } ?>
+					<h4><?php echo htmlspecialchars ($entry->content) ?></h4> 
+				</a>
+			</div>
+		</article>
         <?php
                 }
                 else
                 {
         ?>
-        <div class="book">
-            <div class="cover">
+        <article>
+			<div class="books">
             <?php
                 if ($entry->book->hasCover) {
             ?>
-                <a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a>
+                <span class="cover"><a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a></span>
             <?php
                 }
             ?>
-            </div>
-            <div class="download">
             <?php
                 $i = 0;
                 foreach ($config['cops_prefered_format'] as $format)
@@ -229,49 +218,44 @@
                     if ($data = $entry->book->getDataFormat ($format)) {
                         $i++;
             ?>    
-                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></div>
-            <?php
+                <h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></h2>
+				<?php
                     }
                 }
             ?>
-            </div>
-            <div class="bookdetail">
-                <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" />
-                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?>
+            
+            <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" />
+                <h2><?php echo htmlspecialchars ($entry->title) ?>
             <?php
                 if ($entry->book->getPubDate() != "")
                 {
             ?>
-                    <span class="sp">(<?php echo $entry->book->getPubDate() ?>)</span>
+                    (<?php echo $entry->book->getPubDate() ?>)
             <?php
                 }
             ?>
-                    <span class="sr"><?php echo $entry->book->getRating () ?></span>
-                </div>
-                <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
-                <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
+                    <?php echo $entry->book->getRating () ?></h2>
+                <h4><?php echo localize("authors.title") . " : </h4>" . htmlspecialchars ($entry->book->getAuthorsName ()) ?><br />
+                <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($entry->book->getTagsName ()) ?><br />
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
             ?>
-                <div class="entryContent ss"><?php echo localize("series.title") . " : " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></div>
+                <h4><?php echo localize("series.title") . " :</h4> " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?><br />
             <?php
                 }
             ?>
-            </div>
-        </div>
+			</div>
+        </article>
         <?php
                 }
         ?>
-        <div class="clearer" />
         <?php
             }
         ?>
-    </div>
-    <div class="foot">
-        <div class="footright">
-            <a class="fancyabout" href="about.xml"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
-        </div>
+    </section>
+    <footer>
+            <a href="about.xml"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
 <?php
     if ($currentPage->isPaginated ()) {
 ?> 
@@ -296,7 +280,7 @@
 <?php
     }
 ?>
-    </div>
+    </footer>
 </div>
 </body>
 </html>

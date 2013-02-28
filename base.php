@@ -165,16 +165,7 @@ class Entry
     public $localUpdated;
     private static $updated = NULL;
     
-    public static $icons = array(
-        Author::ALL_AUTHORS_ID       => 'images/author.png',
-        Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
-        Tag::ALL_TAGS_ID             => 'images/tag.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
-        "calibre:books$"             => 'images/allbook.png',
-        "calibre:books:letter"       => 'images/allbook.png'
-    );
-    
+   
     public function getUpdatedTime () {
         if (!is_null ($this->localUpdated)) {
             return date (DATE_ATOM, $this->localUpdated);
@@ -193,16 +184,6 @@ class Entry
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
         
-        if ($config['cops_show_icons'] == 1)
-        {
-            foreach (self::$icons as $reg => $image)
-            {
-                if (preg_match ("/" . $reg . "/", $pid)) {
-                    array_push ($this->linkArray, new Link (getUrlWithVersion ($image), "image/png", Link::OPDS_THUMBNAIL_TYPE));
-                    break;
-                }
-            }
-        }
     }
 }
 
