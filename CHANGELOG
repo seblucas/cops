@@ -1,7 +1,7 @@
 0.3.2 - 201302
   * Add dutch translation. Provided by Northguy.
   * Fix an ugly bug introduced in 0.3.1. Reported by mariosipad.
-  * Small fixes to the update metadata tools :
+  * Small fixes/enhancement to the update metadata tools :
     * The book's name is Author - Title.epub
     * Add the Calibre uuid so that the book is automatically recognised by Calibre.
     * Update the cover
@@ -13,6 +13,8 @@
     * Detect empty publication date set in Calibre to avoid having (0101) as publication year.
     * Don't print "Languages" if there are none defined.
     * Don't print the tag string if there's no tags.
+  * If an OPDS client try to access index.php it will be automatically redirected to feed.php.
+  * Move the search & sort tool box to a new line (also fix a w3c error).
  
 
 0.3.1 - 20130127
