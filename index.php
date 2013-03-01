@@ -18,6 +18,7 @@
     // If we detect that an OPDS reader try to connect try to redirect to feed.php
     if (preg_match("/(MantanoReader|FBReader|Stanza|Aldiko|Moon+ Reader)/", $_SERVER['HTTP_USER_AGENT'])) {
         header("location: feed.php");
+        exit ();
     }
     
     header ("Content-Type:application/xhtml+xml");
