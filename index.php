@@ -202,9 +202,8 @@
                 else
                 {
         ?>
-        <article>
-			<div class="books">
-            <?php
+        <article class="books">
+			<?php
                 if ($entry->book->hasCover) {
             ?>
                 <span class="cover"><a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a></span>
@@ -227,7 +226,8 @@
                 }
             ?>
             </h2>
-            <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
+			<a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
+			<div class="fullclickpopup">
                 <h2><?php echo htmlspecialchars ($entry->title) ?>
             <?php
                 if ($entry->book->getPubDate() != "")
@@ -237,7 +237,7 @@
             <?php
                 }
             ?>
-                    <?php echo $entry->book->getRating () ?></h2></a>
+                    <?php echo $entry->book->getRating () ?></h2>
                 <h4><?php echo localize("authors.title") . " : </h4>" . htmlspecialchars ($entry->book->getAuthorsName ()) ?><br />
                 <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($entry->book->getTagsName ()) ?><br />
             <?php
@@ -247,8 +247,7 @@
                 <h4><?php echo localize("series.title") . " :</h4> " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?><br />
             <?php
                 }
-            ?>
-			</div>
+            ?></div></a>
         </article>
         <?php
                 }
