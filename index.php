@@ -211,6 +211,7 @@
             <?php
                 }
             ?>
+			<h2 class="download">
             <?php
                 $i = 0;
                 foreach ($config['cops_prefered_format'] as $format)
@@ -219,12 +220,13 @@
                     if ($data = $entry->book->getDataFormat ($format)) {
                         $i++;
             ?>    
-                <h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></h2>
+                <a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a><br />
 				<?php
                     }
+					
                 }
             ?>
-            
+            </h2>
             <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
                 <h2><?php echo htmlspecialchars ($entry->title) ?>
             <?php

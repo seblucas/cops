@@ -110,6 +110,7 @@ max-width:800px;
 .books {
 	clear: both;
 	padding: 10px;
+	min-height: 90px;
 }
 
 .cover {
@@ -121,6 +122,8 @@ max-width:800px;
 
 .download {
 	float: right;
+	line-height:40px;
+	text-align: right; 
 }
 
 .download a {
@@ -133,6 +136,7 @@ max-width:800px;
 	font-weight: bold;
 	padding: 5px;
 }
+
 
 .books h4{
  	display: inline;
