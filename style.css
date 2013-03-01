@@ -35,6 +35,40 @@ width:100%;
 height:32px;
 }
 
+#tool
+{
+margin-top: 5px;
+color:white;
+background-color:black;
+width:100%;
+height:32px;
+overflow: hidden;
+}
+
+#tool input[type=text]
+{
+vertical-align: middle;
+width: 100%;
+margin: 5px;
+}
+
+.stop select
+{
+vertical-align: middle;
+margin: 5px;
+}
+
+#sort
+{
+cursor:pointer;
+}
+
+.stop
+{
+display: block;
+overflow: hidden;
+}
+
 img
 {
 margin:0;
@@ -219,45 +253,10 @@ padding: 6px;
 display: inline;
 }
 
-.menu
-{
-float: right;
-width : 250px;
-}
-
-.search
-{
-display:none;
-width : 250px;
-position: absolute;
-background: white;
-}
-
-.search form
-{
-background-color: black;
-margin-top: 3px;
-border-radius: 6px;
-}
-
-.search input[type=text], .search select
-{
-vertical-align: middle;
-margin: 8px 10px;
-}
-
-.search input[type=image], .search img
-{
-vertical-align: middle;
-float:right;
-padding: 3px 2px;
-}
-
 .bookdetail
 {
 color:black;
 }
-
 
 .bookpopup
 {

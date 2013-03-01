@@ -93,11 +93,11 @@
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
-            $("#searchImage").click(function(){
-                if ($("#search").is(":hidden")) {
-                    $("#search").slideDown("slow");
+            $("#settingsImage").click(function(){
+                if ($("#tool").is(":hidden")) {
+                    $("#tool").slideDown("slow");
                 } else {
-                    $("#search").slideUp();
+                    $("#tool").slideUp();
                 }
             });
             
@@ -151,21 +151,31 @@
             </a>
         </div>
         <div class="headright">
-            <img id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
+            <img id="settingsImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         </div>
         <div class="headcenter">
             <p><?php echo htmlspecialchars ($currentPage->title) ?></p>
         </div>
     </div>
     <div class="clearer" />
-    <div class="menu">
-        <div id="search" class="search">
+    <div id="tool" >
+        <div style="float: left; width: 60%">
             <form action="index.php?page=9" method="get">
-                <input type="text" name="query" />
-                <input type="hidden" name="page" value="9" />
-                <input type="image" src="images/search32.png" alt="Search" />
+                <div style="float: right">
+                    <input type="image" src="images/search32.png" alt="Search" />
+                </div>
+                <div class="stop">
+                    <input type="hidden" name="page" value="9" />
+                    <input type="text" name="query" />
+                </div>
             </form>
-            <form action="index.php?page=9" method="get">
+        </div>
+<?php if ($currentPage->containsBook ()) { ?>
+        <div style="float: right; width: 35%">
+            <div style="float: right">
+                <img id="sort" src="images/sort32.png" alt="Sort" />
+            </div>
+            <div class="stop">
                 <select id="sortchoice">
                     <option value="st"><?php echo localize("bookword.title") ?></option>
                     <option value="sa"><?php echo localize("authors.title") ?></option>
@@ -176,9 +186,9 @@
                     <option value="asc">Asc</option>
                     <option value="desc">Desc</option>
                 </select> 
-                <img id="sort" src="images/sort32.png" alt="Sort" />
-            </form>
+            </div>
         </div>
+<?php } ?>
     </div>
     <div class="clearer" />
     <div id="content" style="display: none;"></div>
