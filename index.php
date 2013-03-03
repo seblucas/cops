@@ -21,6 +21,9 @@
         exit ();
     }
     
+    $withToolbar = false;
+    if (!isset($_COOKIE['toolbar'])) $withToolbar = true;
+    
     header ("Content-Type:application/xhtml+xml");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
@@ -53,6 +56,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
     <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.3"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
     <link rel="related" href="feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.3" media="screen" />
@@ -97,8 +101,10 @@
             $("#settingsImage").click(function(){
                 if ($("#tool").is(":hidden")) {
                     $("#tool").slideDown("slow");
+                    $.cookie('toolbar', '1');
                 } else {
                     $("#tool").slideUp();
+                    $.removeCookie('toolbar');
                 }
             });
             
@@ -159,7 +165,7 @@
         </div>
     </div>
     <div class="clearer" />
-    <div id="tool" >
+    <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
         <div style="float: left; width: 60%">
             <form action="index.php?page=9" method="get">
                 <div style="float: right">
