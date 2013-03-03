@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -29,7 +29,7 @@ define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOK
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?) {1} order by books.sort");
+                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
 
