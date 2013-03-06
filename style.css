@@ -1,50 +1,205 @@
-html
-{
-font-family: sans-serif;
-font-size: 1em;
-padding:0px;
-margin:0px;
-background-color:lightgray;
+/* Global Box Sizing and Font-Smoothing */	 
+*, *:after, *:before {
+	box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-font-smoothing:antialiased;
+	-moz-font-smoothing:antialiased;
+	-o-font-smoothing:antialiased;
+	font-smoothing:antialiased;
+	text-rendering:optimizeLegibility;
 }
 
-body
-{
-margin-top:0px;
+html { font-size: 100%; -webkit-text-size-adjust: 100%; 
+                          -ms-text-size-adjust: 100%; }
+
+body {
+	font-family: 'Open Sans', sans-serif;
+	line-height:18px;
+	color: #1c1c1c; /* Lighter on the eyes than #000 Black */
+	margin: 0px; background: #cccccc; background-size: cover;
 }
 
-.container
+img {
+	border: 0px;
+	max-width: 100%;
+	height: auto;
+	width: auto\9; /* ie8 */
+}
+
+/* ==========================================================================
+   Typography stuff goes here
+   ========================================================================== */
+h1,h2,h3,h4,h5,h6 { font-weight: bold; margin:0; padding:0;}
+/*h1 see mediaqueries*/ 
+h2 {font-size: 1.2em;}
+h3 {font-size: 1.1em;}
+h4 {font-size: 1.0em; }
+h5 {font-size: 0.83em;}
+h6 {font-size: 0.75em;}
+
+a:hover, a:active { outline: none; }
+a { color: #000066; font-weight: 800; text-decoration: none;}
+a:visited { color:#414141 ;  }
+a:hover { color:#000; text-decoration: none; }
+.frontpage a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
+.link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
+
+img
 {
-margin:auto;
-width:100%;
+margin:0;
+padding:0;
+border:0;
+}
+
+/* =============================================================================
+   Main container stuff goes here and other globals
+   ========================================================================== */
+.container{
+ background: #414141; border:1px solid #000; border-radius:10px;
+	max-width:800px;width:95%;margin:0 auto;position:relative; }
+	
+.fancyabout { font-weight:400; text-decoration: none; }
+
+/* =============================================================================
+   Header stuff goes here
+   ========================================================================== */
+header {
+	clear:both; 
+	color:white; 
+	text-align:center; 
+	text-transform:uppercase; 
+	display:block;
+	box-shadow:inset 0px -5px 8px #000000;
+	min-height:70px;
+	border-radius: 10px 10px 0px 0px; 
+}
+
+.headleft {
+	float: left;
+}
+
+header h1{
+	float:none;
+	padding-top:25px;
+text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+             0px 8px 13px rgba(0,0,0,0.1),
+             0px 18px 23px rgba(0,0,0,0.1);
+}
+
+.headright {
+	float: right;
+}
+
+/* =============================================================================
+   Section and Article stuff goes here
+   ========================================================================== */
+section {
+clear:both;
+background-color: #fff;
+}
+
+article {
+border-bottom: 1px solid black;
 max-width:800px;
 }
 
-.head
-{
-color:white;
-background-color:black;
-width:100%;
-height:64px;
+/*-------------frontpage article-------------*/
+
+.frontpage h2 {
+	padding: 5px 0 0 5px;
 }
 
-.foot
+.frontpage h4 {
+	padding: 5px 0 5px 20px;
+	 font-style: italic;
+}
+
+/*-------------books article-------------*/
+.books {
+	clear: both;
+	padding: 10px;
+	min-height: 90px;
+}
+
+.cover {
+	float:left;
+	margin: 0 10px 0 0;
+	min-width: 56px;
+	min-height: 70px;
+}
+
+.download {
+	float: right;
+	line-height:40px;
+	text-align: right;
+}
+
+.download a {
+	border-radius: 6px;
+	box-shadow:0 0 10px #000;
+	background: darkgray;  
+	background: radial-gradient(#666, black);
+	color: #EEE;
+	text-decoration : none;
+	font-weight: bold;
+	padding: 5px 10px 5px 10px;
+}
+
+
+.books h4{
+ 	display: inline;
+	font-style: italic;
+}
+
+/*-------------books popup article-------------*/
+.bookpopup h2{
+	margin: 15px 15px; 
+}
+
+.bookpopup h3{
+	display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
+}
+
+.bookpopup p{
+	display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
+}
+
+.bookpopup h4{
+	border-top: 1px solid black;
+}
+
+.fullclickpopup{
+	display: block;
+}
+/* =============================================================================
+   Footer stuff goes here
+   ========================================================================== */
+footer
 {
-color:white;
-background-color:black;
-width:100%;
+clear:both;
+box-shadow:inset 0px 5px 8px #000000;
+border-radius: 0px 0px 10px 10px; 
 height:32px;
 }
 
+footer a{
+	float: right;
+}
+/* =============================================================================
+   Aside stuff goes here
+   ========================================================================== */   
 #tool
 {
-margin-top: 5px;
 color:white;
-background-color:black;
+background: #414141;
 width:100%;
 height:32px;
 overflow: hidden;
 }
 
+
+/*-------------Search Aside-------------*/
 #tool input[type=text]
 {
 vertical-align: middle;
@@ -69,138 +224,6 @@ display: block;
 overflow: hidden;
 }
 
-img
-{
-margin:0;
-padding:0;
-border:0;
-}
-
-.headleft
-{
-float:left;
-height:64px;
-}
-
-.headright
-{
-float:right;
-height:64px;
-cursor:pointer;
-}
-
-.footright
-{
-float:right;
-height:32px;
-}
-
-
-.headcenter
-{
-margin:auto;
-text-align:center;
-font-size: 1.5em;
-font-weight:bold;
-height:64px;
-display:table;
-}
-
-.footcenter
-{
-margin:auto;
-text-align:center;
-font-size: 1.3em;
-font-weight:bold;
-height:32px;
-display:table;
-}
-
-
-.headcenter p, .footcenter p, .footcenter a
-{
-display: table-cell;
-vertical-align: middle;
-text-align: center;
-line-height: 100%;
-}
-
-.clearer 
-{
-clear:both;
-}
-
-.entries
-{
-background-color:lightgray;
-margin-top: 5px;
-}
-
-.entry
-{
-background-color:white;
-border-bottom:1px double black;
-display:block;
-padding:2px;
-cursor: pointer;
-margin-bottom:5px;
-}
-
-.book
-{
-background-color:white;
-border-bottom:1px double black;
-min-height:80px;
-margin-bottom:5px;
-}
-
-.navigation
-{
-display:none;
-}
-
-.entryTitle
-{
-font-weight:bold;
-font-size: 1.1em;
-}
-
-.entryContent
-{
-font-style:italic;
-font-size: 0.9em;
-margin-left: 10px;
-}
-
-.cover
-{
-float:left;
-padding:5px 10px;
-min-width: 56px;
-min-height: 70px;
-}
-
-.download
-{
-float:right;
-}
-
-.button
-{
-height:36px;
-display: table;
-width:80px;
-margin:2px;
-}
-
-
-.button p, .button a
-{
-display: table-cell;
-vertical-align: middle;
-text-align: center;
-}
-
 #loading 
 {
 display:none;
@@ -216,62 +239,34 @@ text-align: center;
 padding-top: 120px;
 }
 
-.entrySection
-{
-margin-top: 8px;
-margin-bottom: 18px;
-line-height: 1.5em;
+/* =============================================================================
+   Mediaquerie stuff goes here
+   ========================================================================== */
+/* 100px and greater */
+@media only screen and (min-width: 100px) {
+h1 {font-size: 1em;}
+.container { width:100%; }
+}
+   
+/* 320px and greater */
+@media only screen and (min-width: 320px) {
+h1 {font-size: 1.2em;}
 }
 
-.entrySection span
-{
-font-style:italic;
-font-size: 1em;
+/* 480px and greater */
+@media only screen and (min-width: 480px) {
+h1 {font-size: 1.5em;}
+body {	font-size: 1em;/*12px/16px */
+			font-weight:450; /* Better supported than 'lighter' attribute */
+	}
 }
 
-
-.buttonEffect a
-{
-border-radius: 6px;
-background: darkgray;  
-background: -moz-radial-gradient(#666, black);
-background: -webkit-radial-gradient(#666, black);
-background: -ms-radial-gradient(#666, black);
-background: radial-gradient(#666, black);
-color: #EEE;
-text-decoration : none;
-font-weight: bold;
-}
-
-.pad6 a
-{
-padding: 6px;
-}
-
-.pad6
-{
-display: inline;
-}
-
-.bookdetail
-{
-color:black;
-}
-
-.bookpopup
-{
-min-width: 400px;
-color:black;
-}
-
-.entries > .bookpopup, .entries > .bookdetail
-{
-background-color: white;
-margin-bottom: 5px;
-padding: 6px;
-}
-
-.content
-{
-line-height: 110%;
+/* 810px and greater */
+@media only screen and (min-width: 768px) {
+h1 {font-size: 2em;}
+.container { box-shadow:0 0 20px #000; }
+body {	margin: 5px; 
+			font-size: 0.85em;/*12px/16px */
+			font-weight:400; /* Better supported than 'lighter' attribute */
+	}
 }

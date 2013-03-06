@@ -14,7 +14,7 @@
      * containing all the formats.
      * BEWARE : it has to end with a /
      */
-    $config['calibre_directory'] = './';
+    $config['calibre_directory'] = './feedbook/';
     
     /*
      * SPECIFIC TO NGINX
