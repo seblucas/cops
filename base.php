@@ -32,7 +32,7 @@ function html2xhtml ($html) {
     $doc->loadHTML($html); // Load the HTML
     $output = utf8_decode($doc->saveXML($doc->documentElement)); // Transform to an Ansi xml stream
     $output = xml2xhtml($output); // Fix the br / hr ...
-    if (preg_match ("/<html><body>(.*)<\/body><\/html>/", $output, $matches)) {
+    if (preg_match ("#<html><body>(.*)</body></html>#ms", $output, $matches)) {
         $output = $matches [1]; // Remove <html><body>
     }
     return $output;
