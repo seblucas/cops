@@ -167,11 +167,12 @@
     <div class="clearer" />
     <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
         <div style="float: left; width: 60%">
-            <form action="index.php?page=9" method="get">
+            <form action="index.php" method="get">
                 <div style="float: right">
                     <input type="image" src="images/search32.png" alt="Search" />
                 </div>
                 <div class="stop">
+                    <input type="hidden" name="current" value="<?php echo $page ?>" />
                     <input type="hidden" name="page" value="9" />
                     <input type="text" name="query" />
                 </div>

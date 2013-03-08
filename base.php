@@ -499,7 +499,15 @@ class PageQueryResult extends Page
     public function InitializeContent () 
     {
         $this->title = "Search result for query *" . $this->query . "*"; // TODO I18N
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
+        $currentPage = getURLParam ("current", NULL);
+        switch ($currentPage) {
+            case Base::PAGE_ALL_AUTHORS :
+            case Base::PAGE_AUTHORS_FIRST_LETTER :
+                $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                break;
+            default:
+                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
+        }
     }
 }
 
