@@ -74,7 +74,6 @@ class CustomColumn extends Base {
     }
        
     public static function getCustomById ($customId, $id) {
-        $test = 'select id, value as name from ' . self::getTableName ($customId) . ' where id = ?';
         $result = parent::getDb ()->prepare('select id, value as name from ' . self::getTableName ($customId) . ' where id = ?');
         $result->execute (array ($id));
         if ($post = $result->fetchObject ()) {
@@ -84,12 +83,6 @@ class CustomColumn extends Base {
     }
     
     public static function getAllCustoms($customId) {
-        $test = str_format ("{0} - {1} - {2}", self::getTableName ($customId), self::getTableLinkName ($customId), self::getTableLinkColumn ($customId));
-        $test = str_format ('select {0}.id as id, {0}.value as name, count(*) as count
-from {0}, {1}
-where {0}.id = {1}.{2}
-group by {0}.id, {0}.value
-order by {0}.value', self::getTableName ($customId), self::getTableLinkName ($customId), self::getTableLinkColumn ($customId));
         $result = parent::getDb ()->query(str_format ('select {0}.id as id, {0}.value as name, count(*) as count
 from {0}, {1}
 where {0}.id = {1}.{2}
