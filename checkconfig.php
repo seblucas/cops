@@ -107,6 +107,24 @@ Please check
             ?>
             </div>
         </div>
+        <div class="entry">
+            <div class="entryTitle">Check if Calibre database file contains at least some of the needed tables</div>
+            <div class="entryContent">
+            <?php 
+            try {
+                $db = new PDO('sqlite:'. Base::getDbFileName ());
+                $count = $db->query("select count(*) FROM sqlite_master WHERE type='table' AND name in ('books', 'authors', 'tags', 'series')")->fetchColumn();
+                if ($count == 4) {
+                    echo "OK";
+                } else {
+                    echo "Not all Calibre tables were found. Are you you're using the correct database.";
+                }
+            } catch (Exception $e) {
+                echo "If the file is readable, check your php configuration. Exception detail : " . $e;
+            }
+            ?>
+            </div>
+        </div>
     </div>
 </div>
 </body>
