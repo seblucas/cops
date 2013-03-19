@@ -81,13 +81,21 @@ class EPub {
         $this->zip->Close ();
     }
 
+    public function cleanITunesCrap () {
+        if ($this->zip->FileExists("iTunesMetadata.plist")) {
+            $this->zip->FileReplace ("iTunesMetadata.plist", false);
+        }
+        if ($this->zip->FileExists("iTunesArtwork")) {
+            $this->zip->FileReplace ("iTunesArtwork", false);
+        }
+    }
+
     /**
      * Writes back all meta data changes
-     * TODO update
      */
     public function save(){
         $this->download ();
-        $zip->close();
+        $this->zip->close();
     }
     
     /**
@@ -412,7 +420,6 @@ class EPub {
             $item->attr('opf:properties', 'cover-image');
         }
     }
-    
     
     public function Cover2($path=false, $mime=false){
         $hascover = true;

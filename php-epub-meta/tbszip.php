@@ -1,7 +1,8 @@
 <?php
 
 /*
-TbsZip version 2.11 (2012-02-14)
+TbsZip version 2.12
+Date    : 2013-03-16
 Author  : Skrol29 (email: http://www.tinybutstrong.com/onlyyou.html)
 Licence : LGPL
 This class is independent from any other classes and has been originally created for the OpenTbs plug-in
@@ -36,7 +37,7 @@ class clsTbsZip {
 		$this->CdPos = $this->CdInfo['p_cd'];
 	}
 
-	function Open($ArchFile) {
+	function Open($ArchFile, $UseIncludePath=false) {
 	// Open the zip archive
 		if (!isset($this->Meth8Ok)) $this->__construct();  // for PHP 4 compatibility
 		$this->Close(); // close handle and init info
@@ -44,7 +45,7 @@ class clsTbsZip {
 		$this->ArchFile = $ArchFile;
 		$this->ArchIsNew = false;
 		// open the file
-		$this->ArchHnd = fopen($ArchFile, 'rb');
+		$this->ArchHnd = fopen($ArchFile, 'rb', $UseIncludePath);
 		$ok = !($this->ArchHnd===false);
 		if ($ok) $ok = $this->CentralDirRead();
 		return $ok;
@@ -89,7 +90,7 @@ class clsTbsZip {
 		$cd_pos = -22;
 		$this->_MoveTo($cd_pos, SEEK_END);
 		$b = $this->_ReadData(4);
-		if ($b!==$cd_info) return $this->RaiseError('The footer of the Central Directory is not found.');
+		if ($b!==$cd_info) return $this->RaiseError('The End of Central Rirectory Record is not found.');
 
 		$this->CdEndPos = ftell($this->ArchHnd) - 4;
 		$this->CdInfo = $this->CentralDirRead_End($cd_info);
@@ -97,8 +98,8 @@ class clsTbsZip {
 		$this->CdFileNbr = $this->CdInfo['file_nbr_curr'];
 		$this->CdPos = $this->CdInfo['p_cd'];
 
-		if ($this->CdFileNbr<=0) return $this->RaiseError('No file found in the Central Directory.');
-		if ($this->CdPos<=0) return $this->RaiseError('No position found for the Central Directory listing.');
+		if ($this->CdFileNbr<=0) return $this->RaiseError('No header found in the Central Directory.');
+		if ($this->CdPos<=0) return $this->RaiseError('No position found for the Central Directory.');
 
 		$this->_MoveTo($this->CdPos);
 		for ($i=0;$i<$this->CdFileNbr;$i++) {
@@ -114,13 +115,13 @@ class clsTbsZip {
 	function CentralDirRead_End($cd_info) {
 		$b = $cd_info.$this->_ReadData(18);
 		$x = array();
-		$x['disk_num_curr'] = $this->_GetDec($b,4,2); // number of this disk
-		$x['disk_num_cd'] = $this->_GetDec($b,6,2);   // number of the disk with the start of the central directory
-		$x['file_nbr_curr'] = $this->_GetDec($b,8,2); // total number of entries in the central directory on this disk
+		$x['disk_num_curr'] = $this->_GetDec($b,4,2);  // number of this disk
+		$x['disk_num_cd'] = $this->_GetDec($b,6,2);    // number of the disk with the start of the central directory
+		$x['file_nbr_curr'] = $this->_GetDec($b,8,2);  // total number of entries in the central directory on this disk
 		$x['file_nbr_tot'] = $this->_GetDec($b,10,2);  // total number of entries in the central directory
 		$x['l_cd'] = $this->_GetDec($b,12,4);          // size of the central directory
-		$x['p_cd'] = $this->_GetDec($b,16,4);         // offset of start of central directory with respect to the starting disk number
-		$x['l_comm'] = $this->_GetDec($b,20,2);       // .ZIP file comment length
+		$x['p_cd'] = $this->_GetDec($b,16,4);          // position of start of central directory with respect to the starting disk number
+		$x['l_comm'] = $this->_GetDec($b,20,2);        // .ZIP file comment length
 		$x['v_comm'] = $this->_ReadData($x['l_comm']); // .ZIP file comment
 		$x['bin'] = $b.$x['v_comm'];
 		return $x;
@@ -131,7 +132,7 @@ class clsTbsZip {
 		$b = $this->_ReadData(46);
 
 		$x = $this->_GetHex($b,0,4);
-		if ($x!=='h:02014b50') return $this->RaiseError('Signature of file information not found in the Central Directory in position '.(ftell($this->ArchHnd)-46).' for file #'.$idx.'.');
+		if ($x!=='h:02014b50') return $this->RaiseError("Signature of Central Directory Header #".$idx." (file information) expected but not found at position ".$this->_TxtPos(ftell($this->ArchHnd) - 46).".");
 
 		$x = array();
 		$x['vers_used'] = $this->_GetDec($b,4,2);
@@ -169,36 +170,56 @@ class clsTbsZip {
 
 		$this->DisplayError = true;
 
-		echo "<br />\r\n";
-		echo "------------------<br/>\r\n";
-		echo "Central Directory:<br/>\r\n";
-		echo "------------------<br/>\r\n";
-		print_r($this->CdInfo);
-
-		echo "<br />\r\n";
-		echo "-----------------------------------<br/>\r\n";
-		echo "File List in the Central Directory:<br/>\r\n";
-		echo "-----------------------------------<br/>\r\n";
-		print_r($this->CdFileLst);
-
 		if ($FileHeaders) {
-			echo "<br/>\r\n";
-			echo "------------------------------<br/>\r\n";
-			echo "File List in the Data Section:<br/>\r\n";
-			echo "------------------------------<br/>\r\n";
+			// Calculations first in order to have error messages before other information
 			$idx = 0;
 			$pos = 0;
+			$pos_stop = $this->CdInfo['p_cd'];
 			$this->_MoveTo($pos);
-			while ($ok = $this->_ReadFile($idx,false)) {
-				$this->VisFileLst[$idx]['debug_pos'] = $pos;
+			while ( ($pos<$pos_stop) && ($ok = $this->_ReadFile($idx,false)) ) {
+				$this->VisFileLst[$idx]['p_this_header (debug_mode only)'] = $pos;
 				$pos = ftell($this->ArchHnd);
 				$idx++;
 			}
-			print_r($this->VisFileLst);
+		}
+		
+		$nl = "\r\n";
+		echo "<pre>";
+		
+		echo "-------------------------------".$nl;
+		echo "End of Central Directory record".$nl;
+		echo "-------------------------------".$nl;
+		print_r($this->DebugArray($this->CdInfo));
+
+		echo $nl;
+		echo "-------------------------".$nl;
+		echo "Central Directory headers".$nl;
+		echo "-------------------------".$nl;
+		print_r($this->DebugArray($this->CdFileLst));
+
+		if ($FileHeaders) {
+			echo $nl;
+			echo "------------------".$nl;
+			echo "Local File headers".$nl;
+			echo "------------------".$nl;
+			print_r($this->DebugArray($this->VisFileLst));
 		}
 
+		echo "</pre>";
+		
 	}
 
+	function DebugArray($arr) {
+		foreach ($arr as $k=>$v) {
+			if (is_array($v)) {
+				$arr[$k] = $this->DebugArray($v);
+			} elseif (substr($k,0,2)=='p_') {
+				$arr[$k] = $this->_TxtPos($v);
+			}
+		}
+		return $arr;
+	}
+	
 	function FileExists($NameOrIdx) {
 		return ($this->FileGetIdx($NameOrIdx)!==false);
 	}
@@ -272,9 +293,9 @@ class clsTbsZip {
 	// read the file header (and maybe the data ) in the archive, assuming the cursor in at a new file position
 
 		$b = $this->_ReadData(30);
-
+		
 		$x = $this->_GetHex($b,0,4);
-		if ($x!=='h:04034b50') return $this->RaiseError('Signature of file information not found in the Data Section in position '.(ftell($this->ArchHnd)-30).' for file #'.$idx.'.');
+		if ($x!=='h:04034b50') return $this->RaiseError("Signature of Local File Header #".$idx." (data section) expected but not found at position ".$this->_TxtPos(ftell($this->ArchHnd)-30).".");
 
 		$x = array();
 		$x['vers'] = $this->_GetDec($b,4,2);
@@ -293,15 +314,20 @@ class clsTbsZip {
 		$x['bin'] = $b.$x['v_name'].$x['v_fields'];
 
 		// Read Data
-		$len_cd = $this->CdFileLst[$idx]['l_data_c'];
-		if ($x['l_data_c']==0) {
-			// Sometimes, the size is not specified in the local information.
-			$len = $len_cd;
+		if (isset($this->CdFileLst[$idx])) {
+			$len_cd = $this->CdFileLst[$idx]['l_data_c'];
+			if ($x['l_data_c']==0) {
+				// Sometimes, the size is not specified in the local information.
+				$len = $len_cd;
+			} else {
+				$len = $x['l_data_c'];
+				if ($len!=$len_cd) {
+					//echo "TbsZip Warning: Local information for file #".$idx." says len=".$len.", while Central Directory says len=".$len_cd.".";
+				}
+			}
 		} else {
 			$len = $x['l_data_c'];
-			if ($len!=$len_cd) {
-				//echo "TbsZip Warning: Local information for file #".$idx." says len=".$len.", while Central Directory says len=".$len_cd.".";
-			}
+			if ($len==0) $this->RaiseError("File Data #".$idx." cannt be read because no length is specified in the Local File Header and its Central Directory information has not been found.");
 		}
 
 		if ($ReadData) {
@@ -309,16 +335,25 @@ class clsTbsZip {
 		} else {
 			$this->_MoveTo($len, SEEK_CUR);
 		}
-
+		
 		// Description information
 		$desc_ok = ($x['purp'][2+3]=='1');
 		if ($desc_ok) {
-			$b = $this->_ReadData(16);
-			$x['desc_bin'] = $b;
-			$x['desc_sign'] = $this->_GetHex($b,0,4); // not specified in the documentation sign=h:08074b50
-			$x['desc_crc32'] = $this->_GetDec($b,4,4);
-			$x['desc_l_data_c'] = $this->_GetDec($b,8,4);
-			$x['desc_l_data_u'] = $this->_GetDec($b,12,4);
+			$b = $this->_ReadData(12);
+			$s = $this->_GetHex($b,0,4);
+			$d = 0;
+			// the specification says the signature may or may not be present
+			if ($s=='h:08074b50') {
+				$b .= $this->_ReadData(4); 
+				$d = 4;
+				$x['desc_bin'] = $b;
+				$x['desc_sign'] = $s;
+			} else {
+				$x['desc_bin'] = $b;
+			}
+			$x['desc_crc32']    = $this->_GetDec($b,0+$d,4);
+			$x['desc_l_data_c'] = $this->_GetDec($b,4+$d,4);
+			$x['desc_l_data_u'] = $this->_GetDec($b,8+$d,4);
 		}
 
 		// Save file info without the data
@@ -441,9 +476,10 @@ class clsTbsZip {
 				if ($ReplInfo['meth']!==false) $this->_PutDec($b1, $ReplInfo['meth'], 8, 2); // meth
 				// prepare the bottom description if the zipped file, if any
 				if ($b2!=='') {
-					$this->_PutDec($b2, $ReplInfo['crc32'], 4, 4);  // crc32
-					$this->_PutDec($b2, $ReplInfo['len_c'], 8, 4);  // l_data_c
-					$this->_PutDec($b2, $ReplInfo['len_u'], 12, 4); // l_data_u
+					$d = (strlen($b2)==16) ? 4 : 0; // offset because of the signature if any
+					$this->_PutDec($b2, $ReplInfo['crc32'], $d+0, 4); // crc32
+					$this->_PutDec($b2, $ReplInfo['len_c'], $d+4, 4); // l_data_c
+					$this->_PutDec($b2, $ReplInfo['len_u'], $d+8, 4); // l_data_u
 				}
 				// output data
 				$this->OutputFromString($b1.$ReplInfo['data'].$b2);
@@ -501,7 +537,7 @@ class clsTbsZip {
 		$ArchPos += $old_cd_len;
  		$DeltaCdLen =  $DeltaCdLen + strlen($b2) - $old_cd_len;
  
-		// Output until Central Directory footer
+		// Output until "end of central directory record"
 		if ($this->ArchHnd!==false) $this->OutputFromArch($ArchPos, $this->CdEndPos); // ArchHnd is false if CreateNew() has been called
 
 		// Output file information of the Central Directory for added files
@@ -514,7 +550,7 @@ class clsTbsZip {
 			$DeltaCdLen += strlen($b2);
 		}
 
-		// Output Central Directory footer
+		// Output "end of central directory record"
 		$b2 = $this->CdInfo['bin'];
 		$DelNbr = count($DelLst);
 		if ( ($AddNbr>0) or ($DelNbr>0) ) {
@@ -708,6 +744,11 @@ class clsTbsZip {
 		return $y.'-'.str_pad($m,2,'0',STR_PAD_LEFT).'-'.str_pad($d,2,'0',STR_PAD_LEFT).' '.str_pad($h,2,'0',STR_PAD_LEFT).':'.str_pad($i,2,'0',STR_PAD_LEFT).':'.str_pad($s,2,'0',STR_PAD_LEFT);
 	}
 
+	function _TxtPos($pos) {
+		// Return the human readable position in both decimal and hexa
+		return $pos." (h:".dechex($pos).")";
+	}
+	
 	function _DataOuputAddedFile($Idx, $PosLoc) {
 
 		$Ref =& $this->AddInfo[$Idx];
