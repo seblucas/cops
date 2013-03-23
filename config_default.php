@@ -93,7 +93,7 @@
     
     /*
      * use URL rewriting for downloading of ebook in HTML catalog
-     * See README for more information
+     * See Github wiki for more information
      *  1 : enable
      *  0 : disable
      */
