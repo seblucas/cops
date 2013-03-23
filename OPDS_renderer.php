@@ -217,7 +217,7 @@ class OPDSRenderer
         }
         
         $lang = $entry->book->getLanguages ();
-        if (!is_null ($lang)) {
+        if (!empty ($lang)) {
             self::getXmlStream ()->startElement ("dcterms:language");
                 self::getXmlStream ()->text ($lang);
             self::getXmlStream ()->endElement ();
