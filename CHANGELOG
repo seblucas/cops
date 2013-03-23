@@ -1,3 +1,11 @@
+0.3.3 - 20130323
+  * Fix catalog if book summary contains bad HTML again :(.
+  * Upgrade to Fancybox 2.4.0 and JQuery 1.9.1.
+  * Search is now dependant on the page you're in. For now if you're on author page it'll look for author name.
+  * Update checkconfig to check if the database provided comes from Calibre.
+  * Update to latest php-epub-meta should fix the metadata update with Epub.
+  * Fix OPDS catalog with Ibis Reader. It didn't like empty language.
+
 0.3.2 - 20130303
   * Add dutch translation. Provided by Northguy.
   * Fix an ugly bug introduced in 0.3.1. Reported by mariosipad.
