@@ -118,7 +118,7 @@ class Book extends Base {
         return $this->authors;
     }
     
-    public function getFilterString () {
+    public static function getFilterString () {
         $filter = getURLParam ("tag", NULL);
         if (empty ($filter)) return "";
         
