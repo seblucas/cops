@@ -12,8 +12,7 @@ require_once('author.php');
 require_once('tag.php');
 require_once ("customcolumn.php");
 require_once('data.php');
-require_once('php-epub-meta/tbszip.php');
-require_once('php-epub-meta/epub.php');
+require_once('epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
