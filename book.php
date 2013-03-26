@@ -138,17 +138,7 @@ class Book extends Base {
     }
     
     public function getAuthorsName () {
-        $authorList = null;
-        foreach ($this->getAuthors () as $author) {
-            if ($authorList) {
-                $authorList = $authorList . ", " . $author->name;
-            }
-            else
-            {
-                $authorList = $author->name;
-            }
-        }
-        return $authorList;
+        return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
     }
     
     public function getSerie () {
@@ -220,17 +210,7 @@ class Book extends Base {
 
     
     public function getTagsName () {
-        $tagList = null;
-        foreach ($this->getTags () as $tag) {
-            if ($tagList) {
-                $tagList = $tagList . ", " . $tag->name;
-            }
-            else
-            {
-                $tagList = $tag->name;
-            }
-        }
-        return $tagList;
+        return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
     
     public function getRating () {
