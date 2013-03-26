@@ -430,6 +430,7 @@ class EPub {
             $mime = $item->attr('opf:media-type');
             $this->coverpath = $item->attr('opf:href');
             $this->coverpath = dirname('/'.$this->meta).'/'.$this->coverpath; // image path is relative to meta file
+            $this->coverpath = ltrim($this->coverpath,'\\');
             $this->coverpath = ltrim($this->coverpath,'/');
         }
         
@@ -448,18 +449,6 @@ class EPub {
         }
         
         if (!$hascover) return $this->no_cover();
-
-        $zip = new ZipArchive();
-        if(!@$zip->open($this->file)){
-            throw new Exception('Failed to read epub file');
-        }
-        $data = $zip->getFromName($this->coverpath);
-
-        return array(
-            'mime'  => $mime,
-            'data'  => $data,
-            'found' => $this->coverpath
-        );
     }
 
     /**
