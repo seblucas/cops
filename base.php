@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.3.3");
+define ("VERSION", "0.3.4");
 date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
