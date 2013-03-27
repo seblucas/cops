@@ -1,3 +1,7 @@
+0.3.4 - 20130327
+  * Hopefully fix metadata update. Beware you should remove the directory php-epub-meta if you have one. Thanks to Mario for his time.
+  * Fix two warnings. Reported by Goner and Mario.
+
 0.3.3 - 20130323
   * Fix catalog if book summary contains bad HTML again :(.
   * Upgrade to Fancybox 2.4.0 and JQuery 1.9.1.
