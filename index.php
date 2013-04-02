@@ -108,6 +108,7 @@
                 }
             });
             
+<?php if  ($page != Base::PAGE_BOOK_DETAIL) { ?>
             $(".bookdetail").click(function(){
                 var url = $(this).find("a").attr("href");
 <?php if ($config['cops_use_fancyapps'] == 0) { ?>
@@ -123,6 +124,7 @@
 <?php } ?>
                 return false;
             });
+<?php } ?>
         });
 
 <?php
