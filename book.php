@@ -72,7 +72,7 @@ class Book extends Base {
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
-        $this->path = $config['calibre_directory'] . $line->path;
+        $this->path = Base::getDbDirectory () . $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;

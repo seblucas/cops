@@ -117,8 +117,8 @@ class Data extends Base {
             $textData = "&data=" . $idData;
         }
         
-        if (preg_match ('/^\//', $config['calibre_directory']) || // Linux /
-            preg_match ('/^\w\:/', $config['calibre_directory']) || // Windows X:
+        if (preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
+            preg_match ('/^\w\:/', Base::getDbDirectory ()) || // Windows X:
             ($type == "epub" && $config['cops_update_epub-metadata']))
         {
             if ($type != "jpg") $textData .= "&type=" . $type;
