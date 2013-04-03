@@ -175,14 +175,19 @@ function localize($phrase, $count=-1) {
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
+    $start = "";
+    if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
+        $start = "?";
+        $urlParams = $matches[1];
+    }
     $params = array();
     parse_str($urlParams, $params);
-    if (empty ($paramValue)) {
+    if (empty ($paramValue) && $paramValue != 0) {
         unset ($params[$paramName]);
     } else {
         $params[$paramName] = $paramValue;   
     }
-    return http_build_query($params);
+    return $start . http_build_query($params);
 }
 
 class Link
