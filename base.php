@@ -27,14 +27,89 @@ function xml2xhtml($xml) {
     '), $xml);
 }
 
+function is_utf8($string) {
+return preg_match('%^(?:  
+[\x09\x0A\x0D\x20-\x7E] # ASCII  
+| [\xC2-\xDF][\x80-\xBF] # non-overlong 2-byte  
+| \xE0[\xA0-\xBF][\x80-\xBF] # excluding overlongs  
+| [\xE1-\xEC\xEE\xEF][\x80-\xBF]{2} # straight 3-byte  
+| \xED[\x80-\x9F][\x80-\xBF] # excluding surrogates  
+| \xF0[\x90-\xBF][\x80-\xBF]{2} # planes 1-3  
+| [\xF1-\xF3][\x80-\xBF]{3} # planes 4-15  
+| \xF4[\x80-\x8F][\x80-\xBF]{2} # plane 16  
+)*$%xs', $string);
+}
+
+function display_xml_error($error)
+{
+    $return .= str_repeat('-', $error->column) . "^\n";
+
+    switch ($error->level) {
+        case LIBXML_ERR_WARNING:
+            $return .= "Warning $error->code: ";
+            break;
+         case LIBXML_ERR_ERROR:
+            $return .= "Error $error->code: ";
+            break;
+        case LIBXML_ERR_FATAL:
+            $return .= "Fatal Error $error->code: ";
+            break;
+    }
+
+    $return .= trim($error->message) .
+               "\n  Line: $error->line" .
+               "\n  Column: $error->column";
+
+    if ($error->file) {
+        $return .= "\n  File: $error->file";
+    }
+
+    return "$return\n\n--------------------------------------------\n\n";
+}
+
+function are_libxml_errors_ok ()
+{
+    $errors = libxml_get_errors();
+    
+    foreach ($errors as $error) {
+        if ($error->code == 801) return false;
+    }
+    return true;
+}
+
 function html2xhtml ($html) {
     $doc = new DOMDocument();
-    $doc->loadHTML($html); // Load the HTML
-    $output = utf8_decode($doc->saveXML($doc->documentElement)); // Transform to an Ansi xml stream
-    $output = xml2xhtml($output); // Fix the br / hr ...
-    if (preg_match ("#<html><body>(.*)</body></html>#ms", $output, $matches)) {
-        $output = $matches [1]; // Remove <html><body>
+    libxml_use_internal_errors(true);
+    if (is_utf8($html)) {
+        $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' . 
+                            $html  . '</body></html>'); // Load the HTML
+        $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
+        $output = xml2xhtml($output);
+        if (preg_match ('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
+            $output = $matches [1]; // Remove <html><body>
+        }
+    } else {
+        $doc->loadHTML($html); // Load the HTML
+        $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
+        $output = xml2xhtml($output);
+        $output = xml2xhtml($output);
+        if (preg_match ('#<html><body>(.*)</body></html>#ms', $output, $matches)) {
+            $output = $matches [1]; // Remove <html><body>
+        }
     }
+    
+    /* 
+    // In case of error with summary, use it to debug
+    $errors = libxml_get_errors();
+
+    foreach ($errors as $error) {
+        $output .= display_xml_error($error);
+    }
+    */
+    
+    if (!are_libxml_errors_ok ()) $output = "HTML code not valid.";
+    
+    
     return $output;
 }
 
