@@ -111,18 +111,27 @@ class Data extends Base {
     {
         global $config;
         
-        $textData = "";
-        if (!is_null ($idData))
-        {
-            $textData = "&data=" . $idData;
-        }
+        $urlParam = addURLParameter("", "data", $idData);
         
         if (preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
             preg_match ('/^\w\:/', Base::getDbDirectory ()) || // Windows X:
+            $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && $config['cops_update_epub-metadata']))
         {
-            if ($type != "jpg") $textData .= "&type=" . $type;
-            return new Link ("fetch.php?id=$book->id" . $textData, $mime, $rel, $title);
+            if ($type != "jpg") $urlParam = addURLParameter($urlParam, "type", $type);
+            if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
+                $height = "50";
+                if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+                    $height = $config['cops_opds_thumbnail_height'];
+                }
+                else
+                {
+                    $height = $config['cops_html_thumbnail_height'];
+                }
+                $urlParam = addURLParameter($urlParam, "height", $height);
+            }
+            $urlParam = addURLParameter($urlParam, "id", $book->id);
+            return new Link ("fetch.php?" . $urlParam, $mime, $rel, $title);
         }
         else
         {

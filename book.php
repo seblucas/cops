@@ -329,15 +329,8 @@ class Book extends Base {
         if ($this->hasCover)
         {
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
-            $height = "50";
-            if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                $height = $config['cops_opds_thumbnail_height'];
-            }
-            else
-            {
-                $height = $config['cops_html_thumbnail_height'];
-            }
-            array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
+            
+            array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL));
         }
         
         foreach ($this->getDatas () as $data)
