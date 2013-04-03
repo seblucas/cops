@@ -33,7 +33,9 @@ $book->getLinkArray ();
             <?php
                 if ($book->hasCover) {
             ?>
-            <a href="fetch.php?id=<?php echo $book->id ?>"><img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="<?php echo localize("i18n.coversection") ?>" /></a>
+            <a href="<?php echo Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml () ?>">
+              <img src="<?php echo Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml () ?>" alt="<?php echo localize("i18n.coversection") ?>" />
+            </a>
             <?php
                 }
             ?>

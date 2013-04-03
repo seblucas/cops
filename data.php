@@ -107,7 +107,7 @@ class Data extends Base {
         }
     }
     
-    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL)
+    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
     {
         global $config;
         
@@ -120,13 +120,14 @@ class Data extends Base {
         {
             if ($type != "jpg") $urlParam = addURLParameter($urlParam, "type", $type);
             if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
-                $height = "50";
-                if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                    $height = $config['cops_opds_thumbnail_height'];
-                }
-                else
-                {
-                    $height = $config['cops_html_thumbnail_height'];
+                if (is_null ($height)) {
+                    if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+                        $height = $config['cops_opds_thumbnail_height'];
+                    }
+                    else
+                    {
+                        $height = $config['cops_html_thumbnail_height'];
+                    }
                 }
                 $urlParam = addURLParameter($urlParam, "height", $height);
             }
