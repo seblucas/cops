@@ -225,7 +225,11 @@ class LinkNavigation extends Link
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
-        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        if (preg_match ("/bookdetail.php/", $_SERVER["SCRIPT_NAME"])) {
+            $this->href = "index.php" . $this->href;
+        } else {
+            $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        }
     }
 }
 
