@@ -635,11 +635,20 @@ abstract class Base
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
     private static $db = NULL;
-  
-    public static function getDbDirectory () {
+    
+    public static function getDbList () {
         global $config;
         if (is_array ($config['calibre_directory'])) {
-            $database = GetUrlParam (DB, 0);
+            return $config['calibre_directory'];
+        } else {
+            return array ("" => $config['calibre_directory']);
+        }
+    }
+  
+    public static function getDbDirectory ($database = NULL) {
+        global $config;
+        if (is_array ($config['calibre_directory'])) {
+            if (is_null ($database)) $database = GetUrlParam (DB, 0);
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
         }
@@ -647,8 +656,8 @@ abstract class Base
     }
 
   
-    public static function getDbFileName () {
-        return self::getDbDirectory () .'metadata.db';
+    public static function getDbFileName ($database = NULL) {
+        return self::getDbDirectory ($database) .'metadata.db';
     }
     
     public static function getDb () {
