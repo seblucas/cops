@@ -13,6 +13,8 @@
      * The directory containing calibre's metadata.db file, with sub-directories
      * containing all the formats.
      * BEWARE : it has to end with a /
+     * You can enable multiple database with this notation :
+     * array ("My database name" => "/home/directory/calibre1/", "My other database name" => "/home/directory/calibre2/");
      */
     $config['calibre_directory'] = './';
     
