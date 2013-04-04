@@ -94,15 +94,18 @@ class Book extends Base {
     }
     
     public function getUri () {
-        return "?page=".parent::PAGE_BOOK_DETAIL."&amp;id=$this->id";
+        return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
     
-    public function getDetailUrl () {
+    public function getDetailUrl ($permalink = false) {
         global $config;
-        if ($config['cops_use_fancyapps'] == 0) { 
-            return 'index.php' . $this->getUri (); 
+        $urlParam = $this->getUri ();
+        if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
+        $urlParam = str_replace ("&", "&amp;", $urlParam);
+        if ($permalink || $config['cops_use_fancyapps'] == 0) { 
+            return 'index.php' . $urlParam; 
         } else { 
-            return 'bookdetail.php?id=' . $this->id; 
+            return 'bookdetail.php' . $urlParam;
         }
     }
     

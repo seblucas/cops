@@ -50,7 +50,7 @@ $book->getLinkArray ();
             }
 ?>
         </div>
-        <div class="entryTitle"><a rel="bookmark" href="<?php echo 'index.php' . $book->getUri () ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></div>
+        <div class="entryTitle"><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></div>
         <div class="entrySection">
             <span><?php echo localize("authors.title") ?></span>
             <div class="buttonEffect pad6">
