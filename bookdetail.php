@@ -59,7 +59,7 @@ $book->getLinkArray ();
             foreach ($authors as $author) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo htmlspecialchars ($author->name) ?></a>
+                <a href="<?php $link = new LinkNavigation ($author->getUri ()); echo $link->hrefXhtml () ?>"><?php echo htmlspecialchars ($author->name) ?></a>
 <?php
             }
 ?>
@@ -76,7 +76,7 @@ $book->getLinkArray ();
             foreach ($tags as $tag) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $tag->getUri ()) ?>"><?php echo htmlspecialchars ($tag->name) ?></a>
+                <a href="<?php $link = new LinkNavigation ($tag->getUri ()); echo $link->hrefXhtml () ?>"><?php echo htmlspecialchars ($tag->name) ?></a>
 <?php
             }
 ?>
@@ -89,7 +89,7 @@ $book->getLinkArray ();
 ?>
         <div class="entrySection">
             <div class="buttonEffect pad6">
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>
+                <a href="<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>
             </div>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
         </div>
