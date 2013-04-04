@@ -132,6 +132,7 @@ class Data extends Base {
                 $urlParam = addURLParameter($urlParam, "height", $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
+            if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
             return new Link ("fetch.php?" . $urlParam, $mime, $rel, $title);
         }
         else

@@ -7,6 +7,7 @@
  */
 
 define ("VERSION", "0.3.4");
+define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
@@ -223,6 +224,7 @@ class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
+        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
     }
 }
@@ -377,16 +379,27 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        array_push ($this->entryArray, Author::getCount());
-        array_push ($this->entryArray, Serie::getCount());
-        array_push ($this->entryArray, Tag::getCount());
-        foreach ($config['cops_calibre_custom_column'] as $lookup) {
-            $customId = CustomColumn::getCustomId ($lookup);
-            if (!is_null ($customId)) {
-                array_push ($this->entryArray, CustomColumn::getCount($customId));
+        $database = GetUrlParam (DB);
+        if (is_array ($config['calibre_directory']) && is_null ($database)) {
+            $i = 0;
+            foreach ($config['calibre_directory'] as $key => $value) {
+                array_push ($this->entryArray, new Entry ($key, DB . ":{$i}", 
+                                        "", "text", 
+                                        array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                $i++;
             }
+        } else {
+            array_push ($this->entryArray, Author::getCount());
+            array_push ($this->entryArray, Serie::getCount());
+            array_push ($this->entryArray, Tag::getCount());
+            foreach ($config['cops_calibre_custom_column'] as $lookup) {
+                $customId = CustomColumn::getCustomId ($lookup);
+                if (!is_null ($customId)) {
+                    array_push ($this->entryArray, CustomColumn::getCount($customId));
+                }
+            }
+            $this->entryArray = array_merge ($this->entryArray, Book::getCount());
         }
-        $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
     
     public function isPaginated ()
@@ -626,7 +639,7 @@ abstract class Base
     public static function getDbDirectory () {
         global $config;
         if (is_array ($config['calibre_directory'])) {
-            $database = GetUrlParam ("database", 0);
+            $database = GetUrlParam (DB, 0);
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
         }
