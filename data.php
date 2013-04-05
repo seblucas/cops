@@ -95,10 +95,12 @@ class Data extends Base {
         
         if ($config['cops_use_url_rewriting'] == "1")
         {
+            $database = "";
+            if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
             if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
-                return "download/" . $this->id . "/" . urlencode ($this->getUpdatedFilenameKepub ());
+                return "download/" . $this->id . "/" . $database . urlencode ($this->getUpdatedFilenameKepub ());
             } else {
-                return "download/" . $this->id . "/" . urlencode ($this->getFilename ());
+                return "download/" . $this->id . "/" . $database . urlencode ($this->getFilename ());
             }
         }
         else
