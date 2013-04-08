@@ -29,6 +29,7 @@
     $query = getURLParam ("query");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
+    $database = GetUrlParam (DB);
     
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent (); 
@@ -176,6 +177,9 @@
                 <div class="stop">
                     <input type="hidden" name="current" value="<?php echo $page ?>" />
                     <input type="hidden" name="page" value="9" />
+                    <?php if (!is_null ($database)) { ?>
+                        <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
+                    <?php } ?>
                     <input type="text" name="query" />
                 </div>
             </form>
