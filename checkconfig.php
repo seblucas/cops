@@ -74,6 +74,18 @@
             ?>
             </div>
         </div>
+        <div class="entry">
+            <div class="entryTitle">Check if libxml is properly installed and loaded</div>
+            <div class="entryContent">
+            <?php 
+            if (extension_loaded('libxml')) {
+                echo "OK";
+            } else {
+                echo "Please make sure libxml is enabled";
+            }
+            ?>
+            </div>
+        </div>
 <?php 
 $i = 0;
 foreach (Base::getDbList () as $name => $database) { 
