@@ -68,13 +68,14 @@ function are_libxml_errors_ok ()
 function html2xhtml ($html) {
     $doc = new DOMDocument();
     libxml_use_internal_errors(true);
-        $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' . 
-                            $html  . '</body></html>'); // Load the HTML
-        $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
-        $output = xml2xhtml($output);
-        if (preg_match ('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
-            $output = $matches [1]; // Remove <html><body>
-        }
+    
+    $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' . 
+                        $html  . '</body></html>'); // Load the HTML
+    $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
+    $output = xml2xhtml($output);
+    if (preg_match ('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
+        $output = $matches [1]; // Remove <html><body>
+    }
     /* 
     // In case of error with summary, use it to debug
     $errors = libxml_get_errors();
