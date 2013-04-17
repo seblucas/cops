@@ -54,7 +54,11 @@
     <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
+    <?php if ($config['cops_use_local_resources'] == 0) { ?>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <?php } else { ?>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
+    <?php } ?>
     <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.4"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>

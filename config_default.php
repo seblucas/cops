@@ -166,4 +166,12 @@
      * 0 : No
      */
     $config['cops_provide_kepub'] = "0";
+    
+    /*
+     * Use local JS resources instead if external resources hosted on CDN
+     * 1 : Yes (enable)
+     * 0 : No
+     */
+    $config['cops_use_local_resources'] = "0";
+
 ?>
