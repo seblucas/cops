@@ -160,7 +160,7 @@
 <div class="container">
     <div class="head">
         <div class="headleft">
-            <a href="<?php echo $_SERVER["SCRIPT_NAME"] ?>">
+            <a href="<?php echo $_SERVER["SCRIPT_NAME"]; if ($page != Base::PAGE_INDEX && !is_null ($database)) echo "?" . addURLParameter ("", DB, $database);  ?>">
                 <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="Home" />
             </a>
         </div>
