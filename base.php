@@ -380,6 +380,8 @@ class Page
                 }
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
+            
+            if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
     }
     
@@ -625,7 +627,17 @@ abstract class Base
             return array ("" => $config['calibre_directory']);
         }
     }
-  
+
+    public static function getDbName ($database = NULL) {
+        global $config;
+        if (is_array ($config['calibre_directory'])) {
+            if (is_null ($database)) $database = GetUrlParam (DB, 0);
+            $array = array_keys ($config['calibre_directory']);
+            return  $array[$database];
+        }
+        return "";
+    }
+
     public static function getDbDirectory ($database = NULL) {
         global $config;
         if (is_array ($config['calibre_directory'])) {
