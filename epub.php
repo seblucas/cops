@@ -12,7 +12,9 @@ define ("METADATA_FILE", "META-INF/container.xml");
  
 class EPub {
     public $xml; //FIXME change to protected, later
+    public $toc;
     protected $xpath;
+    protected $toc_xpath;
     protected $file;
     protected $meta;
     protected $zip;
@@ -65,6 +67,26 @@ class EPub {
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
+    
+    public function initSpineComponent ()
+    {
+        $spine = $this->xpath->query('//opf:spine')->item(0);
+        $tocid = $spine->getAttribute('toc');
+        $tochref = $this->xpath->query("//opf:manifest/opf:item[@id='$tocid']")->item(0)->attr('href');
+        $tocpath = dirname($this->meta).'/'.$tochref; 
+        // read epub toc
+        if (!$this->zip->FileExists($tocpath)) {
+            throw new Exception ("Unable to find " . $tocpath);
+        }
+        
+        $data = $this->zip->FileRead($tocpath);
+        $this->toc =  new DOMDocument();
+        $this->toc->registerNodeClass('DOMElement','EPubDOMElement');
+        $this->toc->loadXML($data);
+        $this->toc_xpath = new EPubDOMXPath($this->toc);
+        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI); 
+        $this->toc_xpath->registerNamespace('x', $rootNamespace);     
+    }
 
     /**
      * file name getter
@@ -82,6 +104,9 @@ class EPub {
         $this->zip->Close ();
     }
 
+    /**
+     * Remove iTunes files
+     */
     public function cleanITunesCrap () {
         if ($this->zip->FileExists("iTunesMetadata.plist")) {
             $this->zip->FileReplace ("iTunesMetadata.plist", false);
@@ -111,7 +136,48 @@ class EPub {
         }
         if ($file) $this->zip->Flush(TBSZIP_DOWNLOAD, $file);
     }
+
+    /**
+     * Get the components list as an array
+     */
+    public function components(){
+        $spine = array();
+        $nodes = $this->xpath->query('//opf:spine/opf:itemref');
+        foreach($nodes as $node){
+            $idref =  $node->getAttribute('idref');
+            $spine[] = $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href');
+        }
+        return $spine;
+    }
     
+    /**
+     * Get the component content
+     */
+    public function component($comp) {
+        $path = dirname($this->meta).'/'.$comp;
+        if (!$this->zip->FileExists($path)) {
+            throw new Exception ("Unable to find " . $path);
+        }
+        
+        $data = $this->zip->FileRead($path);
+        return $data;
+    }
+
+    /**
+     * Get the Epub content (TOC) as an array
+     *
+     * For each chapter there is a "title" and a "src"
+     */
+    public function contents(){
+        $contents = array();
+        $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
+        foreach($nodes as $node){
+            $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
+            $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
+            $contents[] =  array("title" => $title, "src" => $src);
+        }
+        return $contents;
+    }
     
 
     /**
