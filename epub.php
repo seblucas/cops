@@ -85,7 +85,7 @@ class EPub {
         $this->toc->loadXML($data);
         $this->toc_xpath = new EPubDOMXPath($this->toc);
         $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI); 
-        $this->toc_xpath->registerNamespace('x', $rootNamespace);     
+        $this->toc_xpath->registerNamespace('x', $rootNamespace);
     }
 
     /**
@@ -160,7 +160,16 @@ class EPub {
         }
         
         $data = $this->zip->FileRead($path);
+        $data = preg_replace ("/src=[\"']([\w\/\.]*?)[\"']/", "src='epubfs.php?comp=$1'", $data);
+        $data = preg_replace ("/href=[\"']([\w\/\.]*?)[\"']/", "href='epubfs.php?comp=$1'", $data);
         return $data;
+    }
+    
+    /**
+     * Get the component content type
+     */
+    public function componentContentType($comp) {
+        return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
     }
 
     /**
