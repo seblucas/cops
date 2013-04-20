@@ -369,7 +369,7 @@ class Book extends Base {
         $result = array();
         $entry = new Entry (localize ("allbooks.title"), 
                           self::ALL_BOOKS_ID, 
-                          str_format (localize ("allbooks.alphabetical"), $nBooks), "text", 
+                          str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
         $entry = new Entry (localize ("recent.title"), 

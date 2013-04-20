@@ -68,7 +68,7 @@ class CustomColumn extends Base {
     public static function getCount($customId) {
         $nCustoms = parent::getDb ()->query('select count(*) from ' . self::getTableName ($customId))->fetchColumn();
         $entry = new Entry (self::getAllTitle ($customId), self::getAllCustomsId ($customId), 
-            str_format (localize("tags.alphabetical"), $nCustoms), "text", 
+            str_format (localize("tags.alphabetical", $nCustoms), $nCustoms), "text", 
             array ( new LinkNavigation (self::getUriAllCustoms ($customId))));
         return $entry;
     }
