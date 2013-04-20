@@ -118,5 +118,7 @@
 "intro.thanks.1":"Speziellen Dank an Kb Sriram, der nicht nur Trook, eine exzellente und OPDS kompatible ",
 "intro.thanks.2":"Bibliotheksverwaltung programmierte, sondern auch einen Nook spendete!",
 "search.result":"Suchergebnis für",
+"search.sortorder.asc":"Auf",
+"search.sortorder.desc":"Ab",
 "fin":"fin"
 }

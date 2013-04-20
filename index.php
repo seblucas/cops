@@ -201,8 +201,8 @@
                     <option value="sp"><?php echo localize("content.published") ?></option>
                 </select>
                 <select id="sortorder">
-                    <option value="asc">Asc</option>
-                    <option value="desc">Desc</option>
+                    <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
+                    <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
                 </select> 
             </div>
         </div>
