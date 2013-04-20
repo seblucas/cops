@@ -574,7 +574,7 @@ class PageQueryResult extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Search result for query *" . $this->query . "*"; // TODO I18N
+        $this->title = str_format (localize ("search.result"), $this->query);
         $currentPage = getURLParam ("current", NULL);
         switch ($currentPage) {
             case Base::PAGE_ALL_AUTHORS :
