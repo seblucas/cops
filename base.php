@@ -339,6 +339,8 @@ class Page
                 return new PageQueryResult ($id, $query, $n);
             case Base::PAGE_BOOK_DETAIL :
                 return new PageBookDetail ($id, $query, $n);
+            case Base::PAGE_ABOUT :
+                return new PageAbout ($id, $query, $n);
             default:
                 $page = new Page ($id, $query, $n);
                 $page->idPage = "cops:catalog";
@@ -596,6 +598,15 @@ class PageBookDetail extends Page
     }
 }
 
+class PageAbout extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = "About";
+    }
+}
+
+
 abstract class Base
 {
     const PAGE_INDEX = "index";
@@ -614,6 +625,7 @@ abstract class Base
     const PAGE_BOOK_DETAIL = "13";
     const PAGE_ALL_CUSTOMS = "14";
     const PAGE_CUSTOM_DETAIL = "15";
+    const PAGE_ABOUT = "16";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

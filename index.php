@@ -59,12 +59,16 @@
     <?php } else { ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <?php } ?>
+    <?php if ($config['cops_use_fancyapps'] == 1) { ?>
     <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.4"></script>
+    <?php } ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
+    <?php if ($config['cops_use_fancyapps'] == 1) { ?>
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
+    <?php } ?>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
     <script type="text/javascript">
         $(document).ready(function() {
@@ -93,7 +97,6 @@
                 nextEffect		: 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
-<?php } ?>
             
             $(".fancyabout").fancybox({
                 'type' : 'ajax',
@@ -102,6 +105,7 @@
                 nextEffect		: 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
+<?php } ?>
             
             $("#settingsImage").click(function(){
                 if ($("#tool").is(":hidden")) {
@@ -211,14 +215,15 @@
     <div class="clearer" />
     <div id="content" style="display: none;"></div>
     <div class="entries">
-        <?php
-            if ($page == Base::PAGE_BOOK_DETAIL)
-            {
+<?php
+            if ($page == Base::PAGE_BOOK_DETAIL) {
                 include ("bookdetail.php");
+            } else if ($page == Base::PAGE_ABOUT) {
+                readfile ("about.xml");
             }
             foreach ($currentPage->entryArray as $entry) {
                 if (get_class ($entry) != "EntryBook") {
-        ?>
+?>
         <div class="entry">
             <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
             <div class="entryContent"><?php echo htmlspecialchars ($entry->content) ?></div>
@@ -295,7 +300,7 @@
     </div>
     <div class="foot">
         <div class="footright">
-            <a class="fancyabout" href="about.xml"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
+            <a class="fancyabout" href="<?php if ($config['cops_use_fancyapps'] == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="Home" /></a>
         </div>
 <?php
     if ($currentPage->isPaginated ()) {
