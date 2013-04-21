@@ -158,9 +158,6 @@
     </script>
 </head>
 <body>
-<div id="loading">
-  <p><img src="images/ajax-loader.gif" alt="waiting" /> Please Wait</p>
-</div>
 <div class="container">
     <div class="head">
         <div class="headleft">
