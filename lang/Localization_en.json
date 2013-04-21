@@ -103,7 +103,7 @@
 "i18n.summarysection":"Description",
 "i18n.dateGenerated":"Catalog generated on {0}",
 "deeplevel.summary":"{0} broken up by authors, tags, etc. ",
-"about.title":"Calibre2Opds Documentation",
+"about.title":"About COPS",
 "about.summary":"Notes on using Calibre2Opds",
 "usage.intro":"The options are taken from the configuration file located at {0}",
 "config.Language.label":"Language",

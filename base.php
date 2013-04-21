@@ -602,7 +602,7 @@ class PageAbout extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "About";
+        $this->title = localize ("about.title");
     }
 }
 

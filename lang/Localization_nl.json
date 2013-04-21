@@ -102,7 +102,6 @@
 "i18n.summarysection":"Omschrijving",
 "i18n.dateGenerated":"Catalogus gegenereerd op {0}",
 "deeplevel.summary":"{0} uitgesplitst naar auteurs, tags, etc. ",
-"about.title":"Calibre2Opds Documentatie",
 "about.summary":"Notities hoe Calibre2Opds te gebruiken",
 "usage.intro":"De opties worden uit het configuratie bestand {0} gebruikt",
 "config.Language.label":"Taal",

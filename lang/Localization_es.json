@@ -83,7 +83,6 @@
 "i18n.summarysection":"Resumen",
 "i18n.dateGenerated":"Catálogo creado el {0}",
 "deeplevel.summary":"{0} por autores, etiquetas, etc.",
-"about.title":"Documentación de Calibre2Opds",
 "about.summary":"Notas de Uso",
 "usage.intro":"Las opciones provienen del fichero de configuración presente en: {0}",
 "config.Language.label":"Idioma",

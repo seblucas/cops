@@ -89,7 +89,7 @@
 "i18n.summarysection":"Résumé",
 "i18n.dateGenerated":"Catalogue généré le {0}",
 "deeplevel.summary":"{0} par auteur, étiquette, etc.",
-"about.title":"Documentation de Calibre2Opds",
+"about.title":"A propos de COPS",
 "about.summary":"Notes d'utilisation",
 "usage.intro":"Les options sont tirées du fichier de configuration qui se trouve ici : {0}",
 "config.Language.label":"Langue",

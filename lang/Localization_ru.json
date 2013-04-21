@@ -86,7 +86,6 @@
 "i18n.summarysection":"Краткое содержание",
 "i18n.dateGenerated":"Каталог создан {0}",
 "deeplevel.summary":"{0} разбито по авторам, тэгам и т.д.",
-"about.title":"Документация Calibre2Opds",
 "about.summary":"Примечания по использованию Calibre2Opds",
 "usage.intro":"Эта опция взята из файла конфигурации, расположенного в {0}",
 "config.Language.label":"Язык",
