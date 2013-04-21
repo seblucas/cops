@@ -123,5 +123,11 @@
 "search.result":"Search result for *{0}*",
 "search.sortorder.asc":"Asc",
 "search.sortorder.desc":"Desc",
+"permalink.alternate":"Permalink",
+"home.alternate":"Home",
+"search.alternate":"Search",
+"sort.alternate":"Sort",
+"paging.next.alternate":"Next",
+"paging.previous.alternate":"Previous",
 "fin":"fin"
 }

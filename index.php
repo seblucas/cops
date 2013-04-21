@@ -162,7 +162,7 @@
     <div class="head">
         <div class="headleft">
             <a href="<?php echo $_SERVER["SCRIPT_NAME"]; if ($page != Base::PAGE_INDEX && !is_null ($database)) echo "?" . addURLParameter ("", DB, $database);  ?>">
-                <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="Home" />
+                <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="<?php echo localize ("home.alternate") ?>" />
             </a>
         </div>
         <div class="headright">
@@ -177,7 +177,7 @@
         <div style="float: left; width: 60%">
             <form action="index.php" method="get">
                 <div style="float: right">
-                    <input type="image" src="images/search32.png" alt="Search" />
+                    <input type="image" src="images/search32.png" alt="<?php echo localize ("search.alternate") ?>" />
                 </div>
                 <div class="stop">
                     <input type="hidden" name="current" value="<?php echo $page ?>" />
@@ -192,7 +192,7 @@
 <?php if ($currentPage->containsBook ()) { ?>
         <div style="float: right; width: 35%">
             <div style="float: right">
-                <img id="sort" src="images/sort32.png" alt="Sort" />
+                <img id="sort" src="images/sort32.png" alt="<?php echo localize ("sort.alternate") ?>" />
             </div>
             <div class="stop">
                 <select id="sortchoice">
@@ -309,7 +309,7 @@
         <?php
             if (!is_null ($prevLink)) {
         ?>
-        <a href="<?php echo $prevLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/previous.png") ?>" alt="Previous" /></a>
+        <a href="<?php echo $prevLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/previous.png") ?>" alt="<?php echo localize ("paging.previous.alternate") ?>" /></a>
         <?php
             }
         ?>
@@ -317,7 +317,7 @@
         <?php
             if (!is_null ($nextLink)) {
         ?>
-        <a href="<?php echo $nextLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/next.png") ?>" alt="Next" /></a>
+        <a href="<?php echo $nextLink->hrefXhtml () ?>" ><img src="<?php echo getUrlWithVersion("images/next.png") ?>" alt="<?php echo localize ("paging.next.alternate") ?>" /></a>
         <?php
             }
         ?>

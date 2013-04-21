@@ -108,5 +108,11 @@
 "search.result":"Résultats pour *{0}*",
 "search.sortorder.asc":"Crois.",
 "search.sortorder.desc":"Décrois.",
+"permalink.alternate":"Permalien",
+"home.alternate":"Accueil",
+"search.alternate":"Rechercher",
+"sort.alternate":"Trier",
+"paging.next.alternate":"Suivant",
+"paging.previous.alternate":"Précédent",
 "fin":"fin"
 }
