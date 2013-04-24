@@ -172,7 +172,7 @@
             <p><?php echo htmlspecialchars ($currentPage->title) ?></p>
         </div>
     </div>
-    <div class="clearer" />
+    <div class="clearer" ></div>
     <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
         <div style="float: left; width: 60%">
             <form action="index.php" method="get">
@@ -209,7 +209,7 @@
         </div>
 <?php } ?>
     </div>
-    <div class="clearer" />
+    <div class="clearer" ></div>
     <div id="content" style="display: none;"></div>
     <div class="entries">
 <?php
@@ -264,7 +264,7 @@
             ?>
             </div>
             <div class="bookdetail">
-                <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" />
+                <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" ></a>
                 <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?>
             <?php
                 if ($entry->book->getPubDate() != "")
@@ -291,7 +291,7 @@
         <?php
                 }
         ?>
-        <div class="clearer" />
+        <div class="clearer" ></div>
         <?php
             }
         ?>
