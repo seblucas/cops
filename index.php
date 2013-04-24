@@ -226,6 +226,7 @@
             <div class="entryContent"><?php echo htmlspecialchars ($entry->content) ?></div>
         <?php
             foreach ($entry->linkArray as $link) {
+                if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
         ?>
             <a href="<?php echo $link->hrefXhtml () ?>" class="navigation">nav</a>
         <?php
