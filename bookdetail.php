@@ -115,7 +115,7 @@ $book->getLinkArray ();
         }
 ?>
     </div>
-    <div class="clearer" />
+    <div class="clearer" ></div>
     <hr />
     <div><?php echo localize("content.summary") ?></div>
     <div class="content" <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?>><?php echo $book->getComment (false) ?></div>
