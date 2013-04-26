@@ -56,19 +56,22 @@
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
     <?php if ($config['cops_use_local_resources'] == 0) { ?>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.min.js"></script>
+        <?php if ($config['cops_use_fancyapps'] == 1) { ?>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.pack.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.css" media="screen" />
+        <?php } ?>
     <?php } else { ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
-    <?php } ?>
-    <?php if ($config['cops_use_fancyapps'] == 1) { ?>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
+        <?php if ($config['cops_use_fancyapps'] == 1) { ?>
     <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.4"></script>
+    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
+        <?php } ?>
     <?php } ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
-    <?php if ($config['cops_use_fancyapps'] == 1) { ?>
-    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
-    <?php } ?>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
     <script type="text/javascript">
         $(document).ready(function() {
