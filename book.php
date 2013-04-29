@@ -427,8 +427,8 @@ where data.book = books.id and data.id = ?');
         return NULL;
     }
     
-    public static function getBooksByQuery($query, $n) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n);
+    public static function getBooksByQuery($query, $n, $database = NULL) {
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n, $database);
     }
     
     public static function getAllBooks() {
@@ -450,8 +450,8 @@ order by substr (upper (sort), 1, 1)");
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
     }
     
-    public static function getEntryArray ($query, $params, $n) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n);
+    public static function getEntryArray ($query, $params, $n, $database = NULL) {
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

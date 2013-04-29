@@ -576,8 +576,24 @@ class PageQueryResult extends Page
 {
     public function InitializeContent () 
     {
+        global $config;
         $this->title = str_format (localize ("search.result"), $this->query);
         $currentPage = getURLParam ("current", NULL);
+        
+        // Special case when we are doing a search and no database is selected
+        if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
+            $i = 0;
+            foreach ($config['calibre_directory'] as $key => $value) {
+                Base::clearDb ();
+                list ($array, $totalNumber) = Book::getBooksByQuery ($this->query, $this->n, $i);
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}", 
+                                        count($array) . " book found", "text", 
+                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
+                $i++;
+            }
+            return;
+        }
+        
         switch ($currentPage) {
             case Base::PAGE_ALL_AUTHORS :
             case Base::PAGE_AUTHORS_FIRST_LETTER :
@@ -665,11 +681,11 @@ abstract class Base
         return self::getDbDirectory ($database) .'metadata.db';
     }
     
-    public static function getDb () {
+    public static function getDb ($database = NULL) {
         global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. self::getDbFileName ());
+                self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
             } catch (Exception $e) {
                 header("location: checkconfig.php?err=1");
                 exit();
@@ -678,14 +694,18 @@ abstract class Base
         return self::$db;
     }
     
-    public static function executeQuery($query, $columns, $filter, $params, $n) {
+    public static function clearDb () {
+        self::$db = NULL;
+    }
+    
+    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL) {
         global $config;
         $totalResult = -1;
         
         if ($config['cops_max_item_per_page'] != -1 && $n != -1)
         {
             // First check total number of results
-            $result = self::getDb ()->prepare (str_format ($query, "count(*)", $filter));
+            $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
             $result->execute ($params);
             $totalResult = $result->fetchColumn ();
             
@@ -694,7 +714,7 @@ abstract class Base
             array_push ($params, ($n - 1) * $config['cops_max_item_per_page'], $config['cops_max_item_per_page']);
         }
         
-        $result = self::getDb ()->prepare(str_format ($query, $columns, $filter));
+        $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
         $result->execute ($params);
         return array ($totalResult, $result);
     }
