@@ -591,7 +591,7 @@ class PageQueryResult extends Page
                 Base::clearDb ();
                 list ($array, $totalNumber) = Book::getBooksByQuery ($this->query, $this->n, $i);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}", 
-                                        count($array) . " book found", "text", 
+                                        str_format (localize ("bookword", count($array)), count($array)), "text", 
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
                 $i++;
             }
