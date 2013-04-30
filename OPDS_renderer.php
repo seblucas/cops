@@ -60,7 +60,11 @@ class OPDSRenderer
                 $xml->endElement ();
                 $xml->startElement ("Url");
                     $xml->writeAttribute ("type", 'application/atom+xml');
-                    $xml->writeAttribute ("template", $config['cops_full_url'] . 'feed.php?query={searchTerms}');
+                    $urlparam = "?query={searchTerms}";
+                    if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
+                    $urlparam = str_replace ("%7B", "{", $urlparam);
+                    $urlparam = str_replace ("%7D", "}", $urlparam);
+                    $xml->writeAttribute ("template", $config['cops_full_url'] . 'feed.php' . $urlparam);
                 $xml->endElement ();
                 $xml->startElement ("Query");
                     $xml->writeAttribute ("role", "example");
@@ -122,14 +126,16 @@ class OPDSRenderer
             self::renderLink ($link);
             $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
             self::renderLink ($link);
+            $urlparam = "?page=" . self::PAGE_OPENSEARCH;
+            if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
             if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
                 // Good and compliant way of handling search
-                $link = new Link ("feed.php?page=" . self::PAGE_OPENSEARCH, "application/opensearchdescription+xml", "search", "Search here");
+                $link = new Link ("feed.php" . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
             }
             else
             {
                 // Bad way, will be removed when OPDS client are fixed
-                $link = new Link ($config['cops_full_url'] . 'feed.php?query={searchTerms}', "application/atom+xml", "search", "Search here");
+                $link = new Link ($config['cops_full_url'] . 'feed.php' . $urlparam, "application/atom+xml", "search", "Search here");
             }
             self::renderLink ($link);
             if ($page->containsBook () && !is_null ($config['cops_books_filter']) && count ($config['cops_books_filter']) > 0) {
