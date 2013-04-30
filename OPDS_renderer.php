@@ -92,7 +92,9 @@ class OPDSRenderer
             self::getXmlStream ()->startElement ("id");
                 if ($page->idPage)
                 {
-                    self::getXmlStream ()->text ($page->idPage);
+                    $idPage = $page->idPage;
+                    if (!is_null (GetUrlParam (DB))) $idPage = GetUrlParam (DB) . ":" . $idPage;
+                    self::getXmlStream ()->text ($idPage);
                 }
                 else
                 {

@@ -267,6 +267,8 @@ class Entry
                 }
             }
         }
+        
+        if (!is_null (GetUrlParam (DB))) $this->id = GetUrlParam (DB) . ":" . $this->id;
     }
 }
 
@@ -367,7 +369,7 @@ class Page
         if (is_array ($config['calibre_directory']) && is_null ($database)) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
-                array_push ($this->entryArray, new Entry ($key, DB . ":{$i}", 
+                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog", 
                                         "", "text", 
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
                 $i++;
