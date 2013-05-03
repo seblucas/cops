@@ -6,7 +6,7 @@
  * @author Sébastien Lucas <sebastien@slucas.fr>
  */
  
-require_once(realpath( dirname( __FILE__ ) ) . 'tbszip.php');
+require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
 
 define ("METADATA_FILE", "META-INF/container.xml");
  
