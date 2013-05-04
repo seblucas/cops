@@ -24,7 +24,7 @@
     $withToolbar = false;
     if (!isset($_COOKIE['toolbar'])) $withToolbar = true;
     
-    header ("Content-Type:application/xhtml+xml");
+    header ("Content-Type:application/xhtml+xml;charset=utf-8");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $qid = getURLParam ("id");
