@@ -126,10 +126,10 @@ function localize($phrase, $count=-1) {
     static $translations = NULL;
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
-        $lang = "en";
+        $lang = "zh";
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
         {
-            $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+            //$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         }
         $lang_file_en = NULL;
         $lang_file = 'lang/Localization_' . $lang . '.json';
@@ -140,8 +140,12 @@ function localize($phrase, $count=-1) {
             $lang_file_en = 'lang/' . 'Localization_en.json';
         }
         $lang_file_content = file_get_contents($lang_file);
+        //var_dump($lang_file);
+        //var_dump($lang_file_content);
         /* Load the language file as a JSON object and transform it into an associative array */
         $translations = json_decode($lang_file_content, true);
+        //var_dump($translations['boolean.no']);
+        //var_dump($translations['authors.title']);
         if ($lang_file_en)
         {
             $lang_file_content = file_get_contents($lang_file_en);
