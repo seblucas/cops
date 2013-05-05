@@ -172,6 +172,6 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_use_local_resources'] = "0";
+    $config['cops_use_local_resources'] = "1";
 
 ?>
