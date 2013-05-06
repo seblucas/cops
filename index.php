@@ -57,8 +57,8 @@
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
 <?php if ($config['cops_use_fancyapps'] == 1) { ?>
-    <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.4"></script>
-    <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.pack.js") ?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.css") ?>" media="screen" />
 <?php } ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
