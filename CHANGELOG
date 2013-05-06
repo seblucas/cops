@@ -1,4 +1,4 @@
-0.3.5 - 201305??
+0.4.0 - 201305??
   * Add multiple database support. Check the documentation of $config['calibre_directory'] in config-default.php to see how ot enable it.
   * Include jquery library in COPS's repository to be sure that COPS will work on LAN (without Internet access).
   * Prepare the switch to HTML5. Thanks to Thomas Severinsen for most of the code.
@@ -6,6 +6,7 @@
   * If Fancybox is not enabled ($config['cops_use_fancyapps'] = "0") then it's not used at all (even in the about box).
   * Fix book comments if it contains UTF8 characters. Reported by Alain.
   * Link to the book permalink was not working correctly in some cases. Reported by celta.
+  * Moved some external resources to a resources directory.
 
 0.3.4 - 20130327
   * Hopefully fix metadata update. Beware you should remove the directory php-epub-meta if you have one. Thanks to Mario for his time.
