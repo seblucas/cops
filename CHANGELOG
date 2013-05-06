@@ -1,6 +1,6 @@
 0.3.5 - 201305??
   * Add multiple database support. Check the documentation of $config['calibre_directory'] in config-default.php to see how ot enable it.
-  * Include jquery library in COPS's repository to be sure that COPS will work on LAN (without Internet access). You can enable CDN resources with $config['cops_use_local_resources'].
+  * Include jquery library in COPS's repository to be sure that COPS will work on LAN (without Internet access).
   * Prepare the switch to HTML5. Thanks to Thomas Severinsen for most of the code.
   * Update the locale strings to be more strict with plurals. Thanks to Tobias Ausländer for the code.
   * If Fancybox is not enabled ($config['cops_use_fancyapps'] = "0") then it's not used at all (even in the about box).
