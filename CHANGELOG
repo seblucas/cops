@@ -7,6 +7,7 @@
   * Fix book comments if it contains UTF8 characters. Reported by Alain.
   * Link to the book permalink was not working correctly in some cases. Reported by celta.
   * Moved some external resources to a resources directory.
+  * Add chinese translation. Thanks to wogong for the pull request.
 
 0.3.4 - 20130327
   * Hopefully fix metadata update. Beware you should remove the directory php-epub-meta if you have one. Thanks to Mario for his time.
