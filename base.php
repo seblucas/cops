@@ -126,7 +126,7 @@ function localize($phrase, $count=-1) {
     static $translations = NULL;
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
-        $lang = "zh";
+        $lang = "en";
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
         {
             //$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
