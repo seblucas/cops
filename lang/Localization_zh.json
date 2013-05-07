@@ -1,7 +1,7 @@
 {
 "boolean.no":"否",
 "boolean.yes":"是",
-"splitByLetter.letter":"{0} 以 {1} 开始",
+"splitByLetter.letter":"{0} 以 {1} 开头",
 "home.title":"目录",
 "link.fullentry":"全部条目",
 "title.nextpage":"下一页 ({0} of {1})",
