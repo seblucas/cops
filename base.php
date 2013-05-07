@@ -129,7 +129,7 @@ function localize($phrase, $count=-1) {
         $lang = "en";
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
         {
-            //$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+            $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         }
         $lang_file_en = NULL;
         $lang_file = 'lang/Localization_' . $lang . '.json';
