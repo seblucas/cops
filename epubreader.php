@@ -35,14 +35,10 @@ $book->initSpineComponent ();
           getComponent: function (componentId, callback) {
             $.ajax({
                 url: "epubfs.php?comp="  + componentId,
-                type: 'get'
-                , dataType: 'text'
-                , error: function () {alert ("error");} 
-                , success: function (data, textStatus, jqXHR ) {
-                    //alert (textStatus);
-                    //alert (data);
-                    callback (data);
-                }
+                type: 'get',
+                dataType: 'text',
+                error: function () {alert ("error");},
+                success: callback
             });
           },
           getMetaData: function(key) {
