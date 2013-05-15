@@ -38,11 +38,11 @@
  * HTTP_USER_AGENT = "Mozilla/5.0 (Linux; U; en-us; EBRD1101; EXT) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
  */
 
-	if (preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-		$isEink = 1;
-	} else {
-		$isEink = 0;
-	}
+    if (preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+        $isEink = 1;
+    } else {
+        $isEink = 0;
+    }
 
 
 ?>
@@ -60,8 +60,8 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
     <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css?v=2.1.3" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
-	<link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' rel='stylesheet' type='text/css' />
+    <link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' rel='stylesheet' type='text/css' />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
@@ -85,8 +85,8 @@
 <?php if ($config['cops_use_fancyapps'] == 1) { ?>
             $(".fancycover").fancybox({
                 'type' : 'image',
-                prevEffect		: 'none',
-                nextEffect		: 'none'
+                prevEffect      : 'none',
+                nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
 <?php } ?>
@@ -94,8 +94,8 @@
             $(".fancyabout").fancybox({
                 'type' : 'ajax',
                 title           : 'COPS <?php echo VERSION ?>',
-                prevEffect		: 'none',
-                nextEffect		: 'none'
+                prevEffect      : 'none',
+                nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
@@ -202,28 +202,28 @@
                 if (get_class ($entry) != "EntryBook") {
         ?>
         <article>
-			<div class="frontpage">
-			<?php foreach ($entry->linkArray as $link) { if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; } ?> <a href="<?php echo $link->hrefXhtml () ?>">
-					<h2><?php echo htmlspecialchars ($entry->title) ?></h2>
-					<?php } ?>
-					<h4><?php echo htmlspecialchars ($entry->content) ?></h4> 
-				</a>
-			</div>
-		</article>
+            <div class="frontpage">
+            <?php foreach ($entry->linkArray as $link) { if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; } ?> <a href="<?php echo $link->hrefXhtml () ?>">
+                    <h2><?php echo htmlspecialchars ($entry->title) ?></h2>
+                    <?php } ?>
+                    <h4><?php echo htmlspecialchars ($entry->content) ?></h4> 
+                </a>
+            </div>
+        </article>
         <?php
                 }
                 else
                 {
         ?>
         <article class="books">
-			<?php
+            <?php
                 if ($entry->book->hasCover) {
             ?>
                 <span class="cover"><a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a></span>
             <?php
                 }
             ?>
-			<h2 class="download">
+            <h2 class="download">
             <?php
                 $i = 0;
                 foreach ($config['cops_prefered_format'] as $format)
@@ -233,14 +233,14 @@
                         $i++;
             ?>    
                 <a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a><br />
-				<?php
+                <?php
                     }
-					
+                    
                 }
             ?>
             </h2>
-			<a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
-			<div class="fullclickpopup">
+            <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
+            <div class="fullclickpopup">
                 <h2><?php echo htmlspecialchars ($entry->title) ?>
             <?php
                 if ($entry->book->getPubDate() != "")
