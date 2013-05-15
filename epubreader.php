@@ -19,10 +19,9 @@ $book->initSpineComponent ();
     <title>COPS's Epub Reader</title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle320/scripts/monocore.js") ?>"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle320/scripts/monoctrl.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle320/styles/monocore.css") ?>" media="screen" />
-    <style type="text/css">
-        #reader { width: 500px; height: 800px; border: 1px solid #000; }
-    </style>
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle320/styles/monoctrl.css") ?>" media="screen" />
     <script type="text/javascript">
         Monocle.DEBUG = true; 
         var bookData = {
@@ -50,10 +49,21 @@ $book->initSpineComponent ();
         }
 
     </script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("cops-monocle.js") ?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("cops-monocle.css") ?>" media="screen" />
 </head>
 <body>
-  <div id="reader">
+  <div id="readerBg">
+      <div class="board"></div>
+      <div class="jacket"></div>
+      <div class="dummyPage"></div>
+      <div class="dummyPage"></div>
+      <div class="dummyPage"></div>
+      <div class="dummyPage"></div>
+      <div class="dummyPage"></div>
   </div>
-  <script type="text/javascript">Monocle.Reader('reader', bookData, {});</script>
+  <div id="readerCntr">
+      <div id="reader"></div>
+  </div>
 </body>
 </html>
