@@ -74,15 +74,30 @@
             ?>
             </div>
         </div>
-
+        <div class="entry">
+            <div class="entryTitle">Check if libxml is properly installed and loaded</div>
+            <div class="entryContent">
+            <?php 
+            if (extension_loaded('libxml')) {
+                echo "OK";
+            } else {
+                echo "Please make sure libxml is enabled";
+            }
+            ?>
+            </div>
+        </div>
+<?php 
+$i = 0;
+foreach (Base::getDbList () as $name => $database) { 
+?>
         <div class="entry">
             <div class="entryTitle">Check if Calibre database file exists and is readable</div>
             <div class="entryContent">
             <?php 
-            if (is_readable (Base::getDbFileName ())) {
-                echo "OK";
+            if (is_readable (Base::getDbFileName ($i))) {
+                echo "{$name} OK";
             } else {
-                echo "File " . Base::getDbFileName () . " not found, 
+                echo "{$name} File " . Base::getDbFileName ($i) . " not found, 
 Please check 
 <ul>
 <li>Value of \$config['calibre_directory'] in config_local.php</li>
@@ -99,14 +114,33 @@ Please check
             <div class="entryContent">
             <?php 
             try {
-                $db = new PDO('sqlite:'. Base::getDbFileName ());
-                echo "OK";
+                $db = new PDO('sqlite:'. Base::getDbFileName ($i));
+                echo "{$name} OK";
             } catch (Exception $e) {
-                echo "If the file is readable, check your php configuration. Exception detail : " . $e;
+                echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
             }
             ?>
             </div>
         </div>
+        <div class="entry">
+            <div class="entryTitle">Check if Calibre database file contains at least some of the needed tables</div>
+            <div class="entryContent">
+            <?php 
+            try {
+                $db = new PDO('sqlite:'. Base::getDbFileName ($i));
+                $count = $db->query("select count(*) FROM sqlite_master WHERE type='table' AND name in ('books', 'authors', 'tags', 'series')")->fetchColumn();
+                if ($count == 4) {
+                    echo "{$name} OK";
+                } else {
+                    echo "{$name} Not all Calibre tables were found. Are you you're using the correct database.";
+                }
+            } catch (Exception $e) {
+                echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
+            }
+            ?>
+            </div>
+        </div>
+<?php $i++; } ?>
     </div>
 </div>
 </body>

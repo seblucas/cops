@@ -100,7 +100,7 @@
     
     $dir = $config['calibre_internal_directory'];
     if (empty ($config['calibre_internal_directory'])) {
-        $dir = $config['calibre_directory'];
+        $dir = Base::getDbDirectory ();
     }
     
     if (empty ($config['cops_x_accel_redirect'])) {

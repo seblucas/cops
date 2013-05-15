@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.3.2");
+define ("VERSION", "0.4.0");
+define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
@@ -27,14 +28,66 @@ function xml2xhtml($xml) {
     '), $xml);
 }
 
+function display_xml_error($error)
+{
+    $return .= str_repeat('-', $error->column) . "^\n";
+
+    switch ($error->level) {
+        case LIBXML_ERR_WARNING:
+            $return .= "Warning $error->code: ";
+            break;
+         case LIBXML_ERR_ERROR:
+            $return .= "Error $error->code: ";
+            break;
+        case LIBXML_ERR_FATAL:
+            $return .= "Fatal Error $error->code: ";
+            break;
+    }
+
+    $return .= trim($error->message) .
+               "\n  Line: $error->line" .
+               "\n  Column: $error->column";
+
+    if ($error->file) {
+        $return .= "\n  File: $error->file";
+    }
+
+    return "$return\n\n--------------------------------------------\n\n";
+}
+
+function are_libxml_errors_ok ()
+{
+    $errors = libxml_get_errors();
+    
+    foreach ($errors as $error) {
+        if ($error->code == 801) return false;
+    }
+    return true;
+}
+
 function html2xhtml ($html) {
     $doc = new DOMDocument();
-    $doc->loadHTML($html); // Load the HTML
-    $output = utf8_decode($doc->saveXML($doc->documentElement)); // Transform to an Ansi xml stream
-    $output = xml2xhtml($output); // Fix the br / hr ...
-    if (preg_match ("/<html><body>(.*)<\/body><\/html>/", $output, $matches)) {
+    libxml_use_internal_errors(true);
+    
+    $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' . 
+                        $html  . '</body></html>'); // Load the HTML
+    $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
+    $output = xml2xhtml($output);
+    if (preg_match ('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
         $output = $matches [1]; // Remove <html><body>
     }
+    /* 
+    // In case of error with summary, use it to debug
+    $errors = libxml_get_errors();
+
+    foreach ($errors as $error) {
+        $output .= display_xml_error($error);
+    }
+    */
+    
+    if (!are_libxml_errors_ok ()) $output = "HTML code not valid.";
+    
+    libxml_use_internal_errors(false);
     return $output;
 }
 
@@ -100,14 +153,19 @@ function localize($phrase, $count=-1) {
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
+    $start = "";
+    if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
+        $start = "?";
+        $urlParams = $matches[1];
+    }
     $params = array();
     parse_str($urlParams, $params);
-    if (empty ($paramValue)) {
+    if (empty ($paramValue) && $paramValue != 0) {
         unset ($params[$paramName]);
     } else {
         $params[$paramName] = $paramValue;   
     }
-    return http_build_query($params);
+    return $start . http_build_query($params);
 }
 
 class Link
@@ -143,7 +201,13 @@ class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
+        if (preg_match ("/bookdetail.php/", $_SERVER["SCRIPT_NAME"])) {
+            $this->href = "index.php" . $this->href;
+        } else {
+            $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        }
     }
 }
 
@@ -151,6 +215,7 @@ class LinkFacet extends Link
 {
     public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
         parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
+        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
     }
 }
@@ -203,6 +268,8 @@ class Entry
                 }
             }
         }
+        
+        if (!is_null (GetUrlParam (DB))) $this->id = GetUrlParam (DB) . ":" . $this->id;
     }
 }
 
@@ -276,6 +343,8 @@ class Page
                 return new PageQueryResult ($id, $query, $n);
             case Base::PAGE_BOOK_DETAIL :
                 return new PageBookDetail ($id, $query, $n);
+            case Base::PAGE_ABOUT :
+                return new PageAbout ($id, $query, $n);
             default:
                 $page = new Page ($id, $query, $n);
                 $page->idPage = "cops:catalog";
@@ -297,16 +366,29 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        array_push ($this->entryArray, Author::getCount());
-        array_push ($this->entryArray, Serie::getCount());
-        array_push ($this->entryArray, Tag::getCount());
-        foreach ($config['cops_calibre_custom_column'] as $lookup) {
-            $customId = CustomColumn::getCustomId ($lookup);
-            if (!is_null ($customId)) {
-                array_push ($this->entryArray, CustomColumn::getCount($customId));
+        $database = GetUrlParam (DB);
+        if (is_array ($config['calibre_directory']) && is_null ($database)) {
+            $i = 0;
+            foreach ($config['calibre_directory'] as $key => $value) {
+                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog", 
+                                        "", "text", 
+                                        array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                $i++;
             }
+        } else {
+            array_push ($this->entryArray, Author::getCount());
+            array_push ($this->entryArray, Serie::getCount());
+            array_push ($this->entryArray, Tag::getCount());
+            foreach ($config['cops_calibre_custom_column'] as $lookup) {
+                $customId = CustomColumn::getCustomId ($lookup);
+                if (!is_null ($customId)) {
+                    array_push ($this->entryArray, CustomColumn::getCount($customId));
+                }
+            }
+            $this->entryArray = array_merge ($this->entryArray, Book::getCount());
+            
+            if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
-        $this->entryArray = array_merge ($this->entryArray, Book::getCount());
     }
     
     public function isPaginated ()
@@ -498,8 +580,32 @@ class PageQueryResult extends Page
 {
     public function InitializeContent () 
     {
-        $this->title = "Search result for query *" . $this->query . "*"; // TODO I18N
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
+        global $config;
+        $this->title = str_format (localize ("search.result"), $this->query);
+        $currentPage = getURLParam ("current", NULL);
+        
+        // Special case when we are doing a search and no database is selected
+        if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
+            $i = 0;
+            foreach ($config['calibre_directory'] as $key => $value) {
+                Base::clearDb ();
+                list ($array, $totalNumber) = Book::getBooksByQuery ($this->query, $this->n, $i);
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}", 
+                                        str_format (localize ("bookword", count($array)), count($array)), "text", 
+                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
+                $i++;
+            }
+            return;
+        }
+        
+        switch ($currentPage) {
+            case Base::PAGE_ALL_AUTHORS :
+            case Base::PAGE_AUTHORS_FIRST_LETTER :
+                $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                break;
+            default:
+                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
+        }
     }
 }
 
@@ -511,6 +617,15 @@ class PageBookDetail extends Page
         $this->title = $book->title;
     }
 }
+
+class PageAbout extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = localize ("about.title");
+    }
+}
+
 
 abstract class Base
 {
@@ -530,21 +645,51 @@ abstract class Base
     const PAGE_BOOK_DETAIL = "13";
     const PAGE_ALL_CUSTOMS = "14";
     const PAGE_CUSTOM_DETAIL = "15";
+    const PAGE_ABOUT = "16";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
     private static $db = NULL;
     
-    public static function getDbFileName () {
+    public static function getDbList () {
         global $config;
-        return $config['calibre_directory'] .'metadata.db';
+        if (is_array ($config['calibre_directory'])) {
+            return $config['calibre_directory'];
+        } else {
+            return array ("" => $config['calibre_directory']);
+        }
+    }
+
+    public static function getDbName ($database = NULL) {
+        global $config;
+        if (is_array ($config['calibre_directory'])) {
+            if (is_null ($database)) $database = GetUrlParam (DB, 0);
+            $array = array_keys ($config['calibre_directory']);
+            return  $array[$database];
+        }
+        return "";
+    }
+
+    public static function getDbDirectory ($database = NULL) {
+        global $config;
+        if (is_array ($config['calibre_directory'])) {
+            if (is_null ($database)) $database = GetUrlParam (DB, 0);
+            $array = array_values ($config['calibre_directory']);
+            return  $array[$database];
+        }
+        return $config['calibre_directory'];
+    }
+
+  
+    public static function getDbFileName ($database = NULL) {
+        return self::getDbDirectory ($database) .'metadata.db';
     }
     
-    public static function getDb () {
+    public static function getDb ($database = NULL) {
         global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. self::getDbFileName ());
+                self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
             } catch (Exception $e) {
                 header("location: checkconfig.php?err=1");
                 exit();
@@ -553,14 +698,18 @@ abstract class Base
         return self::$db;
     }
     
-    public static function executeQuery($query, $columns, $filter, $params, $n) {
+    public static function clearDb () {
+        self::$db = NULL;
+    }
+    
+    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL) {
         global $config;
         $totalResult = -1;
         
         if ($config['cops_max_item_per_page'] != -1 && $n != -1)
         {
             // First check total number of results
-            $result = self::getDb ()->prepare (str_format ($query, "count(*)", $filter));
+            $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
             $result->execute ($params);
             $totalResult = $result->fetchColumn ();
             
@@ -569,7 +718,7 @@ abstract class Base
             array_push ($params, ($n - 1) * $config['cops_max_item_per_page'], $config['cops_max_item_per_page']);
         }
         
-        $result = self::getDb ()->prepare(str_format ($query, $columns, $filter));
+        $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
         $result->execute ($params);
         return array ($totalResult, $result);
     }
