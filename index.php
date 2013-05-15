@@ -203,7 +203,7 @@
         ?>
         <article>
 			<div class="frontpage">
-			<?php foreach ($entry->linkArray as $link) {?> <a href="<?php echo $link->hrefXhtml () ?>">
+			<?php foreach ($entry->linkArray as $link) { if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; } ?> <a href="<?php echo $link->hrefXhtml () ?>">
 					<h2><?php echo htmlspecialchars ($entry->title) ?></h2>
 					<?php } ?>
 					<h4><?php echo htmlspecialchars ($entry->content) ?></h4> 
