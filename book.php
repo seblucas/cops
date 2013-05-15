@@ -199,6 +199,21 @@ class Book extends Base {
         }
         return $this->datas;
     }
+	
+	public function GetMostInterestingDataToSendToKindle ()
+	{
+		$bestFormatForKindle = array ("PDF", "MOBI");
+		$bestRank = -1;
+		$bestData = NULL;
+		foreach ($this->getDatas () as $data) {
+			$key = array_search ($data->format, $bestFormatForKindle);
+			if ($key !== false && $key > $bestRank) {
+				$bestRank = $key;
+				$bestData = $data;
+			}
+		}
+		return $bestData;
+	}
     
     public function getDataById ($idData)
     {
