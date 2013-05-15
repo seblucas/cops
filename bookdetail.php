@@ -20,7 +20,7 @@ $book->getLinkArray ();
 <?php
     if (isset ($page) &&  $page == Base::PAGE_BOOK_DETAIL) {
 ?>
-<div>
+<article class="bookdetail">
 <?php
     } else {
 ?>
@@ -47,7 +47,7 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-		<h1><a rel="bookmark" href="<?php echo 'index.php' . $book->getUri () ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="permalink" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
+		<h1><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
 			
 			<h3><?php echo localize("authors.title") ?>: </h3>
 			<p class="popupless">
