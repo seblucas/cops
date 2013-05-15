@@ -18,39 +18,32 @@ $book->initSpineComponent ();
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title>COPS's Epub Reader</title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monocore.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monocore.css") ?>" media="screen" />
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle320/scripts/monocore.js") ?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle320/styles/monocore.css") ?>" media="screen" />
+    <style type="text/css">
+        #reader { width: 500px; height: 800px; border: 1px solid #000; }
+    </style>
     <script type="text/javascript">
+        Monocle.DEBUG = true; 
         var bookData = {
           getComponents: function () {
             <?php echo "return [" . implode (", ", array_map (function ($comp) { return "'" . $comp . "'"; }, $book->components ())) . "];"; ?>
           },
           getContents: function () {
-            <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . $content["title"] . "', src: '". $content["src"] . "']"; }, $book->contents ())) . "];"; ?>
-            return [
-              {
-                title: "Chapter 1",
-                src: "component1.xhtml"
-              },
-              {
-                title: "Chapter 2",
-                src: "component3.xhtml#chapter-2"
-              }
-            ]
+            <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . $content["title"] . "', src: '". $content["src"] . "'}"; }, $book->contents ())) . "];"; ?>
           },
-          getComponent: function (componentId) {
-            return {
-              'component1.xhtml':
-                '<h1>Chapter 1</h1><p>Hello world</p>',
-              'component2.xhtml':
-                '<p>Chapter 1 continued.</p>',
-              'component3.xhtml':
-                '<p>Chapter 1 continued again.</p>' +
-                '<h1 id="chapter-2">Chapter 2</h1>' +
-                '<p>Hello from the second chapter.</p>',
-              'component4.xhtml':
-                '<p>THE END.</p>'
-            }[componentId];
+          getComponent: function (componentId, callback) {
+            $.ajax({
+                url: "epubfs.php?comp="  + componentId,
+                type: 'get'
+                , dataType: 'text'
+                , error: function () {alert ("error");} 
+                , success: function (data, textStatus, jqXHR ) {
+                    //alert (textStatus);
+                    //alert (data);
+                    callback (data);
+                }
+            });
           },
           getMetaData: function(key) {
             return {
@@ -63,5 +56,8 @@ $book->initSpineComponent ();
     </script>
 </head>
 <body>
+  <div id="reader">
+  </div>
+  <script type="text/javascript">Monocle.Reader('reader', bookData, {});</script>
 </body>
 </html>
