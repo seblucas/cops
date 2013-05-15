@@ -3,15 +3,18 @@
  * PHP EPub Meta library
  *
  * @author Andreas Gohr <andi@splitbrain.org>
+ * @author Sébastien Lucas <sebastien@slucas.fr>
  */
  
-require_once('tbszip.php');
+require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
 
 define ("METADATA_FILE", "META-INF/container.xml");
  
 class EPub {
     public $xml; //FIXME change to protected, later
+    public $toc;
     protected $xpath;
+    protected $toc_xpath;
     protected $file;
     protected $meta;
     protected $zip;
@@ -64,6 +67,26 @@ class EPub {
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
+    
+    public function initSpineComponent ()
+    {
+        $spine = $this->xpath->query('//opf:spine')->item(0);
+        $tocid = $spine->getAttribute('toc');
+        $tochref = $this->xpath->query("//opf:manifest/opf:item[@id='$tocid']")->item(0)->attr('href');
+        $tocpath = dirname($this->meta).'/'.$tochref; 
+        // read epub toc
+        if (!$this->zip->FileExists($tocpath)) {
+            throw new Exception ("Unable to find " . $tocpath);
+        }
+        
+        $data = $this->zip->FileRead($tocpath);
+        $this->toc =  new DOMDocument();
+        $this->toc->registerNodeClass('DOMElement','EPubDOMElement');
+        $this->toc->loadXML($data);
+        $this->toc_xpath = new EPubDOMXPath($this->toc);
+        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI); 
+        $this->toc_xpath->registerNamespace('x', $rootNamespace);
+    }
 
     /**
      * file name getter
@@ -82,12 +105,23 @@ class EPub {
     }
 
     /**
+     * Remove iTunes files
+     */
+    public function cleanITunesCrap () {
+        if ($this->zip->FileExists("iTunesMetadata.plist")) {
+            $this->zip->FileReplace ("iTunesMetadata.plist", false);
+        }
+        if ($this->zip->FileExists("iTunesArtwork")) {
+            $this->zip->FileReplace ("iTunesArtwork", false);
+        }
+    }
+
+    /**
      * Writes back all meta data changes
-     * TODO update
      */
     public function save(){
         $this->download ();
-        $zip->close();
+        $this->zip->close();
     }
     
     /**
@@ -102,7 +136,57 @@ class EPub {
         }
         if ($file) $this->zip->Flush(TBSZIP_DOWNLOAD, $file);
     }
+
+    /**
+     * Get the components list as an array
+     */
+    public function components(){
+        $spine = array();
+        $nodes = $this->xpath->query('//opf:spine/opf:itemref');
+        foreach($nodes as $node){
+            $idref =  $node->getAttribute('idref');
+            $spine[] = $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href');
+        }
+        return $spine;
+    }
     
+    /**
+     * Get the component content
+     */
+    public function component($comp) {
+        $path = dirname($this->meta).'/'.$comp;
+        if (!$this->zip->FileExists($path)) {
+            throw new Exception ("Unable to find " . $path);
+        }
+        
+        $data = $this->zip->FileRead($path);
+        $data = preg_replace ("/src=[\"']([\w\/\.]*?)[\"']/", "src='epubfs.php?comp=$1'", $data);
+        $data = preg_replace ("/href=[\"']([\w\/\.]*?)[\"']/", "href='epubfs.php?comp=$1'", $data);
+        return $data;
+    }
+    
+    /**
+     * Get the component content type
+     */
+    public function componentContentType($comp) {
+        return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
+    }
+
+    /**
+     * Get the Epub content (TOC) as an array
+     *
+     * For each chapter there is a "title" and a "src"
+     */
+    public function contents(){
+        $contents = array();
+        $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
+        foreach($nodes as $node){
+            $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
+            $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
+            $contents[] =  array("title" => $title, "src" => $src);
+        }
+        return $contents;
+    }
     
 
     /**
@@ -413,7 +497,6 @@ class EPub {
         }
     }
     
-    
     public function Cover2($path=false, $mime=false){
         $hascover = true;
         $item = $this->getCoverItem ();
@@ -423,6 +506,7 @@ class EPub {
             $mime = $item->attr('opf:media-type');
             $this->coverpath = $item->attr('opf:href');
             $this->coverpath = dirname('/'.$this->meta).'/'.$this->coverpath; // image path is relative to meta file
+            $this->coverpath = ltrim($this->coverpath,'\\');
             $this->coverpath = ltrim($this->coverpath,'/');
         }
         
@@ -441,18 +525,6 @@ class EPub {
         }
         
         if (!$hascover) return $this->no_cover();
-
-        $zip = new ZipArchive();
-        if(!@$zip->open($this->file)){
-            throw new Exception('Failed to read epub file');
-        }
-        $data = $zip->getFromName($this->coverpath);
-
-        return array(
-            'mime'  => $mime,
-            'data'  => $data,
-            'found' => $this->coverpath
-        );
     }
 
     /**

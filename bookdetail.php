@@ -32,7 +32,9 @@ $book->getLinkArray ();
             <?php
                 if ($book->hasCover) {
             ?>
-            <a href="fetch.php?id=<?php echo $book->id ?>"><img src="fetch.php?id=<?php echo $book->id ?>&amp;height=150" alt="<?php echo localize("i18n.coversection") ?>" /></a>
+            <a href="<?php echo Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml () ?>">
+              <img src="<?php echo Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml () ?>" alt="<?php echo localize("i18n.coversection") ?>" />
+            </a>
             <?php
                 }
             ?>
@@ -54,7 +56,7 @@ $book->getLinkArray ();
             foreach ($authors as $author) {
                 if ($i > 0) echo ", ";
 ?>
-               <a href="index.php<?php echo str_replace ("&", "&amp;", $author->getUri ()) ?>"><?php echo htmlspecialchars ($author->name) ?></a>
+                <a href="<?php $link = new LinkNavigation ($author->getUri ()); echo $link->hrefXhtml () ?>"><?php echo htmlspecialchars ($author->name) ?></a>
 <?php
             }
 ?>
@@ -69,7 +71,7 @@ $book->getLinkArray ();
             foreach ($tags as $tag) {
                 if ($i > 0) echo ", ";
 ?>
-                <a href="index.php<?php echo str_replace ("&", "&amp;", $tag->getUri ()) ?>"><?php echo htmlspecialchars ($tag->name) ?></a>
+                <a href="<?php $link = new LinkNavigation ($tag->getUri ()); echo $link->hrefXhtml () ?>"><?php echo htmlspecialchars ($tag->name) ?></a>
 <?php
             }
 ?>
@@ -79,7 +81,7 @@ $book->getLinkArray ();
         if (!is_null ($serie))
         {
 ?>
-				<h3><a href="index.php<?php echo str_replace ("&", "&amp;", $serie->getUri ()) ?>"><?php echo localize("series.title") ?></a>: </h3>
+				<h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
 <br />
 <?php

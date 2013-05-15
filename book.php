@@ -12,7 +12,7 @@ require_once('author.php');
 require_once('tag.php');
 require_once ("customcolumn.php");
 require_once('data.php');
-require_once('php-epub-meta/epub.php');
+require_once('resources/php-epub-meta/epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
@@ -72,7 +72,7 @@ class Book extends Base {
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
-        $this->path = $config['calibre_directory'] . $line->path;
+        $this->path = Base::getDbDirectory () . $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;
@@ -94,15 +94,18 @@ class Book extends Base {
     }
     
     public function getUri () {
-        return "?page=".parent::PAGE_BOOK_DETAIL."&amp;id=$this->id";
+        return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
     
-    public function getDetailUrl () {
+    public function getDetailUrl ($permalink = false) {
         global $config;
-        if ($config['cops_use_fancyapps'] == 0) { 
-            return 'index.php' . $this->getUri (); 
+        $urlParam = $this->getUri ();
+        if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
+        $urlParam = str_replace ("&", "&amp;", $urlParam);
+        if ($permalink || $config['cops_use_fancyapps'] == 0) { 
+            return 'index.php' . $urlParam; 
         } else { 
-            return 'bookdetail.php?id=' . $this->id; 
+            return 'bookdetail.php' . $urlParam;
         }
     }
     
@@ -117,7 +120,7 @@ class Book extends Base {
         return $this->authors;
     }
     
-    public function getFilterString () {
+    public static function getFilterString () {
         $filter = getURLParam ("tag", NULL);
         if (empty ($filter)) return "";
         
@@ -137,17 +140,7 @@ class Book extends Base {
     }
     
     public function getAuthorsName () {
-        $authorList = null;
-        foreach ($this->getAuthors () as $author) {
-            if ($authorList) {
-                $authorList = $authorList . ", " . $author->name;
-            }
-            else
-            {
-                $authorList = $author->name;
-            }
-        }
-        return $authorList;
+        return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
     }
     
     public function getSerie () {
@@ -219,17 +212,7 @@ class Book extends Base {
 
     
     public function getTagsName () {
-        $tagList = null;
-        foreach ($this->getTags () as $tag) {
-            if ($tagList) {
-                $tagList = $tagList . ", " . $tag->name;
-            }
-            else
-            {
-                $tagList = $tag->name;
-            }
-        }
-        return $tagList;
+        return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
     
     public function getRating () {
@@ -349,15 +332,8 @@ class Book extends Base {
         if ($this->hasCover)
         {
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
-            $height = "50";
-            if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                $height = $config['cops_opds_thumbnail_height'];
-            }
-            else
-            {
-                $height = $config['cops_html_thumbnail_height'];
-            }
-            array_push ($linkArray, new Link ("fetch.php?id=$this->id&height=" . $height, "image/jpeg", Link::OPDS_THUMBNAIL_TYPE));
+            
+            array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL));
         }
         
         foreach ($this->getDatas () as $data)
@@ -393,7 +369,7 @@ class Book extends Base {
         $result = array();
         $entry = new Entry (localize ("allbooks.title"), 
                           self::ALL_BOOKS_ID, 
-                          str_format (localize ("allbooks.alphabetical"), $nBooks), "text", 
+                          str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
         $entry = new Entry (localize ("recent.title"), 
@@ -451,8 +427,8 @@ where data.book = books.id and data.id = ?');
         return NULL;
     }
     
-    public static function getBooksByQuery($query, $n) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n);
+    public static function getBooksByQuery($query, $n, $database = NULL) {
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n, $database);
     }
     
     public static function getAllBooks() {
@@ -474,8 +450,8 @@ order by substr (upper (sort), 1, 1)");
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
     }
     
-    public static function getEntryArray ($query, $params, $n) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n);
+    public static function getEntryArray ($query, $params, $n, $database = NULL) {
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

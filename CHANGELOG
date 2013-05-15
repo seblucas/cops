@@ -1,3 +1,26 @@
+0.4.0 - 20130507
+  * Add multiple database support. Check the documentation of $config['calibre_directory'] in config-default.php to see how ot enable it.
+  * Include jquery library in COPS's repository to be sure that COPS will work on LAN (without Internet access).
+  * Prepare the switch to HTML5. Thanks to Thomas Severinsen for most of the code.
+  * Update the locale strings to be more strict with plurals. Thanks to Tobias Ausländer for the code.
+  * If Fancybox is not enabled ($config['cops_use_fancyapps'] = "0") then it's not used at all (even in the about box).
+  * Fix book comments if it contains UTF8 characters. Reported by Alain.
+  * Link to the book permalink was not working correctly in some cases. Reported by celta.
+  * Moved some external resources to a resources directory.
+  * Add chinese translation. Thanks to wogong for the pull request.
+
+0.3.4 - 20130327
+  * Hopefully fix metadata update. Beware you should remove the directory php-epub-meta if you have one. Thanks to Mario for his time.
+  * Fix two warnings. Reported by Goner and Mario.
+
+0.3.3 - 20130323
+  * Fix catalog if book summary contains bad HTML again :(.
+  * Upgrade to Fancybox 2.4.0 and JQuery 1.9.1.
+  * Search is now dependant on the page you're in. For now if you're on author page it'll look for author name.
+  * Update checkconfig to check if the database provided comes from Calibre.
+  * Update to latest php-epub-meta should fix the metadata update with Epub.
+  * Fix OPDS catalog with Ibis Reader. It didn't like empty language.
+
 0.3.2 - 20130303
   * Add dutch translation. Provided by Northguy.
   * Fix an ugly bug introduced in 0.3.1. Reported by mariosipad.
