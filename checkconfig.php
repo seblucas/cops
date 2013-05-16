@@ -137,6 +137,7 @@ Please check
         </article>
 <?php $i++; } ?>
     </section>
+    <footer></footer>
 </div>
 </body>
 </html>
