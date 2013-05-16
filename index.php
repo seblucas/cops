@@ -160,42 +160,42 @@
         </a>
         <img class="headright" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
-    <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
-        <div style="float: left; width: 60%">
-            <form action="index.php" method="get">
+        <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
+            <div style="float: left; width: 60%">
+                <form action="index.php" method="get">
+                    <div style="float: right">
+                        <input type="image" src="images/search32.png" alt="<?php echo localize ("search.alternate") ?>" />
+                    </div>
+                    <div class="stop">
+                        <input type="hidden" name="current" value="<?php echo $page ?>" />
+                        <input type="hidden" name="page" value="9" />
+                        <?php if (!is_null ($database)) { ?>
+                            <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
+                        <?php } ?>
+                        <input type="text" name="query" />
+                    </div>
+                </form>
+            </div>
+    <?php if ($currentPage->containsBook ()) { ?>
+            <div style="float: right; width: 35%">
                 <div style="float: right">
-                    <input type="image" src="images/search32.png" alt="<?php echo localize ("search.alternate") ?>" />
+                    <img id="sort" src="images/sort32.png" alt="<?php echo localize ("sort.alternate") ?>" />
                 </div>
                 <div class="stop">
-                    <input type="hidden" name="current" value="<?php echo $page ?>" />
-                    <input type="hidden" name="page" value="9" />
-                    <?php if (!is_null ($database)) { ?>
-                        <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
-                    <?php } ?>
-                    <input type="text" name="query" />
+                    <select id="sortchoice">
+                        <option value="st"><?php echo localize("bookword.title") ?></option>
+                        <option value="sa"><?php echo localize("authors.title") ?></option>
+                        <option value="ss"><?php echo localize("series.title") ?></option>
+                        <option value="sp"><?php echo localize("content.published") ?></option>
+                    </select>
+                    <select id="sortorder">
+                        <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
+                        <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
+                    </select> 
                 </div>
-            </form>
-        </div>
-<?php if ($currentPage->containsBook ()) { ?>
-        <div style="float: right; width: 35%">
-            <div style="float: right">
-                <img id="sort" src="images/sort32.png" alt="<?php echo localize ("sort.alternate") ?>" />
             </div>
-            <div class="stop">
-                <select id="sortchoice">
-                    <option value="st"><?php echo localize("bookword.title") ?></option>
-                    <option value="sa"><?php echo localize("authors.title") ?></option>
-                    <option value="ss"><?php echo localize("series.title") ?></option>
-                    <option value="sp"><?php echo localize("content.published") ?></option>
-                </select>
-                <select id="sortorder">
-                    <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
-                    <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
-                </select> 
-            </div>
+    <?php } ?>
         </div>
-<?php } ?>
-    </div>
     </header>
     <div id="content" style="display: none;"></div>
     <section>
