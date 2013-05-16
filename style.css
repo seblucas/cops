@@ -40,7 +40,6 @@ h6 {font-size: 0.75em;}
 
 a:hover, a:active { outline: none; }
 a { color: #000066; font-weight: 800; text-decoration: none;}
-a:visited { color:#414141 ;  }
 a:hover { color:#000; text-decoration: none; }
 .frontpage a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
 .link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
