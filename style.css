@@ -189,14 +189,34 @@ max-width:800px;
 footer
 {
 clear:both;
+color:white;
 box-shadow:inset 0px 5px 8px #000000;
 border-radius: 0px 0px 10px 10px; 
 height:32px;
 }
 
-footer a{
-    float: right;
+.footright
+{
+float:right;
+height:32px;
 }
+
+.footcenter
+{
+margin:auto;
+text-align:center;
+height:32px;
+display:table;
+}
+
+.footcenter p, .footcenter a
+{
+display: table-cell;
+vertical-align: middle;
+text-align: center;
+line-height: 100%;
+}
+
 /* =============================================================================
    Aside stuff goes here
    ========================================================================== */   
