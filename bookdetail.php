@@ -28,7 +28,7 @@ $book->getLinkArray ();
 <?php
     }
 ?>
-			<span class="cover">
+            <span class="cover">
             <?php
                 if ($book->hasCover) {
             ?>
@@ -38,19 +38,19 @@ $book->getLinkArray ();
             <?php
                 }
             ?>
-			</span>
+            </span>
 <?php
             foreach ($book->getDatas() as $data)
             {
 ?>    
-				<h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></h2>
+                <h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></h2>
 <?php
             }
 ?>
-		<h1><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
-			<p class="popupless">
-			<h3><?php echo localize("authors.title") ?>: </h3>
-			
+        <h1><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
+            <p class="popupless">
+            <h3><?php echo localize("authors.title") ?>: </h3>
+            
 <?php
             $i = 0;
             foreach ($authors as $author) {
@@ -83,7 +83,7 @@ $book->getLinkArray ();
         {
 ?>
             <p class="popupless">
-				<h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
+                <h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
 </p>
 <?php
