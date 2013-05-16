@@ -105,6 +105,6 @@ $book->getLinkArray ();
         }
 ?>
 <br />
-<p><h4><?php echo localize("content.summary") ?></h4>
-<?php if (!isset ($page)) ?><?php echo $book->getComment (false) ?></p>
+<h4><?php echo localize("content.summary") ?></h4>
+<div <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?> ><?php echo $book->getComment (false) ?></div>
 </article>
