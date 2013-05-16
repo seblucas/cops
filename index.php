@@ -73,7 +73,7 @@
             });
             
             $("#sort").click(function(){
-                $('.book').sortElements(function(a, b){
+                $('.books').sortElements(function(a, b){
                     var test = 1;
                     if ($("#sortorder").val() == "desc")
                     {
@@ -81,7 +81,6 @@
                     }
                     return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
                 });
-                $("#search").slideUp();
             });
             
 <?php if ($config['cops_use_fancyapps'] == 1) { ?>
@@ -251,23 +250,23 @@
             </h2>
             <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
             <div class="fullclickpopup">
-                <h2><?php echo htmlspecialchars ($entry->title) ?>
+                <h2><span class="st"><?php echo htmlspecialchars ($entry->title) ?></span>
             <?php
                 if ($entry->book->getPubDate() != "")
                 {
             ?>
-                    (<?php echo $entry->book->getPubDate() ?>)
+                    <span class="sp">(<?php echo $entry->book->getPubDate() ?>)</span>
             <?php
                 }
             ?>
-                    <?php echo $entry->book->getRating () ?></h2>
-                <h4><?php echo localize("authors.title") . " : </h4>" . htmlspecialchars ($entry->book->getAuthorsName ()) ?><br />
+                    <span class="sr"><?php echo $entry->book->getRating () ?></span></h2>
+                <h4><?php echo localize("authors.title") . " : " ?></h4><span class="sa"><?php echo htmlspecialchars ($entry->book->getAuthorsName ()) ?></span><br />
                 <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($entry->book->getTagsName ()) ?><br />
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
             ?>
-                <h4><?php echo localize("series.title") . " :</h4> " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?><br />
+                <h4><?php echo localize("series.title") . " : "  ?></h4><span class="ss"><?php echo htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></span><br />
             <?php
                 }
             ?></div></a>
