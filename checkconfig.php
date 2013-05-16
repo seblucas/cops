@@ -10,7 +10,7 @@
     require_once ("config.php");
     require_once ("base.php");
     
-    header ("Content-Type:application/xhtml+xml");
+    header ("Content-Type:text/html; charset=UTF-8");
     
     $err = getURLParam ("err", -1);
     $error = NULL;
@@ -21,38 +21,35 @@
     }
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title>COPS Configuration Check</title>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
 </head>
 <body>
 <div class="container">
-    <div class="head">
+    <header>
         <div class="headcenter">
-            <p>COPS Configuration Check</p>
+            <h1>COPS Configuration Check</h1>
         </div>
-    </div>
-    <div class="clearer" />
+    </header>
     <div id="content" style="display: none;"></div>
-    <div class="entries">
+    <section>
         <?php
         if (!is_null ($error)) {
         ?>
-        <div class="entry">
-            <div class="entryTitle">You've been redirected because COPS is not configured properly</div>
-            <div class="entryContent"><?php echo $error ?></div>
-        </div>
+        <article class="frontpage">
+            <h2>You've been redirected because COPS is not configured properly</h2>
+            <h4><?php echo $error ?></h4>
+        </article>
         <?php
         }
         ?>
-        <div class="entry">
-            <div class="entryTitle">Check if GD is properly installed and loaded</div>
-            <div class="entryContent">
+        <article class="frontpage">
+            <h2>Check if GD is properly installed and loaded</h2>
+            <h4>
             <?php 
             if (extension_loaded('gd') && function_exists('gd_info')) {
                 echo "OK";
@@ -60,11 +57,11 @@
                 echo "Please install the php5-gd extension and make sure it's enabled";
             }
             ?>
-            </div>
-        </div>
-        <div class="entry">
-            <div class="entryTitle">Check if Sqlite is properly installed and loaded</div>
-            <div class="entryContent">
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Sqlite is properly installed and loaded</h2>
+            <h4>
             <?php 
             if (extension_loaded('pdo_sqlite')) {
                 echo "OK";
@@ -72,11 +69,11 @@
                 echo "Please install the php5-sqlite extension and make sure it's enabled";
             }
             ?>
-            </div>
-        </div>
-        <div class="entry">
-            <div class="entryTitle">Check if libxml is properly installed and loaded</div>
-            <div class="entryContent">
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if libxml is properly installed and loaded</h2>
+            <h4>
             <?php 
             if (extension_loaded('libxml')) {
                 echo "OK";
@@ -84,15 +81,14 @@
                 echo "Please make sure libxml is enabled";
             }
             ?>
-            </div>
-        </div>
+            </h4>
+        </article>
 <?php 
 $i = 0;
 foreach (Base::getDbList () as $name => $database) { 
 ?>
-        <div class="entry">
-            <div class="entryTitle">Check if Calibre database file exists and is readable</div>
-            <div class="entryContent">
+        <article class="frontpage">
+            <h2>Check if Calibre database file exists and is readable</h2>
             <?php 
             if (is_readable (Base::getDbFileName ($i))) {
                 echo "{$name} OK";
@@ -107,11 +103,10 @@ Please check
 </ul>";
             }
             ?>
-            </div>
-        </div>
-        <div class="entry">
-            <div class="entryTitle">Check if Calibre database file can be opened with PHP</div>
-            <div class="entryContent">
+        </article>
+        <article class="frontpage">
+            <h2>Check if Calibre database file can be opened with PHP</h2>
+            <h4>
             <?php 
             try {
                 $db = new PDO('sqlite:'. Base::getDbFileName ($i));
@@ -120,11 +115,11 @@ Please check
                 echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
             }
             ?>
-            </div>
-        </div>
-        <div class="entry">
-            <div class="entryTitle">Check if Calibre database file contains at least some of the needed tables</div>
-            <div class="entryContent">
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Calibre database file contains at least some of the needed tables</h2>
+            <h4>
             <?php 
             try {
                 $db = new PDO('sqlite:'. Base::getDbFileName ($i));
@@ -138,10 +133,10 @@ Please check
                 echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
             }
             ?>
-            </div>
-        </div>
+            </h4>
+        </article>
 <?php $i++; } ?>
-    </div>
+    </section>
 </div>
 </body>
 </html>
