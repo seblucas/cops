@@ -279,7 +279,9 @@
         ?>
     </section>
     <footer>
+        <div class="footright">
             <a class="fancyabout" href="<?php if ($config['cops_use_fancyapps'] == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="<?php echo localize ("about.title") ?>" /></a>
+        </div>
 <?php
     if ($currentPage->isPaginated ()) {
 ?> 
