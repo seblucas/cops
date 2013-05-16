@@ -160,8 +160,7 @@
         </a>
         <img class="headright" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
-    </header>
-    <aside id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
+    <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
         <div style="float: left; width: 60%">
             <form action="index.php" method="get">
                 <div style="float: right">
@@ -196,7 +195,8 @@
             </div>
         </div>
 <?php } ?>
-    </aside>
+    </div>
+    </header>
     <div id="content" style="display: none;"></div>
     <section>
 <?php
