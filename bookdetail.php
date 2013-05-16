@@ -17,17 +17,7 @@ $serie = $book->getSerie ();
 $book->getLinkArray ();
  
 ?>
-<?php
-    if (isset ($page) &&  $page == Base::PAGE_BOOK_DETAIL) {
-?>
-<article class="bookdetail">
-<?php
-    } else {
-?>
 <article class="bookpopup">
-<?php
-    }
-?>
             <span class="cover">
             <?php
                 if ($book->hasCover) {

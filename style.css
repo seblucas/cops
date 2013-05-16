@@ -171,7 +171,6 @@ max-width:800px;
     display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
 }
 
-
 .bookpopup h4{
     border-top: 1px solid black;
 }
@@ -179,6 +178,11 @@ max-width:800px;
 .fullclickpopup{
     display: block;
 }
+
+section .bookpopup{
+    padding: 8px 8px;
+}
+
 /* =============================================================================
    Footer stuff goes here
    ========================================================================== */
