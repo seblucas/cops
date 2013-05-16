@@ -79,12 +79,23 @@ header {
 	float: left;
 }
 
+.headcenter
+{
+float:none;
+margin:auto;
+text-align:center;
+height:70px;
+display:table;
+}
+
 header h1{
-	float:none;
-	padding-top:25px;
-text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
-             0px 8px 13px rgba(0,0,0,0.1),
-             0px 18px 23px rgba(0,0,0,0.1);
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100%;
+    text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
+                 0px 8px 13px rgba(0,0,0,0.1),
+                 0px 18px 23px rgba(0,0,0,0.1);
 }
 
 .headright {

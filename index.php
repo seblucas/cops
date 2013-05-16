@@ -159,7 +159,9 @@
                 <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="<?php echo localize ("home.alternate") ?>" />
         </a>
         <img class="headright" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
-        <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
+        <div class="headcenter">
+            <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
+        </div>
         <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
             <div style="float: left; width: 60%">
                 <form action="index.php" method="get">
