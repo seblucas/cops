@@ -292,7 +292,7 @@
         <?php
             }
         ?>
-        <p><?php echo "&nbsp;" . $currentPage->n . " / " . $currentPage->getMaxPage () . "&nbsp;" ?></p>
+        <p><?php echo " " . $currentPage->n . " / " . $currentPage->getMaxPage () . " " ?></p>
         <?php
             if (!is_null ($nextLink)) {
         ?>
