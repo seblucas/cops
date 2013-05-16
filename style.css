@@ -171,9 +171,6 @@ max-width:800px;
     display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
 }
 
-.bookpopup p{
-    display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
-}
 
 .bookpopup h4{
     border-top: 1px solid black;
