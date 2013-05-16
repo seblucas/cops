@@ -48,9 +48,9 @@ $book->getLinkArray ();
             }
 ?>
 		<h1><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
-			
-			<h3><?php echo localize("authors.title") ?>: </h3>
 			<p class="popupless">
+			<h3><?php echo localize("authors.title") ?>: </h3>
+			
 <?php
             $i = 0;
             foreach ($authors as $author) {
@@ -60,12 +60,13 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-</p><br />
+</p>
 <?php
         if (count ($tags) > 0) {
 ?>
-<h3><?php echo localize("tags.title") ?>: </h3>
-<p class="popupless">
+            <p class="popupless">
+            <h3><?php echo localize("tags.title") ?>: </h3>
+
 <?php
             $i = 0;
             foreach ($tags as $tag) {
@@ -75,32 +76,34 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-</p><br />
+</p>
 <?php
         }
         if (!is_null ($serie))
         {
 ?>
+            <p class="popupless">
 				<h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
-<br />
+</p>
 <?php
         }
         if ($book->getPubDate() != "")
         {
 ?>
-
+            <p class="popupless">
 <h3><?php echo localize("pubdate.title") ?>: </h3>
             <?php echo $book->getPubDate() ?>
-
+</p>
 <?php
         }
         if ($book->getLanguages () != "")
         {
 ?>
-<br />
+            <p class="popupless">
 <h3><?php echo localize("config.Language.label") ?>: </h3>
             <?php echo $book->getLanguages () ?>
+</p>
  <?php
         }
 ?>
