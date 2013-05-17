@@ -43,6 +43,7 @@ a { color: #000066; font-weight: 800; text-decoration: none;}
 a:hover { color:#000; text-decoration: none; }
 .frontpage a {display:inline-block; }
 .frontpage a:hover { width: 100%; background-color: #778899;}
+.books:hover { width: 100%; background-color: #778899; }
 .link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
 
 img
