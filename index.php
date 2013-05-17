@@ -62,15 +62,11 @@
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
-    <link rel="stylesheet" href="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' rel='stylesheet' type='text/css' />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
-            $(".entry").click(function(){
-                window.location=$(this).find("a").attr("href");
-                return false;
-            });
             
             $("#sort").click(function(){
                 $('.books').sortElements(function(a, b){
@@ -98,6 +94,13 @@
                 nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
+            
+            $(".fancydetail").fancybox({
+                'type' : 'ajax',
+                prevEffect      : 'none',
+                nextEffect      : 'none'
+                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+            });
 <?php } ?>
             
             $(".headright").click(function(){
@@ -110,23 +113,6 @@
                 }
             });
             
-<?php if  ($page != Base::PAGE_BOOK_DETAIL) { ?>
-            $(".bookdetail").click(function(){
-                var url = $(this).find("a").attr("href");
-<?php if ($config['cops_use_fancyapps'] == 0) { ?>
-                window.location = url;
-<?php } else { ?>
-                $('#content').load(url, function(data, stat, req){
-                    $.fancybox( {
-                        content: data,
-                        autoSize: true
-                        <?php if ($isEink) echo ", margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-                    } );
-                });
-<?php } ?>
-                return false;
-            });
-<?php } ?>
         });
 
 <?php
@@ -248,7 +234,7 @@
                 }
             ?>
             </h2>
-            <a class="fancyabout" href="<?php echo $entry->book->getDetailUrl () ?>">
+            <a class="fancydetail" href="<?php echo $entry->book->getDetailUrl () ?>">
             <div class="fullclickpopup">
                 <h2><span class="st"><?php echo htmlspecialchars ($entry->title) ?></span>
             <?php
