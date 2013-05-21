@@ -17,19 +17,8 @@ $serie = $book->getSerie ();
 $book->getLinkArray ();
  
 ?>
-<?php
-    if (isset ($page) &&  $page == Base::PAGE_BOOK_DETAIL) {
-?>
-<div class="bookdetail">
-<?php
-    } else {
-?>
-<div class="bookpopup">
-<?php
-    }
-?>
-    <div class="booke">
-        <div class="cover">
+<article class="bookpopup">
+            <span class="cover">
             <?php
                 if ($book->hasCover) {
             ?>
@@ -39,21 +28,19 @@ $book->getLinkArray ();
             <?php
                 }
             ?>
-        </div>
-        <div class="download">
+            </span>
 <?php
             foreach ($book->getDatas() as $data)
             {
 ?>    
-                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></div>
+                <h2 class="download"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $data->format ?></a></h2>
 <?php
             }
 ?>
-        </div>
-        <div class="entryTitle"><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></div>
-        <div class="entrySection">
-            <span><?php echo localize("authors.title") ?></span>
-            <div class="buttonEffect pad6">
+        <h1><a rel="bookmark" href="<?php echo $book->getDetailUrl (true) ?>"><img src="<?php echo getUrlWithVersion("images/Link.png") ?>" alt="<?php echo localize ("permalink.alternate") ?>" /></a><?php echo htmlspecialchars ($book->title) ?></h1>
+            <p class="popupless">
+            <h3><?php echo localize("authors.title") ?>: </h3>
+            
 <?php
             $i = 0;
             foreach ($authors as $author) {
@@ -63,14 +50,13 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-            </div>
-        </div>
+</p>
 <?php
         if (count ($tags) > 0) {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("tags.title") ?></span>
-            <div class="buttonEffect pad6">
+            <p class="popupless">
+            <h3><?php echo localize("tags.title") ?>: </h3>
+
 <?php
             $i = 0;
             foreach ($tags as $tag) {
@@ -80,44 +66,38 @@ $book->getLinkArray ();
 <?php
             }
 ?>
-            </div>
-        </div>
+</p>
 <?php
         }
         if (!is_null ($serie))
         {
 ?>
-        <div class="entrySection">
-            <div class="buttonEffect pad6">
-                <a href="<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>
-            </div>
+            <p class="popupless">
+                <h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
-        </div>
+</p>
 <?php
         }
         if ($book->getPubDate() != "")
         {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("pubdate.title") ?></span>
+            <p class="popupless">
+<h3><?php echo localize("pubdate.title") ?>: </h3>
             <?php echo $book->getPubDate() ?>
-        </div>
+</p>
 <?php
         }
         if ($book->getLanguages () != "")
         {
 ?>
-        <div class="entrySection">
-            <span><?php echo localize("config.Language.label") ?></span>
+            <p class="popupless">
+<h3><?php echo localize("config.Language.label") ?>: </h3>
             <?php echo $book->getLanguages () ?>
-        </div>
-<?php
+</p>
+ <?php
         }
 ?>
-    </div>
-    <div class="clearer" ></div>
-    <hr />
-    <div><?php echo localize("content.summary") ?></div>
-    <div class="content" <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?>><?php echo $book->getComment (false) ?></div>
-    <hr />
-</div>
+<br />
+<h4><?php echo localize("content.summary") ?></h4>
+<div <?php if (!isset ($page)) echo 'style="max-width:700px;"' ?> ><?php echo $book->getComment (false) ?></div>
+</article>
