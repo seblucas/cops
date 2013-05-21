@@ -247,7 +247,14 @@
             ?>
                     <span class="sr"><?php echo $entry->book->getRating () ?></span></h2>
                 <h4><?php echo localize("authors.title") . " : " ?></h4><span class="sa"><?php echo htmlspecialchars ($entry->book->getAuthorsName ()) ?></span><br />
-                <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($entry->book->getTagsName ()) ?><br />
+            <?php
+                $tags = $entry->book->getTagsName ();
+                if (!empty ($tags)) {
+            ?>
+                <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($tags) ?><br />
+            <?php
+                }
+            ?>
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {

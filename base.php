@@ -377,8 +377,10 @@ class Page
             }
         } else {
             array_push ($this->entryArray, Author::getCount());
-            array_push ($this->entryArray, Serie::getCount());
-            array_push ($this->entryArray, Tag::getCount());
+            $series = Serie::getCount();
+            if (!is_null ($series)) array_push ($this->entryArray, $series);
+            $tags = Tag::getCount();
+            if (!is_null ($tags)) array_push ($this->entryArray, $tags);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
                 if (!is_null ($customId)) {
