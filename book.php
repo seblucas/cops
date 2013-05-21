@@ -10,7 +10,8 @@ require_once('base.php');
 require_once('serie.php');
 require_once('author.php');
 require_once('tag.php');
-require_once ("customcolumn.php");
+require_once('language.php');
+require_once("customcolumn.php");
 require_once('data.php');
 require_once('resources/php-epub-meta/epub.php');
 
@@ -26,6 +27,8 @@ define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_
                                                     where books_series_link.book = books.id and series = ? {1} order by series_index");
 define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_tags_link.book = books.id and tag = ? {1} order by sort");
+define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_languages_link.book = books.id and lang_code = ? {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
@@ -44,6 +47,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
+    const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
@@ -63,6 +67,7 @@ class Book extends Base {
     public $authors = NULL;
     public $serie = NULL;
     public $tags = NULL;
+    public $languages = NULL;
     public $format = array ();
 
     
@@ -160,7 +165,7 @@ class Book extends Base {
         $result->execute (array ($this->id));
         while ($post = $result->fetchObject ())
         {
-            array_push ($lang, $post->lang_code);
+            array_push ($lang, localize("languages.".$post->lang_code));
         }
         return implode (", ", $lang);
     }
@@ -408,6 +413,10 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_TAG, array ($tagId), $n);
     }
     
+    public static function getBooksByLanguage($languageId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_LANGUAGE, array ($languageId), $n);
+    }
+
     public static function getBooksByCustom($customId, $id, $n) {
         $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
         return self::getEntryArray ($query, array ($id), $n);
