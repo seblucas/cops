@@ -25,6 +25,7 @@ img {
     max-width: 100%;
     height: auto;
     width: auto\9; /* ie8 */
+	opacity: 1;
 }
 
 /* ==========================================================================
@@ -39,11 +40,15 @@ h5 {font-size: 0.83em;}
 h6 {font-size: 0.75em;}
 
 a:hover, a:active { outline: none; }
-a { color: #000066; font-weight: 800; text-decoration: none;}
+a {
+	color: black;
+	text-decoration: none;
+	font-weight: bold;
+}
 a:hover { color:#000; text-decoration: none; }
 .frontpage a {display:block; }
-.frontpage a:hover { width: 100%; background-color: #778899;}
-.books:hover { width: 100%; background-color: #778899; }
+.frontpage a:hover { width: 100%; background-color: white;}
+.books:hover { width: 100%; background-color: silver; }
 .link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
 
 img
@@ -57,8 +62,10 @@ border:0;
    Main container stuff goes here and other globals
    ========================================================================== */
 .container{
- background: #414141; border:1px solid #000; border-radius:10px;
-    max-width:800px;width:95%;margin:0 auto;position:relative; }
+	border:1px solid #000; border-radius:10px;
+    max-width:800px;width:95%;margin:0 auto;position:relative;
+	background-color: white;
+}
     
 .fancyabout { font-weight:400; text-decoration: none; }
 
@@ -67,13 +74,14 @@ border:0;
    ========================================================================== */
 header {
     clear:both; 
-    color:white; 
-    text-align:center; 
-    text-transform:uppercase; 
-    display:block;
-    box-shadow:inset 0px -5px 8px #000000;
+    color: black; 
+    text-align:center;
+	display:block;
     min-height:70px;
-    border-radius: 10px 10px 0px 0px; 
+    border-radius: 10px 10px 0px 0px;
+	border-bottom: 2px dashed gray;
+	font-variant: small-caps;
+	letter-spacing: 2px;
 }
 
 .headleft {
@@ -119,13 +127,21 @@ max-width:800px;
 /*-------------frontpage article-------------*/
 
 .frontpage h2 {
-    padding: 5px 0 0 5px;
+	text-align: center;
+	letter-spacing: 2px;
+	color: black;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	padding: 5px 0;
 }
 
 .frontpage h4 {
-    padding: 5px 0 5px 20px;
-     font-style: italic;
-}
+    padding: 5px 0;
+	text-align: center;
+	color: gray;
+	 font-style: italic;
+	 font-size: 13px;
+	 text-decoration: overline;
+ }
 
 /*-------------books article-------------*/
 .books {
@@ -179,6 +195,7 @@ max-width:800px;
 
 .fullclickpopup{
     display: block;
+	color: black;
 }
 
 section .bookpopup{
@@ -192,7 +209,6 @@ footer
 {
 clear:both;
 color:white;
-box-shadow:inset 0px 5px 8px #000000;
 border-radius: 0px 0px 10px 10px; 
 height:32px;
 }

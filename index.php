@@ -39,20 +39,18 @@
  * HTTP_USER_AGENT = "Mozilla/5.0 (Linux; U; en-us; EBRD1101; EXT) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1"
  */
 
-	if (preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-		$isEink = 1;
-	} else {
-		$isEink = 0;
-	}
+    if (preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+        $isEink = 1;
+    } else {
+        $isEink = 0;
+    }
 
 
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="imagetoolbar" content="no" />
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
@@ -63,17 +61,15 @@
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $currentPage->favicon ?>" />
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("style.css") ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
     <script type="text/javascript">
         $(document).ready(function() {
             // Handler for .ready() called.
-            $(".entry").click(function(){
-                window.location=$(this).find("a").attr("href");
-                return false;
-            });
             
             $("#sort").click(function(){
-                $('.book').sortElements(function(a, b){
+                $('.books').sortElements(function(a, b){
                     var test = 1;
                     if ($("#sortorder").val() == "desc")
                     {
@@ -81,27 +77,33 @@
                     }
                     return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
                 });
-                $("#search").slideUp();
             });
             
 <?php if ($config['cops_use_fancyapps'] == 1) { ?>
             $(".fancycover").fancybox({
                 'type' : 'image',
-                prevEffect		: 'none',
-                nextEffect		: 'none'
+                prevEffect      : 'none',
+                nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
             
             $(".fancyabout").fancybox({
                 'type' : 'ajax',
                 title           : 'COPS <?php echo VERSION ?>',
-                prevEffect		: 'none',
-                nextEffect		: 'none'
+                prevEffect      : 'none',
+                nextEffect      : 'none'
+                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
+            });
+            
+            $(".fancydetail").fancybox({
+                'type' : 'ajax',
+                prevEffect      : 'none',
+                nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
             });
 <?php } ?>
             
-            $("#settingsImage").click(function(){
+            $(".headright").click(function(){
                 if ($("#tool").is(":hidden")) {
                     $("#tool").slideDown("slow");
                     $.cookie('toolbar', '1');
@@ -111,23 +113,6 @@
                 }
             });
             
-<?php if  ($page != Base::PAGE_BOOK_DETAIL) { ?>
-            $(".bookdetail").click(function(){
-                var url = $(this).find("a").attr("href");
-<?php if ($config['cops_use_fancyapps'] == 0) { ?>
-                window.location = url;
-<?php } else { ?>
-                $('#content').load(url, function(data, stat, req){
-                    $.fancybox( {
-                        content: data,
-                        autoSize: true
-                        <?php if ($isEink) echo ", margin : [15, 35, 10, 10], openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-                    } );
-                });
-<?php } ?>
-                return false;
-            });
-<?php } ?>
         });
 
 <?php
@@ -153,59 +138,53 @@
 </head>
 <body>
 <div class="container">
-    <div class="head">
-        <div class="headleft">
-            <a href="<?php echo $_SERVER["SCRIPT_NAME"]; if ($page != Base::PAGE_INDEX && !is_null ($database)) echo "?" . addURLParameter ("", DB, $database);  ?>">
+    <header>
+        <a class="headleft" href="<?php echo $_SERVER["SCRIPT_NAME"]; if ($page != Base::PAGE_INDEX && !is_null ($database)) echo "?" . addURLParameter ("", DB, $database); ?>">
                 <img src="<?php echo getUrlWithVersion("images/home.png") ?>" alt="<?php echo localize ("home.alternate") ?>" />
-            </a>
-        </div>
-        <div class="headright">
-            <img id="settingsImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
-        </div>
+        </a>
+        <img class="headright" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         <div class="headcenter">
-            <p><?php echo htmlspecialchars ($currentPage->title) ?></p>
+            <h1><?php echo htmlspecialchars ($currentPage->title) ?></h1>
         </div>
-    </div>
-    <div class="clearer" ></div>
-    <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
-        <div style="float: left; width: 60%">
-            <form action="index.php" method="get">
+        <div id="tool" <?php if ($withToolbar) echo 'style="display: none"' ?>>
+            <div style="float: left; width: 60%">
+                <form action="index.php" method="get">
+                    <div style="float: right">
+                        <input type="image" src="images/search32.png" alt="<?php echo localize ("search.alternate") ?>" />
+                    </div>
+                    <div class="stop">
+                        <input type="hidden" name="current" value="<?php echo $page ?>" />
+                        <input type="hidden" name="page" value="9" />
+                        <?php if (!is_null ($database)) { ?>
+                            <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
+                        <?php } ?>
+                        <input type="text" name="query" />
+                    </div>
+                </form>
+            </div>
+    <?php if ($currentPage->containsBook ()) { ?>
+            <div style="float: right; width: 35%">
                 <div style="float: right">
-                    <input type="image" src="images/search32.png" alt="<?php echo localize ("search.alternate") ?>" />
+                    <img id="sort" src="images/sort32.png" alt="<?php echo localize ("sort.alternate") ?>" />
                 </div>
                 <div class="stop">
-                    <input type="hidden" name="current" value="<?php echo $page ?>" />
-                    <input type="hidden" name="page" value="9" />
-                    <?php if (!is_null ($database)) { ?>
-                        <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
-                    <?php } ?>
-                    <input type="text" name="query" />
+                    <select id="sortchoice">
+                        <option value="st"><?php echo localize("bookword.title") ?></option>
+                        <option value="sa"><?php echo localize("authors.title") ?></option>
+                        <option value="ss"><?php echo localize("series.title") ?></option>
+                        <option value="sp"><?php echo localize("content.published") ?></option>
+                    </select>
+                    <select id="sortorder">
+                        <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
+                        <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
+                    </select> 
                 </div>
-            </form>
-        </div>
-<?php if ($currentPage->containsBook ()) { ?>
-        <div style="float: right; width: 35%">
-            <div style="float: right">
-                <img id="sort" src="images/sort32.png" alt="<?php echo localize ("sort.alternate") ?>" />
             </div>
-            <div class="stop">
-                <select id="sortchoice">
-                    <option value="st"><?php echo localize("bookword.title") ?></option>
-                    <option value="sa"><?php echo localize("authors.title") ?></option>
-                    <option value="ss"><?php echo localize("series.title") ?></option>
-                    <option value="sp"><?php echo localize("content.published") ?></option>
-                </select>
-                <select id="sortorder">
-                    <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
-                    <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
-                </select> 
-            </div>
+    <?php } ?>
         </div>
-<?php } ?>
-    </div>
-    <div class="clearer" ></div>
+    </header>
     <div id="content" style="display: none;"></div>
-    <div class="entries">
+    <section>
 <?php
             if ($page == Base::PAGE_BOOK_DETAIL) {
                 include ("bookdetail.php");
@@ -215,34 +194,31 @@
             foreach ($currentPage->entryArray as $entry) {
                 if (get_class ($entry) != "EntryBook") {
 ?>
-        <div class="entry">
-            <div class="entryTitle"><?php echo htmlspecialchars ($entry->title) ?></div>
-            <div class="entryContent"><?php echo htmlspecialchars ($entry->content) ?></div>
-        <?php
-            foreach ($entry->linkArray as $link) {
-                if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
-        ?>
-            <a href="<?php echo $link->hrefXhtml () ?>" class="navigation">nav</a>
-        <?php
-            }
-        ?>
-        </div>
+        <article>
+            <div class="frontpage">
+            <?php foreach ($entry->linkArray as $link) { if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; } ?> <a href="<?php echo $link->hrefXhtml () ?>">
+                    <h2><?php echo htmlspecialchars ($entry->title) ?></h2>
+                    <?php } ?>
+                    <h4><?php echo htmlspecialchars ($entry->content) ?></h4> 
+                </a>
+            </div>
+        </article>
         <?php
                 }
                 else
                 {
         ?>
-        <div class="book">
-            <div class="cover">
+        <article class="books">
+            <span class="cover">
             <?php
                 if ($entry->book->hasCover) {
             ?>
-                <a rel="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a>
+                <a data-fancybox-group="group" class="fancycover" href="<?php echo $entry->getCover () ?>"><img src="<?php echo $entry->getCoverThumbnail () ?>" alt="<?php echo localize("i18n.coversection") ?>" /></a>
             <?php
                 }
             ?>
-            </div>
-            <div class="download">
+            </span>
+            <h2 class="download">
             <?php
                 $i = 0;
                 foreach ($config['cops_prefered_format'] as $format)
@@ -251,15 +227,16 @@
                     if ($data = $entry->book->getDataFormat ($format)) {
                         $i++;
             ?>    
-                <div class="button buttonEffect"><a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a></div>
-            <?php
+                <a href="<?php echo $data->getHtmlLink () ?>"><?php echo $format ?></a><br />
+                <?php
                     }
+                    
                 }
             ?>
-            </div>
-            <div class="bookdetail">
-                <a class="navigation" href="<?php echo $entry->book->getDetailUrl () ?>" ></a>
-                <div class="entryTitle st"><?php echo htmlspecialchars ($entry->title) ?>
+            </h2>
+            <a class="fancydetail" href="<?php echo $entry->book->getDetailUrl () ?>">
+            <div class="fullclickpopup">
+                <h2><span class="st"><?php echo htmlspecialchars ($entry->title) ?></span>
             <?php
                 if ($entry->book->getPubDate() != "")
                 {
@@ -268,33 +245,35 @@
             <?php
                 }
             ?>
-                    <span class="sr"><?php echo $entry->book->getRating () ?></span>
-                </div>
-                <div class="entryContent sa"><?php echo localize("authors.title") . " : " . htmlspecialchars ($entry->book->getAuthorsName ()) ?></div>
-                <div class="entryContent"><?php echo localize("tags.title") . " : " . htmlspecialchars ($entry->book->getTagsName ()) ?></div>
+                    <span class="sr"><?php echo $entry->book->getRating () ?></span></h2>
+                <h4><?php echo localize("authors.title") . " : " ?></h4><span class="sa"><?php echo htmlspecialchars ($entry->book->getAuthorsName ()) ?></span><br />
+            <?php
+                $tags = $entry->book->getTagsName ();
+                if (!empty ($tags)) {
+            ?>
+                <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($tags) ?><br />
+            <?php
+                }
+            ?>
             <?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
             ?>
-                <div class="entryContent ss"><?php echo localize("series.title") . " : " . htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></div>
+                <h4><?php echo localize("series.title") . " : "  ?></h4><span class="ss"><?php echo htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></span><br />
             <?php
                 }
-            ?>
-            </div>
-        </div>
+            ?></div></a>
+        </article>
         <?php
                 }
         ?>
-        <div class="clearer" ></div>
         <?php
             }
         ?>
-    </div>
-    <div class="foot">
+    </section>
+    <footer>
         <div class="footright">
-            <a class="fancyabout" href="<?php if ($config['cops_use_fancyapps'] == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>">
-                <img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="<?php echo localize ("about.title") ?>" />
-            </a>
+            <a class="fancyabout" href="<?php if ($config['cops_use_fancyapps'] == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="<?php echo localize ("about.title") ?>" /></a>
         </div>
 <?php
     if ($currentPage->isPaginated ()) {
@@ -308,7 +287,7 @@
         <?php
             }
         ?>
-        <p><?php echo "&nbsp;" . $currentPage->n . " / " . $currentPage->getMaxPage () . "&nbsp;" ?></p>
+        <p><?php echo " " . $currentPage->n . " / " . $currentPage->getMaxPage () . " " ?></p>
         <?php
             if (!is_null ($nextLink)) {
         ?>
@@ -320,7 +299,7 @@
 <?php
     }
 ?>
-    </div>
+    </footer>
 </div>
 </body>
 </html>
