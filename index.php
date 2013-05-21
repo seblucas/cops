@@ -12,6 +12,7 @@
     require_once ("author.php");
     require_once ("serie.php");
     require_once ("tag.php");
+    require_once ("language.php");
     require_once ("customcolumn.php");
     require_once ("book.php");
     
@@ -173,7 +174,8 @@
                         <option value="sa"><?php echo localize("authors.title") ?></option>
                         <option value="ss"><?php echo localize("series.title") ?></option>
                         <option value="sp"><?php echo localize("content.published") ?></option>
-                    </select>
+						<option value="sl"><?php echo localize("language.title") ?></option>
+					</select>
                     <select id="sortorder">
                         <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
                         <option value="desc"><?php echo localize("search.sortorder.desc") ?></option>
@@ -252,6 +254,14 @@
                 if (!empty ($tags)) {
             ?>
                 <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($tags) ?><br />
+            <?php
+                }
+            ?>
+			<?php
+                $languages = $entry->book->getLanguages ();
+                if (!empty ($languages)) {
+            ?>
+                <h4><?php echo localize("languages.title") . " : </h4>" . htmlspecialchars ($languages) ?><br />
             <?php
                 }
             ?>
