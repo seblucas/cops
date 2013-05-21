@@ -174,7 +174,7 @@
                         <option value="sa"><?php echo localize("authors.title") ?></option>
                         <option value="ss"><?php echo localize("series.title") ?></option>
                         <option value="sp"><?php echo localize("content.published") ?></option>
-						<option value="sl"><?php echo localize("language.title") ?></option>
+			<option value="sl"><?php echo localize("language.title") ?></option>
 					</select>
                     <select id="sortorder">
                         <option value="asc"><?php echo localize("search.sortorder.asc") ?></option>
