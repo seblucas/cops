@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Senioru <bla>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
