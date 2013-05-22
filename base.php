@@ -235,6 +235,7 @@ class Entry
         Serie::ALL_SERIES_ID         => 'images/serie.png',
         Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
+        Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
         "calibre:books$"             => 'images/allbook.png',
         "calibre:books:letter"       => 'images/allbook.png'
@@ -325,6 +326,10 @@ class Page
                 return new PageAllTags ($id, $query, $n);
             case Base::PAGE_TAG_DETAIL :
                 return new PageTagDetail ($id, $query, $n);
+            case Base::PAGE_ALL_LANGUAGES :
+                return new PageAllLanguages ($id, $query, $n);
+            case Base::PAGE_LANGUAGE_DETAIL :
+                return new PageLanguageDetail ($id, $query, $n);             
             case Base::PAGE_ALL_CUSTOMS :
                 return new PageAllCustoms ($id, $query, $n);
             case Base::PAGE_CUSTOM_DETAIL :
@@ -381,6 +386,8 @@ class Page
             if (!is_null ($series)) array_push ($this->entryArray, $series);
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
+			$languages = Language::getCount();
+            if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
                 if (!is_null ($customId)) {
@@ -488,6 +495,16 @@ class PageAllTags extends Page
     }
 }
 
+class PageAllLanguages extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = localize("languages.title");
+        $this->entryArray = Language::getAllLanguages();
+        $this->idPage = Language::ALL_LANGUAGES_ID;
+    }
+}
+
 class PageCustomDetail extends Page
 {
     public function InitializeContent () 
@@ -519,6 +536,17 @@ class PageTagDetail extends Page
         $this->idPage = $tag->getEntryId ();
         $this->title = $tag->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByTag ($this->idGet, $this->n);
+    }
+}
+
+class PageLanguageDetail extends Page
+{
+    public function InitializeContent () 
+    {
+        $language = Language::getLanguageById ($this->idGet);
+        $this->idPage = $language->getEntryId ();
+        $this->title = $language->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByLanguage ($this->idGet, $this->n);
     }
 }
 
@@ -648,6 +676,8 @@ abstract class Base
     const PAGE_ALL_CUSTOMS = "14";
     const PAGE_CUSTOM_DETAIL = "15";
     const PAGE_ABOUT = "16";
+    const PAGE_ALL_LANGUAGES = "17";
+    const PAGE_LANGUAGE_DETAIL = "18";   
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
