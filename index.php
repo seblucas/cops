@@ -159,7 +159,7 @@
                         <?php if (!is_null ($database)) { ?>
                             <input type="hidden" name="<?php echo DB ?>" value="<?php echo $database ?>" />
                         <?php } ?>
-                        <input type="text" name="query" />
+                        <input type="search" name="query" />
                     </div>
                 </form>
             </div>
