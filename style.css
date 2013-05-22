@@ -231,17 +231,22 @@ overflow: hidden;
 
 
 /*-------------Search Aside-------------*/
-#tool input[type=text]
+#tool input[type=search]
 {
 vertical-align: middle;
 width: 100%;
-margin: 5px;
+margin: 3px;
+}
+
+#tool div, #tool form
+{
+height: 32px;
 }
 
 .stop select
 {
 vertical-align: middle;
-margin: 5px;
+margin: 4px;
 }
 
 #sort
