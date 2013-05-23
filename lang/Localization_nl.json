@@ -104,7 +104,7 @@
 "deeplevel.summary":"{0} uitgesplitst naar auteurs, tags, etc. ",
 "about.summary":"Notities hoe Calibre2Opds te gebruiken",
 "usage.intro":"De opties worden uit het configuratie bestand {0} gebruikt",
-"config.Language.label":"Taal",
+"language.title":"Taal",
 "config.Language.description":"Deze setting verandert de taal van het programma ; gebruik de standaard ISO taal code (e.g. EN, FR, DE...)",
 "config.Language.possible":"Mogelijke waardes : {0}",
 "intro.goal":"Genereer OPDS and HTML catalogi van je Calibre eboeken database",

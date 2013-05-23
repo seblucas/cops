@@ -88,7 +88,7 @@
 "deeplevel.summary":"{0} разбито по авторам, тэгам и т.д.",
 "about.summary":"Примечания по использованию Calibre2Opds",
 "usage.intro":"Эта опция взята из файла конфигурации, расположенного в {0}",
-"config.Language.label":"Язык",
+"language.title":"Язык",
 "config.Language.description":"Эта опция устанавливает язык, используемый программой; используйте стандартный ISO код языка (например, EN, FR, DE...)",
 "config.Language.possible":"Возможные значения : {0}",
 "intro.goal":"Генерация OPDS и HTML каталогов вашей базы электронных книг Calibre",
