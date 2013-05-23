@@ -91,7 +91,7 @@ $book->getLinkArray ();
         {
 ?>
             <p class="popupless">
-<h3><?php echo localize("config.Language.label") ?>: </h3>
+<h3><?php echo localize("language.title") ?>: </h3>
             <?php echo $book->getLanguages () ?>
 </p>
  <?php

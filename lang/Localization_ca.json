@@ -85,7 +85,7 @@
 "deeplevel.summary":"{0} per autors, etiquetes, etc.",
 "about.summary":"Notes d'ús",
 "usage.intro":"Les opcions provenen de l'arxiu de configuració present a: {0}",
-"config.Language.label":"Idioma",
+"language.title":"Idioma",
 "config.Language.description":"Aquesta opció canvia l'idioma del programa; fes servir un codi ISO estàndard, p.e: EN, FR, DE, ES...)",
 "config.Language.possible":"Valors posibles: {0}",
 "intro.goal":"Genear catàleg OPDS i HTML des de la biblioteca del Calibre",

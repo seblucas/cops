@@ -110,7 +110,7 @@
 "about.title":"关于COPS",
 "about.summary":"关于Calibre2Opds的说明",
 "usage.intro":"选项从此配置文件生成 {0}",
-"config.Language.label":"语言",
+"language.title":"语言",
 "config.Language.description":"此项设置将会改变程序使用的语言 ; 请使用ISO标准语言代码 (例如 EN, FR, DE...)",
 "config.Language.possible":"可能的选项 : {0}",
 "intro.goal":"从你的 Calibre 数据库生成 OPDS 和 HTML 目录",

@@ -102,7 +102,7 @@
 "deeplevel.summary":"{0} aufgeschlüsselt nach Autoren, Schlagwörter, etc.",
 "about.summary":"Anmerkungen zur Verwendung von Calibre2Opds",
 "usage.intro":"Die Optionen werden der Konfigurationsdatei in {0} entnommen",
-"config.Language.label":"Sprache",
+"language.title":"Sprache",
 "config.Language.description":"Diese Einstellung ändert die verwendete Sprache des Programms; verwende den Standard ISO Sprachcode (z.B. EN, FR, DE …)",
 "config.Language.possible":"Mögliche Werte : {0}",
 "intro.goal":"Erstelle OPDS und HTML Kataloge der Calibre eBooks Datenbank",
