@@ -375,10 +375,12 @@ class Page
         if (is_array ($config['calibre_directory']) && is_null ($database)) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
-                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog", 
-                                        "", "text", 
+                $nBooks = Book::getBookCount ($i);
+                array_push ($this->entryArray, new Entry ($key . " " . $i, "{$i}:cops:catalog", 
+                                        str_format (localize ("bookword", $nBooks), $nBooks), "text", 
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
                 $i++;
+                Base::clearDb ();
             }
         } else {
             array_push ($this->entryArray, Author::getCount());
