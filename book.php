@@ -382,6 +382,12 @@ class Book extends Base {
             $this->getComment (), "text/html", 
             $this->getLinkArray (), $this);
     }
+    
+    public static function getBookCount($database = NULL) {
+        global $config;
+        $nBooks = parent::getDb ($database)->query('select count(*) from books')->fetchColumn();
+        return $nBooks;
+    }
 
     public static function getCount() {
         global $config;
