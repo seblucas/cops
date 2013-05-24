@@ -238,39 +238,45 @@
             <a class="fancydetail" href="<?php echo $entry->book->getDetailUrl () ?>">
             <div class="fullclickpopup">
                 <h2><span class="st"><?php echo htmlspecialchars ($entry->title) ?></span>
-            <?php
+<?php
                 if ($entry->book->getPubDate() != "")
                 {
-            ?>
+?>
                     <span class="sp">(<?php echo $entry->book->getPubDate() ?>)</span>
-            <?php
+<?php
                 }
-            ?>
-                    <span class="sr"><?php echo $entry->book->getRating () ?></span></h2>
+?>
+<?php
+                if (!is_null ($entry->book->rating)) {
+?>
+                    <span class="sr"><?php echo $entry->book->getRating () ?></span>
+<?php
+                }
+?>
+                </h2>
                 <h4><?php echo localize("authors.title") . " : " ?></h4><span class="sa"><?php echo htmlspecialchars ($entry->book->getAuthorsName ()) ?></span><br />
-            <?php
+<?php
                 $tags = $entry->book->getTagsName ();
                 if (!empty ($tags)) {
-            ?>
+?>
                 <h4><?php echo localize("tags.title") . " : </h4>" . htmlspecialchars ($tags) ?><br />
-            <?php
+<?php
                 }
-            ?>
-            <?php
+?>
+<?php
                 $serie = $entry->book->getSerie ();
                 if (!is_null ($serie)) {
-            ?>
+?>
                 <h4><?php echo localize("series.title") . " : "  ?></h4><span class="ss"><?php echo htmlspecialchars ($serie->name) . " (" . $entry->book->seriesIndex . ")" ?></span><br />
-            <?php
+<?php
                 }
-            ?></div></a>
+?>
+            </div></a>
         </article>
-        <?php
+<?php
                 }
-        ?>
-        <?php
             }
-        ?>
+?>
     </section>
     <footer>
         <div class="footright">
