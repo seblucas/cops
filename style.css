@@ -197,6 +197,13 @@ border-radius: 0px 0px 10px 10px;
 height:32px;
 }
 
+.footleft
+{
+float:left;
+height:32px;
+}
+
+
 .footright
 {
 float:right;
