@@ -18,7 +18,7 @@ function getURLParam ($name, $default = NULL) {
 }
 
 function getCurrentCss () {
-    return "styles/style.css";
+    return "styles/style-default.css";
 }
 
 function getUrlWithVersion ($url) {
