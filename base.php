@@ -17,8 +17,19 @@ function getURLParam ($name, $default = NULL) {
     return $default;
 }
 
+function getCurrentOption ($option) {
+    global $config;
+    if (isset($_COOKIE[$option])) {
+        return $_COOKIE[$option];
+    }
+    if ($option == "style") {
+        return "default";
+    }
+    return $config ["cops_" . $option];
+}
+
 function getCurrentCss () {
-    return "styles/style-default.css";
+    return "styles/style-" . getCurrentOption ("style") . ".css";
 }
 
 function getUrlWithVersion ($url) {
