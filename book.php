@@ -107,7 +107,7 @@ class Book extends Base {
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
         $urlParam = str_replace ("&", "&amp;", $urlParam);
-        if ($permalink || $config['cops_use_fancyapps'] == 0) { 
+        if ($permalink || getCurrentOption ('use_fancyapps') == 0) { 
             return 'index.php' . $urlParam; 
         } else { 
             return 'bookdetail.php' . $urlParam;

@@ -55,7 +55,7 @@
     <title><?php echo htmlspecialchars ($currentPage->title) ?></title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
-<?php if ($config['cops_use_fancyapps'] == 1) { ?>
+<?php if (getCurrentOption ('use_fancyapps') == 1) { ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.pack.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.css") ?>" media="screen" />
 <?php } ?>
@@ -80,7 +80,7 @@
                 });
             });
             
-<?php if ($config['cops_use_fancyapps'] == 1) { ?>
+<?php if (getCurrentOption ('use_fancyapps') == 1) { ?>
             $(".fancycover").fancybox({
                 'type' : 'image',
                 prevEffect      : 'none',
@@ -279,8 +279,11 @@
 ?>
     </section>
     <footer>
+        <div class="footleft">
+            <a href="customize.php"><img src="<?php echo getUrlWithVersion("images/theme.png") ?>" alt="<?php echo localize ("customize.title") ?>" /></a>
+        </div>
         <div class="footright">
-            <a class="fancyabout" href="<?php if ($config['cops_use_fancyapps'] == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="<?php echo localize ("about.title") ?>" /></a>
+            <a class="fancyabout" href="<?php if (getCurrentOption ('use_fancyapps') == 1) { echo "about.xml"; } else { echo $_SERVER["SCRIPT_NAME"] . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database)); } ?>"><img src="<?php echo getUrlWithVersion("images/info.png") ?>" alt="<?php echo localize ("about.title") ?>" /></a>
         </div>
 <?php
     if ($currentPage->isPaginated ()) {
