@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Customize COPS UI</title>
+    <title><?php echo localize ("customize.title") ?></title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' />
@@ -57,13 +57,13 @@
         </a>
         <img class="headright" style="visibility: hidden;" id="searchImage" src="<?php echo getUrlWithVersion("images/setting64.png") ?>" alt="Settings and menu" />
         <div class="headcenter">
-            <h1>Customize COPS UI</h1>
+            <h1><?php echo localize ("customize.title") ?></h1>
         </div>
     </header>
     
     <section>
         <article class="frontpage">
-            <h2>Style</h2>
+            <h2><?php echo localize ("customize.style") ?></h2>
             <h4><select id="style" onchange="updateCookie (this);">
 <?php
                 foreach (glob ("styles/style-*.css") as $filename) {
@@ -80,7 +80,7 @@
             </select></h4>
         </article>
         <article class="frontpage">
-            <h2>Use Fancybox</h2>
+            <h2><?php echo localize ("customize.fancybox") ?></h2>
             <h4><input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" <?php echo $use_fancybox ?> /></h4>
         </article>
     </section>

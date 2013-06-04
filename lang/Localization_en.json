@@ -324,5 +324,8 @@
 "sort.alternate":"Sort",
 "paging.next.alternate":"Next",
 "paging.previous.alternate":"Previous",
+"customize.title":"Customize COPS UI",
+"customize.style":"Theme",
+"customize.fancybox":"Use Fancybox",
 "fin":"fin"
 }
