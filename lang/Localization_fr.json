@@ -117,5 +117,8 @@
 "sort.alternate":"Trier",
 "paging.next.alternate":"Suivant",
 "paging.previous.alternate":"Précédent",
+"customize.title":"Paramétrage de COPS",
+"customize.style":"Thème",
+"customize.fancybox":"Utiliser Fancybox",
 "fin":"fin"
 }
