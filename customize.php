@@ -66,7 +66,7 @@
             <h2>Style</h2>
             <h4><select id="style" onchange="updateCookie (this);">
 <?php
-                foreach (glob ("styles/*.css") as $filename) {
+                foreach (glob ("styles/style-*.css") as $filename) {
                     if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
                         $filename = $m [1];
                     }
