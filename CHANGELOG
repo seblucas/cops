@@ -1,9 +1,10 @@
-0.5.0 - 20130525
-  * Upgrade COPS UI to HTML5 / CSS3 to hopefully make it prettier. Most code was contributed by Thomas Severinsen.
+0.5.0 - 20130605
+  * Upgrade COPS UI to HTML5 / CSS3 to hopefully make it prettier. Most of the code was contributed by Thomas Severinsen.
   * Add the number of books in each databases (when multiple database is enabled).
   * Add Norwegian Bokmål strings. Thanks to Rune Mathisen for the pull request.
   * Add a split by language of catalog. Thanks to Puiu Ionut for the pull request.
-  * Theming ////
+  * You can now change the theme and fancybox use on all your devices (You have to enable cookies).
+  * Add an eink theme. Thanks to Gregory Bodin for the code.
 
 0.4.0 - 20130507
   * Add multiple database support. Check the documentation of $config['calibre_directory'] in config-default.php to see how to enable it.
