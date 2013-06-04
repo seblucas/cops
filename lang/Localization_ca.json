@@ -49,7 +49,7 @@
 "bookentry.fullentrylink":"Entrada sencera",
 "tags.title":"Etiquetes",
 "tags.categorized":"Llistat per categories de les {0} etiquetes",
-"tags.categorized.single":"Llistat per categories de la única etiqueta - molt útil ;)",
+"tags.categorized.single":"Llistat per categories de la única etiqueta",
 "tags.alphabetical.many":"{0} etiquetes ordenades alfabèticament",
 "tags.alphabetical.one":"Llistat alfabètic de la única etiqueta ;)",
 "splitByLetter.tag.other":"Altres etiquetes",
