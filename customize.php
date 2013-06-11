@@ -44,8 +44,7 @@
             if ($(id).is(":checked"))
             {
                 if ($(id).is(':radio')) {
-                    var toto = $(id).val ();
-                    $.cookie(name, toto);
+                    $.cookie(name, $(id).val ());
                 } else {
                     $.cookie(name, '1');
                 }
