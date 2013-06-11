@@ -38,9 +38,17 @@
         
         function updateCookieFromCheckbox (id) {
             var name = $(id).attr('id');
+            if ((/^style/).test (name)) {
+                name = "style";
+            }
             if ($(id).is(":checked"))
             {
-                $.cookie(name, '1');
+                if ($(id).is(':radio')) {
+                    var toto = $(id).val ();
+                    $.cookie(name, toto);
+                } else {
+                    $.cookie(name, '1');
+                }
             }
             else
             {
@@ -64,20 +72,35 @@
     <section>
         <article class="frontpage">
             <h2><?php echo localize ("customize.style") ?></h2>
-            <h4><select id="style" onchange="updateCookie (this);">
+            <h4>
 <?php
+            if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                echo '<select id="style" onchange="updateCookie (this);">';
+            }
                 foreach (glob ("styles/style-*.css") as $filename) {
                     if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
                         $filename = $m [1];
                     }
                     $selected = "";
                     if (getCurrentOption ("style") == $filename) {
-                        $selected = "selected='selected'";
+                        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                            $selected = "selected='selected'";
+                        } else {
+                            $selected = "checked='checked'";
+                        }
                     }
-                    echo "<option value='{$filename}' {$selected}>{$filename}</option>";
+                    if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                        echo "<option value='{$filename}' {$selected}>{$filename}</option>";
+                    } else {
+                        echo "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' {$selected} /><label for='style-{$filename}'> {$filename} </label>";
+                    }
                 }
+            if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                echo '</select>';
+            }
+
 ?>
-            </select></h4>
+            </h4>
         </article>
         <article class="frontpage">
             <h2><?php echo localize ("customize.fancybox") ?></h2>
