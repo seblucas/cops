@@ -70,9 +70,9 @@
     </div>
     {{? it.isPaginated == 1}}
     <div class="footcenter">
-        {{? it.prevLink != ""}}<a href="{{=it.prevLink}}" ><img src="images/previous.png?v={{=it.version}}" alt="{{=it.i18n.previousAlt}}" /></a>{{?}}
+        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" ><img src="images/previous.png?v={{=it.version}}" alt="{{=it.i18n.previousAlt}}" /></a>{{?}}
         <p> {{=it.currentPage}} / {{=it.maxPage}} </p>
-        {{? it.nextLink != ""}}<a href="{{=it.nextLink}}" ><img src="images/next.png?v={{=it.version}}" alt="{{=it.i18n.nextAlt}}" /></a>{{?}}
+        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" ><img src="images/next.png?v={{=it.version}}" alt="{{=it.i18n.nextAlt}}" /></a>{{?}}
     </div>
     {{?}}
 </footer>
