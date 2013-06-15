@@ -65,35 +65,6 @@
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
     <script type="text/javascript">
-        var template, result;
-    
-        function ajaxifyLinks () {
-            if (history.pushState) {
-                $("a[href^='index']").click (function (event) {
-                    event.preventDefault(); 
-
-                    var url = $(this).attr('href');
-                    jsonurl = url.replace ("index", "getJSON");
-                    $.getJSON(jsonurl, function(data) {
-                        history.pushState(data, "", url);
-                        result = template (data);
-                        document.title = data.title;
-                        $(".container").html (result);
-                        
-                        ajaxifyLinks ();
-                    });
-                });
-            }
-        }
-        
-        window.onpopstate = function(event) {
-            //alert("location: " + document.location + ", state: " + JSON.stringify(event.state));
-            result = template (event.state);
-            document.title = event.state.title;
-            $(".container").html (result);
-                        
-            ajaxifyLinks ();
-        };
     
         $(document).ready(function() {
             // Handler for .ready() called.
