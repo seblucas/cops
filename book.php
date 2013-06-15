@@ -131,6 +131,7 @@ class Book extends Base {
                       "detailUrl" => $this->getDetailUrl (),
                       "rating" => $this->getRating (),
                       "pubDate" => $this->getPubDate (),
+                      "languagesName" => $this->getLanguages (),
                       "authorsName" => $this->getAuthorsName (),
                       "tagsName" => $this->getTagsName (),
                       "seriesName" => $sn,
@@ -144,6 +145,7 @@ class Book extends Base {
         $out ["detailurl"] = $this->getDetailUrl (true);
         $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml ();
+        $out ["content"] = $this->getComment (false);
         $out ["datas"] = array ();
         foreach ($this->getDatas() as $data) {
             array_push ($out ["datas"], array ("format" => $data->format, "url" => $data->getHtmlLink ()));
