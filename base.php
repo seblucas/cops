@@ -218,7 +218,7 @@ class LinkNavigation extends Link
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
-        if (preg_match ("/bookdetail.php/", $_SERVER["SCRIPT_NAME"])) {
+        if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
             $this->href = "index.php" . $this->href;
         } else {
             $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
@@ -265,6 +265,16 @@ class Entry
         }
         return date (DATE_ATOM, self::$updated);
     }
+    
+    public function getContentArray () {
+        $navlink = "#";
+        foreach ($this->linkArray as $link) { 
+            if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
+            
+            $navlink = $link->hrefXhtml ();
+        }
+        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $navlink );
+    }
  
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
         global $config;
@@ -297,6 +307,14 @@ class EntryBook extends Entry
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
+    }
+    
+    public function getContentArray () {
+        $entry = array ( "title" => $this->title);
+        $entry ["coverurl"] = $this->getCover ();
+        $entry ["thumbnailurl"] = $this->getCoverThumbnail ();
+        $entry ["book"] = $this->book->getContentArray ();
+        return $entry;
     }
     
     public function getCoverThumbnail () {
@@ -415,6 +433,61 @@ class Page
             
             if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
+    }
+    
+    public function getContentArray ()
+    {
+        global $config;
+        $database = GetUrlParam (DB);
+        $page = getURLParam ("page", Base::PAGE_INDEX);
+        $out = array ( "title" => $this->title, "version" => VERSION);
+        $entries = array ();
+        foreach ($this->entryArray as $entry) {
+            array_push ($entries, $entry->getContentArray ());
+        }
+        $out ["databaseId"] = GetUrlParam (DB, "");
+        $out ["databaseName"] = Base::getDbName ();
+        $out ["page"] = $page;
+        $out ["entries"] = $entries;
+        $out ["isPaginated"] = 0;
+        if ($this->isPaginated ()) {
+            $prevLink = $this->getPrevLink ();
+            $nextLink = $this->getNextLink ();
+            $out ["isPaginated"] = 1;
+            $out ["prevLink"] = "";
+            if (!is_null ($prevLink)) {
+                $out ["prevLink"] = $prevLink->hrefXhtml ();
+            }
+            $out ["nextLink"] = "";
+            if (!is_null ($nextLink)) {
+                $out ["nextLink"] = $nextLink->hrefXhtml ();
+            }
+            $out ["maxPage"] = $this->getMaxPage ();
+            $out ["currentPage"] = $this->n;
+        }
+        $out ["i18n"] = array ("coverAlt" => localize("i18n.coversection"),
+                       "authorsTitle" => localize("authors.title"),
+                       "tagsTitle" => localize("tags.title"),
+                       "seriesTitle" => localize("series.title"),
+                       "customizeTitle" => localize ("customize.title"),
+                       "aboutTitle" => localize ("about.title"),
+                       "previousAlt" => localize ("paging.previous.alternate"),
+                       "nextAlt" => localize ("paging.next.alternate"),
+                       "searchAlt" => localize ("search.alternate"),
+                       "homeAlt" => localize ("home.alternate"));
+
+        $out ["containsBook"] = 0;
+        if ($this->containsBook ()) {
+            $out ["containsBook"] = 1;
+        }
+        $out["abouturl"] = "about.xml";
+        if (getCurrentOption ('use_fancyapps') == 0) {
+            $out["abouturl"] = "index.php" . str_replace ("&", "&amp;", addURLParameter ("?page=16", DB, $database));
+        }
+        
+        $out ["homeurl"] = "index.php";
+        if ($page != Base::PAGE_INDEX && !is_null ($database)) $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
+        return $out;
     }
     
     public function isPaginated ()
