@@ -117,11 +117,8 @@
             $.get('templates/default/frontpage.html', function(data){
                 template = doT.template(data);
                 $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", $_SERVER["QUERY_STRING"]); ?>', function(data) {
-                    result = template (data);
-                    document.title = data.title;
-                    $(".container").html (result);
-                    
-                    ajaxifyLinks ();
+                    updatePage (data);
+                    history.replaceState(data, "", window.location);
                 });
             });
         });
