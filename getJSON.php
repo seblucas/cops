@@ -64,7 +64,10 @@
                    "nextAlt" => localize ("paging.next.alternate"),
                    "searchAlt" => localize ("search.alternate"),
                    "homeAlt" => localize ("home.alternate"),
-                   "permalinkAlt" => localize ("permalink.alternate"));
+                   "permalinkAlt" => localize ("permalink.alternate"),
+                   "pubdateTitle" => localize("pubdate.title"),
+                   "languagesTitle" => localize("language.title"),
+                   "contentTitle" => localize("content.summary"));
 
     $out ["containsBook"] = 0;
     if ($currentPage->containsBook ()) {

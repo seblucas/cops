@@ -31,4 +31,19 @@
         <h3><a href="{{=it.book.seriesurl}}">{{=it.i18n.seriesTitle}}</a> : </h3>{{=htmlEscape (it.book.seriesCompleteName)}}
     </p>
     {{?}}
+    {{? it.book.pubDate != ""}}
+    <p class="popupless">
+        <h3>{{=it.i18n.pubdateTitle}}: </h3>{{=it.book.pubDate}}
+    </p>
+    {{?}}
+    {{? it.book.languagesName != ""}}
+    <p class="popupless">
+        <h3>{{=it.i18n.languagesTitle}}: </h3>{{=it.book.languagesName}}
+    </p>
+    {{?}}
+    {{? it.book.content != ""}}
+    <br />
+    <h4>{{=it.i18n.contentTitle}}</h4>
+    <div>{{=it.book.content}}</div>
+    {{?}}
 </article>
