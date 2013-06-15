@@ -102,6 +102,31 @@ class Book extends Base {
         return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
     
+    public function getContentArray () {
+        global $config;
+        $i = 0;
+        $preferedData = array ();
+        foreach ($config['cops_prefered_format'] as $format)
+        {
+            if ($i == 2) { break; }
+            if ($data = $this->getDataFormat ($format)) {
+                $i++;
+                array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
+            }
+        }
+        $serie = $this->getSerie ();
+        if (is_null ($serie)) $serie = "";
+        
+        return array ("hasCover" => $this->hasCover,
+                      "preferedData" => $preferedData,
+                      "detailUrl" => $this->getDetailUrl (),
+                      "rating" => $this->getRating (),
+                      "pubDate" => $this->getPubDate (),
+                      "authorsName" => $this->getAuthorsName (),
+                      "tagsName" => $this->getTagsName (),
+                      "seriesName" => $serie);  
+    }
+    
     public function getDetailUrl ($permalink = false) {
         global $config;
         $urlParam = $this->getUri ();
