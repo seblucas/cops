@@ -94,14 +94,7 @@
                 prevEffect      : 'none',
                 nextEffect      : 'none'
                 <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-            });
-            
-            $(".fancydetail").fancybox({
-                'type' : 'ajax',
-                prevEffect      : 'none',
-                nextEffect      : 'none'
-                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-            });
+            });            
 <?php } ?>
             
             $(".headright").click(function(){
@@ -112,6 +105,10 @@
                     $("#tool").slideUp();
                     $.removeCookie('toolbar');
                 }
+            });
+            
+            $.get('templates/default/bookdetail.html', function(data){
+                templateBookDetail = doT.template (data);
             });
             
             $.get('templates/default/frontpage.html', function(data){

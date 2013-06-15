@@ -31,6 +31,9 @@
     foreach ($currentPage->entryArray as $entry) {
         array_push ($entries, $entry->getContentArray ());
     }
+    if (!is_null ($currentPage->book)) {
+        $out ["book"] = $currentPage->book->getFullContentArray ();
+    }
     $out ["databaseId"] = GetUrlParam (DB, "");
     $out ["databaseName"] = Base::getDbName ();
     $out ["page"] = $page;
@@ -60,7 +63,8 @@
                    "previousAlt" => localize ("paging.previous.alternate"),
                    "nextAlt" => localize ("paging.next.alternate"),
                    "searchAlt" => localize ("search.alternate"),
-                   "homeAlt" => localize ("home.alternate"));
+                   "homeAlt" => localize ("home.alternate"),
+                   "permalinkAlt" => localize ("permalink.alternate"));
 
     $out ["containsBook"] = 0;
     if ($currentPage->containsBook ()) {

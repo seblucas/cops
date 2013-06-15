@@ -343,6 +343,7 @@ class Page
     public $query;
     public $favicon;
     public $n;
+    public $book;
     public $totalNumber = -1;
     public $entryArray = array();
     
@@ -678,8 +679,8 @@ class PageBookDetail extends Page
 {
     public function InitializeContent () 
     {
-        $book = Book::getBookById ($this->idGet);
-        $this->title = $book->title;
+        $this->book = Book::getBookById ($this->idGet);
+        $this->title = $this->book->title;
     }
 }
 

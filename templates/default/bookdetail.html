@@ -1,0 +1,34 @@
+<article class="bookpopup">
+    <span class="cover">
+        {{? it.book.hasCover == 1}}
+        <a href="{{=it.book.coverurl}}">
+          <img src="{{=it.book.thumbnailurl}}" alt="{{=it.i18n.coverAlt}}" />
+        </a>
+        {{?}}
+    </span>
+    <h2 class="download">
+        {{~it.book.datas:data:i}}
+        <a href="{{=data.url}}">{{=data.format}}</a><br />
+        {{~}}
+    </h2>
+    <h1><a rel="bookmark" href="{{=it.book.detailurl}}"><img src="images/Link.png?v={{=it.version}}" alt="{{=it.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>
+    <p class="popupless">
+        <h3>{{=it.i18n.authorsTitle}}: </h3>
+        {{~it.book.authors:author:j}}
+        {{? j > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlEscape (author.name)}}</a>
+        {{~}}
+    </p>
+    {{? it.book.tagsName != ""}}
+    <p class="popupless">
+        <h3>{{=it.i18n.tagsTitle}}: </h3>
+        {{~it.book.tags:tag:k}}
+        {{? k > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlEscape (tag.name)}}</a>
+        {{~}}
+    </p>
+    {{?}}
+    {{? it.book.seriesName != ""}}
+    <p class="popupless">
+        <h3><a href="{{=it.book.seriesurl}}">{{=it.i18n.seriesTitle}}</a> : </h3>{{=htmlEscape (it.book.seriesCompleteName)}}
+    </p>
+    {{?}}
+</article>

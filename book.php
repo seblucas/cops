@@ -115,7 +115,16 @@ class Book extends Base {
             }
         }
         $serie = $this->getSerie ();
-        if (is_null ($serie)) $serie = "";
+        if (is_null ($serie)) {
+            $sn = "";
+            $scn = "";
+            $su = "";
+        } else {
+            $sn = $serie->name;
+            $scn = str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name);
+            $link = new LinkNavigation ($serie->getUri ());
+            $su = $link->hrefXhtml ();
+        }
         
         return array ("hasCover" => $this->hasCover,
                       "preferedData" => $preferedData,
@@ -124,7 +133,33 @@ class Book extends Base {
                       "pubDate" => $this->getPubDate (),
                       "authorsName" => $this->getAuthorsName (),
                       "tagsName" => $this->getTagsName (),
-                      "seriesName" => $serie);  
+                      "seriesName" => $sn,
+                      "seriesCompleteName" => $scn,
+                      "seriesurl" => $su);  
+    
+    }
+    public function getFullContentArray () {
+        $out = $this->getContentArray ();
+        
+        $out ["detailurl"] = $this->getDetailUrl (true);
+        $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
+        $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml ();
+        $out ["datas"] = array ();
+        foreach ($this->getDatas() as $data) {
+            array_push ($out ["datas"], array ("format" => $data->format, "url" => $data->getHtmlLink ()));
+        }
+        $out ["authors"] = array ();
+        foreach ($this->getAuthors () as $author) {
+            $link = new LinkNavigation ($author->getUri ());
+            array_push ($out ["authors"], array ("name" => $author->name, "url" => $link->hrefXhtml ()));
+        }
+        $out ["tags"] = array ();
+        foreach ($this->getTags () as $tag) {
+            $link = new LinkNavigation ($tag->getUri ());
+            array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
+        }
+        ;
+        return $out;
     }
     
     public function getDetailUrl ($permalink = false) {

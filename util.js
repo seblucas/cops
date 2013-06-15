@@ -1,4 +1,4 @@
-var template, result;
+var template, templateBookDetail, result;
 
 function htmlEscape(str) {
     return String(str)
@@ -10,7 +10,7 @@ function htmlEscape(str) {
 }
 
 function navigateTo (url) {
-    jsonurl = url.replace ("index", "getJSON");
+    var jsonurl = url.replace ("index", "getJSON");
     $.getJSON(jsonurl, function(data) {
         history.pushState(data, "", url);
         updatePage (data);
@@ -23,6 +23,20 @@ function updatePage (data) {
     $(".container").html (result);
     
     ajaxifyLinks ();
+    
+    $(".fancydetail").click(function(event){
+        event.preventDefault(); 
+        var url = $(this).attr("href");
+        var jsonurl = url.replace ("bookdetail", "getJSON");
+        $.getJSON(jsonurl, function(data) {
+            var detail = templateBookDetail (data);
+            $.fancybox( {
+                content: detail,
+                autoSize: true
+            });
+        });
+    });
+
 }
 
 function ajaxifyLinks () {
