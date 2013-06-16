@@ -1,5 +1,19 @@
 var template, templateBookDetail, result;
 
+var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
+
+function fancyBoxObject (title, type) {
+    var out = { prevEffect      : 'none', nextEffect      : 'none' };
+    if (isEink) {
+        out ["openEffect"] = 'none';
+        out ["closeEffect"] = 'none';
+        out ["helper"] = { overlay : null };
+    }
+    if (title) out ["title"] = title;
+    if (type) out ["type"] = type;
+    return out;
+}
+
 function htmlEscape(str) {
     return String(str)
             .replace(/&/g, '&amp;')

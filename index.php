@@ -81,20 +81,9 @@
             });
             
 <?php if (getCurrentOption ('use_fancyapps') == 1) { ?>
-            $(".fancycover").fancybox({
-                'type' : 'image',
-                prevEffect      : 'none',
-                nextEffect      : 'none'
-                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-            });
+            $(".fancycover").fancybox(fancyBoxObject (null, 'image'));
             
-            $(".fancyabout").fancybox({
-                'type' : 'ajax',
-                title           : 'COPS <?php echo VERSION ?>',
-                prevEffect      : 'none',
-                nextEffect      : 'none'
-                <?php if ($isEink) echo ", openEffect : 'none', closeEffect : 'none', helpers : {overlay : null}"; ?>
-            });            
+            $(".fancyabout").fancybox(fancyBoxObject ('COPS <?php echo VERSION ?>', 'ajax'));
 <?php } ?>
             
             $(".headright").click(function(){
