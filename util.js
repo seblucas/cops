@@ -1,4 +1,4 @@
-var templatePage, templateBookDetail, templateMain, result;
+var templatePage, templateBookDetail, templateMain, currentData;
 
 var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
 
@@ -32,11 +32,24 @@ function navigateTo (url) {
 }
 
 function updatePage (data) {
-    result = templatePage (data);
+    currentData = data;
+    var result = templatePage (data);
     document.title = data.title;
     $(".container").html (result);
     
+    if ($.cookie('toolbar') == 1) $("#tool").show ();
+    
     ajaxifyLinks ();
+    
+    $(".headright").click(function(){
+        if ($("#tool").is(":hidden")) {
+            $("#tool").slideDown("slow");
+            $.cookie('toolbar', '1');
+        } else {
+            $("#tool").slideUp();
+            $.removeCookie('toolbar');
+        }
+    });
     
     $(".fancydetail").click(function(event){
         event.preventDefault(); 
