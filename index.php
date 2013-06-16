@@ -86,16 +86,6 @@
             $(".fancyabout").fancybox(fancyBoxObject ('COPS <?php echo VERSION ?>', 'ajax'));
 <?php } ?>
             
-            $(".headright").click(function(){
-                if ($("#tool").is(":hidden")) {
-                    $("#tool").slideDown("slow");
-                    $.cookie('toolbar', '1');
-                } else {
-                    $("#tool").slideUp();
-                    $.removeCookie('toolbar');
-                }
-            });
-            
             $.when($.get('templates/default/header.html'),
                    $.get('templates/default/footer.html'),
                    $.get('templates/default/bookdetail.html'),
@@ -118,7 +108,7 @@
                 };
                 
                 templatePage = doT.template (page [0], undefined, defPage);
-                var toto = "toto";
+                currentData = data [0];
                 
                 updatePage (data [0]);
                 history.replaceState(data [0], "", window.location);
