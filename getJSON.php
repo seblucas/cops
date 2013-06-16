@@ -54,7 +54,8 @@
         $out ["maxPage"] = $currentPage->getMaxPage ();
         $out ["currentPage"] = $currentPage->n;
     }
-    $out ["i18n"] = array ("coverAlt" => localize("i18n.coversection"),
+    if (!is_null (getURLParam ("complete"))) { 
+        $out ["i18n"] = array ("coverAlt" => localize("i18n.coversection"),
                    "authorsTitle" => localize("authors.title"),
                    "bookwordTitle" => localize("bookword.title"),
                    "tagsTitle" => localize("tags.title"),
@@ -72,6 +73,7 @@
                    "contentTitle" => localize("content.summary"),
                    "sortorderAsc" => localize("search.sortorder.asc"),
                    "sortorderDesc" => localize("search.sortorder.desc"));
+   }
 
     $out ["containsBook"] = 0;
     if ($currentPage->containsBook ()) {
