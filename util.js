@@ -32,6 +32,7 @@ function navigateTo (url) {
 }
 
 function updatePage (data) {
+    data ["i18n"] = currentData ["i18n"];
     currentData = data;
     var result = templatePage (data);
     document.title = data.title;

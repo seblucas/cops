@@ -91,7 +91,7 @@
                    $.get('templates/default/bookdetail.html'),
                    $.get('templates/default/main.html'),
                    $.get('templates/default/page.html'),
-                   $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", $_SERVER["QUERY_STRING"]); ?>')).done(function(header, footer, bookdetail, main, page, data){
+                   $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1)); ?>')).done(function(header, footer, bookdetail, main, page, data){
                 templateBookDetail = doT.template (bookdetail [0]);
                 
                 var defMain = {
