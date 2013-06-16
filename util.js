@@ -68,7 +68,7 @@ window.onpopstate = function(event) {
     updatePage (event.state);
 };
 
- $(document).keydown(function(e){
+$(document).keydown(function(e){
     if (e.keyCode == 37 && $("#prevLink").length > 0) {
         navigateTo ($("#prevLink").attr('href'));
     }
