@@ -1,4 +1,4 @@
-var template, templateBookDetail, result;
+var templatePage, templateBookDetail, templateMain, result;
 
 var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
 
@@ -32,7 +32,7 @@ function navigateTo (url) {
 }
 
 function updatePage (data) {
-    result = template (data);
+    result = templatePage (data);
     document.title = data.title;
     $(".container").html (result);
     

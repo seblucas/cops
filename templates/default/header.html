@@ -1,0 +1,26 @@
+<header>
+    <a class="headleft" href="{{=it.homeurl}}">
+            <img src="images/home.png?v={{=it.version}}" alt="{{=it.i18n.homeAlt}}" />
+    </a>
+    <img class="headright" id="searchImage" src="images/setting64.png?v={{=it.version}}" alt="Settings and menu" />
+    <div class="headcenter">
+        <h1>{{=it.title}}</h1>
+    </div>
+    <div id="tool">
+        <div style="float: left; width: 60%">
+            <form action="index.php" method="get">
+                <div style="float: right">
+                    <input type="image" src="images/search32.png?v={{=it.version}}" alt="{{=it.i18n.searchAlt}}" />
+                </div>
+                <div class="stop">
+                    <input type="hidden" name="current" value="{{=it.page}}" />
+                    <input type="hidden" name="page" value="9" />
+                    {{? it.databaseId != ""}}
+                        <input type="hidden" name="db" value="{{=it.databaseId}}" />
+                    {{?}}
+                    <input type="search" name="query" />
+                </div>
+            </form>
+        </div>
+    </div>
+</header>

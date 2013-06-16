@@ -96,17 +96,34 @@
                 }
             });
             
-            $.get('templates/default/bookdetail.html', function(data){
-                templateBookDetail = doT.template (data);
+            $.when($.get('templates/default/header.html'),
+                   $.get('templates/default/footer.html'),
+                   $.get('templates/default/bookdetail.html'),
+                   $.get('templates/default/main.html'),
+                   $.get('templates/default/page.html'),
+                   $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", $_SERVER["QUERY_STRING"]); ?>')).done(function(header, footer, bookdetail, main, page, data){
+                templateBookDetail = doT.template (bookdetail [0]);
+                
+                var defMain = {
+                    bookdetail: bookdetail [0]
+                };
+                
+                templateMain = doT.template (main [0], undefined, defMain);
+                
+                var defPage = {
+                    header: header [0],
+                    footer: footer [0],
+                    main  : main [0],
+                    bookdetail: bookdetail [0]
+                };
+                
+                templatePage = doT.template (page [0], undefined, defPage);
+                var toto = "toto";
+                
+                updatePage (data [0]);
+                history.replaceState(data [0], "", window.location);
             });
             
-            $.get('templates/default/frontpage.html', function(data){
-                template = doT.template(data);
-                $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", $_SERVER["QUERY_STRING"]); ?>', function(data) {
-                    updatePage (data);
-                    history.replaceState(data, "", window.location);
-                });
-            });
         });
         
         
