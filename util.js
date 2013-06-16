@@ -40,7 +40,7 @@ function updatePage (data) {
     currentData = data;
     var result = templatePage (data);
     document.title = data.title;
-    $(".container").html (result);
+    $("body").html (result);
     
     if ($.cookie('toolbar') == 1) $("#tool").show ();
     
