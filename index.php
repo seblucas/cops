@@ -86,8 +86,5 @@
     </script>
 </head>
 <body>
-<div id="content" style="display: none;"></div>
-<div class="container">    
-</div>
 </body>
 </html>
