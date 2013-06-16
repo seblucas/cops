@@ -56,6 +56,7 @@
     }
     $out ["i18n"] = array ("coverAlt" => localize("i18n.coversection"),
                    "authorsTitle" => localize("authors.title"),
+                   "bookwordTitle" => localize("bookword.title"),
                    "tagsTitle" => localize("tags.title"),
                    "seriesTitle" => localize("series.title"),
                    "customizeTitle" => localize ("customize.title"),
@@ -63,11 +64,14 @@
                    "previousAlt" => localize ("paging.previous.alternate"),
                    "nextAlt" => localize ("paging.next.alternate"),
                    "searchAlt" => localize ("search.alternate"),
+                   "sortAlt" => localize ("sort.alternate"),
                    "homeAlt" => localize ("home.alternate"),
                    "permalinkAlt" => localize ("permalink.alternate"),
                    "pubdateTitle" => localize("pubdate.title"),
                    "languagesTitle" => localize("language.title"),
-                   "contentTitle" => localize("content.summary"));
+                   "contentTitle" => localize("content.summary"),
+                   "sortorderAsc" => localize("search.sortorder.asc"),
+                   "sortorderDesc" => localize("search.sortorder.desc"));
 
     $out ["containsBook"] = 0;
     if ($currentPage->containsBook ()) {
