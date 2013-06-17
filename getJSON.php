@@ -56,24 +56,28 @@
     }
     if (!is_null (getURLParam ("complete"))) { 
         $out ["const"] = array ("version" => VERSION, "i18n" => array (
-                    "coverAlt" => localize("i18n.coversection"),
-                   "authorsTitle" => localize("authors.title"),
-                   "bookwordTitle" => localize("bookword.title"),
-                   "tagsTitle" => localize("tags.title"),
-                   "seriesTitle" => localize("series.title"),
-                   "customizeTitle" => localize ("customize.title"),
-                   "aboutTitle" => localize ("about.title"),
-                   "previousAlt" => localize ("paging.previous.alternate"),
-                   "nextAlt" => localize ("paging.next.alternate"),
-                   "searchAlt" => localize ("search.alternate"),
-                   "sortAlt" => localize ("sort.alternate"),
-                   "homeAlt" => localize ("home.alternate"),
-                   "permalinkAlt" => localize ("permalink.alternate"),
-                   "pubdateTitle" => localize("pubdate.title"),
-                   "languagesTitle" => localize("language.title"),
-                   "contentTitle" => localize("content.summary"),
-                   "sortorderAsc" => localize("search.sortorder.asc"),
-                   "sortorderDesc" => localize("search.sortorder.desc")));
+                       "coverAlt" => localize("i18n.coversection"),
+                       "authorsTitle" => localize("authors.title"),
+                       "bookwordTitle" => localize("bookword.title"),
+                       "tagsTitle" => localize("tags.title"),
+                       "seriesTitle" => localize("series.title"),
+                       "customizeTitle" => localize ("customize.title"),
+                       "aboutTitle" => localize ("about.title"),
+                       "previousAlt" => localize ("paging.previous.alternate"),
+                       "nextAlt" => localize ("paging.next.alternate"),
+                       "searchAlt" => localize ("search.alternate"),
+                       "sortAlt" => localize ("sort.alternate"),
+                       "homeAlt" => localize ("home.alternate"),
+                       "permalinkAlt" => localize ("permalink.alternate"),
+                       "pubdateTitle" => localize("pubdate.title"),
+                       "languagesTitle" => localize("language.title"),
+                       "contentTitle" => localize("content.summary"),
+                       "sortorderAsc" => localize("search.sortorder.asc"),
+                       "sortorderDesc" => localize("search.sortorder.desc")),
+                   "url" => array (
+                   "detailUrl" => "index.php?page=13&amp;id={0}&amp;db={1}",
+                   "coverUrl" => "fetch.php?id={0}&amp;db={1}",
+                   "thumbnailUrl" => "fetch.php?height=70&amp;id={0}&amp;db={1}"));
    }
 
     $out ["containsBook"] = 0;
