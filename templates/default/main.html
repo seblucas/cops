@@ -16,7 +16,7 @@
     <article class="books">
             <span class="cover">
             {{? entry.book.hasCover == 1}}
-                <a data-fancybox-group="group" class="fancycover" href="{{=entry.coverurl}}"><img src="{{=entry.thumbnailurl}}" alt="{{=it.i18n.coverAlt}}" /></a>
+                <a data-fancybox-group="group" class="fancycover" href="{{=entry.coverurl}}"><img src="{{=entry.thumbnailurl}}" alt="{{=it.const.i18n.coverAlt}}" /></a>
             {{?}}
             </span>
             <h2 class="download">
@@ -30,9 +30,9 @@
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}
                 {{? entry.book.rating != ""}}<span class="sr">{{=entry.book.rating}}</span>{{?}}
                 </h2>
-                <h4>{{=it.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlEscape (entry.book.authorsName)}}</span><br />
-                {{? entry.book.tagsName != ""}}<h4>{{=it.i18n.tagsTitle}} : </h4>{{=htmlEscape (entry.book.tagsName)}}<br />{{?}}
-                {{? entry.book.seriesName != ""}}<h4>{{=it.i18n.seriesTitle}} : </h4>{{=htmlEscape (entry.book.seriesName)}}<br />{{?}}
+                <h4>{{=it.const.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlEscape (entry.book.authorsName)}}</span><br />
+                {{? entry.book.tagsName != ""}}<h4>{{=it.const.i18n.tagsTitle}} : </h4>{{=htmlEscape (entry.book.tagsName)}}<br />{{?}}
+                {{? entry.book.seriesName != ""}}<h4>{{=it.const.i18n.seriesTitle}} : </h4>{{=htmlEscape (entry.book.seriesName)}}<br />{{?}}
             </div></a>
         </article>
     {{?}}

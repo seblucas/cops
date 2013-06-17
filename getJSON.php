@@ -26,7 +26,7 @@
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
     
-    $out = array ( "title" => $currentPage->title, "version" => VERSION);
+    $out = array ( "title" => $currentPage->title);
     $entries = array ();
     foreach ($currentPage->entryArray as $entry) {
         array_push ($entries, $entry->getContentArray ());
@@ -55,7 +55,8 @@
         $out ["currentPage"] = $currentPage->n;
     }
     if (!is_null (getURLParam ("complete"))) { 
-        $out ["i18n"] = array ("coverAlt" => localize("i18n.coversection"),
+        $out ["const"] = array ("version" => VERSION, "i18n" => array (
+                    "coverAlt" => localize("i18n.coversection"),
                    "authorsTitle" => localize("authors.title"),
                    "bookwordTitle" => localize("bookword.title"),
                    "tagsTitle" => localize("tags.title"),
@@ -72,7 +73,7 @@
                    "languagesTitle" => localize("language.title"),
                    "contentTitle" => localize("content.summary"),
                    "sortorderAsc" => localize("search.sortorder.asc"),
-                   "sortorderDesc" => localize("search.sortorder.desc"));
+                   "sortorderDesc" => localize("search.sortorder.desc")));
    }
 
     $out ["containsBook"] = 0;
