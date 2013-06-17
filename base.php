@@ -311,8 +311,6 @@ class EntryBook extends Entry
     
     public function getContentArray () {
         $entry = array ( "title" => $this->title);
-        $entry ["coverurl"] = $this->getCover ();
-        $entry ["thumbnailurl"] = $this->getCoverThumbnail ();
         $entry ["book"] = $this->book->getContentArray ();
         return $entry;
     }

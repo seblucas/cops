@@ -126,9 +126,9 @@ class Book extends Base {
             $su = $link->hrefXhtml ();
         }
         
-        return array ("hasCover" => $this->hasCover,
+        return array ("id" => $this->id,
+                      "hasCover" => $this->hasCover,
                       "preferedData" => $preferedData,
-                      "detailUrl" => $this->getDetailUrl (),
                       "rating" => $this->getRating (),
                       "pubDate" => $this->getPubDate (),
                       "languagesName" => $this->getLanguages (),
