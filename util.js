@@ -36,7 +36,7 @@ function navigateTo (url) {
 }
 
 function updatePage (data) {
-    data ["i18n"] = currentData ["i18n"];
+    data ["const"] = currentData ["const"];
     currentData = data;
     var result = templatePage (data);
     document.title = data.title;
@@ -73,7 +73,7 @@ function updatePage (data) {
             var url = $(this).attr("href");
             var jsonurl = url.replace ("bookdetail", "getJSON");
             $.getJSON(jsonurl, function(data) {
-                data ["i18n"] = currentData ["i18n"];
+                data ["const"] = currentData ["const"];
                 var detail = templateBookDetail (data);
                 $.fancybox( {
                     content: detail,
