@@ -142,7 +142,6 @@ class Book extends Base {
     public function getFullContentArray () {
         $out = $this->getContentArray ();
         
-        $out ["detailurl"] = $this->getDetailUrl (true);
         $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml ();
         $out ["content"] = $this->getComment (false);
