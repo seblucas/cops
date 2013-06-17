@@ -11,7 +11,7 @@
         <a href="{{=data.url}}">{{=data.format}}</a><br />
         {{~}}
     </h2>
-    <h1><a rel="bookmark" href="{{=it.book.detailurl}}"><img src="images/Link.png?v={{=it.const.version}}" alt="{{=it.const.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>
+    <h1><a rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><img src="images/Link.png?v={{=it.const.version}}" alt="{{=it.const.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.const.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:j}}
