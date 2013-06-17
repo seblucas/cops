@@ -71,14 +71,13 @@ function updatePage (data) {
         $(".fancydetail").click(function(event){
             event.preventDefault(); 
             var url = $(this).attr("href");
-            var jsonurl = url.replace ("bookdetail", "getJSON");
+            var jsonurl = url.replace ("index", "getJSON");
             $.getJSON(jsonurl, function(data) {
                 data ["const"] = currentData ["const"];
                 var detail = templateBookDetail (data);
-                $.fancybox( {
-                    content: detail,
-                    autoSize: true
-                });
+                var fancyparams = fancyBoxObject (data.title, null);
+                fancyparams ["content"] = detail;
+                $.fancybox(fancyparams);
             });
         });
         
@@ -91,7 +90,9 @@ function updatePage (data) {
 
 function ajaxifyLinks () {
     if (history.pushState) {
-        $("a[href^='index']").click (function (event) {
+        var links = $("a[href^='index']");
+        if (getCurrentOption ("use_fancyapps") == 1) links = links.not (".fancydetail");
+        links.click (function (event) {
             event.preventDefault(); 
 
             var url = $(this).attr('href');
