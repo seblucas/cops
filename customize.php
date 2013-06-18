@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo localize ("customize.title") ?></title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jQuery/jquery-1.9.1.min.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.cookies.js") ?>"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jquery-cookie/jquery.cookies.js") ?>"></script>
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
