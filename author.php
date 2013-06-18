@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -12,7 +12,7 @@ class Author extends Base {
     const ALL_AUTHORS_ID = "calibre:authors";
     
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
-    const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link bal left outer join books on bal.book=books.id left outer join custom_column_1 cc1 on books.id=cc1.book where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
     const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
     
     public $id;
