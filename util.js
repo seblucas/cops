@@ -94,6 +94,13 @@ function updatePage (data) {
             
         $(".fancyabout").fancybox(fancyBoxObject ('COPS ' + currentData.version, 'ajax'));
     }
+    
+    $("#searchForm").submit (function (event) {
+        event.preventDefault(); 
+        
+        var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+        navigateTo (url);
+    });
 
 }
 
