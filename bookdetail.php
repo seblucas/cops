@@ -73,7 +73,7 @@ $book->getLinkArray ();
         {
 ?>
             <p class="popupless">
-                <h3><a href="index.php<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
+                <h3><a href="<?php $link = new LinkNavigation ($serie->getUri ()); echo $link->hrefXhtml () ?>"><?php echo localize("series.title") ?></a>: </h3>
             <?php echo str_format (localize ("content.series.data"), $book->seriesIndex, htmlspecialchars ($serie->name)) ?>
 </p>
 <?php
