@@ -75,9 +75,12 @@
                        "sortorderAsc" => localize("search.sortorder.asc"),
                        "sortorderDesc" => localize("search.sortorder.desc")),
                    "url" => array (
-                   "detailUrl" => "index.php?page=13&amp;id={0}&amp;db={1}",
-                   "coverUrl" => "fetch.php?id={0}&amp;db={1}",
-                   "thumbnailUrl" => "fetch.php?height=70&amp;id={0}&amp;db={1}"));
+                       "detailUrl" => "index.php?page=13&amp;id={0}&amp;db={1}",
+                       "coverUrl" => "fetch.php?id={0}&amp;db={1}",
+                       "thumbnailUrl" => "fetch.php?height=70&amp;id={0}&amp;db={1}"),
+                   "config" => array (
+                       "use_fancyapps" => $config ["cops_use_fancyapps"],
+                       "max_item_per_page" => $config['cops_max_item_per_page']));
    }
 
     $out ["containsBook"] = 0;
