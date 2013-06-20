@@ -23,6 +23,11 @@ function strformat () {
     return s;
 }
 
+function isDefined(x) {
+    var undefined;
+    return x !== undefined;
+}
+
 function getCurrentOption (option) {
     return $.cookie (option);
 }
