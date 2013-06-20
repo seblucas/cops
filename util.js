@@ -2,6 +2,9 @@ var templatePage, templateBookDetail, templateMain, currentData, before;
 
 var DEBUG = true;
 var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
+var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
+  // pushState isn't reliable on iOS until 5.
+  !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/);
 
 function debug_log(text) {
     if ( DEBUG ) {
@@ -131,24 +134,23 @@ function updatePage (data) {
             
         $(".fancyabout").fancybox(fancyBoxObject ('COPS ' + currentData.version, 'ajax'));
     }
-    
-    $("#searchForm").submit (function (event) {
-        event.preventDefault(); 
-        
-        var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
-        navigateTo (url);
-    });
-
 }
 
 function ajaxifyLinks () {
-    if (history.pushState) {
+    if (isPushStateEnabled) {
         var links = $("a[href^='index']");
         if (getCurrentOption ("use_fancyapps") == 1) links = links.not (".fancydetail");
         links.click (function (event) {
             event.preventDefault(); 
 
             var url = $(this).attr('href');
+            navigateTo (url);
+        });
+        
+        $("#searchForm").submit (function (event) {
+            event.preventDefault(); 
+            
+            var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
             navigateTo (url);
         });
     }
