@@ -1,6 +1,18 @@
-var templatePage, templateBookDetail, templateMain, currentData;
+var templatePage, templateBookDetail, templateMain, currentData, before;
 
+var DEBUG = true;
 var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
+
+function debug_log(text) {
+    if ( DEBUG ) {
+        console.log(text);
+    }
+}
+
+function elapsed () {
+    var elapsed = new Date () - before; 
+    return "Elapsed : " + elapsed;
+}
 
 function fancyBoxObject (title, type) {
     var out = { prevEffect      : 'none', nextEffect      : 'none' };
@@ -42,6 +54,7 @@ function htmlEscape(str) {
 }
 
 function navigateTo (url) {
+    before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
     $.getJSON(jsonurl, function(data) {
         history.pushState(data, "", url);
@@ -50,13 +63,30 @@ function navigateTo (url) {
 }
 
 function updatePage (data) {
+    var result;
     data ["const"] = currentData ["const"];
-    currentData = data;
-    var result = templatePage (data);
+    if (false && $("section").length && currentData.isPaginated == 0 &&  data.isPaginated == 0) {
+        // Partial update (for now disabled)
+        debug_log ("Partial update");
+        result = templateMain (data);
+        $("h1").html (data.title);
+        $("section").html (result);
+    } else {
+        // Full update
+        result = templatePage (data);
+        $("body").html (result);
+    }
     document.title = data.title;
-    $("body").html (result);
+    currentData = data;
+    
+    debug_log (elapsed ());
     
     if ($.cookie('toolbar') == 1) $("#tool").show ();
+    if (currentData.containsBook == 1) {
+        $("#sortForm").show ();
+    } else {
+        $("#sortForm").hide ();
+    }
     
     ajaxifyLinks ();
     
@@ -84,6 +114,7 @@ function updatePage (data) {
     if (getCurrentOption ("use_fancyapps") == 1) {
         $(".fancydetail").click(function(event){
             event.preventDefault(); 
+            before = new Date ();
             var url = $(this).attr("href");
             var jsonurl = url.replace ("index", "getJSON");
             $.getJSON(jsonurl, function(data) {
@@ -92,6 +123,7 @@ function updatePage (data) {
                 var fancyparams = fancyBoxObject (data.title, null);
                 fancyparams ["content"] = detail;
                 $.fancybox(fancyparams);
+                debug_log (elapsed ());
             });
         });
         
@@ -123,6 +155,7 @@ function ajaxifyLinks () {
 }
 
 window.onpopstate = function(event) {
+    before = new Date ();
     updatePage (event.state);
 };
 
