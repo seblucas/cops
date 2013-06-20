@@ -52,12 +52,14 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             
+            var url = "<?php echo "getJSON.php?" . str_replace ("&", "&amp;", addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1)); ?>";
+            
             $.when($.get('templates/default/header.html'),
                    $.get('templates/default/footer.html'),
                    $.get('templates/default/bookdetail.html'),
                    $.get('templates/default/main.html'),
                    $.get('templates/default/page.html'),
-                   $.getJSON('<?php echo "getJSON.php?" . str_replace ("&", "&amp;", addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1)); ?>')).done(function(header, footer, bookdetail, main, page, data){
+                   $.getJSON(url)).done(function(header, footer, bookdetail, main, page, data){
                 templateBookDetail = doT.template (bookdetail [0]);
                 
                 var defMain = {
@@ -77,7 +79,8 @@
                 currentData = data [0];
                 
                 updatePage (data [0]);
-                history.replaceState(data [0], "", window.location);
+                cache.put (url, data [0]);
+                history.replaceState(url, "", window.location);
             });
             
         });
