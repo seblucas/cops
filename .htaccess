@@ -25,6 +25,37 @@ RewriteRule ^download/(\d*)/.*\.kepub\.epub$ fetch.php?data=$1&type=epub [L]
 RewriteRule ^download/(\d*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
 </IfModule>
 
+<IfModule mod_expires.c>
+ExpiresActive on
+
+# Data
+ExpiresByType text/xml "access plus 0 seconds"
+ExpiresByType application/xml "access plus 0 seconds"
+ExpiresByType application/json "access plus 0 seconds"
+ExpiresByType application/xhtml+xml "access plus 0 seconds"
+
+# Favicon (cannot be renamed)
+ExpiresByType image/x-icon "access plus 1 week"
+
+# Media: images
+ExpiresByType image/png "access plus 1 month"
+ExpiresByType image/jpg "access plus 1 month"
+ExpiresByType image/jpeg "access plus 1 month"
+
+# Webfonts
+ExpiresByType font/truetype "access plus 1 month"
+ExpiresByType font/opentype "access plus 1 month"
+ExpiresByType application/x-font-woff   "access plus 1 month"
+ExpiresByType image/svg+xml "access plus 1 month"
+ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+
+# CSS and JavaScript
+ExpiresByType text/css "access plus 1 year"
+ExpiresByType application/javascript "access plus 1 year"
+ExpiresByType text/javascript "access plus 1 year"
+   
+</IfModule>
+
 ###########################################
 # Uncomment if you wish to protect access with a password
 ###########################################
