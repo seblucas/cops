@@ -1,5 +1,7 @@
 var templatePage, templateBookDetail, templateMain, currentData, before;
 
+var cache = new LRUCache(30);
+
 var DEBUG = true;
 var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
@@ -65,7 +67,8 @@ function navigateTo (url) {
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
     $.getJSON(jsonurl, function(data) {
-        history.pushState(data, "", url);
+        history.pushState(jsonurl, "", url);
+        cache.put (jsonurl, data);
         updatePage (data);
     });
 }
@@ -163,7 +166,8 @@ function ajaxifyLinks () {
 
 window.onpopstate = function(event) {
     before = new Date ();
-    updatePage (event.state);
+    var data = cache.get (event.state)
+    updatePage (data);
 };
 
 $(document).keydown(function(e){
