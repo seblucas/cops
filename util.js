@@ -66,11 +66,17 @@ function htmlEscape(str) {
 function navigateTo (url) {
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
-    $.getJSON(jsonurl, function(data) {
+    var cachedData = cache.get (jsonurl);
+    if (cachedData) {
         history.pushState(jsonurl, "", url);
-        cache.put (jsonurl, data);
-        updatePage (data);
-    });
+        updatePage (cachedData);
+    } else {
+        $.getJSON(jsonurl, function(data) {
+            history.pushState(jsonurl, "", url);
+            cache.put (jsonurl, data);
+            updatePage (data);
+        });
+    }
 }
 
 function updatePage (data) {
