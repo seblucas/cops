@@ -44,6 +44,11 @@ function isDefined(x) {
 }
 
 function getCurrentOption (option) {
+    if (!$.cookie (option)) {
+        if (currentData && currentData.const && currentData.const.config && currentData.const.config [option]) {
+            return currentData.const.config [option];
+        }
+    }
     return $.cookie (option);
 }
 
