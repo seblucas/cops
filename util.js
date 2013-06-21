@@ -146,7 +146,7 @@ function updatePage (data) {
         
         $(".fancycover").fancybox(fancyBoxObject (null, 'image'));
             
-        $(".fancyabout").fancybox(fancyBoxObject ('COPS ' + currentData.version, 'ajax'));
+        $(".fancyabout").fancybox(fancyBoxObject ('COPS ' + currentData.const.version, 'ajax'));
     }
 }
 
