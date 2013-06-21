@@ -11,7 +11,7 @@ define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
-    if (!empty ($_GET) && isset($_GET[$name])) {
+    if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
     }
     return $default;
