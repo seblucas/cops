@@ -156,8 +156,12 @@ max-width:800px;
     text-decoration : none;
     font-weight: bold;
     padding: 5px 10px 5px 10px;
+    text-align: center;
 }
 
+.download img {
+    vertical-align:middle;
+}
 
 .books h4{
     display: inline;
