@@ -19,6 +19,23 @@ function elapsed () {
     return "Elapsed : " + elapsed;
 }
 
+function retourMail(data, textStatus, jqXHR ) {
+    alert (data);
+}
+
+function sendToMailAddress (component, dataid) {
+    $toto = $.cookie ('email');
+    if (!$.cookie ('email')) {
+        var email = window.prompt ("Please enter your email : ", "");
+        $.cookie ('email', email);
+    }
+    email = $.cookie ('email');
+    var url = 'sendtomail.php';
+    if (currentData.databaseId) url = url + '?db=' + currentData.databaseId;
+    $.ajax ({url: url, type: 'post', data: { data:  dataid, email: email }, success: retourMail});
+}
+
+
 function fancyBoxObject (title, type) {
     var out = { prevEffect      : 'none', nextEffect      : 'none' };
     if (isEink) {

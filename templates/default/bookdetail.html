@@ -8,7 +8,11 @@
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a href="{{=data.url}}">{{=data.format}}</a><br />
+        <a href="{{=data.url}}">{{=data.format}}</a>
+        {{? data.mail == 1}}
+        <a href="customize.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><img src="images/mail-send.png?v={{=it.const.version}}" alt="Mail" /></a>
+        {{?}}
+        <br />
         {{~}}
     </h2>
     <h1><a rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><img src="images/Link.png?v={{=it.const.version}}" alt="{{=it.const.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>

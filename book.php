@@ -140,14 +140,20 @@ class Book extends Base {
     
     }
     public function getFullContentArray () {
+        global $config;
         $out = $this->getContentArray ();
         
         $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml ();
         $out ["content"] = $this->getComment (false);
         $out ["datas"] = array ();
+        $dataKindle = $this->GetMostInterestingDataToSendToKindle ();
         foreach ($this->getDatas() as $data) {
-            array_push ($out ["datas"], array ("format" => $data->format, "url" => $data->getHtmlLink ()));
+            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0);
+            if (!empty ($config['cops_mail_configuration']) && !is_null ($dataKindle) && $data->id == $dataKindle->id) {
+                $tab ["mail"] = 1;
+            }
+            array_push ($out ["datas"], $tab);
         }
         $out ["authors"] = array ();
         foreach ($this->getAuthors () as $author) {
@@ -264,7 +270,7 @@ class Book extends Base {
 	
 	public function GetMostInterestingDataToSendToKindle ()
 	{
-		$bestFormatForKindle = array ("PDF", "MOBI");
+		$bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
 		$bestRank = -1;
 		$bestData = NULL;
 		foreach ($this->getDatas () as $data) {
