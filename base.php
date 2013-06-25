@@ -208,7 +208,7 @@ class Link
     }
     
     public function hrefXhtml () {
-        return str_replace ("&", "&amp;", $this->href);
+        return $this->href;
     }
 }
 

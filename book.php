@@ -173,7 +173,6 @@ class Book extends Base {
         global $config;
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-        $urlParam = str_replace ("&", "&amp;", $urlParam);
         return 'index.php' . $urlParam; 
     }
     
