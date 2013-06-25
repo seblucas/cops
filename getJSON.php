@@ -87,7 +87,7 @@
     if ($currentPage->containsBook ()) {
         $out ["containsBook"] = 1;
     }
-    $out["abouturl"] = "about.xml";
+    $out["abouturl"] = "about.html";
     if (getCurrentOption ('use_fancyapps') == 0) {
         $out["abouturl"] = "index.php" . addURLParameter ("?page=16", DB, $database);
     }
