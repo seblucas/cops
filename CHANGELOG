@@ -1,3 +1,10 @@
+0.5.1 - 20130630
+  * COPS HTML catalog use templated client side rendering. You can build your own template if you want. Should be a lot faster.
+  * Fancybox has been replaced by Magnific Popup, it seems faster.
+  * Add a way to send book by mail (to send to Kindle or to send to iCloud).
+  * Add expires instruction in .htaccess.
+  * Upgrade to JQuery 1.10.1.
+
 0.5.0 - 20130605
   * Upgrade COPS UI to HTML5 / CSS3 to hopefully make it prettier. Most of the code was contributed by Thomas Severinsen.
   * Add the number of books in each databases (when multiple database is enabled).
