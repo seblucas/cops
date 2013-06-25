@@ -73,10 +73,13 @@ It's tested by me and many other users but there's still some little bugs around
  
 External libraries used : 
  * JQuery : http://jquery.com/
- * Fancyapps : http://fancyapps.com/fancybox/
+ * Magnific Popup : http://dimsemenov.com/plugins/magnific-popup/
  * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me
                    https://github.com/seblucas/php-epub-meta
  * TbsZip : http://www.tinybutstrong.com/apps/tbszip/tbszip_help.html
+ * DoT.js : http://olado.github.io/doT/index.html
+ * PHPMailer : https://github.com/PHPMailer/PHPMailer
+ * js-lru : https://github.com/rsms/js-lru
 
 = Copyright & License =
 
