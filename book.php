@@ -102,16 +102,78 @@ class Book extends Base {
         return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
     
+    public function getContentArray () {
+        global $config;
+        $i = 0;
+        $preferedData = array ();
+        foreach ($config['cops_prefered_format'] as $format)
+        {
+            if ($i == 2) { break; }
+            if ($data = $this->getDataFormat ($format)) {
+                $i++;
+                array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
+            }
+        }
+        $serie = $this->getSerie ();
+        if (is_null ($serie)) {
+            $sn = "";
+            $scn = "";
+            $su = "";
+        } else {
+            $sn = $serie->name;
+            $scn = str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name);
+            $link = new LinkNavigation ($serie->getUri ());
+            $su = $link->hrefXhtml ();
+        }
+        
+        return array ("id" => $this->id,
+                      "hasCover" => $this->hasCover,
+                      "preferedData" => $preferedData,
+                      "rating" => $this->getRating (),
+                      "pubDate" => $this->getPubDate (),
+                      "languagesName" => $this->getLanguages (),
+                      "authorsName" => $this->getAuthorsName (),
+                      "tagsName" => $this->getTagsName (),
+                      "seriesName" => $sn,
+                      "seriesCompleteName" => $scn,
+                      "seriesurl" => $su);  
+    
+    }
+    public function getFullContentArray () {
+        global $config;
+        $out = $this->getContentArray ();
+        
+        $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
+        $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, 150)->hrefXhtml ();
+        $out ["content"] = $this->getComment (false);
+        $out ["datas"] = array ();
+        $dataKindle = $this->GetMostInterestingDataToSendToKindle ();
+        foreach ($this->getDatas() as $data) {
+            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0);
+            if (!empty ($config['cops_mail_configuration']) && !is_null ($dataKindle) && $data->id == $dataKindle->id) {
+                $tab ["mail"] = 1;
+            }
+            array_push ($out ["datas"], $tab);
+        }
+        $out ["authors"] = array ();
+        foreach ($this->getAuthors () as $author) {
+            $link = new LinkNavigation ($author->getUri ());
+            array_push ($out ["authors"], array ("name" => $author->name, "url" => $link->hrefXhtml ()));
+        }
+        $out ["tags"] = array ();
+        foreach ($this->getTags () as $tag) {
+            $link = new LinkNavigation ($tag->getUri ());
+            array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
+        }
+        ;
+        return $out;
+    }
+    
     public function getDetailUrl ($permalink = false) {
         global $config;
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-        $urlParam = str_replace ("&", "&amp;", $urlParam);
-        if ($permalink || getCurrentOption ('use_fancyapps') == 0) { 
-            return 'index.php' . $urlParam; 
-        } else { 
-            return 'bookdetail.php' . $urlParam;
-        }
+        return 'index.php' . $urlParam; 
     }
     
     public function getTitle () {
@@ -207,7 +269,7 @@ class Book extends Base {
 	
 	public function GetMostInterestingDataToSendToKindle ()
 	{
-		$bestFormatForKindle = array ("PDF", "MOBI");
+		$bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
 		$bestRank = -1;
 		$bestData = NULL;
 		foreach ($this->getDatas () as $data) {

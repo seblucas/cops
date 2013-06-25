@@ -1,0 +1,43 @@
+<header>
+    <a class="headleft" href="{{=it.homeurl}}">
+            <img src="images/home.png?v={{=it.const.version}}" alt="{{=it.const.i18n.homeAlt}}" />
+    </a>
+    <img class="headright" id="searchImage" src="images/setting64.png?v={{=it.const.version}}" alt="Settings and menu" />
+    <div class="headcenter">
+        <h1>{{=it.title}}</h1>
+    </div>
+    <div id="tool" style="display: none">
+        <div style="float: left; width: 60%">
+            <form id="searchForm" action="index.php" method="get">
+                <div style="float: right">
+                    <input type="image" src="images/search32.png?v={{=it.const.version}}" alt="{{=it.const.i18n.searchAlt}}" />
+                </div>
+                <div class="stop">
+                    <input type="hidden" name="current" value="{{=it.page}}" />
+                    <input type="hidden" name="page" value="9" />
+                    {{? it.databaseId != ""}}
+                        <input type="hidden" name="db" value="{{=it.databaseId}}" />
+                    {{?}}
+                    <input type="search" name="query" />
+                </div>
+            </form>
+        </div>
+        <div id="sortForm" style="float: right; width: 35%; display: none">
+            <div style="float: right">
+                <img id="sort" src="images/sort32.png?v={{=it.const.version}}" alt="{{=it.const.i18n.sortAlt}}" />
+            </div>
+            <div class="stop">
+                <select id="sortchoice">
+                    <option value="st">{{=it.const.i18n.bookwordTitle}}</option>
+                    <option value="sa">{{=it.const.i18n.authorsTitle}}</option>
+                    <option value="ss">{{=it.const.i18n.seriesTitle}}</option>
+                    <option value="sp">{{=it.const.i18n.pubdateTitle}}</option>
+                </select>
+                <select id="sortorder">
+                    <option value="asc">{{=it.const.i18n.sortorderAsc}}</option>
+                    <option value="desc">{{=it.const.i18n.sortorderDesc}}</option>
+                </select> 
+            </div>
+        </div>
+    </div>
+</header>
