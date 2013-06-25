@@ -11,7 +11,7 @@ define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
  
 function getURLParam ($name, $default = NULL) {
-    if (!empty ($_GET) && isset($_GET[$name])) {
+    if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
     }
     return $default;
@@ -208,7 +208,7 @@ class Link
     }
     
     public function hrefXhtml () {
-        return str_replace ("&", "&amp;", $this->href);
+        return $this->href;
     }
 }
 
@@ -218,7 +218,7 @@ class LinkNavigation extends Link
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
-        if (preg_match ("/bookdetail.php/", $_SERVER["SCRIPT_NAME"])) {
+        if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
             $this->href = "index.php" . $this->href;
         } else {
             $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
@@ -265,6 +265,16 @@ class Entry
         }
         return date (DATE_ATOM, self::$updated);
     }
+    
+    public function getContentArray () {
+        $navlink = "#";
+        foreach ($this->linkArray as $link) { 
+            if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
+            
+            $navlink = $link->hrefXhtml ();
+        }
+        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $navlink );
+    }
  
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
         global $config;
@@ -299,6 +309,12 @@ class EntryBook extends Entry
         $this->localUpdated = $pbook->timestamp;
     }
     
+    public function getContentArray () {
+        $entry = array ( "title" => $this->title);
+        $entry ["book"] = $this->book->getContentArray ();
+        return $entry;
+    }
+    
     public function getCoverThumbnail () {
         foreach ($this->linkArray as $link) {
             if ($link->rel == Link::OPDS_THUMBNAIL_TYPE)
@@ -325,6 +341,7 @@ class Page
     public $query;
     public $favicon;
     public $n;
+    public $book;
     public $totalNumber = -1;
     public $entryArray = array();
     
@@ -416,7 +433,7 @@ class Page
             if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
     }
-    
+
     public function isPaginated ()
     {
         global $config;
@@ -660,8 +677,8 @@ class PageBookDetail extends Page
 {
     public function InitializeContent () 
     {
-        $book = Book::getBookById ($this->idGet);
-        $this->title = $book->title;
+        $this->book = Book::getBookById ($this->idGet);
+        $this->title = $this->book->title;
     }
 }
 

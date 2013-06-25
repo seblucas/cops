@@ -1,0 +1,53 @@
+<article class="bookpopup">
+    <span class="cover">
+        {{? it.book.hasCover == 1}}
+        <a href="{{=it.book.coverurl}}">
+          <img src="{{=it.book.thumbnailurl}}" alt="{{=it.const.i18n.coverAlt}}" />
+        </a>
+        {{?}}
+    </span>
+    <h2 class="download">
+        {{~it.book.datas:data:i}}
+        <a href="{{=data.url}}">{{=data.format}}</a>
+        {{? data.mail == 1}}
+        <a href="customize.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><img src="images/mail-send.png?v={{=it.const.version}}" alt="Mail" /></a>
+        {{?}}
+        <br />
+        {{~}}
+    </h2>
+    <h1><a rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><img src="images/Link.png?v={{=it.const.version}}" alt="{{=it.const.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>
+    <p class="popupless">
+        <h3>{{=it.const.i18n.authorsTitle}}: </h3>
+        {{~it.book.authors:author:j}}
+        {{? j > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlEscape (author.name)}}</a>
+        {{~}}
+    </p>
+    {{? it.book.tagsName != ""}}
+    <p class="popupless">
+        <h3>{{=it.const.i18n.tagsTitle}}: </h3>
+        {{~it.book.tags:tag:k}}
+        {{? k > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlEscape (tag.name)}}</a>
+        {{~}}
+    </p>
+    {{?}}
+    {{? it.book.seriesName != ""}}
+    <p class="popupless">
+        <h3><a href="{{=it.book.seriesurl}}">{{=it.const.i18n.seriesTitle}}</a> : </h3>{{=htmlEscape (it.book.seriesCompleteName)}}
+    </p>
+    {{?}}
+    {{? it.book.pubDate != ""}}
+    <p class="popupless">
+        <h3>{{=it.const.i18n.pubdateTitle}}: </h3>{{=it.book.pubDate}}
+    </p>
+    {{?}}
+    {{? it.book.languagesName != ""}}
+    <p class="popupless">
+        <h3>{{=it.const.i18n.languagesTitle}}: </h3>{{=it.book.languagesName}}
+    </p>
+    {{?}}
+    {{? it.book.content != ""}}
+    <br />
+    <h4>{{=it.const.i18n.contentTitle}}</h4>
+    <div>{{=it.book.content}}</div>
+    {{?}}
+</article>
