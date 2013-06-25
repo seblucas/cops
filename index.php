@@ -22,7 +22,7 @@
         exit ();
     }
     
-    header ("Content-Type:application/xhtml+xml;charset=utf-8");
+    header ("Content-Type:text/html;charset=utf-8");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $qid = getURLParam ("id");
@@ -52,7 +52,7 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             
-            var url = "<?php echo "getJSON.php?" . str_replace ("&", "&amp;", addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1)); ?>";
+            var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
             
             $.when($.get('templates/default/header.html'),
                    $.get('templates/default/footer.html'),
