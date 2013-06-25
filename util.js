@@ -35,19 +35,6 @@ function sendToMailAddress (component, dataid) {
     $.ajax ({url: url, type: 'post', data: { data:  dataid, email: email }, success: retourMail});
 }
 
-
-function fancyBoxObject (title, type) {
-    var out = { prevEffect      : 'none', nextEffect      : 'none' };
-    if (isEink) {
-        out ["openEffect"] = 'none';
-        out ["closeEffect"] = 'none';
-        out ["helper"] = { overlay : null };
-    }
-    if (title) out ["title"] = title;
-    if (type) out ["type"] = type;
-    return out;
-}
-
 function strformat () {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
@@ -154,16 +141,27 @@ function updatePage (data) {
             $.getJSON(jsonurl, function(data) {
                 data ["const"] = currentData ["const"];
                 var detail = templateBookDetail (data);
-                var fancyparams = fancyBoxObject (data.title, null);
-                fancyparams ["content"] = detail;
-                $.fancybox(fancyparams);
+                $.magnificPopup.open({
+                  items: {
+                    src: detail,
+                    type: 'inline'
+                  }
+                });
                 debug_log (elapsed ());
             });
         });
         
-        $(".fancycover").fancybox(fancyBoxObject (null, 'image'));
+
+        $('section').magnificPopup({
+            delegate: '.fancycover', // child items selector, by clicking on it popup will open
+            type: 'image',
+            gallery:{enabled:true, preload: [0,2]}
+            // other options
+        });
+
             
-        $(".fancyabout").fancybox(fancyBoxObject ('COPS ' + currentData.const.version, 'ajax'));
+
+        $('.fancyabout').magnificPopup({ type: 'ajax' });
     }
 }
 
