@@ -36,8 +36,8 @@
     <title>COPS</title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jQuery/jquery-1.9.1.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jquery-cookie/jquery.cookies.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.pack.js") ?>"></script>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/fancybox/jquery.fancybox.css") ?>" media="screen" />
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/Magnific-Popup/jquery.magnific-popup.min.js") ?>"></script>
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/Magnific-Popup/magnific-popup.css") ?>" media="screen" />
     <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/doT/doT.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/lru/lru.js") ?>"></script>
