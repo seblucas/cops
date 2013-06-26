@@ -88,6 +88,18 @@ $i = 0;
 foreach (Base::getDbList () as $name => $database) { 
 ?>
         <article class="frontpage">
+            <h2>Check if Calibre database path is not an URL</h2>
+            <h4>
+            <?php
+            if (!preg_match ("#^http#", $database)) {
+                echo "OK";
+            } else {
+                echo "Calibre path has to be local (no URL allowed)";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if Calibre database file exists and is readable</h2>
             <?php 
             if (is_readable (Base::getDbFileName ($i))) {
