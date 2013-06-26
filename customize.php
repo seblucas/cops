@@ -11,13 +11,15 @@
     require_once ("base.php");
 
     
-    header ("Content-Type:application/xhtml+xml;charset=utf-8");
+    header ("Content-Type:text/html;charset=utf-8");
     
     $database = GetUrlParam (DB);
     $use_fancybox = "";
     if (getCurrentOption ("use_fancyapps") == 1) {
         $use_fancybox = "checked='checked'";
     }
+    $max_item_per_page = getCurrentOption ("max_item_per_page");
+    
 ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -30,7 +32,11 @@
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
     <script type="text/javascript">
+
         function updateCookie (id) {
+            if($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
+                return;
+            }
             var name = $(id).attr('id');
             var value = $(id).val ();
             $.cookie(name, value);
@@ -104,6 +110,10 @@
         <article class="frontpage">
             <h2><?php echo localize ("customize.fancybox") ?></h2>
             <h4><input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" <?php echo $use_fancybox ?> /></h4>
+        </article>
+        <article class="frontpage">
+            <h2><?php echo localize ("customize.paging") ?></h2>
+            <h4><input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="<?php echo $max_item_per_page ?>" min="-1" max="1200" pattern="^[-+]?[0-9]+$" /></h4>
         </article>
     </section>
     

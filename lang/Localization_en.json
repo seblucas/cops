@@ -326,6 +326,8 @@
 "paging.previous.alternate":"Previous",
 "customize.title":"Customize COPS UI",
 "customize.style":"Theme",
+"customize.fancybox":"Use a Lightbox",
 "customize.fancybox":"Use Fancybox",
+"customize.paging":"Max number of books per page (-1 to disable)",
 "fin":"fin"
 }
