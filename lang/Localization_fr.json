@@ -119,7 +119,8 @@
 "paging.previous.alternate":"Précédent",
 "customize.title":"Paramétrage de COPS",
 "customize.style":"Thème",
-"customize.fancybox":"Utiliser Fancybox",
+"customize.fancybox":"Utiliser une Lightbox",
+"customize.paging":"Nombre de livres par page (-1 pour désactiver)",
 "languages.eng":"Anglais",
 "languages.fra":"Français",
 "fin":"fin"

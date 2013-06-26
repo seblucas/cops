@@ -437,9 +437,9 @@ class Page
     public function isPaginated ()
     {
         global $config;
-        return ($config['cops_max_item_per_page'] != -1 && 
+        return (getCurrentOption ("max_item_per_page") != -1 && 
                 $this->totalNumber != -1 && 
-                $this->totalNumber > $config['cops_max_item_per_page']);
+                $this->totalNumber > getCurrentOption ("max_item_per_page"));
     }
     
     public function getNextLink ()
@@ -447,7 +447,7 @@ class Page
         global $config;
         $currentUrl = $_SERVER['QUERY_STRING'];
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
-        if (($this->n) * $config['cops_max_item_per_page'] < $this->totalNumber) {
+        if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", "Page suivante");
         }
         return NULL;
@@ -467,7 +467,7 @@ class Page
     public function getMaxPage ()
     {
         global $config;
-        return ceil ($this->totalNumber / $config['cops_max_item_per_page']);
+        return ceil ($this->totalNumber / getCurrentOption ("max_item_per_page"));
     }
     
     public function containsBook ()
@@ -772,7 +772,7 @@ abstract class Base
         global $config;
         $totalResult = -1;
         
-        if ($config['cops_max_item_per_page'] != -1 && $n != -1)
+        if (getCurrentOption ("max_item_per_page") != -1 && $n != -1)
         {
             // First check total number of results
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
@@ -781,7 +781,7 @@ abstract class Base
             
             // Next modify the query and params
             $query .= " limit ?, ?";
-            array_push ($params, ($n - 1) * $config['cops_max_item_per_page'], $config['cops_max_item_per_page']);
+            array_push ($params, ($n - 1) * getCurrentOption ("max_item_per_page"), getCurrentOption ("max_item_per_page"));
         }
         
         $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
