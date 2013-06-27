@@ -51,6 +51,15 @@ a:hover { color:#000; text-decoration: none; }
 .books:hover { width: 100%; background-color: silver; }
 .link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
 
+.mfp-content .bookpopup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
 img
 {
 margin:0;
