@@ -6,10 +6,10 @@
     {{? it.containsBook == 0}}
     <article>
         <div class="frontpage">
-            <a href="{{=entry.navlink}}">
+            {{? entry.navlink != "#"}}<a href="{{=entry.navlink}}">{{?}}
                 <h2>{{=htmlEscape (entry.title)}}</h2>
                 <h4>{{=entry.content}}</h4> 
-            </a>
+            {{? entry.navlink != "#"}}</a>{{?}}
         </div>
     </article>
     {{??}}
