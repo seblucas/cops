@@ -10,7 +10,7 @@
         {{~it.book.datas:data:i}}
         <a href="{{=data.url}}">{{=data.format}}</a>
         {{? data.mail == 1}}
-        <a href="customize.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><img src="images/mail-send.png?v={{=it.const.version}}" alt="Mail" /></a>
+        <a href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><img src="images/mail-send.png?v={{=it.const.version}}" alt="Mail" /></a>
         {{?}}
         <br />
         {{~}}

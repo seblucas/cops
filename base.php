@@ -382,6 +382,8 @@ class Page
                 return new PageBookDetail ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
+            case Base::PAGE_CUSTOMIZE : 
+                return new PageCustomize ($id, $query, $n);
             default:
                 $page = new Page ($id, $query, $n);
                 $page->idPage = "cops:catalog";
@@ -690,6 +692,59 @@ class PageAbout extends Page
     }
 }
 
+class PageCustomize extends Page
+{
+    public function InitializeContent () 
+    {
+        global $config;
+        $this->title = localize ("customize.title");
+        $this->entryArray = array ();
+        
+        $use_fancybox = "";
+        if (getCurrentOption ("use_fancyapps") == 1) {
+            $use_fancybox = "checked='checked'";
+        }
+        
+        $content = "";
+        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+            $content .= '<select id="style" onchange="updateCookie (this);">';
+        }
+            foreach (glob ("styles/style-*.css") as $filename) {
+                if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
+                    $filename = $m [1];
+                }
+                $selected = "";
+                if (getCurrentOption ("style") == $filename) {
+                    if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                        $selected = "selected='selected'";
+                    } else {
+                        $selected = "checked='checked'";
+                    }
+                }
+                if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+                    $content .= "<option value='{$filename}' {$selected}>{$filename}</option>";
+                } else {
+                    $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' {$selected} /><label for='style-{$filename}'> {$filename} </label>";
+                }
+            }
+        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+            $content .= '</select>';
+        }
+        array_push ($this->entryArray, new Entry (localize ("customize.style"), "", 
+                                        $content, "text", 
+                                        array ()));
+        
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "", 
+                                        $content, "text", 
+                                        array ()));
+        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        array_push ($this->entryArray, new Entry (localize ("customize.paging"), "", 
+                                        $content, "text", 
+                                        array ()));
+    }
+}
+
 
 abstract class Base
 {
@@ -712,6 +767,7 @@ abstract class Base
     const PAGE_ABOUT = "16";
     const PAGE_ALL_LANGUAGES = "17";
     const PAGE_LANGUAGE_DETAIL = "18";   
+    const PAGE_CUSTOMIZE = "19"; 
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

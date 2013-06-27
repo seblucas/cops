@@ -14,6 +14,34 @@ function debug_log(text) {
     }
 }
 
+function updateCookie (id) {
+    if($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
+        return;
+    }
+    var name = $(id).attr('id');
+    var value = $(id).val ();
+    $.cookie(name, value);
+}
+
+function updateCookieFromCheckbox (id) {
+    var name = $(id).attr('id');
+    if ((/^style/).test (name)) {
+        name = "style";
+    }
+    if ($(id).is(":checked"))
+    {
+        if ($(id).is(':radio')) {
+            $.cookie(name, $(id).val ());
+        } else {
+            $.cookie(name, '1');
+        }
+    }
+    else
+    {
+        $.cookie(name, '0');
+    }
+}
+
 function elapsed () {
     var elapsed = new Date () - before; 
     return "Elapsed : " + elapsed;
@@ -109,7 +137,7 @@ function updatePage (data) {
         $("#sortForm").hide ();
     }
     
-    ajaxifyLinks ();
+    if (currentData.page != 19) ajaxifyLinks ();
     
     $("#sort").click(function(){
         $('.books').sortElements(function(a, b){
