@@ -60,6 +60,43 @@ a:hover { color:#000; text-decoration: none; }
   margin: 20px auto;
 }
 
+.filtered {
+display: none;
+}
+
+#filter {
+clear:both;
+}
+
+#filter ul {
+margin: 0;
+padding: 0;
+list-style-type: none;
+text-align: left;
+text-transform:none; 
+font-variant: normal;
+}
+
+#filter li {
+display: inline-block;
+padding: .2em 1em;
+margin: 2px;
+color: black;
+background-color: #ddd;
+opacity: 0.5;
+}
+
+.filter-include { 
+    border-left:thick solid blue;
+    opacity: 1;
+}
+
+.filter-exclude { 
+    border-right:thick solid red;
+    opacity: 1;
+}
+
+
 img
 {
 margin:0;
@@ -256,7 +293,6 @@ line-height: 100%;
 #tool
 {
 width:100%;
-height:32px;
 overflow: hidden;
 }
 
