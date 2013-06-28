@@ -1,4 +1,4 @@
-var templatePage, templateBookDetail, templateMain, currentData, before;
+var templatePage, templateBookDetail, templateMain, currentData, before, filterList;
 
 var cache = new LRUCache(30);
 
@@ -111,8 +111,34 @@ function navigateTo (url) {
     }
 }
 
+function doFilter () {
+    $(".books").removeClass("filtered");
+    if (jQuery.isEmptyObject(filterList)) return;
+    
+    $(".se").each (function(){
+        var taglist = ", " + $(this).text() + ", ";
+        var toBeFiltered = false;
+        for (var filter in filterList) {
+            var onlyThisTag = filterList [filter];
+            filter = ', ' + filter + ', ';
+            var myreg = new RegExp (filter);
+            if (myreg.test (taglist)) {
+                if (onlyThisTag === false) {
+                    toBeFiltered = true;
+                }
+            } else {
+                if (onlyThisTag === true) {
+                    toBeFiltered = true;
+                }
+            }
+        }
+        if (toBeFiltered) $(this).parents (".books").addClass ("filtered");
+    });
+}
+
 function updatePage (data) {
     var result;
+    filterList = {};
     data ["const"] = currentData ["const"];
     if (false && $("section").length && currentData.isPaginated == 0 &&  data.isPaginated == 0) {
         // Partial update (for now disabled)
@@ -133,6 +159,36 @@ function updatePage (data) {
     if ($.cookie('toolbar') == 1) $("#tool").show ();
     if (currentData.containsBook == 1) {
         $("#sortForm").show ();
+        $("#filter ul").empty ();
+        $(".se").each (function(){
+            var taglist = $(this).text();
+
+            var tagarray = taglist.split (",")
+            for (i in tagarray) {
+                var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
+                if ( $('#filter ul li:contains("' + tag + '")').length == 0 ) {
+                    $("#filter ul").append ("<li>" + tag + "</li>");
+                }
+            }
+        });
+        $("li").click(function(){
+            var filter = $(this).text ();
+            switch ($(this).attr("class")) {
+                case "filter-include" :
+                    $(this).attr("class", "filter-exclude");
+                    filterList [filter] = false;
+                    break;
+                case "filter-exclude" :
+                    $(this).removeClass ("filter-exclude");;
+                    delete filterList [filter];;
+                    break;
+                default :
+                    $(this).attr("class", "filter-include");
+                    filterList [filter] = true;
+                    break;
+            }
+            doFilter ();
+        });
     } else {
         $("#sortForm").hide ();
     }
