@@ -77,7 +77,7 @@ text-transform:none;
 font-variant: normal;
 }
 
-#filter li {
+li {
 display: inline-block;
 padding: .2em 1em;
 margin: 2px;
