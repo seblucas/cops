@@ -21,6 +21,8 @@ define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = book
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
+define ('SQL_BOOKS_BY_FIRST_LETTER_UNREAD', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
+                                                    where upper (books.sort) like ? and (custom_column_1.value is null or custom_column_1.value=false) order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_authors_link.book = books.id and author = ? {1} order by pubdate");
 define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -482,7 +484,7 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllBooksUnread() {
         $result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count
-from books
+from books left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
 group by substr (upper (sort), 1, 1)
 order by substr (upper (sort), 1, 1)");
         $entryArray = array();
@@ -490,13 +492,13 @@ order by substr (upper (sort), 1, 1)");
         {
             array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
                 str_format (localize("bookword", $post->count), $post->count), "text", 
-                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER_UNREAD."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
     }
     
     public static function getBooksByStartingLetterUnread($letter, $n) {
-        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
+        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER_UNREAD, array ($letter . "%"), $n);
     }
     
     public static function getEntryArray ($query, $params, $n, $database = NULL) {

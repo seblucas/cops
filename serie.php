@@ -75,8 +75,8 @@ order by series.sort');
 
     public static function getAllSeriesUnread() {
         $result = parent::getDb ()->query('select series.id as id, series.name as name, series.sort as sort, count(*) as count
-from series, books_series_link
-where series.id = series
+from series, books_series_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
+where series.id = series and (custom_column_1.value is null or custom_column_1.value=false) 
 group by series.id, series.name, series.sort
 order by series.sort');
         $entryArray = array();
