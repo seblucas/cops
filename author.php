@@ -14,8 +14,6 @@ class Author extends Base {
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
     const SQL_AUTHORS_BY_FIRST_LETTER_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=0) and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
-    const SQL_ALL_AUTHORS_BY_FIRST_LETTER = "select substr (upper (sort), 1, 1) as title, count(*) as count from authors group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)";
-    const SQL_ALL_AUTHORS_BY_FIRST_LETTER_UNREAD = "select substr (upper (sort), 1, 1) as title, count(*) as count from authors inner join books_authors_link on author = authors.id left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where custom_column_1.value is null or custom_column_1.value=0 group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)";
     const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
     const SQL_ALL_AUTHORS_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=0) group by authors.id, authors.name, authors.sort order by sort";
     
@@ -52,9 +50,9 @@ class Author extends Base {
     
     public static function getAllAuthorsByFirstLetter($unread) {
     	if ($unread) {
-        	$result = parent::getDb ()->query(SQL_ALL_AUTHORS_BY_FIRST_LETTER_UNREAD);
+        	$result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count from authors inner join books_authors_link on author = authors.id left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where custom_column_1.value is null or custom_column_1.value=0 group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)");
     	} else {
-        	$result = parent::getDb ()->query(SQL_ALL_AUTHORS_BY_FIRST_LETTER);
+        	$result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count from authors group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)");
     	}
         $entryArray = array();
         while ($post = $result->fetchObject ())
