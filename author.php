@@ -14,6 +14,8 @@ class Author extends Base {
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
     const SQL_AUTHORS_BY_FIRST_LETTER_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=0) and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_ALL_AUTHORS_BY_FIRST_LETTER = "select substr (upper (sort), 1, 1) as title, count(*) as count from authors group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)";
+    const SQL_ALL_AUTHORS_BY_FIRST_LETTER_UNREAD = "select substr (upper (sort), 1, 1) as title, count(*) as count from authors inner join books_authors_link on author = authors.id left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where custom_column_1.value is null or custom_column_1.value=0 group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)";
     const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
     const SQL_ALL_AUTHORS_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=0) group by authors.id, authors.name, authors.sort order by sort";
     
@@ -26,7 +28,9 @@ class Author extends Base {
         $this->name = $pname;
     }
     
-    public function getUri () {
+    public function getUri ($unread) {
+    	if ($unread)
+    		return "?page=".parent::PAGE_AUTHOR_DETAIL_UNREAD."&id=$this->id";
         return "?page=".parent::PAGE_AUTHOR_DETAIL."&id=$this->id";
     }
     
@@ -46,54 +50,40 @@ class Author extends Base {
         return $entry;
     }
     
-    public static function getAllAuthorsByFirstLetter() {
-        $result = parent::getDb ()->query('select substr (upper (sort), 1, 1) as title, count(*) as count
-from authors
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)');
+    public static function getAllAuthorsByFirstLetter($unread) {
+    	if ($unread) {
+        	$result = parent::getDb ()->query(SQL_ALL_AUTHORS_BY_FIRST_LETTER_UNREAD);
+    	} else {
+        	$result = parent::getDb ()->query(SQL_ALL_AUTHORS_BY_FIRST_LETTER);
+    	}
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
+	    	if ($unread) {
+	        	$page = parent::PAGE_AUTHORS_FIRST_LETTER_UNREAD;
+	    	} else {
+	        	$page = parent::PAGE_AUTHORS_FIRST_LETTER;
+	    	}
             array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title),
                 str_format (localize("authorword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
+                array ( new LinkNavigation ("?page=".$page."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
     }
     
-    public static function getAllAuthorsByFirstLetterUnread() {
-        $result = parent::getDb ()->query('select substr (upper (sort), 1, 1) as title, count(*) as count
-from authors inner join books_authors_link on author = authors.id left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
-where custom_column_1.value is null or custom_column_1.value=0
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)');
-        $entryArray = array();
-        while ($post = $result->fetchObject ())
-        {
-            array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title),
-                str_format (localize("authorword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
-        }
-        return $entryArray;
+    public static function getAuthorsByStartingLetter($letter, $unread) {
+    	if ($unread)
+	        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER_UNREAD, array ($letter . "%"), false);
+        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER, array ($letter . "%"), false);
     }
     
-    public static function getAuthorsByStartingLetter($letter) {
-        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER, array ($letter . "%"));
+    public static function getAllAuthors($unread) {
+    	if ($unread)
+	        return self::getEntryArray (self::SQL_ALL_AUTHORS_UNREAD, array (), false);
+        return self::getEntryArray (self::SQL_ALL_AUTHORS, array (), false);
     }
     
-    public static function getAuthorsByStartingLetterUnread($letter) {
-        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER_UNREAD, array ($letter . "%"));
-    }
-    
-    public static function getAllAuthors() {
-        return self::getEntryArray (self::SQL_ALL_AUTHORS, array ());
-    }
-    
-    public static function getAllAuthorsUnread() {
-    	return self::getEntryArray (self::SQL_ALL_AUTHORS_UNREAD, array ());
-    }
-    
-    public static function getEntryArray ($query, $params) {
+    public static function getEntryArray ($query, $params, $unread) {
         list ($totalNumber, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
@@ -101,7 +91,7 @@ order by substr (upper (sort), 1, 1)');
             $author = new Author ($post->id, $post->sort);
             array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($author->getUri ()))));
+                array ( new LinkNavigation ($author->getUri ($unread)))));
         }
         return $entryArray;
     }

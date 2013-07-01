@@ -482,10 +482,10 @@ class PageAllAuthors extends Page
         
         $this->title = localize("authors.title");
         if ($config['cops_author_split_first_letter'] == 1) {
-            $this->entryArray = Author::getAllAuthorsByFirstLetter();
+            $this->entryArray = Author::getAllAuthorsByFirstLetter(false);
         }
         else {
-            $this->entryArray = Author::getAllAuthors();
+            $this->entryArray = Author::getAllAuthors(false);
         }
         $this->idPage = Author::ALL_AUTHORS_ID;
     }
@@ -498,10 +498,10 @@ class PageAllAuthorsUnread extends Page
         
         $this->title = localize("authors.title");
         if ($config['cops_author_split_first_letter'] == 1) {
-            $this->entryArray = Author::getAllAuthorsByFirstLetterUnread();
+            $this->entryArray = Author::getAllAuthorsByFirstLetter(true);
         }
         else {
-            $this->entryArray = Author::getAllAuthorsUnread();
+            $this->entryArray = Author::getAllAuthors(true);
         }
         $this->idPage = Author::ALL_AUTHORS_ID;
     }
@@ -513,7 +513,7 @@ class PageAllAuthorsLetter extends Page
         global $config;
         
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
-        $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
+        $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet, false);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
     }
 }
@@ -525,7 +525,7 @@ class PageAllAuthorsLetterUnread extends Page
         global $config;
         
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
-        $this->entryArray = Author::getAuthorsByStartingLetterUnread ($this->idGet);
+        $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet, true);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
     }
 }

@@ -346,7 +346,7 @@ class Book extends Base {
         }
     }
     
-    public function getLinkArray ()
+    public function getLinkArray ($unread=false)
     {
         global $config;
         $linkArray = array();
@@ -367,7 +367,7 @@ class Book extends Base {
         }
                 
         foreach ($this->getAuthors () as $author) {
-            array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
+            array_push ($linkArray, new LinkNavigation ($author->getUri ($unread), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
         
         $serie = $this->getSerie ();
@@ -379,10 +379,10 @@ class Book extends Base {
     }
 
     
-    public function getEntry () {    
+    public function getEntry ($unread=false) {    
         return new EntryBook ($this->getTitle (), $this->getEntryId (), 
             $this->getComment (), "text/html", 
-            $this->getLinkArray (), $this);
+            $this->getLinkArray ($unread), $this);
     }
     
     public static function getBookCount($database = NULL) {
@@ -504,13 +504,13 @@ order by substr (upper (sort), 1, 1)");
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER_UNREAD, array ($letter . "%"), $n);
     }
     
-    public static function getEntryArray ($query, $params, $n, $database = NULL) {
+    public static function getEntryArray ($query, $params, $n, $database = NULL, $unread=false) {
         list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
             $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
+            array_push ($entryArray, $book->getEntry ($unread));
         }
         return array ($entryArray, $totalNumber);
     }
