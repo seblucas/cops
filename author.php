@@ -1,10 +1,10 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) class file
- *
- * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
- */
+* COPS (Calibre OPDS PHP Server) class file
+*
+* @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
+* @author Sébastien Lucas <sebastien@slucas.fr>
+*/
 
 require_once('base.php');
 
@@ -13,7 +13,9 @@ class Author extends Base {
     
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_AUTHORS_BY_FIRST_LETTER_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=false) and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
     const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_ALL_AUTHORS_UNREAD = "select {0} from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where author = authors.id and (custom_column_1.value is null or custom_column_1.value=false) group by authors.id, authors.name, authors.sort order by sort";
     
     public $id;
     public $name;
@@ -38,8 +40,8 @@ class Author extends Base {
 
     public static function getCount() {
         $nAuthors = parent::getDb ()->query('select count(*) from authors')->fetchColumn();
-        $entry = new Entry (localize("authors.title"), self::ALL_AUTHORS_ID, 
-            str_format (localize("authors.alphabetical", $nAuthors), $nAuthors), "text", 
+        $entry = new Entry (localize("authors.title"), self::ALL_AUTHORS_ID,
+            str_format (localize("authors.alphabetical", $nAuthors), $nAuthors), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));
         return $entry;
     }
@@ -52,8 +54,24 @@ order by substr (upper (sort), 1, 1)');
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title), 
-                str_format (localize("authorword", $post->count), $post->count), "text", 
+            array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title),
+                str_format (localize("authorword", $post->count), $post->count), "text",
+                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
+        }
+        return $entryArray;
+    }
+    
+    public static function getAllAuthorsByFirstLetterUnread() {
+        $result = parent::getDb ()->query('select substr (upper (sort), 1, 1) as title, count(*) as count
+from authors, books_authors_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
+where custom_column_1.value is null or custom_column_1.value=false
+group by substr (upper (sort), 1, 1)
+order by substr (upper (sort), 1, 1)');
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title),
+                str_format (localize("authorword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
@@ -63,8 +81,16 @@ order by substr (upper (sort), 1, 1)');
         return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER, array ($letter . "%"));
     }
     
+    public static function getAuthorsByStartingLetterUnread($letter) {
+        return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER_UNREAD, array ($letter . "%"));
+    }
+    
     public static function getAllAuthors() {
         return self::getEntryArray (self::SQL_ALL_AUTHORS, array ());
+    }
+    
+    public static function getAllAuthorsUnread() {
+    	return self::getEntryArray (self::SQL_ALL_AUTHORS_UNREAD, array ());
     }
     
     public static function getEntryArray ($query, $params) {
@@ -73,8 +99,8 @@ order by substr (upper (sort), 1, 1)');
         while ($post = $result->fetchObject ())
         {
             $author = new Author ($post->id, $post->sort);
-            array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (), 
-                str_format (localize("bookword", $post->count), $post->count), "text", 
+            array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (),
+                str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ($author->getUri ()))));
         }
         return $entryArray;

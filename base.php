@@ -333,6 +333,8 @@ class Page
         switch ($pageId) {
             case Base::PAGE_ALL_AUTHORS :
                 return new PageAllAuthors ($id, $query, $n);
+            case Base::PAGE_ALL_AUTHORS_UNREAD :
+            	return new PageAllAuthorsUnread ($id, $query, $n);
             case Base::PAGE_AUTHORS_FIRST_LETTER :
                 return new PageAllAuthorsLetter ($id, $query, $n);
             case Base::PAGE_AUTHOR_DETAIL :
@@ -478,7 +480,22 @@ class PageAllAuthors extends Page
         $this->idPage = Author::ALL_AUTHORS_ID;
     }
 }
-
+class PageAllAuthorsUnread extends Page 
+{
+    public function InitializeContent () 
+    {
+        global $config;
+        
+        $this->title = localize("authors.title");
+        if ($config['cops_author_split_first_letter'] == 1) {
+            $this->entryArray = Author::getAllAuthorsByFirstLetterUnread();
+        }
+        else {
+            $this->entryArray = Author::getAllAuthorsUnread();
+        }
+        $this->idPage = Author::ALL_AUTHORS_ID;
+    }
+}
 class PageAllAuthorsLetter extends Page
 {
     public function InitializeContent () 
@@ -487,6 +504,18 @@ class PageAllAuthorsLetter extends Page
         
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
+        $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
+    }
+}
+
+class PageAllAuthorsLetterUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        global $config;
+        
+        $this->idPage = Author::getEntryIdByLetter ($this->idGet);
+        $this->entryArray = Author::getAuthorsByStartingLetterUnread ($this->idGet);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
     }
 }
@@ -695,6 +724,7 @@ abstract class Base
     const PAGE_ABOUT = "16";
     const PAGE_ALL_LANGUAGES = "17";
     const PAGE_LANGUAGE_DETAIL = "18";   
+    const PAGE_ALL_AUTHORS_UNREAD = "19";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
