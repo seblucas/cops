@@ -480,6 +480,25 @@ order by substr (upper (sort), 1, 1)");
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
     }
     
+    public static function getAllBooksUnread() {
+        $result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count
+from books
+group by substr (upper (sort), 1, 1)
+order by substr (upper (sort), 1, 1)");
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
+                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
+        }
+        return $entryArray;
+    }
+    
+    public static function getBooksByStartingLetterUnread($letter, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
+    }
+    
     public static function getEntryArray ($query, $params, $n, $database = NULL) {
         list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database);
         $entryArray = array();

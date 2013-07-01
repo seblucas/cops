@@ -341,6 +341,8 @@ class Page
                 return new PageAuthorDetail ($id, $query, $n);
             case Base::PAGE_ALL_TAGS :
                 return new PageAllTags ($id, $query, $n);
+            case Base::PAGE_ALL_TAGS_UNREAD :
+                return new PageAllTagsUnread ($id, $query, $n);
             case Base::PAGE_TAG_DETAIL :
                 return new PageTagDetail ($id, $query, $n);
             case Base::PAGE_ALL_LANGUAGES :
@@ -541,6 +543,16 @@ class PageAllTags extends Page
     }
 }
 
+class PageAllTagsUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = localize("tags.title");
+        $this->entryArray = Tag::getAllTagsUnread();
+        $this->idPage = Tag::ALL_TAGS_ID;
+    }
+}
+
 class PageAllLanguages extends Page
 {
     public function InitializeContent () 
@@ -606,6 +618,16 @@ class PageAllSeries extends Page
     }
 }
 
+class PageAllSeriesUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = localize("series.title");
+        $this->entryArray = Serie::getAllSeriesUnread();
+        $this->idPage = Serie::ALL_SERIES_ID;
+    }
+}
+
 class PageSerieDetail extends Page
 {
     public function InitializeContent () 
@@ -627,11 +649,36 @@ class PageAllBooks extends Page
     }
 }
 
+class PageAllBooksUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        $this->title = localize ("allbooks.title");
+        $this->entryArray = Book::getAllBooksUnread ();
+        $this->idPage = Book::ALL_BOOKS_ID;
+    }
+}
+
 class PageAllBooksLetter extends Page
 {
     public function InitializeContent () 
     {
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByStartingLetter ($this->idGet, $this->n);
+        $this->idPage = Book::getEntryIdByLetter ($this->idGet);
+        
+        $count = $this->totalNumber;
+        if ($count == -1)
+            $count = count ($this->entryArray);
+        
+        $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("bookword", $count), $count), $this->idGet);
+    }
+}
+
+class PageAllBooksLetterUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByStartingLetterUnread ($this->idGet, $this->n);
         $this->idPage = Book::getEntryIdByLetter ($this->idGet);
         
         $count = $this->totalNumber;
@@ -725,6 +772,10 @@ abstract class Base
     const PAGE_ALL_LANGUAGES = "17";
     const PAGE_LANGUAGE_DETAIL = "18";   
     const PAGE_ALL_AUTHORS_UNREAD = "19";
+    const PAGE_ALL_TAGS_UNREAD = "20";
+    const PAGE_ALL_BOOKS_UNREAD = "21";
+    const PAGE_ALL_BOOKS_LETTER_UNREAD = "22";
+    const PAGE_ALL_SERIES_UNREAD = "23";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     
