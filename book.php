@@ -19,12 +19,10 @@ require_once('resources/php-epub-meta/epub.php');
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
                                 left outer join books_ratings_link on books_ratings_link.book = books.id 
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
-define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where upper (books.sort) like ? order by books.sort");
-define ('SQL_BOOKS_BY_FIRST_LETTER_UNREAD', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
-                                                    where upper (books.sort) like ? and (custom_column_1.value is null or custom_column_1.value=false) order by books.sort");
-define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_authors_link.book = books.id and author = ? {1} order by pubdate");
+define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " where upper (books.sort) like ? order by books.sort");
+define ('SQL_BOOKS_BY_FIRST_LETTER_UNREAD', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where upper (books.sort) like ? and (custom_column_1.value is null or custom_column_1.value=0) order by books.sort");
+define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . " where books_authors_link.book = books.id and author = ? {1} order by pubdate");
+define ('SQL_BOOKS_BY_AUTHOR_UNREAD', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "  left outer join custom_column_1 on books_authors_link.book=custom_column_1.book where books_authors_link.book = books.id and author = ? and (custom_column_1.value is null or custom_column_1.value=0) {1} order by pubdate");
 define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_series_link.book = books.id and series = ? {1} order by series_index");
 define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -46,7 +44,9 @@ class Book extends Base {
     
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
+    const SQL_BOOKS_BY_FIRST_LETTER_UNREAD = SQL_BOOKS_BY_FIRST_LETTER_UNREAD;
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
+    const SQL_BOOKS_BY_AUTHOR_UNREAD = SQL_BOOKS_BY_AUTHOR_UNREAD;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
     const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
@@ -412,6 +412,9 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR, array ($authorId), $n);
     }
 
+    public static function getBooksByAuthorUnread($authorId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR_UNREAD, array ($authorId), $n);
+    }
     
     public static function getBooksBySeries($serieId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_SERIE, array ($serieId), $n);

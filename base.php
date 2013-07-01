@@ -337,8 +337,12 @@ class Page
             	return new PageAllAuthorsUnread ($id, $query, $n);
             case Base::PAGE_AUTHORS_FIRST_LETTER :
                 return new PageAllAuthorsLetter ($id, $query, $n);
+            case Base::PAGE_AUTHORS_FIRST_LETTER_UNREAD :
+                return new PageAllAuthorsLetterUnread ($id, $query, $n);
             case Base::PAGE_AUTHOR_DETAIL :
                 return new PageAuthorDetail ($id, $query, $n);
+            case Base::PAGE_AUTHOR_DETAIL_UNREAD :
+                return new PageAuthorDetailUnread ($id, $query, $n);
             case Base::PAGE_ALL_TAGS :
                 return new PageAllTags ($id, $query, $n);
             case Base::PAGE_ALL_TAGS_UNREAD :
@@ -359,6 +363,10 @@ class Page
                 return new PageAllBooks ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS_LETTER:
                 return new PageAllBooksLetter ($id, $query, $n);
+            case Base::PAGE_ALL_BOOKS_UNREAD :
+                return new PageAllBooksUnread ($id, $query, $n);
+            case Base::PAGE_ALL_BOOKS_LETTER_UNREAD:
+                return new PageAllBooksLetterUnread ($id, $query, $n);
             case Base::PAGE_ALL_RECENT_BOOKS :
                 return new PageRecentBooks ($id, $query, $n);
             case Base::PAGE_SERIE_DETAIL : 
@@ -530,6 +538,17 @@ class PageAuthorDetail extends Page
         $this->idPage = $author->getEntryId ();
         $this->title = $author->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
+    }
+}
+
+class PageAuthorDetailUnread extends Page
+{
+    public function InitializeContent () 
+    {
+        $author = Author::getAuthorById ($this->idGet);
+        $this->idPage = $author->getEntryId ();
+        $this->title = $author->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthorUnread ($this->idGet, $this->n);
     }
 }
 
@@ -724,6 +743,7 @@ class PageQueryResult extends Page
         switch ($currentPage) {
             case Base::PAGE_ALL_AUTHORS :
             case Base::PAGE_AUTHORS_FIRST_LETTER :
+            case Base::PAGE_AUTHORS_FIRST_LETTER_UNREAD :
                 $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
                 break;
             default:
@@ -776,6 +796,8 @@ abstract class Base
     const PAGE_ALL_BOOKS_UNREAD = "21";
     const PAGE_ALL_BOOKS_LETTER_UNREAD = "22";
     const PAGE_ALL_SERIES_UNREAD = "23";
+    const PAGE_AUTHORS_FIRST_LETTER_UNREAD = "24";
+    const PAGE_AUTHOR_DETAIL_UNREAD = "25";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
     

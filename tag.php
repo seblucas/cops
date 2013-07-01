@@ -65,7 +65,7 @@ order by tags.name');
     public static function getAllTagsUnread() {
         $result = parent::getDb ()->query('select tags.id as id, tags.name as name, count(*) as count
 from tags, books_tags_link left outer join custom_column_1 on books_authors_link.book=custom_column_1.book
-where tags.id = tag and (custom_column_1.value is null or custom_column_1.value=false) 
+where tags.id = tag and (custom_column_1.value is null or custom_column_1.value=0) 
 group by tags.id, tags.name
 order by tags.name');
         $entryArray = array();
