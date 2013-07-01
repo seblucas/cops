@@ -95,21 +95,10 @@ function htmlEscape(str) {
             .replace(/>/g, '&gt;');
 }
 
-function navigateTo (url) {
-    before = new Date ();
-    var jsonurl = url.replace ("index", "getJSON");
-    var cachedData = cache.get (jsonurl);
-    if (cachedData) {
-        history.pushState(jsonurl, "", url);
-        updatePage (cachedData);
-    } else {
-        $.getJSON(jsonurl, function(data) {
-            history.pushState(jsonurl, "", url);
-            cache.put (jsonurl, data);
-            updatePage (data);
-        });
-    }
-}
+/************************************************
+ * All functions needed to filter the book list by tags
+ ************************************************
+ */
 
 function getTagList () {
     var tagList = {};
@@ -149,7 +138,13 @@ function doFilter () {
         }
         if (toBeFiltered) $(this).parents (".books").addClass ("filtered");
     });
+    updateFilters ();
+}
+
+function updateFilters () {
     var tagList = getTagList ();
+    
+    // If there is already some filters then let's prepare to update the list
     $("#filter ul li").each (function () {
         var text = $(this).text ();
         if (isDefined (tagList [text]) || $(this).attr ('class')) {
@@ -158,6 +153,8 @@ function doFilter () {
             tagList [text] = -1;
         }
     });
+    
+    // Update the filter -1 to remove, 1 to add, 0 already there
     for (var tag in tagList) {
         var tagValue = tagList [tag];
         if (tagValue == -1) {
@@ -167,9 +164,50 @@ function doFilter () {
             $("#filter ul").append ("<li>" + tag + "</li>");
         }
     }
+    
+    // Sort the list alphabetically
     $('#filter ul li').sortElements(function(a, b){
         return $(a).text() > $(b).text() ? 1 : -1;
     });
+}
+
+function handleFilterEvents () {
+    $("#filter ul").on ("click", "li", function(){
+        var filter = $(this).text ();
+        switch ($(this).attr("class")) {
+            case "filter-include" :
+                $(this).attr("class", "filter-exclude");
+                filterList [filter] = false;
+                break;
+            case "filter-exclude" :
+                $(this).removeClass ("filter-exclude");;
+                delete filterList [filter];;
+                break;
+            default :
+                $(this).attr("class", "filter-include");
+                filterList [filter] = true;
+                break;
+        }
+        doFilter ();
+    });
+}
+
+
+
+function navigateTo (url) {
+    before = new Date ();
+    var jsonurl = url.replace ("index", "getJSON");
+    var cachedData = cache.get (jsonurl);
+    if (cachedData) {
+        history.pushState(jsonurl, "", url);
+        updatePage (cachedData);
+    } else {
+        $.getJSON(jsonurl, function(data) {
+            history.pushState(jsonurl, "", url);
+            cache.put (jsonurl, data);
+            updatePage (data);
+        });
+    }
 }
 
 function updatePage (data) {
@@ -196,38 +234,8 @@ function updatePage (data) {
     if (currentData.containsBook == 1) {
         $("#sortForm").show ();
         $("#filter ul").empty ();
-        $(".se").each (function(){
-            var taglist = $(this).text();
-
-            var tagarray = taglist.split (",")
-            for (i in tagarray) {
-                var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
-                if ( $('#filter ul li:contains("' + tag + '")').length == 0 ) {
-                    $("#filter ul").append ("<li>" + tag + "</li>");
-                }
-            }
-        });
-        $('#filter ul li').sortElements(function(a, b){
-            return $(a).text() > $(b).text() ? 1 : -1;
-        });
-        $("li").click(function(){
-            var filter = $(this).text ();
-            switch ($(this).attr("class")) {
-                case "filter-include" :
-                    $(this).attr("class", "filter-exclude");
-                    filterList [filter] = false;
-                    break;
-                case "filter-exclude" :
-                    $(this).removeClass ("filter-exclude");;
-                    delete filterList [filter];;
-                    break;
-                default :
-                    $(this).attr("class", "filter-include");
-                    filterList [filter] = true;
-                    break;
-            }
-            doFilter ();
-        });
+        updateFilters ();
+        handleFilterEvents ()
     } else {
         $("#sortForm").hide ();
     }
