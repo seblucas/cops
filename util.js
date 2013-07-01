@@ -111,6 +111,21 @@ function navigateTo (url) {
     }
 }
 
+function getTagList () {
+    var tagList = {};
+    $(".se").each (function(){
+        if ($(this).parents (".filtered").length > 0) return;
+        var taglist = $(this).text();
+
+        var tagarray = taglist.split (",")
+        for (i in tagarray) {
+            var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
+            tagList [tag] = 1;
+        }
+    });
+    return tagList;
+}
+
 function doFilter () {
     $(".books").removeClass("filtered");
     if (jQuery.isEmptyObject(filterList)) return;
@@ -133,6 +148,27 @@ function doFilter () {
             }
         }
         if (toBeFiltered) $(this).parents (".books").addClass ("filtered");
+    });
+    var tagList = getTagList ();
+    $("#filter ul li").each (function () {
+        var text = $(this).text ();
+        if (isDefined (tagList [text]) || $(this).attr ('class')) {
+            tagList [text] = 0;
+        } else {
+            tagList [text] = -1;
+        }
+    });
+    for (var tag in tagList) {
+        var tagValue = tagList [tag];
+        if (tagValue == -1) {
+            $("#filter ul li:contains('" + tag + "')").remove();
+        }
+        if (tagValue == 1) {
+            $("#filter ul").append ("<li>" + tag + "</li>");
+        }
+    }
+    $('#filter ul li').sortElements(function(a, b){
+        return $(a).text() > $(b).text() ? 1 : -1;
     });
 }
 
@@ -170,6 +206,9 @@ function updatePage (data) {
                     $("#filter ul").append ("<li>" + tag + "</li>");
                 }
             }
+        });
+        $('#filter ul li').sortElements(function(a, b){
+            return $(a).text() > $(b).text() ? 1 : -1;
         });
         $("li").click(function(){
             var filter = $(this).text ();
