@@ -1,3 +1,7 @@
+// util.js
+// copyright Sébastien Lucas
+// https://github.com/seblucas/cops
+
 var templatePage, templateBookDetail, templateMain, currentData, before, filterList;
 
 var cache = new LRUCache(30);
@@ -217,7 +221,7 @@ function updatePage (data) {
     var result;
     filterList = {};
     data ["const"] = currentData ["const"];
-    if (false && $("section").length && currentData.isPaginated == 0 &&  data.isPaginated === 0) {
+    if (false && $("section").length && currentData.isPaginated === 0 &&  data.isPaginated === 0) {
         // Partial update (for now disabled)
         debug_log ("Partial update");
         result = templateMain (data);
