@@ -3,7 +3,6 @@ var templatePage, templateBookDetail, templateMain, currentData, before, filterL
 var cache = new LRUCache(30);
 
 var DEBUG = true;
-var isEink = /Kobo|Kindle|EBRD1101/i.test(navigator.userAgent);
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
   // pushState isn't reliable on iOS until 5.
   !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/);
@@ -43,8 +42,8 @@ function updateCookieFromCheckbox (id) {
 }
 
 function elapsed () {
-    var elapsed = new Date () - before; 
-    return "Elapsed : " + elapsed;
+    var elapsedTime = new Date () - before; 
+    return "Elapsed : " + elapsedTime;
 }
 
 function retourMail(data, textStatus, jqXHR ) {
@@ -52,15 +51,16 @@ function retourMail(data, textStatus, jqXHR ) {
 }
 
 function sendToMailAddress (component, dataid) {
-    $toto = $.cookie ('email');
+    var email = $.cookie ('email');
     if (!$.cookie ('email')) {
-        var email = window.prompt ("Please enter your email : ", "");
+        email = window.prompt ("Please enter your email : ", "");
         $.cookie ('email', email);
     }
-    email = $.cookie ('email');
     var url = 'sendtomail.php';
-    if (currentData.databaseId) url = url + '?db=' + currentData.databaseId;
-    $.ajax ({url: url, type: 'post', data: { data:  dataid, email: email }, success: retourMail});
+    if (currentData.databaseId) {
+        url = url + '?db=' + currentData.databaseId;
+    }
+    $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
 }
 
 function strformat () {
@@ -73,8 +73,8 @@ function strformat () {
 }
 
 function isDefined(x) {
-    var undefined;
-    return x !== undefined;
+    var undefinedVar;
+    return x !== undefinedVar;
 }
 
 function getCurrentOption (option) {
@@ -107,7 +107,7 @@ function getTagList () {
         var taglist = $(this).text();
 
         var tagarray = taglist.split (",")
-        for (i in tagarray) {
+        for (var i in tagarray) {
             var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
             tagList [tag] = 1;
         }
@@ -180,8 +180,8 @@ function handleFilterEvents () {
                 filterList [filter] = false;
                 break;
             case "filter-exclude" :
-                $(this).removeClass ("filter-exclude");;
-                delete filterList [filter];;
+                $(this).removeClass ("filter-exclude"); 
+                delete filterList [filter];
                 break;
             default :
                 $(this).attr("class", "filter-include");
@@ -192,7 +192,10 @@ function handleFilterEvents () {
     });
 }
 
-
+/************************************************
+ * Functions to handle Ajax navigation
+ ************************************************
+ */
 
 function navigateTo (url) {
     before = new Date ();
@@ -235,7 +238,7 @@ function updatePage (data) {
         $("#sortForm").show ();
         $("#filter ul").empty ();
         updateFilters ();
-        handleFilterEvents ()
+        handleFilterEvents ();
     } else {
         $("#sortForm").hide ();
     }
@@ -318,7 +321,7 @@ function ajaxifyLinks () {
 
 window.onpopstate = function(event) {
     before = new Date ();
-    var data = cache.get (event.state)
+    var data = cache.get (event.state);
     updatePage (data);
 };
 
