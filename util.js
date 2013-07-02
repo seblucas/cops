@@ -103,10 +103,10 @@ function htmlEscape(str) {
 function getTagList () {
     var tagList = {};
     $(".se").each (function(){
-        if ($(this).parents (".filtered").length > 0) return;
+        if ($(this).parents (".filtered").length > 0) { return; }
         var taglist = $(this).text();
 
-        var tagarray = taglist.split (",")
+        var tagarray = taglist.split (",");
         for (var i in tagarray) {
             var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
             tagList [tag] = 1;
@@ -117,7 +117,7 @@ function getTagList () {
 
 function doFilter () {
     $(".books").removeClass("filtered");
-    if (jQuery.isEmptyObject(filterList)) return;
+    if (jQuery.isEmptyObject(filterList)) { return; }
     
     $(".se").each (function(){
         var taglist = ", " + $(this).text() + ", ";
@@ -136,7 +136,7 @@ function doFilter () {
                 }
             }
         }
-        if (toBeFiltered) $(this).parents (".books").addClass ("filtered");
+        if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
     });
     updateFilters ();
 }
@@ -157,10 +157,10 @@ function updateFilters () {
     // Update the filter -1 to remove, 1 to add, 0 already there
     for (var tag in tagList) {
         var tagValue = tagList [tag];
-        if (tagValue == -1) {
+        if (tagValue === -1) {
             $("#filter ul li:contains('" + tag + "')").remove();
         }
-        if (tagValue == 1) {
+        if (tagValue === 1) {
             $("#filter ul").append ("<li>" + tag + "</li>");
         }
     }
@@ -217,7 +217,7 @@ function updatePage (data) {
     var result;
     filterList = {};
     data ["const"] = currentData ["const"];
-    if (false && $("section").length && currentData.isPaginated == 0 &&  data.isPaginated == 0) {
+    if (false && $("section").length && currentData.isPaginated == 0 &&  data.isPaginated === 0) {
         // Partial update (for now disabled)
         debug_log ("Partial update");
         result = templateMain (data);
@@ -233,8 +233,8 @@ function updatePage (data) {
     
     debug_log (elapsed ());
     
-    if ($.cookie('toolbar') == 1) $("#tool").show ();
-    if (currentData.containsBook == 1) {
+    if ($.cookie('toolbar') === 1) { $("#tool").show (); }
+    if (currentData.containsBook === 1) {
         $("#sortForm").show ();
         $("#filter ul").empty ();
         updateFilters ();
@@ -243,12 +243,12 @@ function updatePage (data) {
         $("#sortForm").hide ();
     }
     
-    if (currentData.page != 19) ajaxifyLinks ();
+    if (currentData.page !== 19) { ajaxifyLinks (); }
     
     $("#sort").click(function(){
         $('.books').sortElements(function(a, b){
             var test = 1;
-            if ($("#sortorder").val() == "desc")
+            if ($("#sortorder").val() === "desc")
             {
                 test = -1;
             }
@@ -266,7 +266,7 @@ function updatePage (data) {
         }
     });
     
-    if (getCurrentOption ("use_fancyapps") == 1) {
+    if (getCurrentOption ("use_fancyapps") === 1) {
         $(".fancydetail").click(function(event){
             event.preventDefault(); 
             before = new Date ();
@@ -302,7 +302,7 @@ function updatePage (data) {
 function ajaxifyLinks () {
     if (isPushStateEnabled) {
         var links = $("a[href^='index']");
-        if (getCurrentOption ("use_fancyapps") == 1) links = links.not (".fancydetail");
+        if (getCurrentOption ("use_fancyapps") === 1) { links = links.not (".fancydetail"); }
         links.click (function (event) {
             event.preventDefault(); 
 
@@ -326,10 +326,10 @@ window.onpopstate = function(event) {
 };
 
 $(document).keydown(function(e){
-    if (e.keyCode == 37 && $("#prevLink").length > 0) {
+    if (e.keyCode === 37 && $("#prevLink").length > 0) {
         navigateTo ($("#prevLink").attr('href'));
     }
-    if (e.keyCode == 39  && $("#nextLink").length > 0) {
+    if (e.keyCode === 39  && $("#nextLink").length > 0) {
         navigateTo ($("#nextLink").attr('href'));
     }
 });
