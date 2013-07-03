@@ -34,14 +34,14 @@ function updateCookieFromCheckbox (id) {
     if ($(id).is(":checked"))
     {
         if ($(id).is(':radio')) {
-            $.cookie(name, $(id).val ());
+            $.cookie(name, $(id).val (), { expires: 365 });
         } else {
-            $.cookie(name, '1');
+            $.cookie(name, '1', { expires: 365 });
         }
     }
     else
     {
-        $.cookie(name, '0');
+        $.cookie(name, '0', { expires: 365 });
     }
 }
 
@@ -58,7 +58,7 @@ function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
         email = window.prompt ("Please enter your email : ", "");
-        $.cookie ('email', email);
+        $.cookie ('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
     if (currentData.databaseId) {
@@ -265,7 +265,7 @@ function updatePage (data) {
     $(".headright").click(function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
-            $.cookie('toolbar', '1');
+            $.cookie('toolbar', '1', { expires: 365 });
         } else {
             $("#tool").slideUp();
             $.removeCookie('toolbar');
