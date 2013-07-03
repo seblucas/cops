@@ -200,6 +200,6 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_html_tag_filter'] = "1";
+    $config['cops_html_tag_filter'] = "0";
 
 ?>
