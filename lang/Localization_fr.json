@@ -121,6 +121,7 @@
 "customize.style":"Thème",
 "customize.fancybox":"Utiliser une Lightbox",
 "customize.paging":"Nombre de livres par page (-1 pour désactiver)",
+"customize.email":"Adresse email (pour l'envoi automatique de livres)",
 "languages.eng":"Anglais",
 "languages.fra":"Français",
 "fin":"fin"
