@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>COPS</title>
+    <script type="text/javascript" src="resources/jQuery/jquery-1.10.1.min.js"></script>
+    <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' />
+    <style media="screen" type="text/css">
+        body{
+            background:white;
+            font-family:'Open Sans';
+        }
+        
+        #block{
+            width:230px;
+            height:113px;
+            margin:auto;
+            background:#2c3e50;
+            margin-top:100px;
+            border-radius:2px;
+        }
+        
+        #block:before{
+            content:'';
+            display:block;
+            width:230px;
+            height:3px;
+        }
+        
+        #block:after{
+            content:'';
+            display:block;
+        }
+        
+        #block input[type=text],#block  input[type=password] {
+            font-family:'Open Sans';
+            width:156px;
+            height:32px;
+            margin:15px 15px;
+            border:0;
+            border-radius:2px;
+            display:block;
+            font-size:18px;
+        }
+        
+        #block input[type=password]{
+            width:156px;
+            height:32px;
+            margin:-5px 15px;
+        }
+        #submit{
+            position:absolute;
+            width:33px;
+            height:34px;
+            background:#9b59b6;
+            margin:15px;
+            color:#ffffff;
+            border:0;
+            margin:-29px 180px;
+            font-size:22px;
+            padding:0;
+        }
+    </style>
+    <script>
+        $(document).ready(function()
+        {
+            $('#loginForm').submit(function()
+            {
+              var username = $('#user').val();
+              var password = $('#password').val();
+
+              $.ajax(
+                {
+                  'password' : password,
+                  'username' : username,
+                  'url'      : 'index.php',
+                  'type'     : 'GET',
+                  'success'  : function(){ window.location = 'index.php'; },
+                  'error'    : function(){ alert('Bad Login Details');},
+                }
+              );
+
+              return false;
+            });
+        });
+    </script>
+</head>
+<body>
+    <form id="loginForm">
+    <div id="block">
+        <input id="user" type="text" placeholder="Username" />
+        <input id="password" type="password" placeholder="Password" />
+        <input id="submit" type="submit" value="&#x2192;" />
+    </div>
+    </form>
+</body>
+</html>
