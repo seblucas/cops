@@ -25,7 +25,12 @@ function getCurrentOption ($option) {
     if ($option == "style") {
         return "default";
     }
-    return $config ["cops_" . $option];
+    
+    if (isset($config ["cops_" . $option])) {
+        return $config ["cops_" . $option];
+    }
+    
+    return "";
 }
 
 function getCurrentCss () {
@@ -740,6 +745,10 @@ class PageCustomize extends Page
                                         array ()));
         $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push ($this->entryArray, new Entry (localize ("customize.paging"), "", 
+                                        $content, "text", 
+                                        array ()));
+        $content = '<input type="email" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
+        array_push ($this->entryArray, new Entry (localize ("customize.email"), "", 
                                         $content, "text", 
                                         array ()));
     }
