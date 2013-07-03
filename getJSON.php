@@ -80,7 +80,8 @@
                        "thumbnailUrl" => "fetch.php?height=70&id={0}&db={1}"),
                    "config" => array (
                        "use_fancyapps" => $config ["cops_use_fancyapps"],
-                       "max_item_per_page" => $config['cops_max_item_per_page']));
+                       "max_item_per_page" => $config['cops_max_item_per_page'],
+                       "html_tag_filter" => $config['cops_html_tag_filter']));
    }
 
     $out ["containsBook"] = 0;

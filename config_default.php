@@ -139,7 +139,7 @@
     
     /*
      * Filter on tags to book list
-     * Only works with the OPDS catalog for now
+     * Only works with the OPDS catalog
      * Usage : array ("I only want to see books using the tag : Tag1"     => "Tag1", 
      *                "I only want to see books not using the tag : Tag1" => "!Tag1",
      *                "I want to see every books"                         => "",
@@ -194,5 +194,12 @@
                                                 "smtp.secure"   => "",
                                                 "address.from"  => "cops@slucas.fr"
                                                 );
+                                                
+    /*
+     * Use filter in HTML catalog
+     * 1 : Yes (enable)
+     * 0 : No
+     */
+    $config['cops_html_tag_filter'] = "1";
 
 ?>
