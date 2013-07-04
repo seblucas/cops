@@ -175,21 +175,33 @@ max-width:800px;
 /*-------------books article-------------*/
 .books {
     clear: both;
-    padding: 10px;
     min-height: 90px;
 }
 
-.cover {
+.books .cover {
     float:left;
-    margin: 0 10px 0 0;
-    min-width: 56px;
-    min-height: 70px;
+    margin: 4px 10px 4px 4px;
+    width: 60px;
+    height: 82px;
+}
+
+.bookpopup .cover {
+    float:left;
+    margin: 4px 10px 4px 4px;
+    width: 100px;
+    height: 150px;
+}
+
+.cover img {
+    max-width:100%;
+    max-height:100%;
 }
 
 .download {
     float: right;
     line-height:40px;
     text-align: right;
+    margin: 6px;
 }
 
 .download a {
