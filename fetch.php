@@ -51,7 +51,7 @@
                 $src_img = imagecreatefromjpeg($file);
                 $dst_img = imagecreatetruecolor($nw,$nh);
                 imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                imagejpeg($dst_img,null,100);
+                imagejpeg($dst_img,null,80);
                 imagedestroy($src_img);
                 imagedestroy($dst_img);
                 return;
@@ -76,7 +76,7 @@
                 $src_img = imagecreatefromjpeg($file);
                 $dst_img = imagecreatetruecolor($nw,$nh);
                 imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                imagejpeg($dst_img,null,100);
+                imagejpeg($dst_img,null,80);
                 imagedestroy($src_img);
                 imagedestroy($dst_img);
                 return;
