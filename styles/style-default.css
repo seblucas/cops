@@ -344,9 +344,9 @@ body {  font-size: 1em;/*12px/16px */
     }
 }
 
-/* 810px and greater */
+/* 768px and greater */
 @media only screen and (min-width: 768px) {
-h1 {font-size: 2em;}
+h1 {font-size: 2em; line-height: 1em;}
 .container { box-shadow:0 0 20px #000; }
 body {  margin: 5px; 
             font-size: 0.85em;/*12px/16px */
