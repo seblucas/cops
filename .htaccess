@@ -59,8 +59,10 @@ ExpiresByType text/javascript "access plus 1 year"
 ###########################################
 # Uncomment if you wish to protect access with a password
 ###########################################
+#<FilesMatch "\.php$">
 #AuthUserFile /path/to/file
 #AuthGroupFile /dev/null
 #AuthName "Acces securise"
 #AuthType Basic
 #Require valid-user
+#</FilesMatch>
