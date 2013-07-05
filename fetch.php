@@ -40,6 +40,7 @@
                     $h = $size[1];
                     //set new size
                     $nw = $_GET["width"];
+                    if ($nw > $w) { break; }
                     $nh = ($nw*$h)/$w;
                 }
                 else{
@@ -65,6 +66,7 @@
                     $h = $size[1];
                     //set new size
                     $nh = $_GET["height"];
+                    if ($nh > $h) { break; }
                     $nw = ($nh*$w)/$h;
                 }
                 else{
