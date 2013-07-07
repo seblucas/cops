@@ -357,6 +357,7 @@ class Book extends Base {
         else
         {
             $data = $this->getDataById ($idData);
+            if (!$data) return NULL;
             $file = $data->name . "." . strtolower ($data->format);
         }
 
