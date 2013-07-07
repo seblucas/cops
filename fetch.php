@@ -9,7 +9,14 @@
     require_once ("config.php");
     require_once ("book.php");
     require_once ("data.php");
-     
+
+function notFound () {
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    header("Status: 404 Not Found");
+
+    $_SERVER['REDIRECT_STATUS'] = 404;
+}
+    
     global $config;
     $expires = 60*60*24*14;
     header("Pragma: public");
@@ -25,6 +32,23 @@
     else
     {
         $book = Book::getBookById($bookId);
+    }
+    
+    if (!$book) {
+        notFound ();
+        return;     
+    }
+    
+    if ($book && ($type == "jpg" || empty ($config['calibre_internal_directory']))) {
+        if ($type == "jpg") {
+            $file = $book->getFilePath ($type);
+        } else {
+            $file = $book->getFilePath ($type, $idData);
+        }
+        if (!$file || !file_exists ($file)) {
+            notFound ();
+            return;
+        }
     }
      
     switch ($type)
