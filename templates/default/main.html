@@ -1,6 +1,10 @@
 <section>
-{{? it.page == 13}}
-    {{#def.bookdetail}}
+{{? it.page == 13 || it.page == 16}}
+    {{? it.page == 13}}
+        {{#def.bookdetail}}
+    {{??}}
+        {{= it.fullhtml}}
+    {{?}}
 {{??}}
 {{~it.entries:entry:i}}
     {{? it.containsBook == 0}}

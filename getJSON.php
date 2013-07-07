@@ -93,6 +93,10 @@
         $out["abouturl"] = "index.php" . addURLParameter ("?page=16", DB, $database);
     }
     
+    if ($page == Base::PAGE_ABOUT) {
+        $out ["fullhtml"] = file_get_contents('about.html');
+    }
+    
     $out ["homeurl"] = "index.php";
     if ($page != Base::PAGE_INDEX && !is_null ($database)) $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
 
