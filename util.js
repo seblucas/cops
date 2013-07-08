@@ -121,7 +121,10 @@ function getTagList () {
 
 function doFilter () {
     $(".books").removeClass("filtered");
-    if (jQuery.isEmptyObject(filterList)) { return; }
+    if (jQuery.isEmptyObject(filterList)) {
+        updateFilters ();
+        return;
+    }
     
     $(".se").each (function(){
         var taglist = ", " + $(this).text() + ", ";
@@ -169,6 +172,8 @@ function updateFilters () {
         }
     }
     
+    $("#filter ul").append ("<li>_CLEAR_</li>");
+    
     // Sort the list alphabetically
     $('#filter ul li').sortElements(function(a, b){
         return $(a).text() > $(b).text() ? 1 : -1;
@@ -178,6 +183,13 @@ function updateFilters () {
 function handleFilterEvents () {
     $("#filter ul").on ("click", "li", function(){
         var filter = $(this).text ();
+        if (filter === "_CLEAR_") {
+            filterList = {};
+            $("#filter ul li").removeClass ("filter-exclude");
+            $("#filter ul li").removeClass ("filter-include");
+            doFilter ();
+            return;
+        }
         switch ($(this).attr("class")) {
             case "filter-include" :
                 $(this).attr("class", "filter-exclude");
