@@ -261,7 +261,7 @@ function updatePage (data) {
         $("#sortForm").hide ();
     }
     
-    if (currentData.page !== 19) { ajaxifyLinks (); }
+    if (currentData.page !== "19") { ajaxifyLinks (); }
     
     $("#sort").click(function(){
         $('.books').sortElements(function(a, b){
