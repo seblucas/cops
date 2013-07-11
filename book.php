@@ -16,23 +16,28 @@ require_once('data.php');
 require_once('resources/php-epub-meta/epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
+define ('SQL_BOOKS_LEFT_JOIN_SHORT', "left outer join comments on comments.book = books.id 
+                                left outer join books_ratings_link on books_ratings_link.book = books.id 
+                                left outer join ratings on books_ratings_link.rating = ratings.id");
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
                                 left outer join books_ratings_link on books_ratings_link.book = books.id 
-                                left outer join ratings on books_ratings_link.rating = ratings.id ");
+                                left outer join ratings on books_ratings_link.rating = ratings.id 
+                                left outer join books_series_link on books_series_link.book = books.id
+                                left outer join series on books_series_link.series = series.id");
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_authors_link.book = books.id and author = ? {1} order by pubdate");
-define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_series_link.book = books.id and series = ? {1} order by series_index");
-define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
+define ('SQL_BOOKS_BY_SERIE', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where series = ? {1} order by series_index");
+define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN_SHORT . "
                                                     where books_tags_link.book = books.id and tag = ? {1} order by sort");
-define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " . SQL_BOOKS_LEFT_JOIN . "
+define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " . SQL_BOOKS_LEFT_JOIN_SHORT . "
                                                     where books_languages_link.book = books.id and lang_code = ? {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?) {1} order by books.sort");
+                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ? or series.name like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
 
@@ -521,7 +526,7 @@ where data.book = books.id and data.id = ?');
     }
     
     public static function getBooksByQuery($query, $n, $database = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n, $database);
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%", "%" . $query . "%"), $n, $database);
     }
     
     public static function getAllBooks() {
