@@ -38,7 +38,7 @@ h4 {font-size: 1.0em; }
 h5 {font-size: 0.83em;}
 h6 {font-size: 0.75em;}
 
-a:hover, a:active { outline: none; }
+a:hover, a:focus, a:active { outline: none; }
 a { color: #000066; font-weight: 800; text-decoration: none;}
 a:hover { color:#000; text-decoration: none; }
 .frontpage a {display:block; }

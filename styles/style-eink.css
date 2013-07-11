@@ -39,7 +39,7 @@ h4 {font-size: 1.0em; }
 h5 {font-size: 0.83em;}
 h6 {font-size: 0.75em;}
 
-a:hover, a:active { outline: none; }
+a:hover, a:focus, a:active { outline: none; }
 a {
 	color: black;
 	text-decoration: none;
