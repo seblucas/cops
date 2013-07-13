@@ -709,6 +709,11 @@ class PageCustomize extends Page
         if (getCurrentOption ("use_fancyapps") == 1) {
             $use_fancybox = "checked='checked'";
         }
+        $html_tag_filter = "";
+        if (getCurrentOption ("html_tag_filter") == 1) {
+            $html_tag_filter = "checked='checked'";
+        }
+        
         
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
@@ -749,6 +754,10 @@ class PageCustomize extends Page
                                         array ()));
         $content = '<input type="email" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "", 
+                                        $content, "text", 
+                                        array ()));
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $html_tag_filter . ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.filter"), "", 
                                         $content, "text", 
                                         array ()));
     }
