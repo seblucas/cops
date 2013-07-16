@@ -260,10 +260,12 @@ function updatePage (data) {
     } else {
         $("#sortForm").hide ();
     }
-    
-    if (currentData.page !== "19") { ajaxifyLinks (); }
-    
-    $("#sort").click(function(){
+}
+
+function handleLinks () {
+    $("body").on ("click", "a[href^='index']", link_Clicked);
+    $("body").on ("submit", "#searchForm", search_Submitted);
+    $("body").on ("click", "#sort", function(){
         $('.books').sortElements(function(a, b){
             var test = 1;
             if ($("#sortorder").val() === "desc")
@@ -274,7 +276,7 @@ function updatePage (data) {
         });
     });
     
-    $(".headright").click(function(){
+    $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
             $.cookie('toolbar', '1', { expires: 365 });
@@ -283,58 +285,62 @@ function updatePage (data) {
             $.removeCookie('toolbar');
         }
     });
-    
-    if (getCurrentOption ("use_fancyapps") === "1") {
-        $(".fancydetail").click(function(event){
-            event.preventDefault(); 
-            before = new Date ();
-            var url = $(this).attr("href");
-            var jsonurl = url.replace ("index", "getJSON");
-            $.getJSON(jsonurl, function(data) {
-                data ["const"] = currentData ["const"];
-                var detail = templateBookDetail (data);
-                $.magnificPopup.open({
-                  items: {
-                    src: detail,
-                    type: 'inline'
-                  }
-                });
-                debug_log (elapsed ());
-            });
-        });
-        
-
-        $('section').magnificPopup({
-            delegate: '.fancycover', // child items selector, by clicking on it popup will open
-            type: 'image',
-            gallery:{enabled:true, preload: [0,2]}
-            // other options
-        });
-
-            
-
-        $('.fancyabout').magnificPopup({ type: 'ajax' });
-    }
+    $("body").magnificPopup({
+        delegate: '.fancycover', // child items selector, by clicking on it popup will open
+        type: 'image',
+        gallery:{enabled:true, preload: [0,2]},
+        disableOn: function() {
+          if( getCurrentOption ("use_fancyapps") === "1" ) {
+            return true;
+          } 
+          return false;
+        }
+    });
 }
 
-function ajaxifyLinks () {
-    if (isPushStateEnabled) {
-        var links = $("a[href^='index']");
-        if (getCurrentOption ("use_fancyapps") === "1") { links = links.not (".fancydetail"); }
-        links.click (function (event) {
-            event.preventDefault(); 
-
-            var url = $(this).attr('href');
-            navigateTo (url);
-        });
-        
-        $("#searchForm").submit (function (event) {
-            event.preventDefault(); 
-            
-            var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
-            navigateTo (url);
-        });
+function link_Clicked (event) {
+    var currentLink = $(this);
+    if (!isPushStateEnabled ||
+        currentData.page === "19") { 
+        return;
     }
+    event.preventDefault();
+    var url = currentLink.attr('href');
+    
+    // The bookdetail / about should be displayed in a lightbox
+    if (getCurrentOption ("use_fancyapps") === "1" && 
+        (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
+        before = new Date ();
+        var jsonurl = url.replace ("index", "getJSON");
+        $.getJSON(jsonurl, function(data) {
+            data ["const"] = currentData ["const"];
+            var detail = "";
+            if (data.page === "16") {
+                detail = data.fullhtml;
+            } else {
+                detail = templateBookDetail (data);
+            }
+            $.magnificPopup.open({
+              items: {
+                src: detail,
+                type: 'inline'
+              }
+            });
+            debug_log (elapsed ());
+        });
+        return;
+    }
+    navigateTo (url);
+}
+
+function search_Submitted (event) {
+    if (!isPushStateEnabled ||
+        currentData.page === "19") { 
+        return;
+    }
+    event.preventDefault();
+    var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+    navigateTo (url);
 }
 
 window.onpopstate = function(event) {
