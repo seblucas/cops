@@ -104,8 +104,6 @@ border:0;
 .container{
  background: #414141; border:1px solid #000; border-radius:10px;
     max-width:800px;width:95%;margin:0 auto;position:relative; }
-    
-.fancyabout { font-weight:400; text-decoration: none; }
 
 /* =============================================================================
    Header stuff goes here
