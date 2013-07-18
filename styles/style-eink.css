@@ -288,6 +288,8 @@ margin:auto;
 text-align:center;
 height:32px;
 display:table;
+color: black;
+font-weight: bold;
 }
 
 .footcenter p, .footcenter a

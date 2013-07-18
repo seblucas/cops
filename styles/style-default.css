@@ -276,6 +276,7 @@ margin:auto;
 text-align:center;
 height:32px;
 display:table;
+font-weight: bold;
 }
 
 .footcenter p, .footcenter a
