@@ -146,9 +146,6 @@ header h1{
     vertical-align: middle;
     text-align: center;
     line-height: 100%;
-    text-shadow: 0px 4px 3px rgba(0,0,0,0.4),
-                 0px 8px 13px rgba(0,0,0,0.1),
-                 0px 18px 23px rgba(0,0,0,0.1);
 }
 
 .headright {
@@ -221,11 +218,9 @@ max-width:800px;
 }
 
 .download a {
-    border-radius: 6px;
-    box-shadow:0 0 10px #000;
-    background: darkgray;  
-    background: radial-gradient(#666, black);
-    color: #EEE;
+    border-radius: 2px;
+    background: black;  
+    color: white;
     text-decoration : none;
     font-weight: bold;
     padding: 5px 10px 5px 10px;
@@ -360,7 +355,6 @@ body {  font-size: 1em;/*12px/16px */
 /* 768px and greater */
 @media only screen and (min-width: 768px) {
 h1 {font-size: 2em; line-height: 1em;}
-.container { box-shadow:0 0 20px #000; }
 body {  margin: 5px; 
             font-size: 0.85em;/*12px/16px */
             font-weight:400; /* Better supported than 'lighter' attribute */
