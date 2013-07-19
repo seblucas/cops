@@ -128,6 +128,41 @@ header {
 	letter-spacing: 2px;
 }
 
+.hicon{
+    display:inline-block;
+    color:black;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.submit {
+    color: black;
+    cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    border-color: transparent;
+    -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+    -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none; 
+}
+
+.hicon64{
+    font-size: 64px;
+    line-height: 64px;
+    width: 64px;
+    height: 64px;
+}
+
+.hicon32{
+    font-size: 24px;
+    line-height: 32px;
+    width: 32px;
+    height: 32px;
+}
+
 .headleft {
     float: left;
 }

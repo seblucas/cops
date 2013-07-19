@@ -46,6 +46,7 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="favicon.ico" />
     <link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic' />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/font-awesome.css") ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
     <script type="text/javascript">
     

@@ -1,15 +1,15 @@
 <footer>
     <div class="footleft">
-        <a href="index.php?page=19"><img src="images/theme.png?v={{=it.const.version}}" alt="{{=it.const.i18n.customizeTitle}}" /></a>
+        <a href="index.php?page=19"><div title="{{=it.const.i18n.customizeTitle}}" class="hicon hicon32"><i class="icon-wrench"></i></div></a>
     </div>
     <div class="footright">
-        <a class="fancyabout" href="{{=it.abouturl}}"><img src="images/info.png?v={{=it.const.version}}" alt="{{=it.const.i18n.aboutTitle}}" /></a>
+        <a class="fancyabout" href="{{=it.abouturl}}"><div title="{{=it.const.i18n.aboutTitle}}" class="hicon hicon32"><i class="icon-info-sign"></i></div></a>
     </div>
     {{? it.isPaginated == 1}}
     <div class="footcenter">
-        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" ><img src="images/previous.png?v={{=it.const.version}}" alt="{{=it.const.i18n.previousAlt}}" /></a>{{?}}
+        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" ><div title="{{=it.const.i18n.previousAlt}}" class="hicon hicon32"><i class="icon-angle-left"></i></div></a>{{?}}
         <p> {{=it.currentPage}} / {{=it.maxPage}} </p>
-        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" ><img src="images/next.png?v={{=it.const.version}}" alt="{{=it.const.i18n.nextAlt}}" /></a>{{?}}
+        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" ><div title="{{=it.const.i18n.nextAlt}}" class="hicon hicon32"><i class="icon-angle-right"></i></div></a>{{?}}
     </div>
     {{?}}
 </footer>
