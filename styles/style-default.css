@@ -119,6 +119,42 @@ header {
     border-radius: 10px 10px 0px 0px; 
 }
 
+.hicon{
+    display:inline-block;
+    color:lightgray;
+    text-align: center;
+    vertical-align: bottom;
+    text-shadow: 2px 2px 2px black;
+}
+
+.submit {
+    color: lightgray;
+    cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    border-color: transparent;
+    -webkit-border-radius: 0;
+     -moz-border-radius: 0;
+          border-radius: 0;
+    -webkit-box-shadow: none;
+     -moz-box-shadow: none;
+          box-shadow: none; 
+}
+
+.hicon64{
+    font-size: 64px;
+    line-height: 64px;
+    width: 64px;
+    height: 64px;
+}
+
+.hicon32{
+    font-size: 24px;
+    line-height: 32px;
+    width: 32px;
+    height: 32px;
+}
+
 .headleft {
     float: left;
 }

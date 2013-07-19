@@ -10,12 +10,12 @@
         {{~it.book.datas:data:i}}
         <a href="{{=data.url}}">{{=data.format}}</a>
         {{? data.mail == 1}}
-        <a href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><img src="images/mail-send.png?v={{=it.const.version}}" alt="Mail" /></a>
+        <a title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><i class="icon-envelope icon-large"></i></a>
         {{?}}
         <br />
         {{~}}
     </h2>
-    <h1><a rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><img src="images/Link.png?v={{=it.const.version}}" alt="{{=it.const.i18n.permalinkAlt}}" /></a>{{=htmlEscape (it.title)}}</h1>
+    <h1><a title="{{=it.const.i18n.permalinkAlt}}" rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlEscape (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.const.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:j}}
