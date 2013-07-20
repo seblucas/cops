@@ -50,6 +50,9 @@ function notFound () {
             return;
         }
     }
+    
+    // Clean output buffer : mandatory for nginx / php-fpm on Wheezy
+    ob_end_clean();
      
     switch ($type)
     {
