@@ -51,6 +51,7 @@ function elapsed () {
 }
 
 function retourMail(data, textStatus, jqXHR ) {
+    $("#mailButton :first-child").removeClass ("icon-spinner icon-spin").addClass ("icon-envelope");
     alert (data);
 }
 
@@ -64,6 +65,7 @@ function sendToMailAddress (component, dataid) {
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }
+    $("#mailButton :first-child").removeClass ("icon-envelope").addClass ("icon-spinner icon-spin");
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
 }
 
