@@ -64,4 +64,3 @@ order by languages.lang_code');
         return $entryArray;
     }
 }
-?>

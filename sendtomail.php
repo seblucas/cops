@@ -64,5 +64,3 @@ if(!$mail->Send()) {
 
 echo 'Message has been sent';
 
-
-?>

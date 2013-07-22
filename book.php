@@ -562,4 +562,3 @@ order by substr (upper (sort), 1, 1)");
     }
 
 }
-?>

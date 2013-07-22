@@ -73,4 +73,3 @@ order by series.sort');
         return $entryArray;
     }
 }
-?>

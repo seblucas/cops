@@ -202,4 +202,3 @@
      */
     $config['cops_html_tag_filter'] = "0";
 
-?>
