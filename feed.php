@@ -25,9 +25,6 @@
     
     $OPDSRender = new OPDSRenderer ();
     
-    // Clean output buffer : mandatory for nginx / php-fpm on Wheezy
-    ob_end_clean();
-    
     switch ($page) {
         case Base::PAGE_OPENSEARCH :
             echo $OPDSRender->getOpenSearch ();
@@ -39,4 +36,3 @@
             return;
             break;
     }
-?>

@@ -62,4 +62,3 @@ order by tags.name');
         return $entryArray;
     }
 }
-?>

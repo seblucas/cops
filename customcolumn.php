@@ -99,4 +99,3 @@ order by {0}.value', self::getTableName ($customId), self::getTableLinkName ($cu
         return $entryArray;
     }
 }
-?>

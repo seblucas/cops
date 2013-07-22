@@ -99,4 +99,3 @@ and book = ?');
         return $authorArray;
     }
 }
-?>

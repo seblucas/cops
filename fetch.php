@@ -50,9 +50,6 @@ function notFound () {
             return;
         }
     }
-    
-    // Clean output buffer : mandatory for nginx / php-fpm on Wheezy
-    ob_end_clean();
      
     switch ($type)
     {
@@ -141,4 +138,3 @@ function notFound () {
     else {
         header ($config['cops_x_accel_redirect'] . ": " . $dir . $file);
     }
-?>
