@@ -73,7 +73,8 @@
                        "languagesTitle" => localize("language.title"),
                        "contentTitle" => localize("content.summary"),
                        "sortorderAsc" => localize("search.sortorder.asc"),
-                       "sortorderDesc" => localize("search.sortorder.desc")),
+                       "sortorderDesc" => localize("search.sortorder.desc"),
+                       "customizeEmail" => localize("customize.email")),
                    "url" => array (
                        "detailUrl" => "index.php?page=13&id={0}&db={1}",
                        "coverUrl" => "fetch.php?id={0}&db={1}",
