@@ -58,7 +58,7 @@ function retourMail(data, textStatus, jqXHR ) {
 function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
-        email = window.prompt ("Please enter your email : ", "");
+        email = window.prompt (currentData.const.i18n.customizeEmail, "");
         $.cookie ('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
