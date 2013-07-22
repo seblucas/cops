@@ -1,9 +1,16 @@
-0.5.1 - 20130630
+0.6.0 - 20130730
   * COPS HTML catalog use templated client side rendering. You can build your own template if you want. Should be a lot faster.
   * Fancybox has been replaced by Magnific Popup, it seems faster.
   * Add a way to send book by mail (to send to Kindle or to send to iCloud).
   * Add expires instruction in .htaccess.
-  * Upgrade to JQuery 1.10.1.
+  * Upgrade to JQuery 1.10.2.
+  * Change the way thumbnail are handled to offer greater quality (especially on high density devices : Retina, Nexus, ...).
+  * Change all icon by a vectorial font (again better quality).
+  * Add a way to filter books by tags.
+  * Add a login page (login.html) to allow access to a password protected COPS on a Kobo ereader (that does not support basic auth).
+  * Fix cookie expire date.
+  * Add a default web.config for IIS installation.
+  * The eink style don't use any shadow anymore.
 
 0.5.0 - 20130605
   * Upgrade COPS UI to HTML5 / CSS3 to hopefully make it prettier. Most of the code was contributed by Thomas Severinsen.
