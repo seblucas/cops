@@ -330,5 +330,7 @@
 "customize.paging":"Max number of books per page (-1 to disable)",
 "customize.email":"Set your email (to allow book emailing)",
 "customize.filter":"Enable tag filtering",
+"mail.messagenotsent":"Message could not be sent.",
+"mail.messagesent":"Message has been sent",
 "fin":"fin"
 }

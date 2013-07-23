@@ -1,8 +1,8 @@
 <?php
 
 require_once ("config.php");
-require "resources/PHPMailer/class.phpmailer.php";
-require "book.php";
+require_once "resources/PHPMailer/class.phpmailer.php";
+require_once "book.php";
 
 if (is_null ($config['cops_mail_configuration']) ||
     !is_array ($config['cops_mail_configuration']) ||
@@ -57,10 +57,10 @@ $mail->Subject = 'Sent by COPS';
 $mail->Body    = 'Sent by COPS';
 
 if(!$mail->Send()) {
-   echo 'Message could not be sent.';
+   echo localize ("mail.messagenotsent");
    echo 'Mailer Error: ' . $mail->ErrorInfo;
    exit;
 }
 
-echo 'Message has been sent';
+echo localize ("mail.messagesent");
 

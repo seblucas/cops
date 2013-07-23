@@ -125,5 +125,7 @@
 "customize.filter":"Filtrage via les étiquettes",
 "languages.eng":"Anglais",
 "languages.fra":"Français",
+"mail.messagenotsent":"Le message n'a pas pu être envoyé.",
+"mail.messagesent":"Le message a été envoyé",
 "fin":"fin"
 }
