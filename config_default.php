@@ -124,7 +124,7 @@
     $config['cops_author_split_first_letter'] = "1";  
     
     /*
-     * Enable of Fancyapps (for popups)
+     * Enable the Lightboxes (for popups)
      * 1 : Yes (enable)
      * 0 : No
      */
@@ -180,7 +180,7 @@
      *                                           "address.from"  => "cops@slucas.fr"
      *                                           );
      *
-     * For Gmail :
+     * For Gmail (ssl is mandatory) :
      * $config['cops_mail_configuration'] = array( "smtp.host"     => "smtp.gmail.com",
      *                                           "smtp.username" => "YOUR GMAIL ADRESS",
      *                                           "smtp.password" => "YOUR GMAIL PASSWORD",
