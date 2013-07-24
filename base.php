@@ -752,7 +752,7 @@ class PageCustomize extends Page
         array_push ($this->entryArray, new Entry (localize ("customize.paging"), "", 
                                         $content, "text", 
                                         array ()));
-        $content = '<input type="email" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
+        $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "", 
                                         $content, "text", 
                                         array ()));
