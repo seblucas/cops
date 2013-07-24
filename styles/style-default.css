@@ -55,7 +55,7 @@ a:hover { color:#000; text-decoration: none; }
   margin: 20px auto;
 }
 
-input[type=email] {
+#email {
 width: 300px;
 }
 

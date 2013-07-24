@@ -48,7 +48,10 @@ if (!empty ($config['cops_mail_configuration']["smtp.secure"])) $mail->SMTPSecur
 $mail->From = $config['cops_mail_configuration']["address.from"];
 $mail->FromName = $config['cops_title_default'];
 
-$mail->AddAddress($emailDest);
+foreach (explode (";", $emailDest) as $emailAddress) {
+    if (empty ($emailAddress)) { continue; }
+    $mail->AddAddress($emailAddress);
+}
 
 $mail->AddAttachment($data->getLocalPath ());
 
