@@ -91,7 +91,7 @@
      * The two first will be displayed in book entries
      * The other only appear in book detail
      */
-    $config['cops_prefered_format'] = array ("EPUB", "PDF", "AZW3", "MOBI", "CBR", "CBZ");
+    $config['cops_prefered_format'] = array ("EPUB", "PDF", "AZW3", "AZW", "MOBI", "CBR", "CBZ");
     
     /*
      * use URL rewriting for downloading of ebook in HTML catalog
@@ -188,12 +188,7 @@
      *                                           "address.from"  => "cops@slucas.fr"
      *                                           );
      */
-    $config['cops_mail_configuration'] = array( "smtp.host"     => "smtp.free.fr",
-                                                "smtp.username" => "",
-                                                "smtp.password" => "",
-                                                "smtp.secure"   => "",
-                                                "address.from"  => "cops@slucas.fr"
-                                                );
+    $config['cops_mail_configuration'] = NULL;
                                                 
     /*
      * Use filter in HTML catalog
