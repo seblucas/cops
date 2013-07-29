@@ -309,6 +309,11 @@ function link_Clicked (event) {
     event.preventDefault();
     var url = currentLink.attr('href');
     
+    if ($(".mfp-ready").length)
+    {
+        $.magnificPopup.close();
+    }
+    
     // The bookdetail / about should be displayed in a lightbox
     if (getCurrentOption ("use_fancyapps") === "1" && 
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
