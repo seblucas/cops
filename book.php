@@ -135,6 +135,7 @@ class Book extends Base {
                       "authorsName" => $this->getAuthorsName (),
                       "tagsName" => $this->getTagsName (),
                       "seriesName" => $sn,
+                      "seriesIndex" => $this->seriesIndex,
                       "seriesCompleteName" => $scn,
                       "seriesurl" => $su);  
     

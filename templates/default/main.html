@@ -38,7 +38,7 @@
                 </h2>
                 <h4>{{=it.const.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlEscape (entry.book.authorsName)}}</span><br />
                 {{? entry.book.tagsName != ""}}<h4>{{=it.const.i18n.tagsTitle}} : </h4><span class="se">{{=htmlEscape (entry.book.tagsName)}}</span><br />{{?}}
-                {{? entry.book.seriesName != ""}}<h4>{{=it.const.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlEscape (entry.book.seriesName)}}</span><br />{{?}}
+                {{? entry.book.seriesName != ""}}<h4>{{=it.const.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlEscape (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span><br />{{?}}
             </div></a>
         </article>
     {{?}}
