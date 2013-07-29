@@ -227,7 +227,7 @@ class Book extends Base {
         $result->execute (array ($this->id));
         while ($post = $result->fetchObject ())
         {
-            array_push ($lang, localize("languages.".$post->lang_code));
+            array_push ($lang, Language::getLanguageString($post->lang_code));
         }
         return implode (", ", $lang);
     }

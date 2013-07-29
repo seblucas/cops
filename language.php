@@ -26,6 +26,14 @@ class language extends Base {
     public function getEntryId () {
         return self::ALL_LANGUAGES_ID.":".$this->id;
     }
+    
+    public static function getLanguageString ($code) {
+        $string = localize("languages.".$code);
+        if (preg_match ("/^languages/", $string)) {
+            return $code;
+        }
+        return $string;
+    }
 
     public static function getCount() {
         $nLanguages = parent::getDb ()->query('select count(*) from languages')->fetchColumn();
@@ -40,7 +48,7 @@ class language extends Base {
         $result = parent::getDb ()->prepare('select id, lang_code  from languages where id = ?');
         $result->execute (array ($languageId));
         if ($post = $result->fetchObject ()) {
-            return new Language ($post->id, localize("languages.".$post->lang_code));
+            return new Language ($post->id, Language::getLanguageString ($post->lang_code));
         }
         return NULL;
     }
@@ -57,7 +65,7 @@ order by languages.lang_code');
         while ($post = $result->fetchObject ())
         {
             $language = new Language ($post->id, $post->lang_code);
-            array_push ($entryArray, new Entry (localize("languages.".$language->lang_code), $language->getEntryId (), 
+            array_push ($entryArray, new Entry (Language::getLanguageString ($language->lang_code), $language->getEntryId (), 
                 str_format (localize("bookword", $post->count), $post->count), "text non", 
                 array ( new LinkNavigation ($language->getUri ()))));
         }

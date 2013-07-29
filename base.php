@@ -169,7 +169,10 @@ function localize($phrase, $count=-1) {
             $translations = array_merge ($translations_en, $translations);
         }
     }
-    return $translations[$phrase];
+    if (array_key_exists ($phrase, $translations)) {
+        return $translations[$phrase];
+    }
+    return $phrase;
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
