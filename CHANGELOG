@@ -1,3 +1,9 @@
+0.6.1 - 20130730
+  * Properly close the lightbox when clicking in a link. Reported by le_.
+  * Fix the book by languages list when the language is not found in the resources. Reported by le_.
+  * Fix the string for Portuguese. Reported by le_.
+  * Add again the series Index in the book list. Reported by fatzgenfatz.
+
 0.6.0 - 20130724
   * COPS HTML catalog now use templated client side rendering. You can build your own template if you want. Should be a lot faster.
   * Fancybox has been replaced by Magnific Popup, it seems faster.
