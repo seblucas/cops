@@ -33,6 +33,13 @@
 ?>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="./icons/icon57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="./icons/icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="./icons/icon114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="./icons/icon144.png" />
+    
     <title>COPS</title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jQuery/jquery-1.10.2.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jquery-cookie/jquery.cookies.js") ?>"></script>
