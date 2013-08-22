@@ -69,7 +69,7 @@ function sendToMailAddress (component, dataid) {
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
 }
 
-function strformat () {
+function str_format () {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
         var reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -92,7 +92,7 @@ function getCurrentOption (option) {
     return $.cookie (option);
 }
 
-function htmlEscape(str) {
+function htmlspecialchars(str) {
     return String(str)
             .replace(/&/g, '&amp;')
             .replace(/"/g, '&quot;')
@@ -346,7 +346,7 @@ function search_Submitted (event) {
         return;
     }
     event.preventDefault();
-    var url = strformat ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
     navigateTo (url);
 }
 
