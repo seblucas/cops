@@ -196,4 +196,20 @@
      * 0 : No
      */
     $config['cops_html_tag_filter'] = "0";
+    
+    /*
+     * Thumbnails are generated on-the-fly so it can be problematic on servers with slow CPU (Raspberry Pi, Dockstar, Piratebox, ...).
+     * This configuration item allow to customize how thumbnail will be generated
+     * "" : Generate thumbnail (CPU hungry)
+     * "1" : always send the full size image (Network hungry)
+     * any url : Send a constant image as the thumbnail (you can try "images/bookcover.svg")
+     */
+    $config['cops_thumbnail_handling'] = "images/bookcover.svg";
+    
+    /*
+     * Contains a list of user agent for browsers not compatible with client side rendering
+     * For now : Kindle, Sony PRS-T1
+     * This item is used as regular expression so "." will force server side rendering for all devices
+     */
+    $config['cops_server_side_render'] = ".";//"Kindle|EBRD1101";
 
