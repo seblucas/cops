@@ -189,6 +189,8 @@ header h1{
 
 .headright {
     float: right;
+    /*for ios compatibility*/
+    cursor: pointer;
 }
 
 /* =============================================================================
