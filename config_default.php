@@ -211,5 +211,5 @@
      * For now : Kindle, Sony PRS-T1
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
-    $config['cops_server_side_render'] = ".";//"Kindle|EBRD1101";
+    $config['cops_server_side_render'] = "Kindle|EBRD1101";
 
