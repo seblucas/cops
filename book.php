@@ -632,6 +632,11 @@ function getJson ($complete = false) {
                        "use_fancyapps" => $config ["cops_use_fancyapps"],
                        "max_item_per_page" => $config['cops_max_item_per_page'],
                        "html_tag_filter" => $config['cops_html_tag_filter']));
+        if ($config['cops_thumbnail_handling'] == "1") {
+            $out ["const"]["url"]["thumbnailUrl"] = $out ["const"]["url"]["coverUrl"];
+        } else if (!empty ($config['cops_thumbnail_handling'])) {
+            $out ["const"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+        }
    }
 
     $out ["containsBook"] = 0;
