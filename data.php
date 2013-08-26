@@ -131,11 +131,19 @@ class Data extends Base {
                         $height = $config['cops_html_thumbnail_height'];
                     }
                 }
-                $urlParam = addURLParameter($urlParam, "height", $height);
+                if ($config['cops_thumbnail_handling'] != "1") {
+                    $urlParam = addURLParameter($urlParam, "height", $height);
+                }
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
             if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-            return new Link ("fetch.php?" . $urlParam, $mime, $rel, $title);
+            if ($config['cops_thumbnail_handling'] != "1" && 
+                !empty ($config['cops_thumbnail_handling']) && 
+                $rel == Link::OPDS_THUMBNAIL_TYPE) {
+                return new Link ($config['cops_thumbnail_handling'], $mime, $rel, $title);
+            } else {
+                return new Link ("fetch.php?" . $urlParam, $mime, $rel, $title);
+            }
         }
         else
         {

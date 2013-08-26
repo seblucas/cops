@@ -202,9 +202,9 @@
      * This configuration item allow to customize how thumbnail will be generated
      * "" : Generate thumbnail (CPU hungry)
      * "1" : always send the full size image (Network hungry)
-     * any url : Send a constant image as the thumbnail (you can try "images/bookcover.svg")
+     * any url : Send a constant image as the thumbnail (you can try "images/bookcover.png")
      */
-    $config['cops_thumbnail_handling'] = "images/bookcover.svg";
+    $config['cops_thumbnail_handling'] = "";
     
     /*
      * Contains a list of user agent for browsers not compatible with client side rendering
