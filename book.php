@@ -647,7 +647,8 @@ function getJson ($complete = false) {
     $out["abouturl"] = "index.php" . addURLParameter ("?page=16", DB, $database);
     
     if ($page == Base::PAGE_ABOUT) {
-        $out ["fullhtml"] = file_get_contents('about.html');
+        $temp = preg_replace ("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . VERSION . "</h1>", file_get_contents('about.html'));
+        $out ["fullhtml"] = $temp;
     }
     
     $out ["homeurl"] = "index.php";
