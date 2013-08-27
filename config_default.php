@@ -59,7 +59,7 @@
     /*
      * Height of thumbnail image for OPDS
      */
-    $config['cops_opds_thumbnail_height'] = "70";
+    $config['cops_opds_thumbnail_height'] = "140";
     
     /*
      * Height of thumbnail image for HTML
