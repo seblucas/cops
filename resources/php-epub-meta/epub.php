@@ -145,7 +145,7 @@ class EPub {
         $nodes = $this->xpath->query('//opf:spine/opf:itemref');
         foreach($nodes as $node){
             $idref =  $node->getAttribute('idref');
-            $spine[] = $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href');
+            $spine[] = str_replace ("/", "-SLASH-", $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href'));
         }
         return $spine;
     }
@@ -153,8 +153,9 @@ class EPub {
     /**
      * Get the component content
      */
-    public function component($comp) {
-        $path = dirname($this->meta).'/'.$comp;
+    public function component($comp, $elementPath) {
+        $path = str_replace ("-SLASH-", "/", $comp);
+        $path = $this->getFullPath ($path, $elementPath);
         if (!$this->zip->FileExists($path)) {
             throw new Exception ("Unable to find " . $path);
         }
@@ -167,6 +168,7 @@ class EPub {
      * Get the component content type
      */
     public function componentContentType($comp) {
+        $comp = str_replace ("-SLASH-", "/", $comp);
         return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
     }
 
@@ -181,6 +183,7 @@ class EPub {
         foreach($nodes as $node){
             $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
             $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
+            $src = str_replace ("/", "-SLASH-", $src);
             $contents[] =  array("title" => $title, "src" => $src);
         }
         return $contents;
