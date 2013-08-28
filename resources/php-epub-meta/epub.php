@@ -5,11 +5,11 @@
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Sébastien Lucas <sebastien@slucas.fr>
  */
-
+ 
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
 
 define ("METADATA_FILE", "META-INF/container.xml");
-
+ 
 class EPub {
     public $xml; //FIXME change to protected, later
     public $toc;
@@ -26,13 +26,12 @@ class EPub {
      * Constructor
      *
      * @param string $file path to epub file to work on
-     * @param string $zipClass class to handle zip
      * @throws Exception if metadata could not be loaded
      */
-    public function __construct($file, $zipClass = 'clsTbsZip'){
+    public function __construct($file){
         // open file
         $this->file = $file;
-        $this->zip = new $zipClass();
+        $this->zip = new clsTbsZip();
         if(!$this->zip->Open($this->file)){
             throw new Exception('Failed to read epub file');
         }
@@ -41,7 +40,7 @@ class EPub {
         if (!$this->zip->FileExists(METADATA_FILE)) {
             throw new Exception ("Unable to find metadata.xml");
         }
-
+        
         $data = $this->zip->FileRead(METADATA_FILE);
         if($data == false){
             throw new Exception('Failed to access epub container data');
@@ -57,7 +56,7 @@ class EPub {
         if (!$this->zip->FileExists($this->meta)) {
             throw new Exception ("Unable to find " . $this->meta);
         }
-
+        
         $data = $this->zip->FileRead($this->meta);
         if(!$data){
             throw new Exception('Failed to access epub metadata');
@@ -68,24 +67,24 @@ class EPub {
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
-
+    
     public function initSpineComponent ()
     {
         $spine = $this->xpath->query('//opf:spine')->item(0);
         $tocid = $spine->getAttribute('toc');
         $tochref = $this->xpath->query("//opf:manifest/opf:item[@id='$tocid']")->item(0)->attr('href');
-        $tocpath = dirname($this->meta).'/'.$tochref;
+        $tocpath = $this->getFullPath ($tochref); 
         // read epub toc
         if (!$this->zip->FileExists($tocpath)) {
             throw new Exception ("Unable to find " . $tocpath);
         }
-
+        
         $data = $this->zip->FileRead($tocpath);
         $this->toc =  new DOMDocument();
         $this->toc->registerNodeClass('DOMElement','EPubDOMElement');
         $this->toc->loadXML($data);
         $this->toc_xpath = new EPubDOMXPath($this->toc);
-        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI);
+        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI); 
         $this->toc_xpath->registerNamespace('x', $rootNamespace);
     }
 
@@ -95,7 +94,7 @@ class EPub {
     public function file(){
         return $this->file;
     }
-
+    
     /**
      * Close the epub file
      */
@@ -124,7 +123,7 @@ class EPub {
         $this->download ();
         $this->zip->close();
     }
-
+    
     /**
      * Get the updated epub
      */
@@ -150,7 +149,7 @@ class EPub {
         }
         return $spine;
     }
-
+    
     /**
      * Get the component content
      */
@@ -159,11 +158,11 @@ class EPub {
         if (!$this->zip->FileExists($path)) {
             throw new Exception ("Unable to find " . $path);
         }
-
+        
         $data = $this->zip->FileRead($path);
         return $data;
     }
-
+    
     /**
      * Get the component content type
      */
@@ -186,7 +185,7 @@ class EPub {
         }
         return $contents;
     }
-
+    
     /**
      * Get or set the book author(s)
      *
@@ -301,61 +300,6 @@ class EPub {
     }
 
     /**
-     * Set or get the book's Unique Identifier
-     *
-     * @param string Unique identifier
-     */
-    public function Uuid($uuid = false)
-    {
-        $nodes = $this->xpath->query('/opf:package');
-        if ($nodes->length !== 1) {
-            $error = sprintf('Cannot find ebook identifier');
-            throw new Exception($error);
-        }
-        $identifier = $nodes->item(0)->attr('unique-identifier');
-
-        $res = $this->getset('dc:identifier', $uuid, 'id', $identifier);
-
-        return $res;
-    }
-
-    /**
-     * Set or get the book's creation date
-     *
-     * @param string Date eg: 2012-05-19T12:54:25Z
-     */
-    public function CreationDate($date = false)
-    {
-        $res = $this->getset('dc:date', $date, 'opf:event', 'creation');
-
-        return $res;
-    }
-
-    /**
-     * Set or get the book's modification date
-     *
-     * @param string Date eg: 2012-05-19T12:54:25Z
-     */
-    public function ModificationDate($date = false)
-    {
-        $res = $this->getset('dc:date', $date, 'opf:event', 'modification');
-
-        return $res;
-    }
-
-    /**
-     * Set or get the book's URI
-     *
-     * @param string URI
-     */
-    public function Uri($uri = false)
-    {
-        $res = $this->getset('dc:identifier', $uri, 'opf:scheme', 'URI');
-
-        return $res;
-    }
-
-    /**
      * Set or get the book's ISBN number
      *
      * @param string $isbn
@@ -381,7 +325,7 @@ class EPub {
     public function Amazon($amazon=false){
         return $this->getset('dc:identifier',$amazon,'opf:scheme','AMAZON');
     }
-
+    
     /**
      * Set or get the Calibre UUID of the book
      *
@@ -399,7 +343,7 @@ class EPub {
     public function Serie($serie=false){
         return $this->getset('opf:meta',$serie,'name','cops:series','content');
     }
-
+    
     /**
      * Set or get the Serie Index of the book
      *
@@ -408,7 +352,7 @@ class EPub {
     public function SerieIndex($serieIndex=false){
         return $this->getset('opf:meta',$serieIndex,'name','cops:series_index','content');
     }
-
+    
     /**
      * Set or get the book's subjects (aka. tags)
      *
@@ -529,11 +473,11 @@ class EPub {
             'found' => $path
         );
     }
-
+    
     public function getCoverItem () {
         $nodes = $this->xpath->query('//opf:metadata/opf:meta[@name="cover"]');
         if(!$nodes->length) return NULL;
-
+        
         $coverid = (String) $nodes->item(0)->attr('opf:content');
         if(!$coverid) return NULL;
 
@@ -542,14 +486,61 @@ class EPub {
 
         return $nodes->item(0);
     }
+    
+    public function Combine($a, $b)
+	{
+		$isAbsolute = false;
+		if ($a[0] == "/")
+			$isAbsolute = true;
 
+		if ($b[0] == "/")
+			throw new InvalidArgumentException("Second path part must not stwar with " . $m_Separator);
+	
+		$splittedA = split("/", $a);
+		$splittedB = split("/", $b);
+
+		$pathParts = array();
+		$mergedPath = array_merge($splittedA, $splittedB);
+
+		foreach($mergedPath as $item)
+		{
+			if ($item == null || $item == "" || $item == ".")
+				continue;
+
+			if ($item == "..")
+			{
+				array_pop($pathParts);
+				continue;
+			}
+
+			array_push($pathParts, $item);
+		}
+
+		$path = implode("/", $pathParts);
+		if ($isAbsolute)
+			return("/" . $path);
+		else
+			return($path);
+	}
+    
+    private function getFullPath ($file, $context = NULL) {
+        $path = dirname('/'.$this->meta).'/'.$file;
+        $path = ltrim($path,'\\');
+        $path = ltrim($path,'/');
+        if (!empty ($context)) {
+            $path = $this->combine (dirname ($path), $context);
+        }
+        error_log ("FullPath : $path ($file / $context)");
+        return $path;
+    }
+    
     public function updateForKepub () {
         $item = $this->getCoverItem ();
         if (!is_null ($item)) {
             $item->attr('opf:properties', 'cover-image');
         }
     }
-
+    
     public function Cover2($path=false, $mime=false){
         $hascover = true;
         $item = $this->getCoverItem ();
@@ -562,7 +553,7 @@ class EPub {
             $this->coverpath = ltrim($this->coverpath,'\\');
             $this->coverpath = ltrim($this->coverpath,'/');
         }
-
+        
         // set cover
         if($path !== false){
             if (!$hascover) return; // TODO For now only update
@@ -576,7 +567,7 @@ class EPub {
 
             $this->reparse();
         }
-
+        
         if (!$hascover) return $this->no_cover();
     }
 
