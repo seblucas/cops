@@ -6,7 +6,7 @@ require_once ("resources/php-epub-meta/epub.php");
 
 header ("Content-Type: text/html;charset=utf-8");
 
-$book = new EPub ("c:/Temp/Alice.epub");
+$book = new EPub ("c:/Temp/Phare.epub");
 $book->initSpineComponent ();
 
 ?>
