@@ -37,9 +37,14 @@ try {
         if (preg_match ("/^#/", $path)) {
             return $path;
         }
+        $hash = "";
+        if (preg_match ("/^(.+)#(.+)$/", $path, $matches)) {
+            $path = $matches [1];
+            $hash = "#" . $matches [2];
+        }
         $comp = $book->getComponentName ($component, $path);
         if (!$comp) return "#";
-        return "$method'epubfs.php?{$add}comp=$comp'";
+        return "$method'epubfs.php?{$add}comp={$comp}{$hash}'";
     };
     
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
