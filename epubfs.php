@@ -46,6 +46,10 @@ try {
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
     
+    $expires = 60*60*24*14;
+    header("Pragma: public");
+    header("Cache-Control: maxage=".$expires);
+    header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
     header ("Content-Type: " . $book->componentContentType($component));
     echo $data;
 }
