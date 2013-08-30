@@ -171,6 +171,12 @@ class EPub {
             error_log ("Unable to find " . $path);
             return false;
         }
+        $ref = dirname('/'.$this->meta);
+        $ref = ltrim($ref,'\\');
+        $ref = ltrim($ref,'/');
+        if (strlen ($ref) > 0) {
+            $path = str_replace ($ref . "/", "", $path);
+        }
         return str_replace ("/", "-SLASH-", $path);
     }
     
