@@ -42,14 +42,19 @@ try {
             $path = $matches [1];
             $hash = "#" . $matches [2];
         }
+        $end = "";
+        if (preg_match ("/^src:/", $method)) {
+            $end = ")";
+        }
         $comp = $book->getComponentName ($component, $path);
         if (!$comp) return "#";
-        return "$method'epubfs.php?{$add}comp={$comp}{$hash}'";
+        return "$method'epubfs.php?{$add}comp={$comp}{$hash}'{$end}";
     };
     
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
+    $data = preg_replace_callback ("/(src:\s+url\()(.*?)\)/", $callback, $data);
     
     $expires = 60*60*24*14;
     header("Pragma: public");
