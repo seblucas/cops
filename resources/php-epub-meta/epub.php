@@ -182,6 +182,13 @@ class EPub {
         return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
     }
 
+    private function getNavPointDetail ($node) {
+        $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
+        $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
+        $src = str_replace ("/", "-SLASH-", $src);
+        return array("title" => $title, "src" => $src);
+    }
+    
     /**
      * Get the Epub content (TOC) as an array
      *
@@ -191,17 +198,11 @@ class EPub {
         $contents = array();
         $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
         foreach($nodes as $node){
-            $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
-            $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
-            $src = str_replace ("/", "-SLASH-", $src);
-            $contents[] =  array("title" => $title, "src" => $src);
+            $contents[] = $this->getNavPointDetail ($node);
             
             $insidenodes = $this->toc_xpath->query('x:navPoint', $node);
             foreach($insidenodes as $insidenode){
-                $title = $this->toc_xpath->query('x:navLabel/x:text', $insidenode)->item(0)->nodeValue;
-                $src = $this->toc_xpath->query('x:content', $insidenode)->item(0)->attr('src');
-                $src = str_replace ("/", "-SLASH-", $src);
-                $contents[] =  array("title" => $title, "src" => $src);
+                $contents[] = $this->getNavPointDetail ($insidenode);
             }
         }
         return $contents;
