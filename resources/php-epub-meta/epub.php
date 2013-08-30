@@ -194,6 +194,14 @@ class EPub {
             $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
             $src = str_replace ("/", "-SLASH-", $src);
             $contents[] =  array("title" => $title, "src" => $src);
+            
+            $insidenodes = $this->toc_xpath->query('x:navPoint', $node);
+            foreach($insidenodes as $insidenode){
+                $title = $this->toc_xpath->query('x:navLabel/x:text', $insidenode)->item(0)->nodeValue;
+                $src = $this->toc_xpath->query('x:content', $insidenode)->item(0)->attr('src');
+                $src = str_replace ("/", "-SLASH-", $src);
+                $contents[] =  array("title" => $title, "src" => $src);
+            }
         }
         return $contents;
     }
