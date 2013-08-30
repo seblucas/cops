@@ -107,7 +107,7 @@ body {
   top: 1%;
   left: 6%;
   cursor: pointer;
-  padding-left: 0;
+  padding: 0;
 }
 
 .chapterTitle {
