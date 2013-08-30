@@ -153,15 +153,24 @@ class EPub {
     /**
      * Get the component content
      */
-    public function component($comp, $elementPath) {
+    public function component($comp) {
         $path = str_replace ("-SLASH-", "/", $comp);
-        $path = $this->getFullPath ($path, $elementPath);
+        $path = $this->getFullPath ($path);
         if (!$this->zip->FileExists($path)) {
             throw new Exception ("Unable to find " . $path);
         }
         
         $data = $this->zip->FileRead($path);
         return $data;
+    }
+    
+    public function getComponentName ($comp, $elementPath) {
+        $path = str_replace ("-SLASH-", "/", $comp);
+        $path = $this->getFullPath ($path, $elementPath);
+        if (!$this->zip->FileExists($path)) {
+            throw new Exception ("Unable to find " . $path);
+        }
+        return str_replace ("/", "-SLASH-", $path);
     }
     
     /**
@@ -533,7 +542,7 @@ class EPub {
         if (!empty ($context)) {
             $path = $this->combine (dirname ($path), $context);
         }
-        error_log ("FullPath : $path ($file / $context)");
+        //error_log ("FullPath : $path ($file / $context)");
         return $path;
     }
     
