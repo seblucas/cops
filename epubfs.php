@@ -38,6 +38,7 @@ try {
             return $path;
         }
         $comp = $book->getComponentName ($component, $path);
+        if (!$comp) return "#";
         return "$method'epubfs.php?{$add}comp=$comp'";
     };
     
