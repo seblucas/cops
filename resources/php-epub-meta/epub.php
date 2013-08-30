@@ -168,7 +168,8 @@ class EPub {
         $path = str_replace ("-SLASH-", "/", $comp);
         $path = $this->getFullPath ($path, $elementPath);
         if (!$this->zip->FileExists($path)) {
-            throw new Exception ("Unable to find " . $path);
+            error_log ("Unable to find " . $path);
+            return false;
         }
         return str_replace ("/", "-SLASH-", $path);
     }
