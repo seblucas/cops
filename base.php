@@ -6,9 +6,14 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.6.1");
+define ("VERSION", "0.6.2");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
+ 
+function useServerSideRendering () {
+    global $config;
+    return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
+}
  
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {

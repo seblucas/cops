@@ -15,24 +15,24 @@
         <br />
         {{~}}
     </h2>
-    <h1><a title="{{=it.const.i18n.permalinkAlt}}" rel="bookmark" href="{{=strformat (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlEscape (it.title)}}</h1>
+    <h1><a title="{{=it.const.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.const.i18n.authorsTitle}}: </h3>
-        {{~it.book.authors:author:j}}
-        {{? j > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlEscape (author.name)}}</a>
+        {{~it.book.authors:author:i}}
+        {{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
         {{~}}
     </p>
     {{? it.book.tagsName != ""}}
     <p class="popupless">
         <h3>{{=it.const.i18n.tagsTitle}}: </h3>
-        {{~it.book.tags:tag:k}}
-        {{? k > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlEscape (tag.name)}}</a>
+        {{~it.book.tags:tag:i}}
+        {{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>
         {{~}}
     </p>
     {{?}}
     {{? it.book.seriesName != ""}}
     <p class="popupless">
-        <h3><a href="{{=it.book.seriesurl}}">{{=it.const.i18n.seriesTitle}}</a> : </h3>{{=htmlEscape (it.book.seriesCompleteName)}}
+        <h3><a href="{{=it.book.seriesurl}}">{{=it.const.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}

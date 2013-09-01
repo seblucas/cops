@@ -1,3 +1,8 @@
+0.6.2 - 
+  * Added server side rendering for devices like PRS-T2 / Kindle.
+  * Added a configuration item to tweak how thumbnail are handled.
+  * 
+  
 0.6.1 - 20130730
   * Properly close the lightbox when clicking in a link. Reported by le_.
   * Fix the book by languages list when the language is not found in the resources. Reported by le_.
