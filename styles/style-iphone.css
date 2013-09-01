@@ -9,13 +9,14 @@
     font-smoothing:antialiased;
     text-rendering:optimizeLegibility;
 }
-
-html { font-size: 100%; -webkit-text-size-adjust: 100%; 
-                          -ms-text-size-adjust: 100%; }
+/* reduction des tailles de police et taille fixe en px*/
+/*html { font-size: 100%; -webkit-text-size-adjust: 100%; 
+                          -ms-text-size-adjust: 100%; }*/
 
 body {
     font-family: 'Open Sans', sans-serif;
-    line-height:18px;
+    /*line-height:18px;*/
+    font-size: 12px;
     color: #1c1c1c; /* Lighter on the eyes than #000 Black */
     margin: 0px; background: #cccccc; background-size: cover;
 }
@@ -32,11 +33,11 @@ img {
    ========================================================================== */
 h1,h2,h3,h4,h5,h6 { font-weight: bold; margin:0; padding:0;}
 /*h1 see mediaqueries*/ 
-h2 {font-size: 1.2em;}
-h3 {font-size: 1.1em;}
-h4 {font-size: 1.0em; }
-h5 {font-size: 0.83em;}
-h6 {font-size: 0.75em;}
+h2 {font-size: 13px;}
+h3 {font-size: 12px;}
+h4 {font-size: 12px;}
+h5 {font-size: 10px;}
+h6 {font-size: 10px;}
 
 a:hover, a:focus, a:active { outline: none; }
 a { color: #000066; font-weight: 800; text-decoration: none;}
@@ -47,6 +48,10 @@ a:hover { color:#000; text-decoration: none; }
 .link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
 
 .mfp-content .bookpopup {
+/* Taille minimum du detail du livre en popup
+pour que la pochette ne depasse pas
+(pas seulemet pour iphone) */
+  min-height: 210px;
   position: relative;
   background: #FFF;
   padding: 20px;
@@ -105,22 +110,24 @@ border:0;
 /* =============================================================================
    Main container stuff goes here and other globals
    ========================================================================== */
+/*Suppression des arrondis*/
 .container{
- background: #414141; border:1px solid #000; border-radius:10px;
+ background: #414141; border:1px solid #000; /*border-radius:10px;*/
     max-width:800px;width:95%;margin:0 auto;position:relative; }
 
 /* =============================================================================
    Header stuff goes here
    ========================================================================== */
+/*Suppression ombrage (bug avec formulaire recherche)*/
 header {
     clear:both; 
     color:white; 
     text-align:center; 
     text-transform:uppercase; 
     display:block;
-    box-shadow:inset 0px -5px 8px #000000;
+    /*box-shadow:inset 0px -5px 8px #000000;*/
     min-height:70px;
-    border-radius: 10px 10px 0px 0px; 
+    /*border-radius: 10px 10px 0px 0px;*/
 }
 
 .hicon{
@@ -225,9 +232,10 @@ max-width:800px;
     height: 82px;
 }
 
+/*modification des marges*/
 .bookpopup .cover {
     float:left;
-    margin: 4px 10px 4px 4px;
+    margin: 27px 4px 4px 0px;
     width: 100px;
     height: 150px;
 }
@@ -238,10 +246,19 @@ max-width:800px;
     color: white;
 }
 
+/*bouton de donwload en haut dans book detail*/
 .download {
-    float: right;
+    /*float: right;*/
     line-height:40px;
     text-align: right;
+    /*margin: 6px;*/
+}
+
+.bookpopup .download {
+    margin: -12px 30px -2px 4px;
+}
+.books .download {
+    float: right;
     margin: 6px;
 }
 
@@ -295,7 +312,7 @@ footer
 clear:both;
 color:white;
 box-shadow:inset 0px 5px 8px #000000;
-border-radius: 0px 0px 10px 10px; 
+/*border-radius: 0px 0px 10px 10px;*/
 height:32px;
 }
 
@@ -344,7 +361,14 @@ overflow: hidden;
 {
 vertical-align: middle;
 width: 100%;
-margin: 3px;
+height: 20px;
+/*margin: 3px;*/
+margin-left: 3px;
+margin-bottom: 3px;
+}
+
+#tool .hicon32{
+    margin-top: -5px;
 }
 
 .stop select
@@ -381,7 +405,7 @@ h1 {font-size: 1.2em;}
 /* 480px and greater */
 @media only screen and (min-width: 480px) {
 h1 {font-size: 1.5em;}
-body {  font-size: 1em;/*12px/16px */
+body {  /*font-size: 1em; 12px/16px */
             font-weight:450; /* Better supported than 'lighter' attribute */
     }
 }
@@ -391,7 +415,7 @@ body {  font-size: 1em;/*12px/16px */
 h1 {font-size: 2em; line-height: 1em;}
 .container { box-shadow:0 0 20px #000; }
 body {  margin: 5px; 
-            font-size: 0.85em;/*12px/16px */
+            /*font-size: 0.85em; 12px/16px */
             font-weight:400; /* Better supported than 'lighter' attribute */
     }
 }
