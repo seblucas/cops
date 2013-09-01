@@ -11,7 +11,7 @@
     <article>
         <div class="frontpage">
             {{? entry.navlink != "#"}}<a href="{{=entry.navlink}}">{{?}}
-                <h2>{{=htmlEscape (entry.title)}}</h2>
+                <h2>{{=htmlspecialchars (entry.title)}}</h2>
                 <h4>{{=entry.content}}</h4> 
             {{? entry.navlink != "#"}}</a>{{?}}
         </div>
@@ -20,8 +20,8 @@
     <article class="books">
             <span class="cover">
             {{? entry.book.hasCover == 1}}
-                <a data-fancybox-group="group" class="fancycover" href="{{=strformat (it.const.url.coverUrl, entry.book.id, it.databaseId)}}">
-                    <img src="{{=strformat (it.const.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.const.i18n.coverAlt}}" />
+                <a data-fancybox-group="group" class="fancycover" href="{{=str_format (it.const.url.coverUrl, entry.book.id, it.databaseId)}}">
+                    <img src="{{=str_format (it.const.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.const.i18n.coverAlt}}" />
                 </a>
             {{?}}
             </span>
@@ -30,15 +30,15 @@
                  <a href="{{=data.url}}">{{=data.name}}</a><br />
                 {{~}}
             </h2>
-            <a class="fancydetail" href="{{=strformat (it.const.url.detailUrl, entry.book.id, it.databaseId)}}">
+            <a class="fancydetail" href="{{=str_format (it.const.url.detailUrl, entry.book.id, it.databaseId)}}">
             <div class="fullclickpopup">
-                <h2><span class="st">{{=htmlEscape (entry.title)}}</span>
+                <h2><span class="st">{{=htmlspecialchars (entry.title)}}</span>
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}
                 {{? entry.book.rating != ""}}<span class="sr">{{=entry.book.rating}}</span>{{?}}
                 </h2>
-                <h4>{{=it.const.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlEscape (entry.book.authorsName)}}</span><br />
-                {{? entry.book.tagsName != ""}}<h4>{{=it.const.i18n.tagsTitle}} : </h4><span class="se">{{=htmlEscape (entry.book.tagsName)}}</span><br />{{?}}
-                {{? entry.book.seriesName != ""}}<h4>{{=it.const.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlEscape (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span><br />{{?}}
+                <h4>{{=it.const.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span><br />
+                {{? entry.book.tagsName != ""}}<h4>{{=it.const.i18n.tagsTitle}} : </h4><span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span><br />{{?}}
+                {{? entry.book.seriesName != ""}}<h4>{{=it.const.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span><br />{{?}}
             </div></a>
         </article>
     {{?}}
