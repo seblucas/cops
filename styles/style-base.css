@@ -1,0 +1,379 @@
+/* Global Box Sizing and Font-Smoothing */
+*, *:after, *:before {
+    box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-font-smoothing:antialiased;
+    -moz-font-smoothing:antialiased;
+    -o-font-smoothing:antialiased;
+    font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+}
+
+html { font-size: 100%; -webkit-text-size-adjust: 100%; 
+                          -ms-text-size-adjust: 100%; }
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    line-height:18px;
+    color: #1c1c1c; /* Lighter on the eyes than #000 Black */
+    margin: 0px; background: #cccccc; background-size: cover;
+}
+
+img {
+    border: 0px;
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
+
+/* ==========================================================================
+   Typography stuff goes here
+   ========================================================================== */
+h1,h2,h3,h4,h5,h6 { font-weight: bold; margin:0; padding:0;}
+/*h1 see mediaqueries*/ 
+h2 {font-size: 1.2em;}
+h3 {font-size: 1.1em;}
+h4 {font-size: 1.0em; }
+h5 {font-size: 0.83em;}
+h6 {font-size: 0.75em;}
+
+a:hover, a:focus, a:active { outline: none; }
+a { color: #000066; font-weight: 800; text-decoration: none;}
+a:hover { color:#000; text-decoration: none; }
+.frontpage a {display:block; }
+.frontpage a:hover { width: 100%; background-color: #778899;}
+.books:hover { width: 100%; background-color: #778899; }
+.link a:hover { display:inline-block; width: 100%; background-color: #778899;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;}
+
+.mfp-content .bookpopup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 700px;
+  margin: 20px auto;
+}
+
+#email {
+width: 300px;
+}
+
+.filtered {
+display: none;
+}
+
+#filter {
+clear:both;
+}
+
+#filter ul {
+margin: 0;
+padding: 0;
+list-style-type: none;
+text-align: left;
+text-transform:none; 
+}
+
+li {
+display: inline-block;
+padding: .2em 1em;
+margin: 2px;
+color: black;
+background-color: white;
+opacity: 0.5;
+}
+
+.filter-include { 
+    border-left:thick solid blue;
+    opacity: 1;
+}
+
+.filter-exclude { 
+    border-right:thick solid red;
+    opacity: 1;
+}
+
+
+img
+{
+margin:0;
+padding:0;
+border:0;
+}
+
+/* =============================================================================
+   Main container stuff goes here and other globals
+   ========================================================================== */
+.container{
+ background: #414141; border:1px solid #000;
+    max-width:800px;width:95%;margin:0 auto;position:relative; }
+
+/* =============================================================================
+   Header stuff goes here
+   ========================================================================== */
+header {
+    clear:both; 
+    color:white; 
+    text-align:center; 
+    text-transform:uppercase; 
+    display:block;
+    min-height:70px;
+}
+
+.hicon{
+    display:inline-block;
+    color:lightgray;
+    text-align: center;
+    vertical-align: bottom;
+}
+
+.submit {
+    color: lightgray;
+    cursor: pointer;
+    background-color: transparent;
+    background-image: none;
+    border-color: transparent;
+}
+
+.hicon64{
+    font-size: 64px;
+    line-height: 64px;
+    width: 64px;
+    height: 64px;
+}
+
+.hicon32{
+    font-size: 24px;
+    line-height: 32px;
+    width: 32px;
+    height: 32px;
+}
+
+.headleft {
+    float: left;
+}
+
+.headcenter
+{
+float:none;
+margin:auto;
+text-align:center;
+height:70px;
+display:table;
+}
+
+header h1{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    line-height: 100%;
+}
+
+.headright {
+    float: right;
+    /*for ios compatibility*/
+    cursor: pointer;
+}
+
+/* =============================================================================
+   Section and Article stuff goes here
+   ========================================================================== */
+section {
+clear:both;
+background-color: #fff;
+}
+
+article {
+border-bottom: 1px solid black;
+max-width:800px;
+}
+
+/*-------------frontpage article-------------*/
+
+.frontpage h2 {
+    padding: 5px 0 0 5px;
+}
+
+.frontpage h4 {
+    padding: 5px 0 5px 20px;
+     font-style: italic;
+}
+
+/*-------------books article-------------*/
+.books {
+    clear: both;
+    min-height: 90px;
+}
+
+.books .cover {
+    float:left;
+    margin: 4px 10px 4px 4px;
+    width: 60px;
+    height: 82px;
+}
+
+.bookpopup .cover {
+    float:left;
+    margin: 4px 10px 4px 4px;
+    width: 100px;
+    height: 150px;
+}
+
+.cover img {
+    max-width:100%;
+    max-height:100%;
+    color: white;
+}
+
+.download {
+    float: right;
+    line-height:40px;
+    text-align: right;
+    margin: 6px;
+}
+
+.download a {
+    background: darkgray;  
+    color: #EEE;
+    text-decoration : none;
+    font-weight: bold;
+    padding: 5px 10px 5px 10px;
+    text-align: center;
+}
+
+.download img {
+    vertical-align:middle;
+}
+
+.books h4{
+    display: inline;
+    font-style: italic;
+}
+
+/*-------------books popup article-------------*/
+.bookpopup h2{
+    margin: 15px 15px; 
+}
+
+.bookpopup h3{
+    display:inline;  /*Dirty IE Hack*/  zoom: 1;  *display: inline;
+}
+
+.bookpopup h4{
+    border-top: 1px solid black;
+}
+
+.fullclickpopup{
+    display: block;
+}
+
+section .bookpopup{
+    padding: 8px 8px;
+}
+
+/* =============================================================================
+   Footer stuff goes here
+   ========================================================================== */
+footer
+{
+clear:both;
+color:white;
+height:32px;
+}
+
+.footleft
+{
+float:left;
+height:32px;
+}
+
+
+.footright
+{
+float:right;
+height:32px;
+}
+
+.footcenter
+{
+margin:auto;
+text-align:center;
+height:32px;
+display:table;
+font-weight: bold;
+}
+
+.footcenter p, .footcenter a
+{
+display: table-cell;
+vertical-align: middle;
+text-align: center;
+line-height: 100%;
+}
+
+/* =============================================================================
+   Aside stuff goes here
+   ========================================================================== */   
+#tool
+{
+width:100%;
+overflow: hidden;
+}
+
+
+/*-------------Search Aside-------------*/
+#tool input[type=search]
+{
+vertical-align: middle;
+width: 100%;
+margin: 3px;
+}
+
+.stop select
+{
+vertical-align: middle;
+margin: 4px;
+}
+
+#sort
+{
+cursor:pointer;
+}
+
+.stop
+{
+display: block;
+overflow: hidden;
+}
+
+/* =============================================================================
+   Mediaquerie stuff goes here
+   ========================================================================== */
+/* 100px and greater */
+@media only screen and (min-width: 100px) {
+h1 {font-size: 1em;}
+.container { width:100%; }
+}
+   
+/* 320px and greater */
+@media only screen and (min-width: 320px) {
+h1 {font-size: 1.2em;}
+}
+
+/* 480px and greater */
+@media only screen and (min-width: 480px) {
+h1 {font-size: 1.5em;}
+body {  font-size: 1em;/*12px/16px */
+            font-weight:450; /* Better supported than 'lighter' attribute */
+    }
+}
+
+/* 768px and greater */
+@media only screen and (min-width: 768px) {
+h1 {font-size: 2em; line-height: 1em;}
+body {  margin: 5px; 
+            font-size: 0.85em;/*12px/16px */
+            font-weight:400; /* Better supported than 'lighter' attribute */
+    }
+}

@@ -20,7 +20,7 @@
     <article class="books">
             <span class="cover">
             {{? entry.book.hasCover == 1}}
-                <a data-fancybox-group="group" class="fancycover" href="{{=str_format (it.const.url.coverUrl, entry.book.id, it.databaseId)}}">
+                <a class="fancycover" href="{{=str_format (it.const.url.coverUrl, entry.book.id, it.databaseId)}}">
                     <img src="{{=str_format (it.const.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.const.i18n.coverAlt}}" />
                 </a>
             {{?}}
