@@ -10,24 +10,25 @@
 class doT {
     public $functionBody;
     private $functionCode;
-    private $def;
+    public $def;
     
-    private function resolveDefs ($block) {
-        return preg_replace_callback ("/\{\{#([\s\S]+?)\}\}/", function ($m) {
+    public function resolveDefs ($block) {
+        $me = $this;
+        return preg_replace_callback ("/\{\{#([\s\S]+?)\}\}/", function ($m) use ($me) {
             $d = $m[1];
             $d = substr ($d, 4);
-            if (!array_key_exists ($d, $this->def)) {
+            if (!array_key_exists ($d, $me->def)) {
                 return "";
             }
-            if (preg_match ("/\{\{#([\s\S]+?)\}\}/", $this->def [$d])) {
-                return $this->resolveDefs ($this->def [$d], $this->def);
+            if (preg_match ("/\{\{#([\s\S]+?)\}\}/", $me->def [$d])) {
+                return $me->resolveDefs ($me->def [$d], $me->def);
             } else {
-                return $this->def [$d];
+                return $me->def [$d];
             }
         }, $block);
     }
     
-    private function handleDotNotation ($string) {
+    public function handleDotNotation ($string) {
         $out = preg_replace ("/(\w+)\.(.*?)([\s,\)])/", "\$$1[\"$2\"]$3", $string);
         $out = preg_replace ("/(\w+)\.([\w\.]*?)$/", "\$$1[\"$2\"] ", $out);
         $out = preg_replace ("/\./", '"]["', $out);
@@ -38,6 +39,7 @@ class doT {
     }
     
     public function template ($string, $def) {
+        $me = $this;
         $func = preg_replace ("/'|\\\/", "\\$&", $string);
 
         // deps
@@ -48,34 +50,34 @@ class doT {
             $func = $this->resolveDefs ($func);
         }
         // interpolate
-        $func = preg_replace_callback ("/\{\{=([\s\S]+?)\}\}/", function ($m) {
-            return "' . " . $this->handleDotNotation ($m[1]) . " . '";
+        $func = preg_replace_callback ("/\{\{=([\s\S]+?)\}\}/", function ($m) use ($me) {
+            return "' . " . $me->handleDotNotation ($m[1]) . " . '";
         }, $func);
         // Conditional
-        $func = preg_replace_callback ("/\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}/", function ($m) {
+        $func = preg_replace_callback ("/\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}/", function ($m) use ($me) {
             $elsecase = $m[1];
             $code = $m[2];
             if ($elsecase) {
                 if ($code) {
-                    return "';} else if (" . $this->handleDotNotation ($code) . ") { $" . "out.='";
+                    return "';} else if (" . $me->handleDotNotation ($code) . ") { $" . "out.='";
                 } else {
                     return "';} else { $" . "out.='";
                 }
             } else {
                 if ($code) {
-                    return "'; if (" . $this->handleDotNotation ($code) . ") { $" . "out.='";
+                    return "'; if (" . $me->handleDotNotation ($code) . ") { $" . "out.='";
                 } else {
                     return "';} $" . "out.='";
                 }
             }
         }, $func);
         // Iterate
-        $func = preg_replace_callback ("/\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})/", function ($m) {
+        $func = preg_replace_callback ("/\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})/", function ($m) use ($me) {
             if (count($m) > 1) {
                 $iterate = $m[1];
                 $vname = $m[2];
                 $iname = $m[3];
-                $iterate = $this->handleDotNotation ($iterate); 
+                $iterate = $me->handleDotNotation ($iterate); 
                 return "'; for (\$$iname = 0; \$$iname < count($iterate); \$$iname++) { \$$vname = $iterate [\$$iname]; \$out.='";
             } else {
                 return "';} $" . "out.='";
