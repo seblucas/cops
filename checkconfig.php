@@ -83,6 +83,18 @@
             ?>
             </h4>
         </article>
+        <article class="frontpage">
+            <h2>Check if the rendering will be done on client side or server side</h2>
+            <h4>
+            <?php 
+            if (useServerSideRendering ()) {
+                echo "Server side rendering";
+            } else {
+                echo "Client side rendering";
+            }
+            ?>
+            </h4>
+        </article>
 <?php 
 $i = 0;
 foreach (Base::getDbList () as $name => $database) { 
