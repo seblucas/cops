@@ -208,8 +208,8 @@
     
     /*
      * Contains a list of user agent for browsers not compatible with client side rendering
-     * For now : Kindle, Sony PRS-T1, Sony PRS-T2
+     * For now : Kindle, Sony PRS-T1, Sony PRS-T2, All Cybook devices (maybe a little extreme).
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
-    $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201";
+    $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201|cybook";
 
