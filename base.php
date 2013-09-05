@@ -751,11 +751,12 @@ class PageCustomize extends Page
         array_push ($this->entryArray, new Entry (localize ("customize.style"), "", 
                                         $content, "text", 
                                         array ()));
-        
-        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
-        array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "", 
-                                        $content, "text", 
-                                        array ()));
+        if (!useServerSideRendering ()) {
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
+            array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "", 
+                                            $content, "text", 
+                                            array ()));
+        }
         $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push ($this->entryArray, new Entry (localize ("customize.paging"), "", 
                                         $content, "text", 

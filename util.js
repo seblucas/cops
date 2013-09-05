@@ -4,7 +4,9 @@
 
 var templatePage, templateBookDetail, templateMain, currentData, before, filterList;
 
-var cache = new LRUCache(30);
+if (typeof LRUCache!='undefined') {
+    var cache = new LRUCache(30);
+}
 
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
