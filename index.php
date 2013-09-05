@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
 <?php
 /**
  * COPS (Calibre OPDS PHP Server) HTML main script
@@ -31,7 +29,8 @@
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
-?>
+?><!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
