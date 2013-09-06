@@ -60,7 +60,7 @@ function retourMail(data, textStatus, jqXHR ) {
 function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
-        email = window.prompt (currentData.const.i18n.customizeEmail, "");
+        email = window.prompt (currentData.c.i18n.customizeEmail, "");
         $.cookie ('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
@@ -87,8 +87,8 @@ function isDefined(x) {
 
 function getCurrentOption (option) {
     if (!$.cookie (option)) {
-        if (currentData && currentData.const && currentData.const.config && currentData.const.config [option]) {
-            return currentData.const.config [option];
+        if (currentData && currentData.c && currentData.c.config && currentData.c.config [option]) {
+            return currentData.c.config [option];
         }
     }
     return $.cookie (option);
@@ -218,6 +218,7 @@ function handleFilterEvents () {
  */
 
 function navigateTo (url) {
+    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
     var cachedData = cache.get (jsonurl);
@@ -236,7 +237,7 @@ function navigateTo (url) {
 function updatePage (data) {
     var result;
     filterList = {};
-    data ["const"] = currentData ["const"];
+    data ["c"] = currentData ["c"];
     if (false && $("section").length && currentData.isPaginated === 0 &&  data.isPaginated === 0) {
         // Partial update (for now disabled)
         debug_log ("Partial update");
@@ -322,7 +323,7 @@ function link_Clicked (event) {
         before = new Date ();
         var jsonurl = url.replace ("index", "getJSON");
         $.getJSON(jsonurl, function(data) {
-            data ["const"] = currentData ["const"];
+            data ["c"] = currentData ["c"];
             var detail = "";
             if (data.page === "16") {
                 detail = data.fullhtml;

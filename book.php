@@ -604,7 +604,7 @@ function getJson ($complete = false) {
         $out ["currentPage"] = $currentPage->n;
     }
     if (!is_null (getURLParam ("complete")) || $complete) { 
-        $out ["const"] = array ("version" => VERSION, "i18n" => array (
+        $out ["c"] = array ("version" => VERSION, "i18n" => array (
                        "coverAlt" => localize("i18n.coversection"),
                        "authorsTitle" => localize("authors.title"),
                        "bookwordTitle" => localize("bookword.title"),
@@ -634,9 +634,9 @@ function getJson ($complete = false) {
                        "server_side_rendering" => useServerSideRendering (),
                        "html_tag_filter" => $config['cops_html_tag_filter']));
         if ($config['cops_thumbnail_handling'] == "1") {
-            $out ["const"]["url"]["thumbnailUrl"] = $out ["const"]["url"]["coverUrl"];
+            $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } else if (!empty ($config['cops_thumbnail_handling'])) {
-            $out ["const"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+            $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
         }
    }
 

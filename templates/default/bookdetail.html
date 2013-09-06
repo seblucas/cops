@@ -2,7 +2,7 @@
     <span class="cover">
         {{? it.book.hasCover == 1}}
         <a href="{{=it.book.coverurl}}">
-          <img src="{{=it.book.thumbnailurl}}" alt="{{=it.const.i18n.coverAlt}}" />
+          <img src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
         </a>
         {{?}}
     </span>
@@ -15,16 +15,16 @@
         <br />
         {{~}}
     </h2>
-    <h1><a title="{{=it.const.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.const.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
+    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
     <p class="popupless">
-        <h3>{{=it.const.i18n.authorsTitle}}: </h3>
+        <h3>{{=it.c.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:i}}
         {{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
         {{~}}
     </p>
     {{? it.book.tagsName != ""}}
     <p class="popupless">
-        <h3>{{=it.const.i18n.tagsTitle}}: </h3>
+        <h3>{{=it.c.i18n.tagsTitle}}: </h3>
         {{~it.book.tags:tag:i}}
         {{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>
         {{~}}
@@ -32,22 +32,22 @@
     {{?}}
     {{? it.book.seriesName != ""}}
     <p class="popupless">
-        <h3><a href="{{=it.book.seriesurl}}">{{=it.const.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
+        <h3><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}
     <p class="popupless">
-        <h3>{{=it.const.i18n.pubdateTitle}}: </h3>{{=it.book.pubDate}}
+        <h3>{{=it.c.i18n.pubdateTitle}}: </h3>{{=it.book.pubDate}}
     </p>
     {{?}}
     {{? it.book.languagesName != ""}}
     <p class="popupless">
-        <h3>{{=it.const.i18n.languagesTitle}}: </h3>{{=it.book.languagesName}}
+        <h3>{{=it.c.i18n.languagesTitle}}: </h3>{{=it.book.languagesName}}
     </p>
     {{?}}
     {{? it.book.content != ""}}
     <br />
-    <h4>{{=it.const.i18n.contentTitle}}</h4>
+    <h4>{{=it.c.i18n.contentTitle}}</h4>
     <div>{{=it.book.content}}</div>
     {{?}}
 </article>
