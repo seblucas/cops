@@ -251,6 +251,7 @@ function updatePage (data) {
     }
     document.title = data.title;
     currentData = data;
+    setTimeout( function() { $("input[name=query]").focus() }, 500 );
     
     debug_log (elapsed ());
     
