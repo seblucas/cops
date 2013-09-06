@@ -1,18 +1,18 @@
 <header>
     <a class="headleft" href="{{=it.homeurl}}">
-        <div title="{{=it.const.i18n.homeAlt}}" class="hicon hicon64"><i class="icon-home"></i></div>
+        <div title="{{=it.c.i18n.homeAlt}}" class="hicon hicon64"><i class="icon-home"></i></div>
     </a>
-    {{? it.const.config.server_side_rendering == 0}}
+    {{? it.c.config.server_side_rendering == 0}}
     <div title="Settings and menu" class="hicon hicon64 headright"><i class="icon-cog" id="searchImage"></i></div>
     {{?}}
     <div class="headcenter">
         <h1>{{=it.title}}</h1>
     </div>
-    <div id="tool" {{? it.const.config.server_side_rendering == 0}}style="display: none"{{?}}>
+    <div id="tool" {{? it.c.config.server_side_rendering == 0}}style="display: none"{{?}}>
         <div style="float: left; width: 50%">
             <form id="searchForm" action="index.php" method="get">
                 <div  style="float: right">
-                    <button title="{{=it.const.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
+                    <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
                         <i class="icon-search"></i>
                     </button>
                 </div>
@@ -26,21 +26,21 @@
                 </div>
             </form>
         </div>
-        {{? it.const.config.server_side_rendering == 0}}
+        {{? it.c.config.server_side_rendering == 0}}
         <div id="sortForm" style="float: right; width: 45%; display: none">
             <div style="float: right">
-                <div title="{{=it.const.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="icon-sort"></i></div>
+                <div title="{{=it.c.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="icon-sort"></i></div>
             </div>
             <div class="stop">
                 <select id="sortchoice">
-                    <option value="st">{{=it.const.i18n.bookwordTitle}}</option>
-                    <option value="sa">{{=it.const.i18n.authorsTitle}}</option>
-                    <option value="ss">{{=it.const.i18n.seriesTitle}}</option>
-                    <option value="sp">{{=it.const.i18n.pubdateTitle}}</option>
+                    <option value="st">{{=it.c.i18n.bookwordTitle}}</option>
+                    <option value="sa">{{=it.c.i18n.authorsTitle}}</option>
+                    <option value="ss">{{=it.c.i18n.seriesTitle}}</option>
+                    <option value="sp">{{=it.c.i18n.pubdateTitle}}</option>
                 </select>
                 <select id="sortorder">
-                    <option value="asc">{{=it.const.i18n.sortorderAsc}}</option>
-                    <option value="desc">{{=it.const.i18n.sortorderDesc}}</option>
+                    <option value="asc">{{=it.c.i18n.sortorderAsc}}</option>
+                    <option value="desc">{{=it.c.i18n.sortorderDesc}}</option>
                 </select> 
             </div>
         </div>
