@@ -48,7 +48,7 @@ try {
         }
         $comp = $book->getComponentName ($component, $path);
         if (!$comp) return "#";
-        return "$method'epubfs.php?{$add}comp={$comp}{$hash}'{$end}";
+        return str_replace ("&", "&amp;", "{$method}'epubfs.php?{$add}comp={$comp}{$hash}'{$end}");
     };
     
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
