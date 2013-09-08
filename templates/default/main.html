@@ -32,7 +32,7 @@
             </h2>
             <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
             <div class="fullclickpopup">
-                <h2><span class="st">{{=htmlspecialchars (entry.title)}}</span>
+                <h2><span class="st"><a href="{{=entry.book.readerUrl}}">{{=htmlspecialchars (entry.title)}}</a></span>
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}
                 {{? entry.book.rating != ""}}<span class="sr">{{=entry.book.rating}}</span>{{?}}
                 </h2>
