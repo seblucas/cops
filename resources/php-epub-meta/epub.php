@@ -26,12 +26,13 @@ class EPub {
      * Constructor
      *
      * @param string $file path to epub file to work on
+     * @param string $zipClass class to handle zip
      * @throws Exception if metadata could not be loaded
      */
-    public function __construct($file){
+    public function __construct($file, $zipClass = 'clsTbsZip'){
         // open file
         $this->file = $file;
-        $this->zip = new clsTbsZip();
+        $this->zip = new $zipClass();
         if(!$this->zip->Open($this->file)){
             throw new Exception('Failed to read epub file');
         }
