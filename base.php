@@ -157,12 +157,12 @@ function localize($phrase, $count=-1) {
             $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
         }
         $lang_file_en = NULL;
-        $lang_file = 'lang/Localization_' . $lang . '.json';
+        $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
         if (!file_exists($lang_file)) {
-            $lang_file = 'lang/' . 'Localization_en.json';
+            $lang_file = dirname(__FILE__). '/lang/' . 'Localization_en.json';
         }
         elseif ($lang != "en") {
-            $lang_file_en = 'lang/' . 'Localization_en.json';
+            $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
         }
         $lang_file_content = file_get_contents($lang_file);
         /* Load the language file as a JSON object and transform it into an associative array */
