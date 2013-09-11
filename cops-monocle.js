@@ -41,6 +41,21 @@ Monocle.DEBUG = true;
             'resize',
             function () { window.reader.resized() }
           );
+          
+          Monocle.Events.listen(window.top.document, 'keyup', function(evt) {
+            var eventCharCode = evt.charCode || evt.keyCode;
+            var dir = null;
+            var flipper = reader.Flipper;
+            if (eventCharCode == 33 || eventCharCode == 37) { // Page down or Left arrow
+              dir = -1;
+            } else if (eventCharCode == 34 || eventCharCode == 39 ) { // Page down or Right arrow
+              dir = 1;
+            }
+            if (dir) {
+              reader.moveTo({ direction: dir });
+              evt.preventDefault();
+            }
+          });
 
           /* MAGNIFIER CONTROL */
           var magnifier = new Monocle.Controls.Magnifier(reader);
