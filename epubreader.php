@@ -23,7 +23,6 @@ $book->initSpineComponent ();
     <meta http-equiv="imagetoolbar" content="no" />
     <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
     <title>COPS's Epub Reader</title>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jQuery/jquery-1.10.2.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monocore.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monoctrl.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monocore.css") ?>" media="screen" />
@@ -37,14 +36,8 @@ $book->initSpineComponent ();
           getContents: function () {
             <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . $content["title"] . "', src: '". $content["src"] . "'}"; }, $book->contents ())) . "];"; ?>
           },
-          getComponent: function (componentId, callback) {
-            $.ajax({
-                url: "epubfs.php?<?php echo $add ?>comp="  + componentId,
-                type: 'get',
-                dataType: 'text',
-                error: function () {alert ("error");},
-                success: callback
-            });
+          getComponent: function (componentId) {
+            return { url: "epubfs.php?<?php echo $add ?>comp="  + componentId };
           },
           getMetaData: function(key) {
             return {
