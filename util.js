@@ -285,6 +285,7 @@ function handleLinks () {
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
+            $("input[name=query]").focus();
             $.cookie('toolbar', '1', { expires: 365 });
         } else {
             $("#tool").slideUp();
