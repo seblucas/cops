@@ -6,7 +6,9 @@
   * Fixed a regression about custom favicon.ico. Thanks to Tyler.
   * Fixed another regression about COPS's version in the about box. Reported by Ian.
   * Upgraded Magnific Popup to v0.9.5.
-  * Add a style for iphone. Thanks to sb domo.  
+  * Added a style for IPhone. Thanks to sb domo.  
+  * Added Portuguese translation. Thanks to Pablo Aguiar.
+  * Fixed rendering on Internet Explorer < 9.0.
   
 0.6.1 - 20130730
   * Properly close the lightbox when clicking in a link. Reported by le_.
