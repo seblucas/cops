@@ -185,7 +185,7 @@ class CalibreDbLoader
 			$stmt->execute();
 		}
 		// Add the authors in the db
-		foreach ($inBookInfo->mAuthors as $author) {
+		foreach ($inBookInfo->mAuthors as $authorSort => $author) {
 			// Get the author id
 			$sql = 'select id from authors where name=:author';
 			$stmt = $this->mDb->prepare($sql);
@@ -200,7 +200,7 @@ class CalibreDbLoader
 				$sql = 'insert into authors(name, sort) values(:author, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':author', $author);
-				$stmt->bindParam(':sort', $author);
+				$stmt->bindParam(':sort', $authorSort);
 				$stmt->execute();
 				// Get the author id
 				$sql = 'select id from authors where name=:author';
