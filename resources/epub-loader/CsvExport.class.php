@@ -42,11 +42,19 @@ class CsvExport extends BaseExport
 			$info = '';
 			if (is_array($value)) {
 				foreach ($value as $value1) {
+					// Escape quotes
+					if (strpos($value1, '\'') !== false) {
+						$value1 = '\'' . str_replace('\'', '\'\'', $value1) . '\'';
+					}
 					$text .= $value1 . self::CsvSeparator;
 				}
 				continue;
 			}
 			else {
+				// Escape quotes
+				if (strpos($value, '\'') !== false) {
+					$value = '\'' . str_replace('\'', '\'\'', $value) . '\'';
+				}
 				$info = $value;
 			}
 			$text .= $info . self::CsvSeparator;

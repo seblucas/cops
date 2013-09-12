@@ -27,8 +27,9 @@ class BookInfos
 	public $mDescription = '';
 	public $mSubjects = null;
 	public $mCover = '';
-	public $mSerie = '';
-	public $mSerieIndex = '';
+	public $mIsbn = '';
+	public $mRights = '';
+	public $mPublisher = '';
 
 	/**
 	 * Loads book infos from an epub file
@@ -56,8 +57,9 @@ class BookInfos
 		$this->mDescription = $epub->Description();
 		$this->mSubjects = $epub->Subjects();
 		$this->mCover = $epub->getCoverItem();
-		$this->mSerie = $epub->Serie();
-		$this->mSerieIndex = $epub->SerieIndex();
+		$this->mIsbn = $epub->ISBN();
+		$this->mRights = $epub->Copyright();
+		$this->mPublisher = $epub->Publisher();
 	}
 
 }
