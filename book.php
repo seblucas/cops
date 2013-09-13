@@ -462,11 +462,13 @@ class Book extends Base {
                           str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
-        $entry = new Entry (localize ("recent.title"), 
-                          self::ALL_RECENT_BOOKS_ID, 
-                          str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text", 
-                          array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
-        array_push ($result, $entry);
+        if ($config['cops_recentbooks_limit'] > 0) {
+            $entry = new Entry (localize ("recent.title"), 
+                              self::ALL_RECENT_BOOKS_ID, 
+                              str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text", 
+                              array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
+            array_push ($result, $entry);
+        }
         return $result;
     }
         
