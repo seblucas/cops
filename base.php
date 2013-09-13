@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.6.2");
+define ("VERSION", "0.7.0beta");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
  
