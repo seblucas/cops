@@ -144,7 +144,7 @@ class CalibreDbLoader
 		$sql = 'insert into books(title, sort, uuid, path) values(:title, :sort, :uuid, :path)';
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
-		$stmt->bindParam(':sort', $inBookInfo->mTitleSort);
+		$stmt->bindParam(':sort', $inBookInfo->mTitle);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
 		$stmt->execute();

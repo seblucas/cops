@@ -73,6 +73,7 @@ class BookExport
 			$this->mExport->SetProperty($i++, 'Uri');
 			$this->mExport->SetProperty($i++, 'Title');
 			$this->mExport->SetProperty($i++, 'Authors');
+			$this->mExport->SetProperty($i++, 'AuthorsSort');
 			$this->mExport->SetProperty($i++, 'Language');
 			$this->mExport->SetProperty($i++, 'Description');
 			$this->mExport->SetProperty($i++, 'Subjects');
@@ -92,6 +93,7 @@ class BookExport
 		$this->mExport->SetProperty($i++, $inBookInfo->mUri);
 		$this->mExport->SetProperty($i++, $inBookInfo->mTitle);
 		$this->mExport->SetProperty($i++, implode(' - ', $inBookInfo->mAuthors));
+		$this->mExport->SetProperty($i++, implode(' - ', array_keys($inBookInfo->mAuthors)));
 		$this->mExport->SetProperty($i++, $inBookInfo->mLanguage);
 		$this->mExport->SetProperty($i++, $inBookInfo->mDescription);
 		$this->mExport->SetProperty($i++, implode(' - ', $inBookInfo->mSubjects));

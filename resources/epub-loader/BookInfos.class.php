@@ -21,7 +21,6 @@ class BookInfos
 	public $mUuid = '';
 	public $mUri = '';
 	public $mTitle = '';
-	public $mTitleSort = '';
 	public $mAuthors = null;
 	public $mLanguage = '';
 	public $mDescription = '';
@@ -51,7 +50,6 @@ class BookInfos
 		$this->mUuid = $epub->Uuid();
 		$this->mUri = $epub->Uri();
 		$this->mTitle = $epub->Title();
-		$this->mTitleSort = $this->mTitle; // Use title for now
 		$this->mAuthors = $epub->Authors();
 		$this->mLanguage = $epub->Language();
 		$this->mDescription = $epub->Description();
