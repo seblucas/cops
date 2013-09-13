@@ -1,4 +1,4 @@
-0.6.2 - 201309XX
+0.6.2 - 20130913
   * Added server side rendering for devices like PRS-TX / Kindle / Cybook. Thanks to all the testers.
   * Added a configuration item to tweak how thumbnail are handled.
   * Fixed the click on cog on IOS. Thanks to sb domo.
