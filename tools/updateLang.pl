@@ -9,7 +9,7 @@
 
 use strict;
 
-my @strings = ();
+our @strings = ();
 my %values;
 my %allstrings;
 
@@ -43,38 +43,54 @@ closedir $dirhandle;
 
 # Load existing json files with strings and values
 
+handleLanguageFile ("Localization_en.json");
+
 opendir (my($dirhandle), "../lang") or die ("Directory not found\n");
 for (readdir ($dirhandle)) {
     next if (-d $_ ); # skip directories
     next if (/^[.]/); # skip dot-files
     next if not (/(.+)[.]json$/);
+    next if (/en\.json$/);
     
-    my $file = "../lang/" . $_;    
-    (my $lang = $_) =~ s/Localization_(\w\w)\.json/$1/;
-    debug ("language file: $_ / $lang \n");
+    handleLanguageFile ($_);
+}
+closedir $dirhandle;
+
+sub handleLanguageFile {
+    my ($file) = @_;
+    (my $lang = $file) =~ s/Localization_(\w\w)\.json/$1/;
+    my $file = "../lang/" . $file;    
+    
+    debug ("language file: $file / $lang \n");
     
     my $content = loadFile ($file);
     
     while ($content =~ /"(.*?)"\:"(.*?)",/igs) {
-        #push @strings, $1;
-        $values{$lang}{$1} = $2;
+        my $key = $1;
+        my $value = $2;
+        next if ($key =~ /^##TODO##/);
+        if ($lang eq "en" && $key =~ /^languages\.\w\w\w$/) {
+            push (@strings, $key);
+        }
+        $values{$lang}{$key} = $value;
         #debug (" * $1 \n");
     }
     
-    open OUTPUT, ">$file.new";
+    open OUTPUT, ">$file";
     
     print OUTPUT "{\n";
     foreach my $name (@strings) {
-        print OUTPUT "\"$name\":\"$values{$lang}{$name}\",\n";
+        if (not exists ($values{$lang}{$name})) {
+            print OUTPUT "\"##TODO##$name\":\"$values{en}{$name}\",\n";
+        } else {
+            print OUTPUT "\"$name\":\"$values{$lang}{$name}\",\n";
+        }
     }
     print OUTPUT "\"end\":\"end\"\n";
     print OUTPUT "}\n";
     
     close OUTPUT;
 }
-closedir $dirhandle;
-
-
 
 sub loadFile {
     my ($file) = @_;
