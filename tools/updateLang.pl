@@ -69,7 +69,7 @@ sub handleLanguageFile {
         my $key = $1;
         my $value = $2;
         next if ($key =~ /^##TODO##/);
-        if ($lang eq "en" && $key =~ /^languages\.\w\w\w$/) {
+        if ($lang eq "en" && $key =~ /^languages\.\w{3}$/) {
             push (@strings, $key);
         }
         $values{$lang}{$key} = $value;
@@ -86,7 +86,7 @@ sub handleLanguageFile {
             print OUTPUT "\"$name\":\"$values{$lang}{$name}\",\n";
         }
     }
-    print OUTPUT "\"end\":\"end\"\n";
+    print OUTPUT "\"DO_NOT_TRANSLATE\":\"end\"\n";
     print OUTPUT "}\n";
     
     close OUTPUT;
