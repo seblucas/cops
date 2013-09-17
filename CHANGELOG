@@ -1,4 +1,4 @@
-0.6.2 - 201309XX
+0.6.2 - 20130913
   * Added server side rendering for devices like PRS-TX / Kindle / Cybook. Thanks to all the testers.
   * Added a configuration item to tweak how thumbnail are handled.
   * Fixed the click on cog on IOS. Thanks to sb domo.
@@ -6,7 +6,9 @@
   * Fixed a regression about custom favicon.ico. Thanks to Tyler.
   * Fixed another regression about COPS's version in the about box. Reported by Ian.
   * Upgraded Magnific Popup to v0.9.5.
-  * Add a style for iphone. Thanks to sb domo.  
+  * Added a style for IPhone. Thanks to sb domo.  
+  * Added Portuguese translation. Thanks to Pablo Aguiar.
+  * Fixed rendering on Internet Explorer < 9.0.
   
 0.6.1 - 20130730
   * Properly close the lightbox when clicking in a link. Reported by le_.
