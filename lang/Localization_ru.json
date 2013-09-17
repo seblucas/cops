@@ -16,6 +16,7 @@
 "bookword.none":"Нет книг",
 "bookword.one":"1 книга",
 "bookword.title":"Книги",
+"##TODO##cog.alternate":"Search, sort and filters",
 "content.series":"Серии:",
 "content.series.data":"Книга {0} в {1} серии",
 "content.summary":"Краткое содержание:",
