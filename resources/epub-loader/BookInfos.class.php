@@ -29,6 +29,8 @@ class BookInfos
 	public $mIsbn = '';
 	public $mRights = '';
 	public $mPublisher = '';
+	public $mSerie = '';
+	public $mSerieIndex = '';
 
 	/**
 	 * Loads book infos from an epub file
@@ -41,23 +43,26 @@ class BookInfos
 	public function LoadFromEpub($inFileName)
 	{
 		// Load the epub file
-		$epub = new EPub($inFileName, 'ZipFile');
+		$ePub = new EPub($inFileName, 'ZipFile');
 
 		// Get the epub infos
 		$this->mFormat = 'epub';
 		$this->mPath = pathinfo($inFileName, PATHINFO_DIRNAME);
 		$this->mName = pathinfo($inFileName, PATHINFO_FILENAME);
-		$this->mUuid = $epub->Uuid();
-		$this->mUri = $epub->Uri();
-		$this->mTitle = $epub->Title();
-		$this->mAuthors = $epub->Authors();
-		$this->mLanguage = $epub->Language();
-		$this->mDescription = $epub->Description();
-		$this->mSubjects = $epub->Subjects();
-		$this->mCover = $epub->getCoverItem();
-		$this->mIsbn = $epub->ISBN();
-		$this->mRights = $epub->Copyright();
-		$this->mPublisher = $epub->Publisher();
+		$this->mUuid = $ePub->Uuid();
+		$this->mUri = $ePub->Uri();
+		$this->mTitle = $ePub->Title();
+		$this->mAuthors = $ePub->Authors();
+		$this->mLanguage = $ePub->Language();
+		$this->mDescription = $ePub->Description();
+		$this->mSubjects = $ePub->Subjects();
+		$cover = $ePub->Cover();
+		$this->mCover = ($cover['found'] !== false) ? $cover['found'] : '';
+		$this->mIsbn = $ePub->ISBN();
+		$this->mRights = $ePub->Copyright();
+		$this->mPublisher = $ePub->Publisher();
+		$this->mSerie = $ePub->Serie();
+		$this->mSerieIndex = $ePub->SerieIndex();
 	}
 
 }

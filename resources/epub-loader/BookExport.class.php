@@ -81,6 +81,8 @@ class BookExport
 			$this->mExport->SetProperty($i++, 'Isbn');
 			$this->mExport->SetProperty($i++, 'Rights');
 			$this->mExport->SetProperty($i++, 'Publisher');
+			$this->mExport->SetProperty($i++, 'Serie');
+			$this->mExport->SetProperty($i++, 'SerieIndex');
 			$this->mExport->AddContent();
 		}
 
@@ -101,6 +103,8 @@ class BookExport
 		$this->mExport->SetProperty($i++, $inBookInfo->mIsbn);
 		$this->mExport->SetProperty($i++, $inBookInfo->mRights);
 		$this->mExport->SetProperty($i++, $inBookInfo->mPublisher);
+		$this->mExport->SetProperty($i++, $inBookInfo->mSerie);
+		$this->mExport->SetProperty($i++, $inBookInfo->mSerieIndex);
 
 		$this->mExport->AddContent();
 	}
