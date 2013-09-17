@@ -16,6 +16,7 @@
 "bookword.none":"Nessun libro",
 "bookword.one":"1 libro",
 "bookword.title":"Libri",
+"##TODO##cog.alternate":"Search, sort and filters",
 "content.series":"Collana:",
 "content.series.data":"Libro {0} nella collana {1}",
 "content.summary":"Riassunto:",

@@ -16,6 +16,7 @@
 "bookword.none":"Geen boek",
 "bookword.one":"1 boek",
 "bookword.title":"Boeken",
+"##TODO##cog.alternate":"Search, sort and filters",
 "content.series":"Series:",
 "content.series.data":"Boek {0} in de {1} serie",
 "content.summary":"Samenvatting",
