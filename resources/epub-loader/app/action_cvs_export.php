@@ -6,25 +6,23 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
-foreach ($gConfig['databases'] as $dbConfig) {
-	// Init csv file
-	$fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . basename($dbConfig['db_path']) . '_metadata.csv';
-	try {
-		// Open or create the export file
-		$export = new BookExport($fileName, BookExport::eExportTypeCsv, true);
-		echo sprintf('Export ebooks to %s', $fileName) . '<br />';
-		// Add the epub files into the export file
-		if (!empty($dbConfig['epub_path'])) {
-			$fileList = glob($dbConfig['epub_path'] . DIRECTORY_SEPARATOR . '*.epub');
-			foreach ($fileList as $fileName) {
-				$export->AddEpub($fileName);
-			}
+// Init csv file
+$fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . basename($dbConfig['db_path']) . '_metadata.csv';
+try {
+	// Open or create the export file
+	$export = new BookExport($fileName, BookExport::eExportTypeCsv, true);
+	echo sprintf('Export ebooks to %s', $fileName) . '<br />';
+	// Add the epub files into the export file
+	if (!empty($dbConfig['epub_path'])) {
+		$fileList = glob($dbConfig['epub_path'] . DIRECTORY_SEPARATOR . '*.epub');
+		foreach ($fileList as $fileName) {
+			$export->AddEpub($fileName);
 		}
-		$export->SaveToFile();
 	}
-	catch (Exception $e) {
-		$gErrorArray[$fileName] = $e->getMessage();
-	}
+	$export->SaveToFile();
+}
+catch (Exception $e) {
+	$gErrorArray[$fileName] = $e->getMessage();
 }
 
 ?>

@@ -42,4 +42,4 @@ $gConfig['databases'][] = array('name' => 'La Bibliothèque électronique du Qu�
  */
 $gConfig['actions'] = array();
 $gConfig['actions']['cvs_export'] = 'Cvs export';
-$gConfig['actions']['db_load'] = 'Calibre database load';
+$gConfig['actions']['db_load'] = 'Create database';

@@ -14,12 +14,12 @@ header('Content-type: text/html; charset=utf-8');
   body {
 	  font-family: "Times New Roman", Times, serif;
 	  background-color: #ffffff;
-	  color: #2F4769;
+	  color: #333333;
 	  margin: 20px;
   }
   a {
-	  color: #CC9966;
-		text-decoration:  none;
+	  color: #096DD1;
+		text-decoration: none;
   }
   a:hover {
 	  color: #DF7800;
@@ -70,7 +70,7 @@ header('Content-type: text/html; charset=utf-8');
 	.footer {
 		border-top: solid #2F4769 1px;
 		margin-top: 15px;
-		padding-top: 5px;
+		padding-top: 10px;
 	  font-size: 80%;
 	  font-style: italic;
   }
