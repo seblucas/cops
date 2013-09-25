@@ -28,7 +28,7 @@ class BookExport
 	{
 		switch ($inExportType) {
 		case self::eExportTypeCsv:
-			$this->mExport = new CsvExport($inFileName);
+			$this->mExport = new CsvExport($inFileName, $inCreate);
 			break;
 		default:
 			$error = sprintf('Incorrect export type: %d', $inExportType);

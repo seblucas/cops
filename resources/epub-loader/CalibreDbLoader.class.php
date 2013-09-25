@@ -30,7 +30,7 @@ class CalibreDbLoader
 	 */
 	public function __construct($inDbFileName, $inCreate = false)
 	{
-		if ($inCreate || !file_exists($inDbFileName)) {
+		if ($inCreate) {
 			$this->CreateDatabase($inDbFileName);
 		}
 		else {
@@ -51,7 +51,7 @@ class CalibreDbLoader
 		// Read the sql file
 		$content = file_get_contents(CalibreCreateDbSql);
 		if ($content === false) {
-			$error = sprintf('Cannot read sql file: %s', $inDbFileName);
+			$error = sprintf('Cannot read sql file: %s', CalibreCreateDbSql);
 			throw new Exception($error);
 		}
 
