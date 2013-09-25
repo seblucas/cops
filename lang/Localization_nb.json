@@ -16,6 +16,7 @@
 "bookword.none":"Ingen bøker",
 "bookword.one":"1 bok",
 "bookword.title":"Bøker",
+"##TODO##cog.alternate":"Search, sort and filters",
 "content.series":"Serier:",
 "content.series.data":"Bok {0} i serien {1}",
 "content.summary":"Sammendrag",

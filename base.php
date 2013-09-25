@@ -470,7 +470,7 @@ class Page
         $currentUrl = $_SERVER['QUERY_STRING'];
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
-            return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", "Page suivante");
+            return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
         }
         return NULL;
     }
@@ -481,7 +481,7 @@ class Page
         $currentUrl = $_SERVER['QUERY_STRING'];
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
         if ($this->n > 1) {
-            return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", "Page precedente");
+            return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
         }
         return NULL;
     }

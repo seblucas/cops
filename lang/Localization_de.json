@@ -16,6 +16,7 @@
 "bookword.none":"Kein Buch",
 "bookword.one":"1 Buch",
 "bookword.title":"Bücher",
+"##TODO##cog.alternate":"Search, sort and filters",
 "content.series":"Serien: ",
 "content.series.data":"Buch {0} der {1} - Reihe",
 "content.summary":"Inhalt: ",

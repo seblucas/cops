@@ -619,6 +619,7 @@ function getJson ($complete = false) {
                        "searchAlt" => localize ("search.alternate"),
                        "sortAlt" => localize ("sort.alternate"),
                        "homeAlt" => localize ("home.alternate"),
+                       "cogAlt" => localize ("cog.alternate"),
                        "permalinkAlt" => localize ("permalink.alternate"),
                        "pubdateTitle" => localize("pubdate.title"),
                        "languagesTitle" => localize("language.title"),
