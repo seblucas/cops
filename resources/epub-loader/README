@@ -1,0 +1,9 @@
+## =============================================================================
+## epub-loader readme
+## =============================================================================
+
+epub-loader is a utility ressource for ebooks.
+
+- CalibreDbLoader class allows create Calibre databases and add ebooks
+- BookExport class allows to export ebooks metadata in csv files
+- The app directory contains samples and allows to run actions
