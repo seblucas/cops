@@ -72,4 +72,22 @@ order by series.sort');
         }
         return $entryArray;
     }
+    
+    public static function getAllSeriesByQuery($query) {
+        $result = parent::getDb ()->prepare('select series.id as id, series.name as name, series.sort as sort, count(*) as count
+from series, books_series_link
+where series.id = series and series.name like ?
+group by series.id, series.name, series.sort
+order by series.sort');
+        $entryArray = array();
+        $result->execute (array ('%' . $query . '%'));
+        while ($post = $result->fetchObject ())
+        {
+            $serie = new Serie ($post->id, $post->sort);
+            array_push ($entryArray, new Entry ($serie->name, $serie->getEntryId (), 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
+                array ( new LinkNavigation ($serie->getUri ()))));
+        }
+        return $entryArray;
+    }
 }
