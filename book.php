@@ -32,7 +32,11 @@ define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " 
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?) {1} order by books.sort");
+                                                    where (
+                                                    exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
+                                                    exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
+                                                    exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
+                                                    title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
 
@@ -524,7 +528,7 @@ where data.book = books.id and data.id = ?');
     }
     
     public static function getBooksByQuery($query, $n, $database = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n, $database);
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database);
     }
     
     public static function getAllBooks() {
