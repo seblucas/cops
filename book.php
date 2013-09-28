@@ -594,30 +594,13 @@ function getJson ($complete = false) {
             $pagequery = Base::PAGE_OPENSEARCH_QUERY;
             foreach ($array as $entry) {
                 if (count($array) > 0) {
+                    // Comment to help the perl i18n script
                     // str_format (localize("bookword", count($array))
                     // str_format (localize("authorword", count($array)
                     // str_format (localize("seriesword", count($array)
                     // str_format (localize("tagword", count($array)
                     array_push ($out, array ("title" => "<strong>" . str_format (localize("{$key}word", count($array)), count($array)) . "</strong>",
                                                         "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
-                    /*switch ($key) {
-                        case "book":
-                            array_push ($out, array ("title" => "<strong>" . str_format (localize("bookword", count($array)), count($array)) . "</strong>"));
-                            break;
-                        case "author":
-                            array_push ($out, array ("title" => "<strong>" . str_format (localize("authorword", count($array)), count($array)) . "</strong>",
-                                                     "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope=author"));
-                            break;
-                        case "series":
-                            array_push ($out, array ("title" => "<strong>" . str_format (localize("seriesword", count($array)), count($array)) . "</strong>",
-                                                     "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope=series"));
-                            break;
-                        case "tag":
-                            array_push ($out, array ("title" => "<strong>" . str_format (localize("tagword", count($array)), count($array)) . "</strong>"));
-                            break;
-                        default :
-                            array_push ($out, array ("title" => "<strong>" . count($array) . " Titre</strong>"));
-                    }*/
                 }
                 if ($entry instanceof EntryBook) {
                     array_push ($out, array ("title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
