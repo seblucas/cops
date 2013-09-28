@@ -574,9 +574,62 @@ function getJson ($complete = false) {
     global $config;
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
+    $search = getURLParam ("search");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
+    
+    if ($search) {
+        $out = array ();
+        $arrayTag = Tag::getAllTagsByQuery ($query);
+        $arraySeries = Serie::getAllSeriesByQuery ($query);
+        $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
+        list ($arrayBook, $totalNumber) = Book::getBooksByStartingLetter ('%' . $query, -1);
+        
+        foreach (array ("book" => $arrayBook, 
+                        "author" => $arrayAuthor, 
+                        "series" => $arraySeries, 
+                        "tag" => $arrayTag) as $key => $array) {
+            $i = 0;
+            $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+            foreach ($array as $entry) {
+                if (count($array) > 0) {
+                    // str_format (localize("bookword", count($array))
+                    // str_format (localize("authorword", count($array)
+                    // str_format (localize("seriesword", count($array)
+                    // str_format (localize("tagword", count($array)
+                    array_push ($out, array ("title" => "<strong>" . str_format (localize("{$key}word", count($array)), count($array)) . "</strong>",
+                                                        "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
+                    /*switch ($key) {
+                        case "book":
+                            array_push ($out, array ("title" => "<strong>" . str_format (localize("bookword", count($array)), count($array)) . "</strong>"));
+                            break;
+                        case "author":
+                            array_push ($out, array ("title" => "<strong>" . str_format (localize("authorword", count($array)), count($array)) . "</strong>",
+                                                     "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope=author"));
+                            break;
+                        case "series":
+                            array_push ($out, array ("title" => "<strong>" . str_format (localize("seriesword", count($array)), count($array)) . "</strong>",
+                                                     "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope=series"));
+                            break;
+                        case "tag":
+                            array_push ($out, array ("title" => "<strong>" . str_format (localize("tagword", count($array)), count($array)) . "</strong>"));
+                            break;
+                        default :
+                            array_push ($out, array ("title" => "<strong>" . count($array) . " Titre</strong>"));
+                    }*/
+                }
+                if ($entry instanceof EntryBook) {
+                    array_push ($out, array ("title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+                } else {
+                    array_push ($out, $entry->getContentArray ());
+                }
+                $i++;
+                if ($i > 4) { break; };
+            }
+        }
+        return $out;
+    }
     
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
