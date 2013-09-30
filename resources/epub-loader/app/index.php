@@ -37,14 +37,14 @@ if (!is_dir($gConfig['cops_directory'])) {
 // Include Calibre database loader class
 $fileName = $gConfig['cops_directory'] . '/resources/epub-loader/CalibreDbLoader.class.php';
 if (!file_exists($fileName)) {
-	die ('Incorrect include file: ' . $gConfig['cops_directory']);
+	die ('Incorrect include file: ' . $fileName);
 }
 require_once($fileName);
 
 // Include book export class
 $fileName = $gConfig['cops_directory'] . '/resources/epub-loader/BookExport.class.php';
 if (!file_exists($fileName)) {
-	die ('Incorrect include file: ' . $gConfig['cops_directory']);
+	die ('Incorrect include file: ' . $fileName);
 }
 require_once($fileName);
 

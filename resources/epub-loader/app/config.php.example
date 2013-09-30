@@ -1,6 +1,6 @@
 <?php
 /**
- * Epub loader config
+ * Epub loader application config
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
@@ -32,10 +32,9 @@ $gConfig['create_db'] = true;
  *   epub_path: The path where to look for the epub files to load
  */
 $gConfig['databases'] = array();
-$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/atoll/opds/demo', 'epub_path' => '/opt/atoll/external/demo');
-$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/atoll/opds/bnr', 'epub_path' => '/opt/atoll/external/bnr');
-$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/atoll/opds/bibebook', 'epub_path' => '/opt/atoll/external/bibebook');
-$gConfig['databases'][] = array('name' => 'La Bibliothèque électronique du Québec', 'db_path' => '/opt/atoll/opds/beq', 'epub_path' => '/opt/atoll/external/beq');
+$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/ebooks/calibre/demo', 'epub_path' => '/opt/ebooks/epub/demo');
+$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/ebooks/calibre/bnr', 'epub_path' => '/opt/ebooks/epub/bnr');
+$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/ebooks/calibre/bibebook', 'epub_path' => '/opt/ebooks/epub/bibebook');
 
 /**
  * Available actions
@@ -43,3 +42,5 @@ $gConfig['databases'][] = array('name' => 'La Bibliothèque électronique du Qu�
 $gConfig['actions'] = array();
 $gConfig['actions']['cvs_export'] = 'Cvs export';
 $gConfig['actions']['db_load'] = 'Create database';
+
+?>

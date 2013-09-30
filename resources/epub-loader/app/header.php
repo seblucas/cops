@@ -1,5 +1,4 @@
 <?php
-// Spécifie l'encodage
 header('Content-type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
