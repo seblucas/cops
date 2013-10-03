@@ -39,5 +39,25 @@ class StackTest extends PHPUnit_Framework_TestCase
         
         $config['cops_recentbooks_limit'] = 50; 
     }
+    
+    public function testGetBooksByAuthor ()
+    {
+        // All book by Arthur Conan Doyle
+        global $config;
+        
+        $config['cops_max_item_per_page'] = 5;
+        list ($entryArray, $totalNumber) = Book::getBooksByAuthor (1, 1);
+        $this->assertEquals (5, count($entryArray));
+        $this->assertEquals (8, $totalNumber);
+        
+        list ($entryArray, $totalNumber) = Book::getBooksByAuthor (1, 2);
+        $this->assertEquals (3, count($entryArray));
+        $this->assertEquals (8, $totalNumber);
+        
+        $config['cops_max_item_per_page'] = -1;
+        list ($entryArray, $totalNumber) = Book::getBooksByAuthor (1, -1);
+        $this->assertEquals (8, count($entryArray));
+        $this->assertEquals (-1, $totalNumber);
+    }
 
 }
