@@ -9,6 +9,7 @@
 define ("VERSION", "0.7.0beta");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
+
  
 function useServerSideRendering () {
     global $config;
