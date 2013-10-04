@@ -87,8 +87,31 @@ class StackTest extends PHPUnit_Framework_TestCase
     public function testGetAllBooks ()
     {
         // All books by first letter
-        $entryArray = Book::getAllBooks (1, -1);
+        $entryArray = Book::getAllBooks ();
         $this->assertCount (9, $entryArray);
+    }
+    
+    public function testGetBooksByStartingLetter ()
+    {
+        // All books by first letter
+        list ($entryArray, $totalNumber) = Book::getBooksByStartingLetter ("T", -1);
+        $this->assertCount (3, $entryArray);
+    }
+    
+    public function testGetAllRecentBooks ()
+    {
+        // All recent books
+        global $config;
+        
+        $config['cops_recentbooks_limit'] = 2;
+        
+        $entryArray = Book::getAllRecentBooks ();
+        $this->assertCount (2, $entryArray);
+        
+        $config['cops_recentbooks_limit'] = 50;
+        
+        $entryArray = Book::getAllRecentBooks ();
+        $this->assertCount (14, $entryArray);
     }
 
     public function testGetBookById ()
