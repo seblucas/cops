@@ -139,7 +139,7 @@ function str_format($format) {
  * This method is based on this page
  * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  */
-function localize($phrase, $count=-1) {
+function localize($phrase, $count=-1, $reset=false) {
     if ($count == 0)
         $phrase .= ".none";
     if ($count == 1)
@@ -149,6 +149,9 @@ function localize($phrase, $count=-1) {
 
     /* Static keyword is used to ensure the file is loaded only once */
     static $translations = NULL;
+    if ($reset) {
+        $translations = NULL;
+    }
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
         $lang = "en";
