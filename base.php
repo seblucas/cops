@@ -673,9 +673,24 @@ class PageQueryResult extends Page
     public function InitializeContent () 
     {
         global $config;
-        $this->title = str_format (localize ("search.result"), $this->query);
         $scope = getURLParam ("scope");
-        
+        switch ($scope) {
+            case self::SCOPE_AUTHOR :
+                $this->title = str_format (localize ("search.result.author"), $this->query);
+                break;
+            case self::SCOPE_TAG :
+                $this->title = str_format (localize ("search.result.tag"), $this->query);
+                break;
+            case self::SCOPE_SERIES :
+                $this->title = str_format (localize ("search.result.series"), $this->query);
+                break;
+            case self::SCOPE_BOOK :
+                $this->title = str_format (localize ("search.result.book"), $this->query);
+                break;    
+            default:
+                $this->title = str_format (localize ("search.result"), $this->query);
+        }
+
         $crit = "%" . $this->query . "%";
         $bad = "QQQQQ";
         
