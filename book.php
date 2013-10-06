@@ -599,13 +599,14 @@ function getJson ($complete = false) {
                     // str_format (localize("authorword", count($array)
                     // str_format (localize("seriesword", count($array)
                     // str_format (localize("tagword", count($array)
-                    array_push ($out, array ("title" => "<strong>" . str_format (localize("{$key}word", count($array)), count($array)) . "</strong>",
-                                                        "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
+                    array_push ($out, array ("title" => str_format (localize("{$key}word", count($array)), count($array)),
+                                             "class" => "tt-header",
+                                             "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
                 }
                 if ($entry instanceof EntryBook) {
-                    array_push ($out, array ("title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
                 } else {
-                    array_push ($out, $entry->getContentArray ());
+                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
                 }
                 $i++;
                 if ($i > 4) { break; };

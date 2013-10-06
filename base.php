@@ -287,14 +287,17 @@ class Entry
         return date (DATE_ATOM, self::$updated);
     }
     
-    public function getContentArray () {
-        $navlink = "#";
+    public function getNavLink () {
         foreach ($this->linkArray as $link) { 
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
             
-            $navlink = $link->hrefXhtml ();
+            return $link->hrefXhtml ();
         }
-        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $navlink );
+        return "#";
+    }
+    
+    public function getContentArray () {
+        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
     }
  
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
