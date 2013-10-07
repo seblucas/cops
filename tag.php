@@ -61,4 +61,22 @@ order by tags.name');
         }
         return $entryArray;
     }
+    
+    public static function getAllTagsByQuery($query) {
+        $result = parent::getDb ()->prepare('select tags.id as id, tags.name as name, count(*) as count
+from tags, books_tags_link
+where tags.id = tag and tags.name like ?
+group by tags.id, tags.name
+order by tags.name');
+        $entryArray = array();
+        $result->execute (array ('%' . $query . '%'));
+        while ($post = $result->fetchObject ())
+        {
+            $tag = new Tag ($post->id, $post->name);
+            array_push ($entryArray, new Entry ($tag->name, $tag->getEntryId (), 
+                str_format (localize("bookword", $post->count), $post->count), "text", 
+                array ( new LinkNavigation ($tag->getUri ()))));
+        }
+        return $entryArray;
+    }
 }
