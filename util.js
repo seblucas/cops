@@ -237,7 +237,7 @@ function navigateTo (url) {
 function updatePage (data) {
     var result;
     filterList = {};
-    data ["c"] = currentData ["c"];
+    data.c = currentData.c;
     if (false && $("section").length && currentData.isPaginated === 0 &&  data.isPaginated === 0) {
         // Partial update (for now disabled)
         debug_log ("Partial update");
@@ -251,7 +251,7 @@ function updatePage (data) {
     }
     document.title = data.title;
     currentData = data;
-    setTimeout( function() { $("input[name=query]").focus() }, 500 );
+    setTimeout( function() { $("input[name=query]").focus(); }, 500 );
     
     debug_log (elapsed ());
     
@@ -325,7 +325,7 @@ function link_Clicked (event) {
         before = new Date ();
         var jsonurl = url.replace ("index", "getJSON");
         $.getJSON(jsonurl, function(data) {
-            data ["c"] = currentData ["c"];
+            data.c = currentData.c;
             var detail = "";
             if (data.page === "16") {
                 detail = data.fullhtml;

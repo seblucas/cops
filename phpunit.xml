@@ -1,0 +1,23 @@
+<phpunit>
+    
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <!-- this is the path of the files included in your clover report -->
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory suffix=".php">./resources</directory>
+            </exclude>
+            <exclude>
+                <directory suffix=".php">./test</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="./clover.xml"/>
+    </logging>
+    <testsuites>
+        <testsuite name="COPS">
+            <directory>test</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

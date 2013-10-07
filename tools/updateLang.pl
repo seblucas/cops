@@ -60,6 +60,8 @@ sub handleLanguageFile {
     my ($file) = @_;
     (my $lang = $file) =~ s/Localization_(\w\w)\.json/$1/;
     my $file = "../lang/" . $file;    
+    my $total = 0;
+    my $translated = 0;
     
     debug ("language file: $file / $lang \n");
     
@@ -80,12 +82,16 @@ sub handleLanguageFile {
     
     print OUTPUT "{\n";
     foreach my $name (@strings) {
+        $total++ if ($name !~ /^languages\.\w{3}$/);
         if (not exists ($values{$lang}{$name})) {
             print OUTPUT "\"##TODO##$name\":\"$values{en}{$name}\",\n";
         } else {
+            $translated++  if ($name !~ /^languages\.\w{3}$/);
             print OUTPUT "\"$name\":\"$values{$lang}{$name}\",\n";
         }
     }
+    my $percentage = ($translated * 100) / $total;
+    debug ("  $translated / $total ($percentage %) \n");
     print OUTPUT "\"DO_NOT_TRANSLATE\":\"end\"\n";
     print OUTPUT "}\n";
     

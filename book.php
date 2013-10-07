@@ -32,7 +32,11 @@ define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " 
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where (exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or title like ?) {1} order by books.sort");
+                                                    where (
+                                                    exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
+                                                    exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
+                                                    exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
+                                                    title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
 
@@ -524,7 +528,7 @@ where data.book = books.id and data.id = ?');
     }
     
     public static function getBooksByQuery($query, $n, $database = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, array ("%" . $query . "%", "%" . $query . "%"), $n, $database);
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database);
     }
     
     public static function getAllBooks() {
@@ -570,9 +574,46 @@ function getJson ($complete = false) {
     global $config;
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
+    $search = getURLParam ("search");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
+    
+    if ($search) {
+        $out = array ();
+        $arrayTag = Tag::getAllTagsByQuery ($query);
+        $arraySeries = Serie::getAllSeriesByQuery ($query);
+        $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
+        list ($arrayBook, $totalNumber) = Book::getBooksByStartingLetter ('%' . $query, -1);
+        
+        foreach (array ("book" => $arrayBook, 
+                        "author" => $arrayAuthor, 
+                        "series" => $arraySeries, 
+                        "tag" => $arrayTag) as $key => $array) {
+            $i = 0;
+            $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+            foreach ($array as $entry) {
+                if (count($array) > 0) {
+                    // Comment to help the perl i18n script
+                    // str_format (localize("bookword", count($array))
+                    // str_format (localize("authorword", count($array)
+                    // str_format (localize("seriesword", count($array)
+                    // str_format (localize("tagword", count($array)
+                    array_push ($out, array ("title" => str_format (localize("{$key}word", count($array)), count($array)),
+                                             "class" => "tt-header",
+                                             "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
+                }
+                if ($entry instanceof EntryBook) {
+                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+                } else {
+                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+                }
+                $i++;
+                if ($i > 4) { break; };
+            }
+        }
+        return $out;
+    }
     
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();

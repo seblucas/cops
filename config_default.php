@@ -103,8 +103,8 @@
     
     /*
      * generate a invalid OPDS stream to allow bad OPDS client to use search
-     * Example of non compliant OPDS client : FBReader (was working in May 2012), Moon+ Reader
-     * Example of good OPDS client : Mantano
+     * Example of non compliant OPDS client : Moon+ Reader
+     * Example of good OPDS client : Mantano, FBReader
      *  1 : enable support for non compliant OPDS client
      *  0 : always generate valid OPDS code
      */

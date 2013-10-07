@@ -9,6 +9,7 @@
 define ("VERSION", "0.7.0beta");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
+
  
 function useServerSideRendering () {
     global $config;
@@ -168,7 +169,7 @@ function localize($phrase, $count=-1) {
         /* Load the language file as a JSON object and transform it into an associative array */
         $translations = json_decode($lang_file_content, true);
         
-        /* Clean the array of all translations unfinished */
+        /* Clean the array of all unfinished translations */
         foreach ($translations as $key => $val) {
             if (preg_match ("/^##TODO##/", $key)) {
                 unset ($translations [$key]);
@@ -286,14 +287,17 @@ class Entry
         return date (DATE_ATOM, self::$updated);
     }
     
-    public function getContentArray () {
-        $navlink = "#";
+    public function getNavLink () {
         foreach ($this->linkArray as $link) { 
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
             
-            $navlink = $link->hrefXhtml ();
+            return $link->hrefXhtml ();
         }
-        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $navlink );
+        return "#";
+    }
+    
+    public function getContentArray () {
+        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
     }
  
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
@@ -664,18 +668,41 @@ class PageRecentBooks extends Page
 
 class PageQueryResult extends Page
 {
+    const SCOPE_TAG = "tag";
+    const SCOPE_SERIES = "series";
+    const SCOPE_AUTHOR = "author";
+    const SCOPE_BOOK = "book";
+    
     public function InitializeContent () 
     {
         global $config;
-        $this->title = str_format (localize ("search.result"), $this->query);
-        $currentPage = getURLParam ("current", NULL);
+        $scope = getURLParam ("scope");
+        switch ($scope) {
+            case self::SCOPE_AUTHOR :
+                $this->title = str_format (localize ("search.result.author"), $this->query);
+                break;
+            case self::SCOPE_TAG :
+                $this->title = str_format (localize ("search.result.tag"), $this->query);
+                break;
+            case self::SCOPE_SERIES :
+                $this->title = str_format (localize ("search.result.series"), $this->query);
+                break;
+            case self::SCOPE_BOOK :
+                $this->title = str_format (localize ("search.result.book"), $this->query);
+                break;    
+            default:
+                $this->title = str_format (localize ("search.result"), $this->query);
+        }
+
+        $crit = "%" . $this->query . "%";
+        $bad = "QQQQQ";
         
         // Special case when we are doing a search and no database is selected
         if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery ($this->query, $this->n, $i);
+                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), $this->n, $i);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}", 
                                         str_format (localize ("bookword", count($array)), count($array)), "text", 
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
@@ -683,14 +710,23 @@ class PageQueryResult extends Page
             }
             return;
         }
-        
-        switch ($currentPage) {
-            case Base::PAGE_ALL_AUTHORS :
-            case Base::PAGE_AUTHORS_FIRST_LETTER :
+        switch ($scope) {
+            case self::SCOPE_AUTHOR :
                 $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
                 break;
+            case self::SCOPE_TAG :
+                $this->entryArray = Tag::getAllTagsByQuery ($this->query);
+                break;
+            case self::SCOPE_SERIES :
+                $this->entryArray = Serie::getAllSeriesByQuery ($this->query);
+                break;
+            case self::SCOPE_BOOK :
+                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
+                    array ($bad, $bad, $bad, $crit), $this->n);
+                break;    
             default:
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery ($this->query, $this->n);
+                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
+                    array ($crit, $crit, $crit, $crit), $this->n);
         }
     }
 }
