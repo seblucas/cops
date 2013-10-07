@@ -62,6 +62,44 @@ $dbNum = isset($_GET['dbnum']) ? (int)$_GET['dbnum'] : null;
 // Include html header
 require_once(__DIR__ . DIRECTORY_SEPARATOR . 'header.php');
 
+/**
+ * Recursive get files
+ *
+ * @param string Base directory to search in
+ * @param string Search pattern
+ */
+function RecursiveGlob($inPath = '', $inPattern = '*')
+{
+	$res = array();
+
+	// Check path
+	if (!is_dir($inPath)) {
+		return $res;
+	}
+
+	// Get the list of directories
+	if (substr($inPath, -1) != DIRECTORY_SEPARATOR) {
+		$inPath .= DIRECTORY_SEPARATOR;
+	}
+
+	// Add files from the current directory
+	$files = glob($inPath . $inPattern, GLOB_MARK | GLOB_NOSORT);
+	foreach ($files as $item) {
+		if (substr($item, -1) == DIRECTORY_SEPARATOR) {
+			continue;
+		}
+		$res[] = $item;
+	}
+
+	// Scan sub directories
+	$paths = glob($inPath . '*', GLOB_MARK | GLOB_ONLYDIR | GLOB_NOSORT);
+	foreach ($paths as $path) {
+		$res = array_merge($res, RecursiveGlob($path, $inPattern));
+	}
+
+	return $res;
+}
+
 // Html content
 if (isset($action) && isset($dbNum)) {
 	if (!isset($gConfig['databases'][$dbNum])) {
@@ -102,7 +140,7 @@ else {
 		$str .= '</tr>' . "\n";
 		$actionTitle = $gConfig['actions'][$action];
 		foreach ($gConfig['databases'] as $dbNum => $dbConfig) {
-			$fileList = glob($dbConfig['epub_path'] . DIRECTORY_SEPARATOR . '*.epub');
+			$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
 			$str .= '<tr>' . "\n";
 			$str .= '<td>' . $dbNum . '</td>' . "\n";
 			$str .= '<td>' . $dbConfig['name'] . '</td>' . "\n";

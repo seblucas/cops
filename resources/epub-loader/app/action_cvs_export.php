@@ -14,7 +14,7 @@ try {
 	echo sprintf('Export ebooks to %s', $fileName) . '<br />';
 	// Add the epub files into the export file
 	if (!empty($dbConfig['epub_path'])) {
-		$fileList = glob($dbConfig['epub_path'] . DIRECTORY_SEPARATOR . '*.epub');
+		$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
 		foreach ($fileList as $fileName) {
 			$export->AddEpub($fileName);
 		}
