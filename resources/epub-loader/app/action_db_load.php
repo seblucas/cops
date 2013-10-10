@@ -15,10 +15,10 @@ try {
 	// Add the epub files into the database
 	if (!empty($dbConfig['epub_path'])) {
 		$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
-		foreach ($fileList as $fileName) {
-			$error = $db->AddEpub($fileName);
+		foreach ($fileList as $file) {
+			$error = $db->AddEpub($file);
 			if (!empty($error)) {
-				$gErrorArray[$fileName] = $error;
+				$gErrorArray[$file] = $error;
 			}
 		}
 	}

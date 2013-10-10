@@ -15,10 +15,10 @@ try {
 	// Add the epub files into the export file
 	if (!empty($dbConfig['epub_path'])) {
 		$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
-		foreach ($fileList as $fileName) {
-			$error = $export->AddEpub($fileName);
+		foreach ($fileList as $file) {
+			$error = $export->AddEpub($file);
 			if (!empty($error)) {
-				$gErrorArray[$fileName] = $error;
+				$gErrorArray[$file] = $error;
 			}
 		}
 	}
