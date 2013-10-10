@@ -161,12 +161,12 @@ class CalibreDbLoader
 			throw new Exception($error);
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, timestamp, pubdate, series_index, uuid, path) values(:title, :sort, :timestamp, :pubdate, :serieindex, :uuid, :path)';
+		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path)';
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', $inBookInfo->mTitle);
-		$stmt->bindParam(':timestamp', empty($inBookInfo->mModificationDate) ? null : $inBookInfo->mModificationDate);
 		$stmt->bindParam(':pubdate', empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate);
+		$stmt->bindParam(':lastmodified', empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate);
 		$stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
