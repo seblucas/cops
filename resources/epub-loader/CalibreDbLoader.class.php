@@ -161,15 +161,20 @@ class CalibreDbLoader
 			throw new Exception($error);
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path)';
+		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :isbn)';
+		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
+		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
+		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', $inBookInfo->mTitle);
-		$stmt->bindParam(':pubdate', empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate);
-		$stmt->bindParam(':lastmodified', empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate);
+		$stmt->bindParam(':pubdate', $pubDate);
+		$stmt->bindParam(':lastmodified', $lastModified);
 		$stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
+		$stmt->bindParam(':hascover', $hasCover, PDO::PARAM_INT);
+		$stmt->bindParam(':isbn', $inBookInfo->mIsbn);
 		$stmt->execute();
 		// Get the book id
 		$sql = 'select id from books where uuid=:uuid';

@@ -44,6 +44,11 @@ class BookInfos
 	 */
 	public function LoadFromEpub($inFileName)
 	{
+		// Check file access
+		if (!is_readable($inFileName)) {
+			throw new Exception('Cannot read file');
+		}
+
 		// Load the epub file
 		$ePub = new EPub($inFileName, 'ZipFile');
 

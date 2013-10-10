@@ -6,6 +6,11 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+/**
+ * Feed validator
+ *   http://opds-validator.appspot.com/
+ */
+
 // Include config file
 $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'epub-loader-config.php';
 if (!file_exists($fileName)) {
