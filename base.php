@@ -425,6 +425,9 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
+        $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
+        $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
 
     public function InitializeContent ()
@@ -432,9 +435,6 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        $this->authorName = isset($config['cops_author_name']) ? $config['cops_author_name'] : utf8_encode('Sébastien Lucas');
-        $this->authorUri = isset($config['cops_author_uri']) ? $config['cops_author_uri'] : 'http://blog.slucas.fr';
-        $this->authorEmail = isset($config['cops_author_email']) ? $config['cops_author_email'] : 'sebastien@slucas.fr';
         $database = GetUrlParam (DB);
         if (is_array ($config['calibre_directory']) && is_null ($database)) {
             $i = 0;
