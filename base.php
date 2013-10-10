@@ -10,12 +10,12 @@ define ("VERSION", "0.7.0beta");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
- 
+
 function useServerSideRendering () {
     global $config;
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
 }
- 
+
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
@@ -31,11 +31,11 @@ function getCurrentOption ($option) {
     if ($option == "style") {
         return "default";
     }
-    
+
     if (isset($config ["cops_" . $option])) {
         return $config ["cops_" . $option];
     }
-    
+
     return "";
 }
 
@@ -84,7 +84,7 @@ function display_xml_error($error)
 function are_libxml_errors_ok ()
 {
     $errors = libxml_get_errors();
-    
+
     foreach ($errors as $error) {
         if ($error->code == 801) return false;
     }
@@ -94,15 +94,15 @@ function are_libxml_errors_ok ()
 function html2xhtml ($html) {
     $doc = new DOMDocument();
     libxml_use_internal_errors(true);
-    
-    $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' . 
+
+    $doc->loadHTML('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></head><body>' .
                         $html  . '</body></html>'); // Load the HTML
     $output = $doc->saveXML($doc->documentElement); // Transform to an Ansi xml stream
     $output = xml2xhtml($output);
     if (preg_match ('#<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8"></meta></head><body>(.*)</body></html>#ms', $output, $matches)) {
         $output = $matches [1]; // Remove <html><body>
     }
-    /* 
+    /*
     // In case of error with summary, use it to debug
     $errors = libxml_get_errors();
 
@@ -110,9 +110,9 @@ function html2xhtml ($html) {
         $output .= display_xml_error($error);
     }
     */
-    
+
     if (!are_libxml_errors_ok ()) $output = "HTML code not valid.";
-    
+
     libxml_use_internal_errors(false);
     return $output;
 }
@@ -124,7 +124,7 @@ function html2xhtml ($html) {
 function str_format($format) {
     $args = func_get_args();
     $format = array_shift($args);
-    
+
     preg_match_all('/(?=\{)\{(\d+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
     $offset = 0;
     foreach ($matches[1] as $data) {
@@ -132,7 +132,7 @@ function str_format($format) {
         $format = substr_replace($format, @$args[$i], $offset + $data[1] - 1, 2 + strlen($i));
         $offset += strlen(@$args[$i]) - 2 - strlen($i);
     }
-    
+
     return $format;
 }
 
@@ -168,7 +168,7 @@ function localize($phrase, $count=-1) {
         $lang_file_content = file_get_contents($lang_file);
         /* Load the language file as a JSON object and transform it into an associative array */
         $translations = json_decode($lang_file_content, true);
-        
+
         /* Clean the array of all unfinished translations */
         foreach ($translations as $key => $val) {
             if (preg_match ("/^##TODO##/", $key)) {
@@ -199,7 +199,7 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
     if (empty ($paramValue) && $paramValue != 0) {
         unset ($params[$paramName]);
     } else {
-        $params[$paramName] = $paramValue;   
+        $params[$paramName] = $paramValue;
     }
     return $start . http_build_query($params);
 }
@@ -211,14 +211,14 @@ class Link
     const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
     const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
     const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
-    
+
     public $href;
     public $type;
     public $rel;
     public $title;
     public $facetGroup;
     public $activeFacet;
-    
+
     public function __construct($phref, $ptype, $prel = NULL, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
         $this->href = $phref;
         $this->type = $ptype;
@@ -227,7 +227,7 @@ class Link
         $this->facetGroup = $pfacetGroup;
         $this->activeFacet = $pactiveFacet;
     }
-    
+
     public function hrefXhtml () {
         return $this->href;
     }
@@ -265,7 +265,7 @@ class Entry
     public $linkArray;
     public $localUpdated;
     private static $updated = NULL;
-    
+
     public static $icons = array(
         Author::ALL_AUTHORS_ID       => 'images/author.png',
         Serie::ALL_SERIES_ID         => 'images/serie.png',
@@ -276,7 +276,7 @@ class Entry
         "calibre:books$"             => 'images/allbook.png',
         "calibre:books:letter"       => 'images/allbook.png'
     );
-    
+
     public function getUpdatedTime () {
         if (!is_null ($this->localUpdated)) {
             return date (DATE_ATOM, $this->localUpdated);
@@ -286,20 +286,20 @@ class Entry
         }
         return date (DATE_ATOM, self::$updated);
     }
-    
+
     public function getNavLink () {
-        foreach ($this->linkArray as $link) { 
+        foreach ($this->linkArray as $link) {
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
-            
+
             return $link->hrefXhtml ();
         }
         return "#";
     }
-    
+
     public function getContentArray () {
         return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
     }
- 
+
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
         global $config;
         $this->title = $ptitle;
@@ -307,7 +307,7 @@ class Entry
         $this->content = $pcontent;
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
-        
+
         if ($config['cops_show_icons'] == 1)
         {
             foreach (self::$icons as $reg => $image)
@@ -318,7 +318,7 @@ class Entry
                 }
             }
         }
-        
+
         if (!is_null (GetUrlParam (DB))) $this->id = GetUrlParam (DB) . ":" . $this->id;
     }
 }
@@ -326,19 +326,19 @@ class Entry
 class EntryBook extends Entry
 {
     public $book;
-    
+
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook) {
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
     }
-    
+
     public function getContentArray () {
         $entry = array ( "title" => $this->title);
         $entry ["book"] = $this->book->getContentArray ();
         return $entry;
     }
-    
+
     public function getCoverThumbnail () {
         foreach ($this->linkArray as $link) {
             if ($link->rel == Link::OPDS_THUMBNAIL_TYPE)
@@ -346,7 +346,7 @@ class EntryBook extends Entry
         }
         return null;
     }
-    
+
     public function getCover () {
         foreach ($this->linkArray as $link) {
             if ($link->rel == Link::OPDS_IMAGE_TYPE)
@@ -360,6 +360,9 @@ class Page
 {
     public $title;
     public $subtitle = "";
+    public $authorName = "";
+    public $authorUri = "";
+    public $authorEmail = "";
     public $idPage;
     public $idGet;
     public $query;
@@ -368,7 +371,7 @@ class Page
     public $book;
     public $totalNumber = -1;
     public $entryArray = array();
-    
+
     public static function getPage ($pageId, $id, $query, $n)
     {
         switch ($pageId) {
@@ -385,7 +388,7 @@ class Page
             case Base::PAGE_ALL_LANGUAGES :
                 return new PageAllLanguages ($id, $query, $n);
             case Base::PAGE_LANGUAGE_DETAIL :
-                return new PageLanguageDetail ($id, $query, $n);             
+                return new PageLanguageDetail ($id, $query, $n);
             case Base::PAGE_ALL_CUSTOMS :
                 return new PageAllCustoms ($id, $query, $n);
             case Base::PAGE_CUSTOM_DETAIL :
@@ -398,7 +401,7 @@ class Page
                 return new PageAllBooksLetter ($id, $query, $n);
             case Base::PAGE_ALL_RECENT_BOOKS :
                 return new PageRecentBooks ($id, $query, $n);
-            case Base::PAGE_SERIE_DETAIL : 
+            case Base::PAGE_SERIE_DETAIL :
                 return new PageSerieDetail ($id, $query, $n);
             case Base::PAGE_OPENSEARCH_QUERY :
                 return new PageQueryResult ($id, $query, $n);
@@ -406,7 +409,7 @@ class Page
                 return new PageBookDetail ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
-            case Base::PAGE_CUSTOMIZE : 
+            case Base::PAGE_CUSTOMIZE :
                 return new PageCustomize ($id, $query, $n);
             default:
                 $page = new Page ($id, $query, $n);
@@ -414,28 +417,31 @@ class Page
                 return $page;
         }
     }
-    
+
     public function __construct($pid, $pquery, $pn) {
         global $config;
-        
+
         $this->idGet = $pid;
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
     }
-    
-    public function InitializeContent () 
+
+    public function InitializeContent ()
     {
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
+        $this->authorName = isset($config['cops_author_name']) ? $config['cops_author_name'] : utf8_encode('Sébastien Lucas');
+        $this->authorUri = isset($config['cops_author_uri']) ? $config['cops_author_uri'] : 'http://blog.slucas.fr';
+        $this->authorEmail = isset($config['cops_author_email']) ? $config['cops_author_email'] : 'sebastien@slucas.fr';
         $database = GetUrlParam (DB);
         if (is_array ($config['calibre_directory']) && is_null ($database)) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 $nBooks = Book::getBookCount ($i);
-                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog", 
-                                        str_format (localize ("bookword", $nBooks), $nBooks), "text", 
+                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog",
+                                        str_format (localize ("bookword", $nBooks), $nBooks), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
                 $i++;
                 Base::clearDb ();
@@ -455,7 +461,7 @@ class Page
                 }
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
-            
+
             if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
     }
@@ -463,11 +469,11 @@ class Page
     public function isPaginated ()
     {
         global $config;
-        return (getCurrentOption ("max_item_per_page") != -1 && 
-                $this->totalNumber != -1 && 
+        return (getCurrentOption ("max_item_per_page") != -1 &&
+                $this->totalNumber != -1 &&
                 $this->totalNumber > getCurrentOption ("max_item_per_page"));
     }
-    
+
     public function getNextLink ()
     {
         global $config;
@@ -478,7 +484,7 @@ class Page
         }
         return NULL;
     }
-    
+
     public function getPrevLink ()
     {
         global $config;
@@ -489,13 +495,13 @@ class Page
         }
         return NULL;
     }
-    
+
     public function getMaxPage ()
     {
         global $config;
         return ceil ($this->totalNumber / getCurrentOption ("max_item_per_page"));
     }
-    
+
     public function containsBook ()
     {
         if (count ($this->entryArray) == 0) return false;
@@ -507,10 +513,10 @@ class Page
 
 class PageAllAuthors extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         global $config;
-        
+
         $this->title = localize("authors.title");
         if ($config['cops_author_split_first_letter'] == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
@@ -524,10 +530,10 @@ class PageAllAuthors extends Page
 
 class PageAllAuthorsLetter extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         global $config;
-        
+
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
@@ -536,7 +542,7 @@ class PageAllAuthorsLetter extends Page
 
 class PageAuthorDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $author = Author::getAuthorById ($this->idGet);
         $this->idPage = $author->getEntryId ();
@@ -547,7 +553,7 @@ class PageAuthorDetail extends Page
 
 class PageAllTags extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();
@@ -557,7 +563,7 @@ class PageAllTags extends Page
 
 class PageAllLanguages extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize("languages.title");
         $this->entryArray = Language::getAllLanguages();
@@ -567,7 +573,7 @@ class PageAllLanguages extends Page
 
 class PageCustomDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
         $custom = CustomColumn::getCustomById ($customId, $this->idGet);
@@ -579,7 +585,7 @@ class PageCustomDetail extends Page
 
 class PageAllCustoms extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
         $this->title = CustomColumn::getAllTitle ($customId);
@@ -590,7 +596,7 @@ class PageAllCustoms extends Page
 
 class PageTagDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $tag = Tag::getTagById ($this->idGet);
         $this->idPage = $tag->getEntryId ();
@@ -601,7 +607,7 @@ class PageTagDetail extends Page
 
 class PageLanguageDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $language = Language::getLanguageById ($this->idGet);
         $this->idPage = $language->getEntryId ();
@@ -612,7 +618,7 @@ class PageLanguageDetail extends Page
 
 class PageAllSeries extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();
@@ -622,7 +628,7 @@ class PageAllSeries extends Page
 
 class PageSerieDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $serie = Serie::getSerieById ($this->idGet);
         $this->title = $serie->name;
@@ -633,7 +639,7 @@ class PageSerieDetail extends Page
 
 class PageAllBooks extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize ("allbooks.title");
         $this->entryArray = Book::getAllBooks ();
@@ -643,22 +649,22 @@ class PageAllBooks extends Page
 
 class PageAllBooksLetter extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByStartingLetter ($this->idGet, $this->n);
         $this->idPage = Book::getEntryIdByLetter ($this->idGet);
-        
+
         $count = $this->totalNumber;
         if ($count == -1)
             $count = count ($this->entryArray);
-        
+
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("bookword", $count), $count), $this->idGet);
     }
 }
 
 class PageRecentBooks extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize ("recent.title");
         $this->entryArray = Book::getAllRecentBooks ();
@@ -672,8 +678,8 @@ class PageQueryResult extends Page
     const SCOPE_SERIES = "series";
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
-    
-    public function InitializeContent () 
+
+    public function InitializeContent ()
     {
         global $config;
         $scope = getURLParam ("scope");
@@ -689,22 +695,22 @@ class PageQueryResult extends Page
                 break;
             case self::SCOPE_BOOK :
                 $this->title = str_format (localize ("search.result.book"), $this->query);
-                break;    
+                break;
             default:
                 $this->title = str_format (localize ("search.result"), $this->query);
         }
 
         $crit = "%" . $this->query . "%";
         $bad = "QQQQQ";
-        
+
         // Special case when we are doing a search and no database is selected
         if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 Base::clearDb ();
                 list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), $this->n, $i);
-                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}", 
-                                        str_format (localize ("bookword", count($array)), count($array)), "text", 
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
+                                        str_format (localize ("bookword", count($array)), count($array)), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
                 $i++;
             }
@@ -723,7 +729,7 @@ class PageQueryResult extends Page
             case self::SCOPE_BOOK :
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
                     array ($bad, $bad, $bad, $crit), $this->n);
-                break;    
+                break;
             default:
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
                     array ($crit, $crit, $crit, $crit), $this->n);
@@ -733,7 +739,7 @@ class PageQueryResult extends Page
 
 class PageBookDetail extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->book = Book::getBookById ($this->idGet);
         $this->title = $this->book->title;
@@ -742,7 +748,7 @@ class PageBookDetail extends Page
 
 class PageAbout extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         $this->title = localize ("about.title");
     }
@@ -750,12 +756,12 @@ class PageAbout extends Page
 
 class PageCustomize extends Page
 {
-    public function InitializeContent () 
+    public function InitializeContent ()
     {
         global $config;
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
-        
+
         $use_fancybox = "";
         if (getCurrentOption ("use_fancyapps") == 1) {
             $use_fancybox = "checked='checked'";
@@ -764,8 +770,8 @@ class PageCustomize extends Page
         if (getCurrentOption ("html_tag_filter") == 1) {
             $html_tag_filter = "checked='checked'";
         }
-        
-        
+
+
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
@@ -791,26 +797,26 @@ class PageCustomize extends Page
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '</select>';
         }
-        array_push ($this->entryArray, new Entry (localize ("customize.style"), "", 
-                                        $content, "text", 
+        array_push ($this->entryArray, new Entry (localize ("customize.style"), "",
+                                        $content, "text",
                                         array ()));
         if (!useServerSideRendering ()) {
             $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
-            array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "", 
-                                            $content, "text", 
+            array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "",
+                                            $content, "text",
                                             array ()));
         }
         $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
-        array_push ($this->entryArray, new Entry (localize ("customize.paging"), "", 
-                                        $content, "text", 
+        array_push ($this->entryArray, new Entry (localize ("customize.paging"), "",
+                                        $content, "text",
                                         array ()));
         $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
-        array_push ($this->entryArray, new Entry (localize ("customize.email"), "", 
-                                        $content, "text", 
+        array_push ($this->entryArray, new Entry (localize ("customize.email"), "",
+                                        $content, "text",
                                         array ()));
         $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $html_tag_filter . ' />';
-        array_push ($this->entryArray, new Entry (localize ("customize.filter"), "", 
-                                        $content, "text", 
+        array_push ($this->entryArray, new Entry (localize ("customize.filter"), "",
+                                        $content, "text",
                                         array ()));
     }
 }
@@ -836,13 +842,13 @@ abstract class Base
     const PAGE_CUSTOM_DETAIL = "15";
     const PAGE_ABOUT = "16";
     const PAGE_ALL_LANGUAGES = "17";
-    const PAGE_LANGUAGE_DETAIL = "18";   
-    const PAGE_CUSTOMIZE = "19"; 
+    const PAGE_LANGUAGE_DETAIL = "18";
+    const PAGE_CUSTOMIZE = "19";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
-    
+
     private static $db = NULL;
-    
+
     public static function getDbList () {
         global $config;
         if (is_array ($config['calibre_directory'])) {
@@ -872,11 +878,11 @@ abstract class Base
         return $config['calibre_directory'];
     }
 
-  
+
     public static function getDbFileName ($database = NULL) {
         return self::getDbDirectory ($database) .'metadata.db';
     }
-    
+
     public static function getDb ($database = NULL) {
         global $config;
         if (is_null (self::$db)) {
@@ -889,27 +895,27 @@ abstract class Base
         }
         return self::$db;
     }
-    
+
     public static function clearDb () {
         self::$db = NULL;
     }
-    
+
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL) {
         global $config;
         $totalResult = -1;
-        
+
         if (getCurrentOption ("max_item_per_page") != -1 && $n != -1)
         {
             // First check total number of results
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
             $result->execute ($params);
             $totalResult = $result->fetchColumn ();
-            
+
             // Next modify the query and params
             $query .= " limit ?, ?";
             array_push ($params, ($n - 1) * getCurrentOption ("max_item_per_page"), getCurrentOption ("max_item_per_page"));
         }
-        
+
         $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
         $result->execute ($params);
         return array ($totalResult, $result);
