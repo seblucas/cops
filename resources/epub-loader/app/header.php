@@ -5,7 +5,7 @@ header('Content-type: text/html; charset=utf-8');
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo DEF_AppName; ?></title>
+	<title><?php echo $gConfig['app_name']; ?></title>
 	<meta name="author" content="opale-concept.com" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
@@ -80,7 +80,7 @@ header('Content-type: text/html; charset=utf-8');
 <body>
 	<!-- Header begin -->
 	<div class="header">
-<?php echo '		<a href=".">' . DEF_AppName . '</a>' . "\n"; ?>
+		<a href="."><?php echo $gConfig['app_name']; ?></a>
 	</div>
 	<!-- Header end -->
 

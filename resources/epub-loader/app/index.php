@@ -7,32 +7,15 @@
  */
 
 //------------------------------------------------------------------------------
-// Global defines
-//------------------------------------------------------------------------------
-
-// Application version
-define('DEF_AppVersion', '1.0');
-// Application name
-define('DEF_AppName', 'epub loader');
-// Admin email
-define('DEF_AppAdminMail', 'didier.corbiere@opale-concept.com');
-
-
-//------------------------------------------------------------------------------
 // Include files
 //------------------------------------------------------------------------------
 
 // Include config file
-$fileName = __DIR__ . DIRECTORY_SEPARATOR . 'config.php';
+$fileName = __DIR__ . DIRECTORY_SEPARATOR . 'epub-loader-config.php';
 if (!file_exists($fileName)) {
 	die ('Missing configuration file: ' . $fileName);
 }
 require_once($fileName);
-
-// Check Cops directory
-if (!is_dir($gConfig['cops_directory'])) {
-	die ('Incorrect Cops directory: ' . $gConfig['cops_directory']);
-}
 
 // Include Calibre database loader class
 $fileName = $gConfig['cops_directory'] . '/resources/epub-loader/CalibreDbLoader.class.php';
