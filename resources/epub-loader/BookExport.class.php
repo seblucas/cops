@@ -42,15 +42,24 @@ class BookExport
 	 * @param string Epub file name
 	 * @throws Exception if error
 	 *
-	 * @return void
+	 * @return string Empty string or error if any
 	 */
 	public function AddEpub($inFileName)
 	{
-		// Load the book infos
-		$bookInfos = new BookInfos();
-		$bookInfos->LoadFromEpub($inFileName);
-		// Add the book
-		$this->AddBook($bookInfos);
+		$error = '';
+
+		try {
+			// Load the book infos
+			$bookInfos = new BookInfos();
+			$bookInfos->LoadFromEpub($inFileName);
+			// Add the book
+			$this->AddBook($bookInfos);
+		}
+		catch (Exception $e) {
+			$error = $e->getMessage();
+		}
+
+		return $error;
 	}
 
 	/**
@@ -83,6 +92,8 @@ class BookExport
 			$this->mExport->SetProperty($i++, 'Publisher');
 			$this->mExport->SetProperty($i++, 'Serie');
 			$this->mExport->SetProperty($i++, 'SerieIndex');
+			$this->mExport->SetProperty($i++, 'CreationDate');
+			$this->mExport->SetProperty($i++, 'ModificationDate');
 			$this->mExport->AddContent();
 		}
 
@@ -105,6 +116,8 @@ class BookExport
 		$this->mExport->SetProperty($i++, $inBookInfo->mPublisher);
 		$this->mExport->SetProperty($i++, $inBookInfo->mSerie);
 		$this->mExport->SetProperty($i++, $inBookInfo->mSerieIndex);
+		$this->mExport->SetProperty($i++, $inBookInfo->mCreationDate);
+		$this->mExport->SetProperty($i++, $inBookInfo->mModificationDate);
 
 		$this->mExport->AddContent();
 	}

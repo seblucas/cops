@@ -323,6 +323,30 @@ class EPub {
     }
 
     /**
+     * Set or get the book's creation date
+     *
+     * @param string Date eg: 2012-05-19T12:54:25Z
+     */
+    public function CreationDate($date = false)
+    {
+        $res = $this->getset('dc:date', $date, 'opf:event', 'creation');
+
+        return $res;
+    }
+
+    /**
+     * Set or get the book's modification date
+     *
+     * @param string Date eg: 2012-05-19T12:54:25Z
+     */
+    public function ModificationDate($date = false)
+    {
+        $res = $this->getset('dc:date', $date, 'opf:event', 'modification');
+
+        return $res;
+    }
+
+    /**
      * Set or get the book's URI
      *
      * @param string URI

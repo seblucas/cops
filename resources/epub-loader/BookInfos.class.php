@@ -31,6 +31,8 @@ class BookInfos
 	public $mPublisher = '';
 	public $mSerie = '';
 	public $mSerieIndex = '';
+	public $mCreationDate = '';
+	public $mModificationDate = '';
 
 	/**
 	 * Loads book infos from an epub file
@@ -63,6 +65,8 @@ class BookInfos
 		$this->mPublisher = $ePub->Publisher();
 		$this->mSerie = $ePub->Serie();
 		$this->mSerieIndex = $ePub->SerieIndex();
+		$this->mCreationDate = $ePub->CreationDate();
+		$this->mModificationDate = $ePub->ModificationDate();
 	}
 
 }
