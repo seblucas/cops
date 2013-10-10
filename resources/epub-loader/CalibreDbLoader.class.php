@@ -106,6 +106,8 @@ class CalibreDbLoader
 			// Open the database
 			$this->mDb = new PDO($dsn); // Send an exception if error
 			$this->mDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$this->mDb->exec('pragma synchronous = off');
+			$this->mDb->exec('pragma journal_mode = MEMORY');
 			//echo sprintf('Init database ok for: %s%s', $dsn, '<br />');
 		}
 		catch (Exception $e) {

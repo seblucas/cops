@@ -138,7 +138,6 @@ else {
 			$str .= '<td>' . $dbConfig['epub_path'] . '</td>' . "\n";
 			$str .= '<td>' . count($fileList) . '</td>' . "\n";
 			$str .= '</tr>' . "\n";
-			$numWork++;
 		}
 		$str .= '</table>' . "\n";
 		echo $str;
