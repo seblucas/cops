@@ -89,6 +89,12 @@ if (isset($action) && isset($dbNum)) {
 		die ('Incorrect database num: ' . $dbNum);
 	}
 	$dbConfig = $gConfig['databases'][$dbNum];
+	$dbPath = $dbConfig['db_path'];
+	if (!is_dir($dbPath)) {
+		if (!mkdir($dbPath, 0755, true)) {
+			die ('Cannot create directory: ' . $dbPath);
+		}
+	}
 	$fileName = sprintf('%s%saction_%s.php', __DIR__, DIRECTORY_SEPARATOR, $action);
 	if (!file_exists($fileName)) {
 		die ('Incorrect action file: ' . $fileName);
