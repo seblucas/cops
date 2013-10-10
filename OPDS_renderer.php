@@ -7,7 +7,7 @@
  */
 
 require_once ("base.php");
- 
+
 class OPDSRenderer
 {
     const PAGE_OPENSEARCH = "8";
@@ -15,14 +15,14 @@ class OPDSRenderer
 
     private $xmlStream = NULL;
     private $updated = NULL;
-    
+
     private function getUpdatedTime () {
         if (is_null ($this->updated)) {
             $this->updated = time();
         }
         return date (DATE_ATOM, $this->updated);
     }
-    
+
     private function getXmlStream () {
         if (is_null ($this->xmlStream)) {
             $this->xmlStream = new XMLWriter();
@@ -31,7 +31,7 @@ class OPDSRenderer
         }
         return $this->xmlStream;
     }
-    
+
     public function getOpenSearch () {
         global $config;
         $xml = new XMLWriter ();
@@ -74,7 +74,7 @@ class OPDSRenderer
         $xml->endDocument();
         return $xml->outputMemory(true);
     }
-    
+
     private function startXmlDocument ($page) {
         global $config;
         self::getXmlStream ()->startDocument('1.0','UTF-8');
@@ -113,13 +113,13 @@ class OPDSRenderer
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("author");
                 self::getXmlStream ()->startElement ("name");
-                    self::getXmlStream ()->text (utf8_encode ("Sébastien Lucas"));
+                    self::getXmlStream ()->text ($page->authorName);
                 self::getXmlStream ()->endElement ();
                 self::getXmlStream ()->startElement ("uri");
-                    self::getXmlStream ()->text ("http://blog.slucas.fr");
+                    self::getXmlStream ()->text ($page->authorUri);
                 self::getXmlStream ()->endElement ();
                 self::getXmlStream ()->startElement ("email");
-                    self::getXmlStream ()->text ("sebastien@slucas.fr");
+                    self::getXmlStream ()->text ($page->authorEmail);
                 self::getXmlStream ()->endElement ();
             self::getXmlStream ()->endElement ();
             $link = new LinkNavigation ("", "start", "Home");
@@ -146,13 +146,13 @@ class OPDSRenderer
                 }
             }
     }
-        
+
     private function endXmlDocument () {
         self::getXmlStream ()->endElement ();
         self::getXmlStream ()->endDocument ();
         return self::getXmlStream ()->outputMemory(true);
     }
-    
+
     private function renderLink ($link) {
         self::getXmlStream ()->startElement ("link");
             self::getXmlStream ()->writeAttribute ("href", $link->href);
@@ -172,7 +172,7 @@ class OPDSRenderer
         self::getXmlStream ()->endElement ();
     }
 
-    
+
     private function renderEntry ($entry) {
         self::getXmlStream ()->startElement ("title");
             self::getXmlStream ()->text ($entry->title);
@@ -194,11 +194,11 @@ class OPDSRenderer
         foreach ($entry->linkArray as $link) {
             self::renderLink ($link);
         }
-        
+
         if (get_class ($entry) != "EntryBook") {
             return;
         }
-        
+
         foreach ($entry->book->getAuthors () as $author) {
             self::getXmlStream ()->startElement ("author");
                 self::getXmlStream ()->startElement ("name");
@@ -223,7 +223,7 @@ class OPDSRenderer
                 self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate) . "T08:08:08Z");
             self::getXmlStream ()->endElement ();
         }
-        
+
         $lang = $entry->book->getLanguages ();
         if (!empty ($lang)) {
             self::getXmlStream ()->startElement ("dcterms:language");
@@ -232,7 +232,7 @@ class OPDSRenderer
         }
 
     }
-    
+
     public function render ($page) {
         global $config;
         self::startXmlDocument ($page);
@@ -264,4 +264,4 @@ class OPDSRenderer
         return self::endXmlDocument ();
     }
 }
- 
+

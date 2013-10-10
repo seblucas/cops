@@ -20,7 +20,7 @@ class CsvExport extends BaseExport
 	 * @param string Export file name
 	 * @param boolean Force file creation
 	 */
-	public function __construct($inFileName)
+	public function __construct($inFileName, $inCreate = false)
 	{
 		$this->mSearch = array("\r", "\n", self::CsvSeparator);
 		$this->mReplace = array('', '<br />', '');
@@ -28,7 +28,7 @@ class CsvExport extends BaseExport
 		// Init container
 		$this->mLines = array();
 
-		parent::__construct($inFileName);
+		parent::__construct($inFileName, $inCreate);
 	}
 
 	/**

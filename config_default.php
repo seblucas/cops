@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
     if (!isset($config))
@@ -38,10 +38,25 @@
     $config['cops_recentbooks_limit'] = '50'; 
     
     /*
+     * Catalog's author name
+     */
+    $config['cops_author_name'] = "Sébastien Lucas";
+
+    /*
+     * Catalog's author uri
+     */
+    $config['cops_author_uri'] = "http://blog.slucas.fr";
+
+    /*
+     * Catalog's author email
+     */
+    $config['cops_author_email'] = "sebastien@slucas.fr";
+
+    /*
      * Catalog's title
      */
     $config['cops_title_default'] = "COPS";
-
+    
     /*
      * Catalog's subtitle
      */
@@ -212,4 +227,3 @@
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
     $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201|cybook";
-
