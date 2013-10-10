@@ -11,24 +11,22 @@
     <div id="tool" {{? it.c.config.server_side_rendering == 0}}style="display: none"{{?}}>
         <div style="float: left; width: 50%">
             <form id="searchForm" action="index.php" method="get">
-                <div  style="float: right">
-                    <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
-                        <i class="icon-search"></i>
-                    </button>
-                </div>
                 <div class="stop">
                     <input type="hidden" name="page" value="9" />
                     {{? it.databaseId != ""}}
                         <input type="hidden" name="db" value="{{=it.databaseId}}" />
                     {{?}}
-                    <input type="search" required="required" name="query" />
+                    <input type="text" data-type="search" required="required" name="query" />
                 </div>
+                <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
+                    <i class="icon-search icon-2x"></i>
+                </button>
             </form>
         </div>
         {{? it.c.config.server_side_rendering == 0}}
         <div id="sortForm" style="float: right; width: 45%; display: none">
             <div style="float: right">
-                <div title="{{=it.c.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="icon-sort"></i></div>
+                <div title="{{=it.c.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="icon-sort icon-2x"></i></div>
             </div>
             <div class="stop">
                 <select id="sortchoice">
