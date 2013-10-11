@@ -45,6 +45,9 @@ header('Content-type: text/html; charset=utf-8');
 	  padding-bottom: 5px;
   	font-weight: bold;
 	}
+	.small {
+		font-size: 80%;
+	}
 	table {
 		border-collapse: collapse;
 		border-color: #ccc;
@@ -80,7 +83,7 @@ header('Content-type: text/html; charset=utf-8');
 <body>
 	<!-- Header begin -->
 	<div class="header">
-		<a href="."><?php echo $gConfig['app_name']; ?></a>
+		<a href="."><?php echo $gConfig['app_name']; ?></a> <span class="small"><?php echo ' - version ' . DEF_AppVersion; ?></span>
 	</div>
 	<!-- Header end -->
 
