@@ -138,7 +138,6 @@ class CalibreDbLoader
 		}
 
 		return $error;
-
 	}
 
 	/**
@@ -190,13 +189,24 @@ class CalibreDbLoader
 			$error = sprintf('Cannot find book id for uuid: %s', $inBookInfo->mUuid);
 			throw new Exception($error);
 		}
-		// Add the book formats
-		$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
-		$stmt = $this->mDb->prepare($sql);
-		$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-		$stmt->bindParam(':format', $inBookInfo->mFormat);
-		$stmt->bindParam(':name', $inBookInfo->mName);
-		$stmt->execute();
+		// Add the book data (formats)
+		$formats = array($inBookInfo->mFormat, 'pdf');
+		foreach ($formats as $format) {
+			$fileName = sprintf('%s%s%s.%s', $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
+			if (!is_readable($fileName)) {
+				if ($format == $inBookInfo->mFormat) {
+					$error = sprintf('Cannot read file: %s', $fileName);
+					throw new Exception($error);
+				}
+				continue;
+			}
+			$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
+			$stmt = $this->mDb->prepare($sql);
+			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
+			$stmt->bindParam(':format', $format);
+			$stmt->bindParam(':name', $inBookInfo->mName);
+			$stmt->execute();
+		}
 		// Add the book comments
 		$sql = 'insert into comments(book, text) values(:idBook, :text)';
 		$stmt = $this->mDb->prepare($sql);

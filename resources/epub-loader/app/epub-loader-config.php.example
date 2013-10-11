@@ -43,12 +43,11 @@ $gConfig['create_db'] = true;
  *   name: The database name to display
  *   db_path: The path where to create the database
  *   epub_path: The path where to look for the epub files to load
- *   pdf_path: The path where to look for pdf files
  */
 $gConfig['databases'] = array();
-$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/ebooks/calibre/demo', 'epub_path' => '/opt/ebooks/epub/demo', 'pdf_path' => '');
-$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/ebooks/calibre/bnr', 'epub_path' => '/opt/ebooks/epub/bnr', 'pdf_path' => '');
-$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/ebooks/calibre/bibebook', 'epub_path' => '/opt/ebooks/epub/bibebook', 'pdf_path' => '');
+$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/ebooks/calibre/demo', 'epub_path' => '/opt/ebooks/epub/demo');
+$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/ebooks/calibre/bnr', 'epub_path' => '/opt/ebooks/epub/bnr');
+$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/ebooks/calibre/bibebook', 'epub_path' => '/opt/ebooks/epub/bibebook');
 
 /**
  * Available actions

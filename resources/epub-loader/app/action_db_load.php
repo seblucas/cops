@@ -11,17 +11,21 @@ $fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . 'metadata.db';
 try {
 	// Open or create the database
 	$db = new CalibreDbLoader($fileName, $gConfig['create_db']);
-	echo sprintf('Load database %s', $fileName) . '<br />';
 	// Add the epub files into the database
+	$nbOk = 0;
 	if (!empty($dbConfig['epub_path'])) {
 		$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
 		foreach ($fileList as $file) {
 			$error = $db->AddEpub($file);
 			if (!empty($error)) {
 				$gErrorArray[$file] = $error;
+				continue;
 			}
+			$nbOk++;
 		}
 	}
+	// Display info
+	echo sprintf('Load database %s - %d files', $fileName, $nbOk) . '<br />';
 }
 catch (Exception $e) {
 	$gErrorArray[$fileName] = $e->getMessage();
