@@ -6,6 +6,8 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+defined('DEF_AppName') or die('Restricted access');
+
 // Init csv file
 $fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . basename($dbConfig['db_path']) . '_metadata.csv';
 try {

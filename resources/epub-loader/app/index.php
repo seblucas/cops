@@ -6,6 +6,9 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+// Application name
+define('DEF_AppName', 'Epub loader');
+
 // Application version
 define('DEF_AppVersion', '1.0');
 

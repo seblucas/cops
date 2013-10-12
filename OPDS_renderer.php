@@ -205,7 +205,8 @@ class OPDSRenderer
                     self::getXmlStream ()->text ($author->name);
                 self::getXmlStream ()->endElement ();
                 self::getXmlStream ()->startElement ("uri");
-                    self::getXmlStream ()->text ("feed.php" . $author->getUri ());
+                    $link = new LinkNavigation($author->getUri ());
+                    self::getXmlStream ()->text ($link->hrefXhtml());
                 self::getXmlStream ()->endElement ();
             self::getXmlStream ()->endElement ();
         }

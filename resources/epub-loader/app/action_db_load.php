@@ -6,6 +6,8 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+defined('DEF_AppName') or die('Restricted access');
+
 // Init database file
 $fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . 'metadata.db';
 try {

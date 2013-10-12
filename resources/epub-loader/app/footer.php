@@ -1,3 +1,6 @@
+<?php
+defined('DEF_AppName') or die('Restricted access');
+?>
 	</div>
 	<!-- Content end -->
 

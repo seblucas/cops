@@ -6,6 +6,8 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+defined('DEF_AppName') or die('Restricted access');
+
 $gConfig = array();
 
 /**
