@@ -3,7 +3,7 @@
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
 
-class StackTest extends PHPUnit_Framework_TestCase
+class BookTest extends PHPUnit_Framework_TestCase
 {   
     public function testGetBookCount ()
     {
