@@ -175,4 +175,42 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue ($currentPage->ContainsBook ());
     }
     
+    public function testPageAllSeries ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_SERIES;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Series", $currentPage->title);
+        $this->assertCount (3, $currentPage->entryArray);
+        $this->assertEquals ("D'Artagnan Romances", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+    
+    public function testPageSeriesDetail ()
+    {
+        global $config;
+        $page = Base::PAGE_SERIE_DETAIL;
+        $query = NULL;
+        $search = NULL;
+        $qid = "1";
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Sherlock Holmes", $currentPage->title);
+        $this->assertCount (7, $currentPage->entryArray);
+        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+    }
+    
 }
