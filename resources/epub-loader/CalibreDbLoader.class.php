@@ -3,7 +3,7 @@
  * CalibreDbLoader class
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
 require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
