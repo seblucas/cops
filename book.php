@@ -592,17 +592,17 @@ function getJson ($complete = false) {
                         "tag" => $arrayTag) as $key => $array) {
             $i = 0;
             $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+            if (count($array) > 0) {
+                // Comment to help the perl i18n script
+                // str_format (localize("bookword", count($array))
+                // str_format (localize("authorword", count($array)
+                // str_format (localize("seriesword", count($array)
+                // str_format (localize("tagword", count($array)
+                array_push ($out, array ("title" => str_format (localize("{$key}word", count($array)), count($array)),
+                                         "class" => "tt-header",
+                                         "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
+            }
             foreach ($array as $entry) {
-                if (count($array) > 0) {
-                    // Comment to help the perl i18n script
-                    // str_format (localize("bookword", count($array))
-                    // str_format (localize("authorword", count($array)
-                    // str_format (localize("seriesword", count($array)
-                    // str_format (localize("tagword", count($array)
-                    array_push ($out, array ("title" => str_format (localize("{$key}word", count($array)), count($array)),
-                                             "class" => "tt-header",
-                                             "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
-                }
                 if ($entry instanceof EntryBook) {
                     array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
                 } else {
