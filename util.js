@@ -2,7 +2,7 @@
 // copyright Sébastien Lucas
 // https://github.com/seblucas/cops
 
-var templatePage, templateBookDetail, templateMain, currentData, before, filterList;
+var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
 if (typeof LRUCache!='undefined') {
     var cache = new LRUCache(30);
