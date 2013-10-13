@@ -3,7 +3,7 @@
  * Epub loader application: COPS fetch wrapper
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
 // Application name
