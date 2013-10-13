@@ -3,7 +3,7 @@
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
 
-class StackTest extends PHPUnit_Framework_TestCase
+class BookTest extends PHPUnit_Framework_TestCase
 {   
     public function testGetBookCount ()
     {
@@ -83,6 +83,36 @@ class StackTest extends PHPUnit_Framework_TestCase
         $this->assertEquals (14, count($entryArray));
         $this->assertEquals (-1, $totalNumber);
     }
+    
+    public function testGetAllBooks ()
+    {
+        // All books by first letter
+        $entryArray = Book::getAllBooks ();
+        $this->assertCount (9, $entryArray);
+    }
+    
+    public function testGetBooksByStartingLetter ()
+    {
+        // All books by first letter
+        list ($entryArray, $totalNumber) = Book::getBooksByStartingLetter ("T", -1);
+        $this->assertCount (3, $entryArray);
+    }
+    
+    public function testGetAllRecentBooks ()
+    {
+        // All recent books
+        global $config;
+        
+        $config['cops_recentbooks_limit'] = 2;
+        
+        $entryArray = Book::getAllRecentBooks ();
+        $this->assertCount (2, $entryArray);
+        
+        $config['cops_recentbooks_limit'] = 50;
+        
+        $entryArray = Book::getAllRecentBooks ();
+        $this->assertCount (14, $entryArray);
+    }
 
     public function testGetBookById ()
     {
@@ -94,7 +124,8 @@ class StackTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Doyle, Arthur Conan", $book->getAuthorsName ());
         $this->assertEquals ("Fiction, Mystery & Detective, Short Stories", $book->getTagsName ());
         $this->assertEquals ('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment (false));
-        
+        $this->assertEquals ("English", $book->getLanguages ());
+        $this->assertEquals ("", $book->getRating ());
     }
     
 }
