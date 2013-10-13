@@ -11,6 +11,9 @@
  *   http://opds-validator.appspot.com/
  */
 
+// Application name
+define('DEF_AppName', 'Cops feed');
+
 // Include config file
 $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'epub-loader-config.php';
 if (!file_exists($fileName)) {

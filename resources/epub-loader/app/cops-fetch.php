@@ -6,6 +6,9 @@
  * @author     Didier Corbière <didier.corbiere@opale-concept.com>
  */
 
+// Application name
+define('DEF_AppName', 'Cops fetch');
+
 // Include config file
 $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'epub-loader-config.php';
 if (!file_exists($fileName)) {
