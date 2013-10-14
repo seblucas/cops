@@ -2,6 +2,8 @@
 // copyright Sébastien Lucas
 // https://github.com/seblucas/cops
 
+/*global LRUCache */
+
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
 if (typeof LRUCache!='undefined') {
@@ -19,6 +21,7 @@ function debug_log(text) {
     }
 }
 
+/*exported updateCookie */
 function updateCookie (id) {
     if($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
         return;
@@ -28,6 +31,7 @@ function updateCookie (id) {
     $.cookie(name, value, { expires: 365 });
 }
 
+/*exported updateCookieFromCheckbox */
 function updateCookieFromCheckbox (id) {
     var name = $(id).attr('id');
     if ((/^style/).test (name)) {
@@ -57,6 +61,7 @@ function retourMail(data, textStatus, jqXHR ) {
     alert (data);
 }
 
+/*exported sendToMailAddress */
 function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
@@ -94,6 +99,7 @@ function getCurrentOption (option) {
     return $.cookie (option);
 }
 
+/*exported htmlspecialchars */
 function htmlspecialchars(str) {
     return String(str)
             .replace(/&/g, '&amp;')
@@ -268,6 +274,7 @@ function updatePage (data) {
     }
 }
 
+/*exported handleLinks */
 function handleLinks () {
     $("body").on ("click", "a[href^='index']", link_Clicked);
     $("body").on ("submit", "#searchForm", search_Submitted);
