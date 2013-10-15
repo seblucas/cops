@@ -129,35 +129,6 @@ function getTagList () {
     return tagList;
 }
 
-function doFilter () {
-    $(".books").removeClass("filtered");
-    if (jQuery.isEmptyObject(filterList)) {
-        updateFilters ();
-        return;
-    }
-    
-    $(".se").each (function(){
-        var taglist = ", " + $(this).text() + ", ";
-        var toBeFiltered = false;
-        for (var filter in filterList) {
-            var onlyThisTag = filterList [filter];
-            filter = ', ' + filter + ', ';
-            var myreg = new RegExp (filter);
-            if (myreg.test (taglist)) {
-                if (onlyThisTag === false) {
-                    toBeFiltered = true;
-                }
-            } else {
-                if (onlyThisTag === true) {
-                    toBeFiltered = true;
-                }
-            }
-        }
-        if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
-    });
-    updateFilters ();
-}
-
 function updateFilters () {
     var tagList = getTagList ();
     
@@ -188,6 +159,35 @@ function updateFilters () {
     $('#filter ul li').sortElements(function(a, b){
         return $(a).text() > $(b).text() ? 1 : -1;
     });
+}
+
+function doFilter () {
+    $(".books").removeClass("filtered");
+    if (jQuery.isEmptyObject(filterList)) {
+        updateFilters ();
+        return;
+    }
+    
+    $(".se").each (function(){
+        var taglist = ", " + $(this).text() + ", ";
+        var toBeFiltered = false;
+        for (var filter in filterList) {
+            var onlyThisTag = filterList [filter];
+            filter = ', ' + filter + ', ';
+            var myreg = new RegExp (filter);
+            if (myreg.test (taglist)) {
+                if (onlyThisTag === false) {
+                    toBeFiltered = true;
+                }
+            } else {
+                if (onlyThisTag === true) {
+                    toBeFiltered = true;
+                }
+            }
+        }
+        if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
+    });
+    updateFilters ();
 }
 
 function handleFilterEvents () {
@@ -223,23 +223,6 @@ function handleFilterEvents () {
  ************************************************
  */
 
-function navigateTo (url) {
-    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
-    before = new Date ();
-    var jsonurl = url.replace ("index", "getJSON");
-    var cachedData = cache.get (jsonurl);
-    if (cachedData) {
-        history.pushState(jsonurl, "", url);
-        updatePage (cachedData);
-    } else {
-        $.getJSON(jsonurl, function(data) {
-            history.pushState(jsonurl, "", url);
-            cache.put (jsonurl, data);
-            updatePage (data);
-        });
-    }
-}
-
 function updatePage (data) {
     var result;
     filterList = {};
@@ -274,42 +257,21 @@ function updatePage (data) {
     }
 }
 
-/*exported handleLinks */
-function handleLinks () {
-    $("body").on ("click", "a[href^='index']", link_Clicked);
-    $("body").on ("submit", "#searchForm", search_Submitted);
-    $("body").on ("click", "#sort", function(){
-        $('.books').sortElements(function(a, b){
-            var test = 1;
-            if ($("#sortorder").val() === "desc")
-            {
-                test = -1;
-            }
-            return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
+function navigateTo (url) {
+    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
+    before = new Date ();
+    var jsonurl = url.replace ("index", "getJSON");
+    var cachedData = cache.get (jsonurl);
+    if (cachedData) {
+        history.pushState(jsonurl, "", url);
+        updatePage (cachedData);
+    } else {
+        $.getJSON(jsonurl, function(data) {
+            history.pushState(jsonurl, "", url);
+            cache.put (jsonurl, data);
+            updatePage (data);
         });
-    });
-    
-    $("body").on ("click", ".headright", function(){
-        if ($("#tool").is(":hidden")) {
-            $("#tool").slideDown("slow");
-            $("input[name=query]").focus();
-            $.cookie('toolbar', '1', { expires: 365 });
-        } else {
-            $("#tool").slideUp();
-            $.removeCookie('toolbar');
-        }
-    });
-    $("body").magnificPopup({
-        delegate: '.fancycover', // child items selector, by clicking on it popup will open
-        type: 'image',
-        gallery:{enabled:true, preload: [0,2]},
-        disableOn: function() {
-          if( getCurrentOption ("use_fancyapps") === "1" ) {
-            return true;
-          }
-          return false;
-        }
-    });
+    }
 }
 
 function link_Clicked (event) {
@@ -360,6 +322,44 @@ function search_Submitted (event) {
     event.preventDefault();
     var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
     navigateTo (url);
+}
+
+/*exported handleLinks */
+function handleLinks () {
+    $("body").on ("click", "a[href^='index']", link_Clicked);
+    $("body").on ("submit", "#searchForm", search_Submitted);
+    $("body").on ("click", "#sort", function(){
+        $('.books').sortElements(function(a, b){
+            var test = 1;
+            if ($("#sortorder").val() === "desc")
+            {
+                test = -1;
+            }
+            return $(a).find ("." + $("#sortchoice").val()).text() > $(b).find ("." + $("#sortchoice").val()).text() ? test : -test;
+        });
+    });
+    
+    $("body").on ("click", ".headright", function(){
+        if ($("#tool").is(":hidden")) {
+            $("#tool").slideDown("slow");
+            $("input[name=query]").focus();
+            $.cookie('toolbar', '1', { expires: 365 });
+        } else {
+            $("#tool").slideUp();
+            $.removeCookie('toolbar');
+        }
+    });
+    $("body").magnificPopup({
+        delegate: '.fancycover', // child items selector, by clicking on it popup will open
+        type: 'image',
+        gallery:{enabled:true, preload: [0,2]},
+        disableOn: function() {
+          if( getCurrentOption ("use_fancyapps") === "1" ) {
+            return true;
+          }
+          return false;
+        }
+    });
 }
 
 window.onpopstate = function(event) {
