@@ -6,7 +6,7 @@
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
-if (typeof LRUCache!='undefined') {
+if (typeof LRUCache != 'undefined') {
     var cache = new LRUCache(30);
 }
 
@@ -23,7 +23,7 @@ function debug_log(text) {
 
 /*exported updateCookie */
 function updateCookie (id) {
-    if($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
+    if ($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
         return;
     }
     var name = $(id).attr('id');
@@ -52,7 +52,7 @@ function updateCookieFromCheckbox (id) {
 }
 
 function elapsed () {
-    var elapsedTime = new Date () - before; 
+    var elapsedTime = new Date () - before;
     return "Elapsed : " + elapsedTime;
 }
 
@@ -206,7 +206,7 @@ function handleFilterEvents () {
                 filterList [filter] = false;
                 break;
             case "filter-exclude" :
-                $(this).removeClass ("filter-exclude"); 
+                $(this).removeClass ("filter-exclude");
                 delete filterList [filter];
                 break;
             default :
@@ -306,7 +306,7 @@ function handleLinks () {
         disableOn: function() {
           if( getCurrentOption ("use_fancyapps") === "1" ) {
             return true;
-          } 
+          }
           return false;
         }
     });
@@ -315,7 +315,7 @@ function handleLinks () {
 function link_Clicked (event) {
     var currentLink = $(this);
     if (!isPushStateEnabled ||
-        currentData.page === "19") { 
+        currentData.page === "19") {
         return;
     }
     event.preventDefault();
@@ -327,7 +327,7 @@ function link_Clicked (event) {
     }
     
     // The bookdetail / about should be displayed in a lightbox
-    if (getCurrentOption ("use_fancyapps") === "1" && 
+    if (getCurrentOption ("use_fancyapps") === "1" &&
         (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
         before = new Date ();
         var jsonurl = url.replace ("index", "getJSON");
@@ -354,7 +354,7 @@ function link_Clicked (event) {
 
 function search_Submitted (event) {
     if (!isPushStateEnabled ||
-        currentData.page === "19") { 
+        currentData.page === "19") {
         return;
     }
     event.preventDefault();
