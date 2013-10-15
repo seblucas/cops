@@ -57,7 +57,7 @@ function elapsed () {
     return "Elapsed : " + elapsedTime;
 }
 
-function retourMail(data, textStatus, jqXHR ) {
+function retourMail(data) {
     $("#mailButton :first-child").removeClass ("icon-spinner icon-spin").addClass ("icon-envelope");
     alert (data);
 }
