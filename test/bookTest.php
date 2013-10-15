@@ -128,4 +128,42 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("", $book->getRating ());
     }
     
+    public function testTypeaheadSearch ()
+    {
+        $_GET["query"] = "fic";
+        $_GET["search"] = "1";
+        
+        $array = getJson ();
+        
+        $this->assertCount (3, $array);
+        $this->assertEquals ("2 tags", $array[0]["title"]);
+        $this->assertEquals ("Fiction", $array[1]["title"]);
+        $this->assertEquals ("Science Fiction", $array[2]["title"]);
+        
+        $_GET["query"] = "car";
+        $_GET["search"] = "1";
+        
+        $array = getJson ();
+        
+        $this->assertCount (4, $array);
+        $this->assertEquals ("1 book", $array[0]["title"]);
+        $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
+        $this->assertEquals ("1 author", $array[2]["title"]);
+        $this->assertEquals ("Carroll, Lewis", $array[3]["title"]);
+        
+        $_GET["query"] = "art";
+        $_GET["search"] = "1";
+        
+        $array = getJson ();
+        
+        $this->assertCount (4, $array);
+        $this->assertEquals ("1 author", $array[0]["title"]);
+        $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
+        $this->assertEquals ("1 series", $array[2]["title"]);
+        $this->assertEquals ("D'Artagnan Romances", $array[3]["title"]);
+        
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+    
 }
