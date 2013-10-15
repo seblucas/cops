@@ -45,3 +45,14 @@ header {
     background: black;  
     color: white;
 }
+
+
+.tt-dropdown-menu {
+  color: black;   
+  background-color: white;
+  border: 1px solid #ccc;
+}
+.tt-suggestion.tt-is-under-cursor {
+  color: black;
+  background-color: white;
+}
