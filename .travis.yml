@@ -5,6 +5,7 @@ php:
   - 5.3
 before_script:
   - npm install jshint -g
+  - jshint --version
 script:
   - phpunit
   - jshint --verbose util.js
