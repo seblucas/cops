@@ -15,6 +15,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     public function testLocalize ()
     {
         $this->assertEquals ("Authors", localize ("authors.title"));
+        
+        $this->assertEquals ("unknow.key", localize ("unknow.key"));
     }
     
     public function testLocalizeFr ()
