@@ -7,5 +7,5 @@ before_script:
   - npm install jshint -g
 script:
   - phpunit
-  - jshint util.js
+  - jshint --verbose util.js
   
