@@ -224,7 +224,9 @@ function handleFilterEvents () {
  ************************************************
  */
 
-function updatePage (data) {
+var updatePage, navigateTo;
+
+updatePage = function (data) {
     var result;
     filterList = {};
     data.c = currentData.c;
@@ -274,12 +276,12 @@ function updatePage (data) {
     }
     ]);
     
-    $('input[name=query]').bind('typeahead:selected', function(obj, datum) {        
+    $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
         navigateTo (datum.navlink);
     });
-}
+};
 
-function navigateTo (url) {
+navigateTo = function (url) {
     $("h1").append (" <i class='icon-spinner icon-spin'></i>");
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
@@ -294,7 +296,7 @@ function navigateTo (url) {
             updatePage (data);
         });
     }
-}
+};
 
 function link_Clicked (event) {
     var currentLink = $(this);
