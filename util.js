@@ -2,6 +2,7 @@
 // copyright Sébastien Lucas
 // https://github.com/seblucas/cops
 
+/*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true */
 /*global LRUCache */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
