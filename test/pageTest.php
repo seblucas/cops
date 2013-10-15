@@ -212,5 +212,140 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
     }
+
+    public function testPageAllTags ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_TAGS;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Tags", $currentPage->title);
+        $this->assertCount (10, $currentPage->entryArray);
+        $this->assertEquals ("Action & Adventure", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+    
+    public function testPageTagDetail ()
+    {
+        global $config;
+        $page = Base::PAGE_TAG_DETAIL;
+        $query = NULL;
+        $search = NULL;
+        $qid = "1";
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Fiction", $currentPage->title);
+        $this->assertCount (14, $currentPage->entryArray);
+        $this->assertEquals ("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+    }
+
+    public function testPageAllLanguages ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_LANGUAGES;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Languages", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("English", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+    
+    public function testPageLanguageDetail ()
+    {
+        global $config;
+        $page = Base::PAGE_LANGUAGE_DETAIL;
+        $query = NULL;
+        $search = NULL;
+        $qid = "1";
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("English", $currentPage->title);
+        $this->assertCount (14, $currentPage->entryArray);
+        $this->assertEquals ("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+    }
+    
+    public function testPageRecent ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Recent additions", $currentPage->title);
+        $this->assertCount (14, $currentPage->entryArray);
+        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        // Test facets
+        
+        $_GET["tag"] = "Historical";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Recent additions", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Twenty Years After", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        $_GET["tag"] = "!Romance";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Recent additions", $currentPage->title);
+        $this->assertCount (12, $currentPage->entryArray);
+        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        $_GET["tag"] = NULL;
+    }
+    
+    public function testPageBookDetail ()
+    {
+        global $config;
+        $page = Base::PAGE_BOOK_DETAIL;
+        $query = NULL;
+        $search = NULL;
+        $qid = "2";
+        $n = "1";
+        $database = NULL;
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("The Return of Sherlock Holmes", $currentPage->title);
+        $this->assertCount (0, $currentPage->entryArray);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
     
 }
