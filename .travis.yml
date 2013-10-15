@@ -8,5 +8,5 @@ before_script:
   - jshint --version
 script:
   - phpunit
-  - jshint --verbose util.js
+  - jshint --verbose --show-non-errors util.js
   
