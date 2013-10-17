@@ -18,7 +18,7 @@
 "bookword.title":"书名",
 "cog.alternate":"搜索, 分类和过滤",
 "content.series":"系列:",
-"content.series.data":"{0} 系列的第 {0} 本",
+"content.series.data":"系列 {1} 的第 {0} 本",
 "content.summary":"概要",
 "customize.email":"设置您的电子邮件(以允许发送邮件)",
 "customize.fancybox":"使用灯箱",
