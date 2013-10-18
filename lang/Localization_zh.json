@@ -114,7 +114,7 @@
 "##TODO##languages.fao":"Faroese",
 "##TODO##languages.fij":"Fijian",
 "##TODO##languages.fin":"Finnish",
-"##TODO##languages.fra":"法语",
+"languages.fra":"法语",
 "##TODO##languages.ful":"Fula",
 "##TODO##languages.glg":"Galician",
 "##TODO##languages.kat":"Georgian",
@@ -139,7 +139,7 @@
 "##TODO##languages.isl":"Icelandic",
 "##TODO##languages.ita":"Italian",
 "##TODO##languages.iku":"Inuktitut",
-"##TODO##languages.jpn":"日语",
+"languages.jpn":"日语",
 "##TODO##languages.jav":"Javanese",
 "##TODO##languages.kal":"Kalaallisut",
 "##TODO##languages.kan":"Kannada",
@@ -253,4 +253,3 @@
 "##TODO##languages.zul":"Zulu",
 "DO_NOT_TRANSLATE":"end"
 }
-
