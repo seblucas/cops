@@ -35,6 +35,53 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
     
+    public function testPageIndexWithCustomColumn ()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $config['cops_calibre_custom_column'] = array ("type1");
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertCount (7, $currentPage->entryArray);
+        $this->assertEquals ("Type1", $currentPage->entryArray [4]->title);
+        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [4]->content);
+        
+        $config['cops_calibre_custom_column'] = array ("type2");
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertCount (7, $currentPage->entryArray);
+        $this->assertEquals ("Type2", $currentPage->entryArray [4]->title);
+        $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [4]->content);
+        
+        $config['cops_calibre_custom_column'] = array ("type4");
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertCount (7, $currentPage->entryArray);
+        $this->assertEquals ("Type4", $currentPage->entryArray [4]->title);
+        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [4]->content);
+        
+        $config['cops_calibre_custom_column'] = array ("type1", "type2", "type4");
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertCount (9, $currentPage->entryArray);
+        
+        $config['cops_calibre_custom_column'] = array ();
+    }
+    
     public function testPageAllAuthors ()
     {
         global $config;
