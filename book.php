@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -510,6 +510,17 @@ where books.id = ?');
         }
         return NULL;
     }
+
+		public static function getBookIdentifierById($bookId, $type)
+		{
+			$sql = 'select val from identifiers where book = ? and type = ?';
+			$result = parent::getDb()->prepare($sql);
+			$result->execute(array($bookId, $type));
+			while ($post = $result->fetchObject()) {
+				return $post->val;
+			}
+			return NULL;
+		}
 
     public static function getBookByDataId($dataId) {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
