@@ -145,6 +145,26 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
         
+        $_GET ["custom"] = "2";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("tag1", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        $_GET ["custom"] = "3";
+        $qid = "2";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("other", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
         
         $_GET ["custom"] = NULL;
     }
