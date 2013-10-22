@@ -15,6 +15,7 @@
     header ("Content-Type:text/html; charset=UTF-8");
     
     $err = getURLParam ("err", -1);
+    $full = getURLParam ("full");
     $error = NULL;
     switch ($err) {
         case 1 :
@@ -151,7 +152,7 @@ Please check
                 if ($count == 4) {
                     echo "{$name} OK";
                 } else {
-                    echo "{$name} Not all Calibre tables were found. Are you you're using the correct database.";
+                    echo "{$name} Not all Calibre tables were found. Are you sure you're using the correct database.";
                 }
             } catch (Exception $e) {
                 echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
@@ -159,6 +160,28 @@ Please check
             ?>
             </h4>
         </article>
+        <?php if ($full) { ?>
+        <article class="frontpage">
+            <h2>Check if all Calibre books are found</h2>
+            <h4>
+            <?php 
+            try {
+                $db = new PDO('sqlite:'. Base::getDbFileName ($i));
+                $result = $db->prepare("select books.path || '/' || data.name || '.' || lower (format) as fullpath from data join books on data.book = books.id");
+                $result->execute ();
+                while ($post = $result->fetchObject ())
+                {
+                    if (!is_file (Base::getDbDirectory ($i) . $post->fullpath)) {
+                        echo "<p>" . Base::getDbDirectory ($i) . $post->fullpath . "</p>";
+                    }
+                }
+            } catch (Exception $e) {
+                echo "{$name} If the file is readable, check your php configuration. Exception detail : " . $e;
+            }
+            ?>
+            </h4>
+        </article>
+        <?php } ?>
 <?php $i++; } ?>
     </section>
     <footer></footer>
