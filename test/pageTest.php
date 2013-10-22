@@ -514,4 +514,94 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Through the Looking Glass (And What Alice Found There)", $currentPage->entryArray [2]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
     }
+    
+    public function testPageSearchScopeAuthors ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        $_GET ["scope"] = "author";
+        
+        // Match Lewis Carroll
+        $query = "car";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Search result for *car* in authors", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["scope"] = NULL;
+    }
+    
+    public function testPageSearchScopeSeries ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        $_GET ["scope"] = "series";
+        
+        // Match Holmes
+        $query = "hol";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Search result for *hol* in series", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["scope"] = NULL;
+    }
+    
+    public function testPageSearchScopeBooks ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        $_GET ["scope"] = "book";
+        
+        // Match Holmes
+        $query = "hol";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Search result for *hol* in books", $currentPage->title);
+        $this->assertCount (4, $currentPage->entryArray);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        $_GET ["scope"] = NULL;
+    }
+    
+    public function testPageSearchScopeTags ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        $_GET ["scope"] = "tag";
+        
+        // Match Holmes
+        $query = "fic";
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Search result for *fic* in tags", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["scope"] = NULL;
+    }
 }
