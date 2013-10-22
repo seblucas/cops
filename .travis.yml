@@ -9,4 +9,5 @@ before_script:
 script:
   - phpunit
   - jshint --verbose --show-non-errors util.js
+  - php test/coverage-checker.php clover.xml 45
   
