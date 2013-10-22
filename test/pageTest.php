@@ -502,7 +502,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Through the Looking Glass (And What Alice Found There)", $currentPage->entryArray [1]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
         
-        // Only books returned
+        // Match Lewis Caroll & Scarlet
         $query = "car";
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
