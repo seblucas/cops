@@ -82,6 +82,73 @@ class PageTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array ();
     }
     
+    public function testPageAllCustom ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_CUSTOMS;
+        $query = NULL;
+        $search = NULL;
+        $qid = NULL;
+        $n = "1";
+        $database = NULL;
+        
+        $_GET ["custom"] = "1";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Type4", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("SeriesLike", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["custom"] = "2";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Type2", $currentPage->title);
+        $this->assertCount (3, $currentPage->entryArray);
+        $this->assertEquals ("tag1", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["custom"] = "3";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Type1", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("other", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+        
+        $_GET ["custom"] = NULL;
+    }
+    
+    public function testPageCustomDetail ()
+    {
+        global $config;
+        $page = Base::PAGE_CUSTOM_DETAIL;
+        $query = NULL;
+        $search = NULL;
+        $qid = "1";
+        $n = "1";
+        $database = NULL;
+        
+        $_GET ["custom"] = "1";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("SeriesLike", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+        
+        
+        $_GET ["custom"] = NULL;
+    }
+    
     public function testPageAllAuthors ()
     {
         global $config;
