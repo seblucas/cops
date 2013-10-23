@@ -5,11 +5,11 @@
  * @author Andreas Gohr <andi@splitbrain.org>
  * @author Sébastien Lucas <sebastien@slucas.fr>
  */
- 
+
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
 
 define ("METADATA_FILE", "META-INF/container.xml");
- 
+
 class EPub {
     public $xml; //FIXME change to protected, later
     public $toc;
@@ -26,12 +26,13 @@ class EPub {
      * Constructor
      *
      * @param string $file path to epub file to work on
+     * @param string $zipClass class to handle zip
      * @throws Exception if metadata could not be loaded
      */
-    public function __construct($file){
+    public function __construct($file, $zipClass = 'clsTbsZip'){
         // open file
         $this->file = $file;
-        $this->zip = new clsTbsZip();
+        $this->zip = new $zipClass();
         if(!$this->zip->Open($this->file)){
             throw new Exception('Failed to read epub file');
         }
@@ -40,7 +41,7 @@ class EPub {
         if (!$this->zip->FileExists(METADATA_FILE)) {
             throw new Exception ("Unable to find metadata.xml");
         }
-        
+
         $data = $this->zip->FileRead(METADATA_FILE);
         if($data == false){
             throw new Exception('Failed to access epub container data');
@@ -56,7 +57,7 @@ class EPub {
         if (!$this->zip->FileExists($this->meta)) {
             throw new Exception ("Unable to find " . $this->meta);
         }
-        
+
         $data = $this->zip->FileRead($this->meta);
         if(!$data){
             throw new Exception('Failed to access epub metadata');
@@ -67,7 +68,7 @@ class EPub {
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
-    
+
     public function initSpineComponent ()
     {
         $spine = $this->xpath->query('//opf:spine')->item(0);
