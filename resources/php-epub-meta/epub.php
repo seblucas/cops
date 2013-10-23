@@ -74,18 +74,18 @@ class EPub {
         $spine = $this->xpath->query('//opf:spine')->item(0);
         $tocid = $spine->getAttribute('toc');
         $tochref = $this->xpath->query("//opf:manifest/opf:item[@id='$tocid']")->item(0)->attr('href');
-        $tocpath = $this->getFullPath ($tochref); 
+        $tocpath = $this->getFullPath ($tochref);
         // read epub toc
         if (!$this->zip->FileExists($tocpath)) {
             throw new Exception ("Unable to find " . $tocpath);
         }
-        
+
         $data = $this->zip->FileRead($tocpath);
         $this->toc =  new DOMDocument();
         $this->toc->registerNodeClass('DOMElement','EPubDOMElement');
         $this->toc->loadXML($data);
         $this->toc_xpath = new EPubDOMXPath($this->toc);
-        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI); 
+        $rootNamespace = $this->toc->lookupNamespaceUri($this->toc->namespaceURI);
         $this->toc_xpath->registerNamespace('x', $rootNamespace);
     }
 
@@ -95,7 +95,7 @@ class EPub {
     public function file(){
         return $this->file;
     }
-    
+
     /**
      * Close the epub file
      */
@@ -124,7 +124,7 @@ class EPub {
         $this->download ();
         $this->zip->close();
     }
-    
+
     /**
      * Get the updated epub
      */
@@ -150,7 +150,7 @@ class EPub {
         }
         return $spine;
     }
-    
+
     /**
      * Get the component content
      */
@@ -160,11 +160,11 @@ class EPub {
         if (!$this->zip->FileExists($path)) {
             throw new Exception ("Unable to find " . $path);
         }
-        
+
         $data = $this->zip->FileRead($path);
         return $data;
     }
-    
+
     public function getComponentName ($comp, $elementPath) {
         $path = str_replace ("-SLASH-", "/", $comp);
         $path = $this->getFullPath ($path, $elementPath);
@@ -180,7 +180,7 @@ class EPub {
         }
         return str_replace ("/", "-SLASH-", $path);
     }
-    
+
     /**
      * Get the component content type
      */
@@ -195,7 +195,7 @@ class EPub {
         $src = str_replace ("/", "-SLASH-", $src);
         return array("title" => $title, "src" => $src);
     }
-    
+
     /**
      * Get the Epub content (TOC) as an array
      *
@@ -206,7 +206,7 @@ class EPub {
         $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
         foreach($nodes as $node){
             $contents[] = $this->getNavPointDetail ($node);
-            
+
             $insidenodes = $this->toc_xpath->query('x:navPoint', $node);
             foreach($insidenodes as $insidenode){
                 $contents[] = $this->getNavPointDetail ($insidenode);
@@ -214,7 +214,7 @@ class EPub {
         }
         return $contents;
     }
-    
+
     /**
      * Get or set the book author(s)
      *
@@ -329,6 +329,61 @@ class EPub {
     }
 
     /**
+     * Set or get the book's Unique Identifier
+     *
+     * @param string Unique identifier
+     */
+    public function Uuid($uuid = false)
+    {
+        $nodes = $this->xpath->query('/opf:package');
+        if ($nodes->length !== 1) {
+            $error = sprintf('Cannot find ebook identifier');
+            throw new Exception($error);
+        }
+        $identifier = $nodes->item(0)->attr('unique-identifier');
+
+        $res = $this->getset('dc:identifier', $uuid, 'id', $identifier);
+
+        return $res;
+    }
+
+    /**
+     * Set or get the book's creation date
+     *
+     * @param string Date eg: 2012-05-19T12:54:25Z
+     */
+    public function CreationDate($date = false)
+    {
+        $res = $this->getset('dc:date', $date, 'opf:event', 'creation');
+
+        return $res;
+    }
+
+    /**
+     * Set or get the book's modification date
+     *
+     * @param string Date eg: 2012-05-19T12:54:25Z
+     */
+    public function ModificationDate($date = false)
+    {
+        $res = $this->getset('dc:date', $date, 'opf:event', 'modification');
+
+        return $res;
+    }
+
+    /**
+     * Set or get the book's URI
+     *
+     * @param string URI
+     */
+    public function Uri($uri = false)
+    {
+        $res = $this->getset('dc:identifier', $uri, 'opf:scheme', 'URI');
+
+        return $res;
+    }
+
+    /**
      * Set or get the book's ISBN number
      *
      * @param string $isbn
@@ -354,7 +409,7 @@ class EPub {
     public function Amazon($amazon=false){
         return $this->getset('dc:identifier',$amazon,'opf:scheme','AMAZON');
     }
-    
+
     /**
      * Set or get the Calibre UUID of the book
      *
@@ -372,7 +427,7 @@ class EPub {
     public function Serie($serie=false){
         return $this->getset('opf:meta',$serie,'name','cops:series','content');
     }
-    
+
     /**
      * Set or get the Serie Index of the book
      *
@@ -381,7 +436,7 @@ class EPub {
     public function SerieIndex($serieIndex=false){
         return $this->getset('opf:meta',$serieIndex,'name','cops:series_index','content');
     }
-    
+
     /**
      * Set or get the book's subjects (aka. tags)
      *
@@ -502,11 +557,11 @@ class EPub {
             'found' => $path
         );
     }
-    
+
     public function getCoverItem () {
         $nodes = $this->xpath->query('//opf:metadata/opf:meta[@name="cover"]');
         if(!$nodes->length) return NULL;
-        
+
         $coverid = (String) $nodes->item(0)->attr('opf:content');
         if(!$coverid) return NULL;
 
@@ -515,43 +570,43 @@ class EPub {
 
         return $nodes->item(0);
     }
-    
+
     public function Combine($a, $b)
-	{
-		$isAbsolute = false;
-		if ($a[0] == "/")
-			$isAbsolute = true;
+    {
+        $isAbsolute = false;
+        if ($a[0] == "/")
+            $isAbsolute = true;
 
-		if ($b[0] == "/")
-			throw new InvalidArgumentException("Second path part must not stwar with " . $m_Separator);
-	
-		$splittedA = split("/", $a);
-		$splittedB = split("/", $b);
+        if ($b[0] == "/")
+            throw new InvalidArgumentException("Second path part must not start with " . $m_Separator);
 
-		$pathParts = array();
-		$mergedPath = array_merge($splittedA, $splittedB);
+        $splittedA = split("/", $a);
+        $splittedB = split("/", $b);
 
-		foreach($mergedPath as $item)
-		{
-			if ($item == null || $item == "" || $item == ".")
-				continue;
+        $pathParts = array();
+        $mergedPath = array_merge($splittedA, $splittedB);
 
-			if ($item == "..")
-			{
-				array_pop($pathParts);
-				continue;
-			}
+        foreach($mergedPath as $item)
+        {
+            if ($item == null || $item == "" || $item == ".")
+                continue;
 
-			array_push($pathParts, $item);
-		}
+            if ($item == "..")
+            {
+                array_pop($pathParts);
+                continue;
+            }
 
-		$path = implode("/", $pathParts);
-		if ($isAbsolute)
-			return("/" . $path);
-		else
-			return($path);
-	}
-    
+            array_push($pathParts, $item);
+        }
+
+        $path = implode("/", $pathParts);
+        if ($isAbsolute)
+            return("/" . $path);
+        else
+            return($path);
+    }
+
     private function getFullPath ($file, $context = NULL) {
         $path = dirname('/'.$this->meta).'/'.$file;
         $path = ltrim($path,'\\');
@@ -562,14 +617,14 @@ class EPub {
         //error_log ("FullPath : $path ($file / $context)");
         return $path;
     }
-    
+
     public function updateForKepub () {
         $item = $this->getCoverItem ();
         if (!is_null ($item)) {
             $item->attr('opf:properties', 'cover-image');
         }
     }
-    
+
     public function Cover2($path=false, $mime=false){
         $hascover = true;
         $item = $this->getCoverItem ();
@@ -582,7 +637,7 @@ class EPub {
             $this->coverpath = ltrim($this->coverpath,'\\');
             $this->coverpath = ltrim($this->coverpath,'/');
         }
-        
+
         // set cover
         if($path !== false){
             if (!$hascover) return; // TODO For now only update
@@ -596,7 +651,7 @@ class EPub {
 
             $this->reparse();
         }
-        
+
         if (!$hascover) return $this->no_cover();
     }
 
