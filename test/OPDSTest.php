@@ -1,4 +1,10 @@
 <?php
+/**
+ * COPS (Calibre OPDS PHP Server) test file
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
+ */
 
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
