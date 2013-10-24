@@ -94,6 +94,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
 
         $config['cops_max_item_per_page'] = 2;
+        $config['cops_books_filter'] = array ("Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories");
 
         // First page
 
