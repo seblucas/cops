@@ -1,10 +1,16 @@
 <?php
+/**
+ * COPS (Calibre OPDS PHP Server) test file
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
+ */
 
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
 require_once (dirname(__FILE__) . "/../OPDS_renderer.php");
 
-define ("OPDS_RELAX_NG", dirname(__FILE__) . "/opds_catalog_1_1.rng");
+define ("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
 define ("JING_JAR", dirname(__FILE__) . "/jing.jar");
 define ("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
