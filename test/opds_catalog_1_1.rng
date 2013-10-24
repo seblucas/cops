@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  -*- rnc -*- 
+  RELAX NG Compact Syntax Grammar for OPDS Catalog Feed & Entry Documents
+  Version 2010-08-18
+-->
+<grammar xmlns:atom="http://www.w3.org/2005/Atom" xmlns:opds="http://opds-spec.org/2010/catalog" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!--
+    The OPDS Catalog spec extends Atom (RFC4287), and the additions require some
+    patterns not used in the Atom schema. The first is atomUriExceptOPDS, which
+    is used to describe an atomLink whose rel value is an atomNCName (no-colon
+    name) or any URI other than these from OPDS Catalogs. In these cases, no
+    opds:price element should appear.
+  -->
+  <define name="atomUriExceptOPDS">
+    <data type="string" datatypeLibrary="">
+      <except>
+        <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/buy</value>
+        <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/borrow</value>
+        <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/subscribe</value>
+        <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/sample</value>
+      </except>
+    </data>
+  </define>
+  <!--
+    Next is OPDSUrisExceptBuy, which is used to describe an atomLink whose
+    rel value is from OPDS Catalogs but is not ".../acquisition/buy". In such
+    cases, an opds:price element is optional.
+  -->
+  <define name="OPDSUrisExceptBuy">
+    <choice>
+      <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/borrow</value>
+      <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/subscribe</value>
+      <value type="string" datatypeLibrary="">http://opds-spec.org/acquisition/sample</value>
+    </choice>
+  </define>
+  <!--
+    To simplify OPDS Catalog validation, we do not use Schematron to assert that
+    any atom:link with a rel value of ".../acquisition/buy" must be accompanied
+    by one or more opds:price elements.
+    Instead we rely on Relax NG to describe one of three situations:
+    - the rel value is ".../acquisition/buy" and at least one opds:price element
+      is required
+    - the rel value is ".../acquisition/borrow" or ".../acquisition/subscribe" or
+      ".../acquisition/sample", in case opds:price elements may be
+      included; or
+    - the value of the rel attribute is any other URI or an Atom-defined no-colon
+      name, and no opds:price element is permitted
+  -->
+  <!--
+    Note that this OPDS Catalog schema includes atom.rnc, so that schema must be
+    present for validation.
+    
+    Note also that atom.rnc defines atomUri as text and not as xsd:anyURI, and so
+    wherever the Atom spec requires an IRI, the schema will not check the value
+    against any URI pattern or logic. The OPDS Catalog schema overrides atom.rnc
+    to provide a relatively accurate test. With the approval of XSD 1.1, the
+    schema definition should change to xsd:anyURI to match what the spec text
+    says.
+  -->
+  <include href="atom.rng">
+    <define name="undefinedAttribute">
+      <attribute>
+        <anyName>
+          <except>
+            <name>xml:base</name>
+            <name>xml:lang</name>
+            <nsName ns=""/>
+            <nsName ns="http://opds-spec.org/2010/catalog"/>
+          </except>
+        </anyName>
+      </attribute>
+    </define>
+    <define name="atomLink">
+      <element name="atom:link">
+        <ref name="atomCommonAttributes"/>
+        <attribute name="href">
+          <ref name="atomUri"/>
+        </attribute>
+        <optional>
+          <attribute name="type">
+            <ref name="atomMediaType"/>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="hreflang">
+            <ref name="atomLanguageTag"/>
+          </attribute>
+        </optional>
+        <optional>
+          <attribute name="title"/>
+        </optional>
+        <optional>
+          <attribute name="length"/>
+        </optional>
+        <optional>
+          <choice>
+            <group>
+              <attribute name="rel">
+                <value>http://opds-spec.org/facet</value>
+              </attribute>
+              <interleave>
+                <optional>
+                  <attribute name="opds:facetGroup"/>
+                </optional>
+                <optional>
+                  <attribute name="opds:activeFacet">
+                    <value>true</value>
+                  </attribute>
+                </optional>
+              </interleave>
+            </group>
+            <group>
+              <attribute name="rel">
+                <value>http://opds-spec.org/acquisition/buy</value>
+              </attribute>
+              <oneOrMore>
+                <ref name="opdsPrice"/>
+              </oneOrMore>
+            </group>
+            <group>
+              <attribute name="rel">
+                <ref name="OPDSUrisExceptBuy"/>
+              </attribute>
+              <zeroOrMore>
+                <ref name="opdsPrice"/>
+              </zeroOrMore>
+            </group>
+            <attribute name="rel">
+              <choice>
+                <ref name="atomNCName"/>
+                <ref name="atomUriExceptOPDS"/>
+              </choice>
+            </attribute>
+          </choice>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <ref name="opdsIndirectAcquisition"/>
+            <ref name="anyOPDSForeignElement"/>
+            <text/>
+          </choice>
+        </zeroOrMore>
+      </element>
+    </define>
+    <!--
+      Here is where OPDS Catalogs use John Cowan's pragmatic evaluation of an
+      IRI. This modifies xsd:anyURI in XSD 1.0 to exclude ASCII characters not
+      valid in 1.1 or IRI's without being escaped. This matches the OPDS and Atom
+      specs, but not the non-normative atom.rnc.
+    -->
+    <define name="atomUri">
+      <data type="anyURI">
+        <except>
+          <data type="string">
+            <param name="pattern">.*[ &lt;&gt;{}|^`"\\\n\r\t].*</param>
+          </data>
+        </except>
+      </data>
+    </define>
+    <!--
+      Here we override Atom to account for HTML abuse in the summary element,
+      restricting it in OPDS Catalog to text:
+    -->
+    <define name="atomSummary">
+      <element name="atom:summary">
+        <ref name="atomCommonAttributes"/>
+        <optional>
+          <attribute name="type">
+            <value>text</value>
+          </attribute>
+        </optional>
+        <text/>
+      </element>
+    </define>
+  </include>
+  <define name="anyOPDSForeignElement">
+    <element>
+      <anyName>
+        <except>
+          <nsName ns="http://www.w3.org/2005/Atom"/>
+          <nsName ns="http://opds-spec.org/2010/catalog"/>
+        </except>
+      </anyName>
+      <zeroOrMore>
+        <choice>
+          <attribute>
+            <anyName/>
+          </attribute>
+          <text/>
+          <ref name="anyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!--
+    An opds:indirectAcquisition should use strictly MIME media type for
+    its type attribute
+  -->
+  <define name="opdsIndirectAcquisition">
+    <element name="opds:indirectAcquisition">
+      <ref name="atomCommonAttributes"/>
+      <attribute name="type">
+        <ref name="atomMediaType"/>
+      </attribute>
+      <zeroOrMore>
+        <choice>
+          <ref name="anyOPDSForeignElement"/>
+          <ref name="opdsIndirectAcquisition"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!--
+    An opds:price element should not contain a currency symbol; it is
+    restricted to non-negative decimal numbers.
+  -->
+  <define name="opdsPrice">
+    <element name="opds:price">
+      <ref name="atomCommonAttributes"/>
+      <attribute name="currencycode">
+        <ref name="opdsPriceCurrencyCode"/>
+      </attribute>
+      <data type="decimal">
+        <param name="minInclusive">0.0</param>
+      </data>
+    </element>
+  </define>
+  <!--
+    Instead of allowing every possible 3-letter or 3-digit combination as a
+    currency code, here the permissible codes (as identified in ISO4217 as of
+    2010-08-25) are enumerated. In 2012 or so, that standard may add, remove or
+    change some currency codes, thus requiring this schema to be updated. Note
+    that codes for metals and funds are not included.
+  -->
+  <define name="opdsPriceCurrencyCode">
+    <choice>
+      <value>AED</value>
+      <value>AFN</value>
+      <value>ALL</value>
+      <value>AMD</value>
+      <value>ANG</value>
+      <value>AOA</value>
+      <value>ARS</value>
+      <value>AUD</value>
+      <value>AWG</value>
+      <value>AZN</value>
+      <value>BAM</value>
+      <value>BBD</value>
+      <value>BDT</value>
+      <value>BGN</value>
+      <value>BHD</value>
+      <value>BIF</value>
+      <value>BMD</value>
+      <value>BND</value>
+      <value>BOB</value>
+      <value>BOV</value>
+      <value>BRL</value>
+      <value>BSD</value>
+      <value>BTN</value>
+      <value>BWP</value>
+      <value>BYR</value>
+      <value>BZD</value>
+      <value>CAD</value>
+      <value>CDF</value>
+      <value>CHE</value>
+      <value>CHF</value>
+      <value>CHW</value>
+      <value>CLF</value>
+      <value>CLP</value>
+      <value>CNY</value>
+      <value>COP</value>
+      <value>COU</value>
+      <value>CRC</value>
+      <value>CUC</value>
+      <value>CUP</value>
+      <value>CVE</value>
+      <value>CZK</value>
+      <value>DJF</value>
+      <value>DKK</value>
+      <value>DOP</value>
+      <value>DZD</value>
+      <value>EEK</value>
+      <value>EGP</value>
+      <value>ERN</value>
+      <value>ETB</value>
+      <value>EUR</value>
+      <value>FJD</value>
+      <value>FKP</value>
+      <value>GBP</value>
+      <value>GEL</value>
+      <value>GHS</value>
+      <value>GIP</value>
+      <value>GMD</value>
+      <value>GNF</value>
+      <value>GTQ</value>
+      <value>GYD</value>
+      <value>HKD</value>
+      <value>HNL</value>
+      <value>HRK</value>
+      <value>HTG</value>
+      <value>HUF</value>
+      <value>IDR</value>
+      <value>ILS</value>
+      <value>INR</value>
+      <value>IQD</value>
+      <value>IRR</value>
+      <value>ISK</value>
+      <value>JMD</value>
+      <value>JOD</value>
+      <value>JPY</value>
+      <value>KES</value>
+      <value>KGS</value>
+      <value>KHR</value>
+      <value>KMF</value>
+      <value>KPW</value>
+      <value>KRW</value>
+      <value>KWD</value>
+      <value>KYD</value>
+      <value>KZT</value>
+      <value>LAK</value>
+      <value>LBP</value>
+      <value>LKR</value>
+      <value>LRD</value>
+      <value>LSL</value>
+      <value>LTL</value>
+      <value>LVL</value>
+      <value>LYD</value>
+      <value>MAD</value>
+      <value>MDL</value>
+      <value>MGA</value>
+      <value>MKD</value>
+      <value>MMK</value>
+      <value>MNT</value>
+      <value>MOP</value>
+      <value>MRO</value>
+      <value>MUR</value>
+      <value>MVR</value>
+      <value>MWK</value>
+      <value>MXN</value>
+      <value>MXV</value>
+      <value>MYR</value>
+      <value>MZN</value>
+      <value>NAD</value>
+      <value>NGN</value>
+      <value>NIO</value>
+      <value>NOK</value>
+      <value>NPR</value>
+      <value>NZD</value>
+      <value>OMR</value>
+      <value>PAB</value>
+      <value>PEN</value>
+      <value>PGK</value>
+      <value>PHP</value>
+      <value>PKR</value>
+      <value>PLN</value>
+      <value>PYG</value>
+      <value>QAR</value>
+      <value>RON</value>
+      <value>RSD</value>
+      <value>RUB</value>
+      <value>RWF</value>
+      <value>SAR</value>
+      <value>SBD</value>
+      <value>SCR</value>
+      <value>SDG</value>
+      <value>SEK</value>
+      <value>SGD</value>
+      <value>SHP</value>
+      <value>SLL</value>
+      <value>SOS</value>
+      <value>SRD</value>
+      <value>STD</value>
+      <value>SVC</value>
+      <value>SYP</value>
+      <value>SZL</value>
+      <value>THB</value>
+      <value>TJS</value>
+      <value>TMT</value>
+      <value>TND</value>
+      <value>TOP</value>
+      <value>TRY</value>
+      <value>TTD</value>
+      <value>TWD</value>
+      <value>TZS</value>
+      <value>UAH</value>
+      <value>UGX</value>
+      <value>USD</value>
+      <value>USN</value>
+      <value>USS</value>
+      <value>UYI</value>
+      <value>UYU</value>
+      <value>UZS</value>
+      <value>VEF</value>
+      <value>VND</value>
+      <value>VUV</value>
+      <value>WST</value>
+      <value>XAF</value>
+      <value>XAG</value>
+      <value>XAU</value>
+      <value>XBA</value>
+      <value>XBB</value>
+      <value>XBC</value>
+      <value>XBD</value>
+      <value>XCD</value>
+      <value>XDR</value>
+      <value>XFU</value>
+      <value>XOF</value>
+      <value>XPD</value>
+      <value>XPF</value>
+      <value>XPT</value>
+      <value>XTS</value>
+      <value>XXX</value>
+      <value>YER</value>
+      <value>ZAR</value>
+      <value>ZMK</value>
+      <value>ZWL</value>
+      <value>008</value>
+      <value>012</value>
+      <value>032</value>
+      <value>036</value>
+      <value>044</value>
+      <value>048</value>
+      <value>050</value>
+      <value>051</value>
+      <value>052</value>
+      <value>060</value>
+      <value>064</value>
+      <value>068</value>
+      <value>072</value>
+      <value>084</value>
+      <value>090</value>
+      <value>096</value>
+      <value>104</value>
+      <value>108</value>
+      <value>116</value>
+      <value>124</value>
+      <value>132</value>
+      <value>136</value>
+      <value>144</value>
+      <value>152</value>
+      <value>156</value>
+      <value>170</value>
+      <value>174</value>
+      <value>188</value>
+      <value>191</value>
+      <value>192</value>
+      <value>203</value>
+      <value>208</value>
+      <value>214</value>
+      <value>222</value>
+      <value>230</value>
+      <value>232</value>
+      <value>233</value>
+      <value>238</value>
+      <value>242</value>
+      <value>262</value>
+      <value>270</value>
+      <value>292</value>
+      <value>320</value>
+      <value>324</value>
+      <value>328</value>
+      <value>332</value>
+      <value>340</value>
+      <value>344</value>
+      <value>348</value>
+      <value>352</value>
+      <value>356</value>
+      <value>360</value>
+      <value>364</value>
+      <value>368</value>
+      <value>376</value>
+      <value>388</value>
+      <value>392</value>
+      <value>398</value>
+      <value>400</value>
+      <value>404</value>
+      <value>408</value>
+      <value>410</value>
+      <value>414</value>
+      <value>417</value>
+      <value>418</value>
+      <value>422</value>
+      <value>426</value>
+      <value>428</value>
+      <value>430</value>
+      <value>434</value>
+      <value>440</value>
+      <value>446</value>
+      <value>454</value>
+      <value>458</value>
+      <value>462</value>
+      <value>478</value>
+      <value>480</value>
+      <value>484</value>
+      <value>496</value>
+      <value>498</value>
+      <value>504</value>
+      <value>512</value>
+      <value>516</value>
+      <value>524</value>
+      <value>532</value>
+      <value>533</value>
+      <value>548</value>
+      <value>554</value>
+      <value>558</value>
+      <value>566</value>
+      <value>578</value>
+      <value>586</value>
+      <value>590</value>
+      <value>598</value>
+      <value>600</value>
+      <value>604</value>
+      <value>608</value>
+      <value>634</value>
+      <value>643</value>
+      <value>646</value>
+      <value>654</value>
+      <value>678</value>
+      <value>682</value>
+      <value>690</value>
+      <value>694</value>
+      <value>702</value>
+      <value>704</value>
+      <value>706</value>
+      <value>710</value>
+      <value>748</value>
+      <value>752</value>
+      <value>756</value>
+      <value>760</value>
+      <value>764</value>
+      <value>776</value>
+      <value>780</value>
+      <value>784</value>
+      <value>788</value>
+      <value>800</value>
+      <value>807</value>
+      <value>818</value>
+      <value>826</value>
+      <value>834</value>
+      <value>840</value>
+      <value>858</value>
+      <value>860</value>
+      <value>882</value>
+      <value>886</value>
+      <value>894</value>
+      <value>901</value>
+      <value>931</value>
+      <value>932</value>
+      <value>934</value>
+      <value>936</value>
+      <value>937</value>
+      <value>938</value>
+      <value>940</value>
+      <value>941</value>
+      <value>943</value>
+      <value>944</value>
+      <value>946</value>
+      <value>947</value>
+      <value>948</value>
+      <value>949</value>
+      <value>950</value>
+      <value>951</value>
+      <value>952</value>
+      <value>953</value>
+      <value>955</value>
+      <value>956</value>
+      <value>957</value>
+      <value>958</value>
+      <value>959</value>
+      <value>960</value>
+      <value>961</value>
+      <value>962</value>
+      <value>963</value>
+      <value>964</value>
+      <value>968</value>
+      <value>969</value>
+      <value>970</value>
+      <value>971</value>
+      <value>972</value>
+      <value>973</value>
+      <value>974</value>
+      <value>975</value>
+      <value>976</value>
+      <value>977</value>
+      <value>978</value>
+      <value>979</value>
+      <value>980</value>
+      <value>981</value>
+      <value>984</value>
+      <value>985</value>
+      <value>986</value>
+      <value>990</value>
+      <value>997</value>
+      <value>998</value>
+      <value>999</value>
+    </choice>
+  </define>
+</grammar>
