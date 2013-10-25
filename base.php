@@ -276,8 +276,8 @@ class Entry
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
-        "calibre:books$"             => 'images/allbook.png',
-        "calibre:books:letter"       => 'images/allbook.png'
+        "cops:books$"             => 'images/allbook.png',
+        "cops:books:letter"       => 'images/allbook.png'
     );
 
     public function getUpdatedTime () {
@@ -322,7 +322,7 @@ class Entry
             }
         }
 
-        if (!is_null (GetUrlParam (DB))) $this->id = GetUrlParam (DB) . ":" . $this->id;
+        if (!is_null (GetUrlParam (DB))) $this->id = str_replace ("cops:", "cops:" . GetUrlParam (DB) . ":", $this->id);
     }
 }
 

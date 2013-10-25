@@ -9,7 +9,7 @@
 require_once('base.php');
 
 class language extends Base {
-    const ALL_LANGUAGES_ID = "calibre:languages";
+    const ALL_LANGUAGES_ID = "cops:languages";
     
     public $id;
     public $lang_code;

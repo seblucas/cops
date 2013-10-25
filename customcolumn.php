@@ -9,7 +9,7 @@
 require_once('base.php');
 
 class CustomColumn extends Base {
-    const ALL_CUSTOMS_ID = "calibre:custom";
+    const ALL_CUSTOMS_ID = "cops:custom";
     
     public $id;
     public $name;
