@@ -9,7 +9,7 @@
 require_once('base.php');
 
 class Serie extends Base {
-    const ALL_SERIES_ID = "calibre:series";
+    const ALL_SERIES_ID = "cops:series";
     
     public $id;
     public $name;

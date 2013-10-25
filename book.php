@@ -42,8 +42,8 @@ define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
-    const ALL_BOOKS_ID = "calibre:books";
-    const ALL_RECENT_BOOKS_ID = "calibre:recentbooks";
+    const ALL_BOOKS_ID = "cops:books";
+    const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
     
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
