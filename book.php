@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -440,7 +440,7 @@ class Book extends Base {
         
         $serie = $this->getSerie ();
         if (!is_null ($serie)) {
-            array_push ($linkArray, new LinkNavigation ($serie->getUri (), "related", str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name)));
+            array_push ($linkArray, new LinkNavigation ($serie->getUri (), "related", str_format (localize ("content.series.title"), $this->seriesIndex, $serie->name)));
         }
         
         return $linkArray;
