@@ -139,6 +139,13 @@
     $config['cops_author_split_first_letter'] = "1";  
     
     /*
+     * split titles by first letter
+     * 1 : Yes
+     * 0 : No
+     */
+    $config['cops_titles_split_first_letter'] = "1";  
+    
+    /*
      * Enable the Lightboxes (for popups)
      * 1 : Yes (enable)
      * 0 : No
