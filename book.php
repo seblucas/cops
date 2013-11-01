@@ -460,22 +460,23 @@ class Book extends Base {
     }
 
     public static function getCount() {
-        global $config;
         $nBooks = parent::getDb ()->query('select count(*) from books')->fetchColumn();
-        $result = array();
         $entry = new Entry (localize ("allbooks.title"), 
                           self::ALL_BOOKS_ID, 
                           str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text", 
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
-        array_push ($result, $entry);
+        return $entry;
+    }
+
+    public static function getRecent()
+        global $config;
         if ($config['cops_recentbooks_limit'] > 0) {
             $entry = new Entry (localize ("recent.title"), 
                               self::ALL_RECENT_BOOKS_ID, 
                               str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text", 
                               array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
-            array_push ($result, $entry);
         }
-        return $result;
+        return $entry;
     }
         
     public static function getBooksByAuthor($authorId, $n) {
