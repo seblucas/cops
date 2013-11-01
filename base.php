@@ -429,7 +429,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('S�bastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
@@ -458,7 +458,7 @@ class Page
             if (!is_null ($series)) array_push ($this->entryArray, $series);
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-			$languages = Language::getCount();
+            $languages = Language::getCount();
             if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
