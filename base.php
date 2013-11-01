@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "0.7.0beta");
@@ -451,7 +451,9 @@ class Page
                 Base::clearDb ();
             }
         } else {
+            array_push ($this->entryArray, Book::getRecent());
             array_push ($this->entryArray, Author::getCount());
+            array_push ($this->entryArray, Book::getCount());
             $series = Serie::getCount();
             if (!is_null ($series)) array_push ($this->entryArray, $series);
             $tags = Tag::getCount();
@@ -464,7 +466,6 @@ class Page
                     array_push ($this->entryArray, CustomColumn::getCount($customId));
                 }
             }
-            $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
             if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
