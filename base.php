@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "0.7.0beta");
@@ -272,6 +272,7 @@ class Entry
     public static $icons = array(
         Author::ALL_AUTHORS_ID       => 'images/author.png',
         Serie::ALL_SERIES_ID         => 'images/serie.png',
+        Book::ALL_BOOKS_ID           => 'images/allbook.png',
         Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
@@ -428,7 +429,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sï¿½bastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
@@ -644,8 +645,15 @@ class PageAllBooks extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize ("allbooks.title");
-        $this->entryArray = Book::getAllBooks ();
+        global $config;
+
+        $this->title = localize("allbooks.title");
+        if ($config['cops_titles_split_first_letter'] == 1) {
+            $this->entryArray = Book::getAllBooks();
+        }
+        else {
+            list ($this->entryArray, $this->totalNumber) = Book::getBooks ($this->n);
+        }
         $this->idPage = Book::ALL_BOOKS_ID;
     }
 }
