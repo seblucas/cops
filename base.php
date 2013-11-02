@@ -523,7 +523,7 @@ class PageAllAuthors extends Page
         global $config;
 
         $this->title = localize("authors.title");
-        if ($config['cops_author_split_first_letter'] == 1) {
+        if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
         else {
@@ -649,7 +649,7 @@ class PageAllBooks extends Page
         global $config;
 
         $this->title = localize("allbooks.title");
-        if ($config['cops_titles_split_first_letter'] == 1) {
+        if (getCurrentOption ("titles_split_first_letter") == 1) {
             $this->entryArray = Book::getAllBooks();
         }
         else {
