@@ -778,6 +778,15 @@ class PageCustomize extends Page
         if (getCurrentOption ("use_fancyapps") == 1) {
             $use_fancybox = "checked='checked'";
         }
+        $use_authorsplit = "";
+        if (getCurrentOption ("author_split_first_letter") == 1) {
+            $use_authorsplit = "checked='checked'";
+        }
+
+        $use_titlessplit = "";
+        if (getCurrentOption ("titles_split_first_letter") == 1) {
+            $use_titlessplit = "checked='checked'";
+        }
         $html_tag_filter = "";
         if (getCurrentOption ("html_tag_filter") == 1) {
             $html_tag_filter = "checked='checked'";
@@ -818,10 +827,20 @@ class PageCustomize extends Page
                                             $content, "text",
                                             array ()));
         }
-        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        $content = '<input type="number" size=4 onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push ($this->entryArray, new Entry (localize ("customize.paging"), "",
                                         $content, "text",
                                         array ()));
+
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="author_split_first_letter" ' . $use_authorsplit . ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.authorsplit"), "",
+                                        $content, "text",
+                                        array ()));
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="titles_split_first_letter" ' . $use_titlessplit .  ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.titlessplit"), "",
+                                        $content, "text",
+                                        array ()));
+
         $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "",
                                         $content, "text",
