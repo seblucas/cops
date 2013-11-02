@@ -472,7 +472,7 @@ class Book extends Base {
         return $entry;
     }
 
-    public static function getRecent()
+    public static function getRecent() {
         global $config;
         if ($config['cops_recentbooks_limit'] > 0) {
             $entry = new Entry (localize ("recent.title"), 
