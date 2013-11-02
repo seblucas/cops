@@ -686,6 +686,8 @@ function getJson ($complete = false) {
                        "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
                    "config" => array (
                        "use_fancyapps" => $config ["cops_use_fancyapps"],
+                       "use_authorsplit" => $config ["cops_author_split_first_letter"],
+                       "use_titlessplit" => $config ["cops_titles_split_first_letter"],
                        "max_item_per_page" => $config['cops_max_item_per_page'],
                        "server_side_rendering" => useServerSideRendering (),
                        "html_tag_filter" => $config['cops_html_tag_filter']));
