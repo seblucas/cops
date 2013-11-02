@@ -85,10 +85,11 @@ class Book extends Base {
         $this->pubdate = strtotime ($line->pubdate);
         $this->path = Base::getDbDirectory () . $line->path;
         $this->relativePath = $line->path;
-        $this->seriesIndex = $line->series_index;
-        if (strpos($this->seriesIndex,'.0') > 0) {
-            // strip the .0
-            $this->seriesIndex = substr_replace($this->seriesIndex ,"",-2);
+        if (strpos($line->series_index,'.0') > 0) { // strip the .0
+            $this->seriesIndex = substr_replace($line->series_index ,"",-2);
+        }
+        else {
+            $this->seriesIndex = $line->series_index;
         }
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
