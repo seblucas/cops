@@ -444,14 +444,17 @@ class Page
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 $nBooks = Book::getBookCount ($i);
-                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
+                if ($nBooks > 0) {
+                    array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                }
                 $i++;
                 Base::clearDb ();
             }
         } else {
-            array_push ($this->entryArray, Book::getRecent());
+            $recent = Book::getRecent();
+            if (!is_null ($recent)) array_push ($this->entryArray, $recent);
             array_push ($this->entryArray, Author::getCount());
             array_push ($this->entryArray, Book::getCount());
             $series = Serie::getCount();

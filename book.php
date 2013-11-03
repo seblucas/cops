@@ -475,6 +475,7 @@ class Book extends Base {
 
     public static function getRecent() {
         global $config;
+        $entry = NULL;
         if ($config['cops_recentbooks_limit'] > 0) {
             $entry = new Entry (localize ("recent.title"), 
                               self::ALL_RECENT_BOOKS_ID, 
