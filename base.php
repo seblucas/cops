@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "0.7.0beta");
@@ -272,6 +272,7 @@ class Entry
     public static $icons = array(
         Author::ALL_AUTHORS_ID       => 'images/author.png',
         Serie::ALL_SERIES_ID         => 'images/serie.png',
+        Book::ALL_BOOKS_ID           => 'images/allbook.png',
         Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
@@ -428,7 +429,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('SÃ©bastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
@@ -443,19 +444,24 @@ class Page
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 $nBooks = Book::getBookCount ($i);
-                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
+                if ($nBooks > 0) {
+                    array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                }
                 $i++;
                 Base::clearDb ();
             }
         } else {
+            $recent = Book::getRecent();
+            if (!is_null ($recent)) array_push ($this->entryArray, $recent);
             array_push ($this->entryArray, Author::getCount());
+            array_push ($this->entryArray, Book::getCount());
             $series = Serie::getCount();
             if (!is_null ($series)) array_push ($this->entryArray, $series);
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-			$languages = Language::getCount();
+            $languages = Language::getCount();
             if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
@@ -463,7 +469,6 @@ class Page
                     array_push ($this->entryArray, CustomColumn::getCount($customId));
                 }
             }
-            $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
             if (!is_null ($database)) $this->title =  Base::getDbName ();
         }
@@ -521,7 +526,7 @@ class PageAllAuthors extends Page
         global $config;
 
         $this->title = localize("authors.title");
-        if ($config['cops_author_split_first_letter'] == 1) {
+        if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
         else {
@@ -644,8 +649,15 @@ class PageAllBooks extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize ("allbooks.title");
-        $this->entryArray = Book::getAllBooks ();
+        global $config;
+
+        $this->title = localize("allbooks.title");
+        if (getCurrentOption ("titles_split_first_letter") == 1) {
+            $this->entryArray = Book::getAllBooks();
+        }
+        else {
+            list ($this->entryArray, $this->totalNumber) = Book::getBooks ($this->n);
+        }
         $this->idPage = Book::ALL_BOOKS_ID;
     }
 }
@@ -769,6 +781,15 @@ class PageCustomize extends Page
         if (getCurrentOption ("use_fancyapps") == 1) {
             $use_fancybox = "checked='checked'";
         }
+        $use_authorsplit = "";
+        if (getCurrentOption ("author_split_first_letter") == 1) {
+            $use_authorsplit = "checked='checked'";
+        }
+
+        $use_titlessplit = "";
+        if (getCurrentOption ("titles_split_first_letter") == 1) {
+            $use_titlessplit = "checked='checked'";
+        }
         $html_tag_filter = "";
         if (getCurrentOption ("html_tag_filter") == 1) {
             $html_tag_filter = "checked='checked'";
@@ -809,10 +830,20 @@ class PageCustomize extends Page
                                             $content, "text",
                                             array ()));
         }
-        $content = '<input type="number" onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
+        $content = '<input type="number" size=4 onchange="updateCookie (this);" id="max_item_per_page" value="' . getCurrentOption ("max_item_per_page") . '" min="-1" max="1200" pattern="^[-+]?[0-9]+$" />';
         array_push ($this->entryArray, new Entry (localize ("customize.paging"), "",
                                         $content, "text",
                                         array ()));
+
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="author_split_first_letter" ' . $use_authorsplit . ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.authorsplit"), "",
+                                        $content, "text",
+                                        array ()));
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="titles_split_first_letter" ' . $use_titlessplit .  ' />';
+        array_push ($this->entryArray, new Entry (localize ("customize.titlessplit"), "",
+                                        $content, "text",
+                                        array ()));
+
         $content = '<input type="text" onchange="updateCookie (this);" id="email" value="' . getCurrentOption ("email") . '" />';
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "",
                                         $content, "text",
