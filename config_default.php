@@ -27,8 +27,8 @@
 
     /*
      * Full URL prefix (with trailing /)
-     * usefull especially for Opensearch where a full URL is sometimes required
-     * For example Mantano requires it.
+     * usefull especially for Opensearch where a full URL is often required
+     * For example Mantano, Aldiko and Marvin require it.
      */
     $config['cops_full_url'] = ''; 
     
