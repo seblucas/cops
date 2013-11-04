@@ -7,7 +7,6 @@
     -moz-font-smoothing:antialiased;
     -o-font-smoothing:antialiased;
     font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
 }
 
 html { font-size: 100%; -webkit-text-size-adjust: 100%; 
