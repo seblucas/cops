@@ -19,6 +19,7 @@ require_once('resources/php-epub-meta/epub.php');
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
                                 left outer join books_ratings_link on books_ratings_link.book = books.id 
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
+define ('SQL_BOOKS_ALL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " order by books.sort ");
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -47,6 +48,7 @@ class Book extends Base {
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
     
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
+    const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
     const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
@@ -530,7 +532,12 @@ where data.book = books.id and data.id = ?');
     public static function getBooksByQuery($query, $n, $database = NULL) {
         return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database);
     }
-    
+
+    public static function getBooks($n) {
+        list ($entryArray, $totalNumber) = self::getEntryArray (self::SQL_BOOKS_ALL , array (), $n);
+        return array ($entryArray, $totalNumber);
+    }
+
     public static function getAllBooks() {
         $result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count
 from books
