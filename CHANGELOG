@@ -1,3 +1,15 @@
+0.7.0 - 201311XX
+  * Add a lot of unit testing. I hope it will limit the risks of regression.
+  * Added a "smart / autocomplete" search.
+  * Updated the way locales are handled. Should be easier to add new languages.
+  * Fixed display of Cyrillic characters.
+  * Upgraded doT to version 1.0.1, Magnific-Popup to 0.9.8, Normalize.css to 2.1.3, Jquery-cookie to 1.4.0.
+  * Upgraded
+  * Fixed OPDS stream validity. Reported by Didier.
+  * Added a new check in checkconfig.php to detect case problem between the actual path and the path stored in Calibre database. Try checkconfig.php?full=1. Reported by Ruud.
+  * Fixed the display of the rating stars with Chrome. Thanks to At_Libitum.
+  * Added a new parameter to avoid splitting the books by first letter. Thanks to At_Libitum.
+
 0.6.2 - 20130913
   * Added server side rendering for devices like PRS-TX / Kindle / Cybook. Thanks to all the testers.
   * Added a configuration item to tweak how thumbnail are handled.
