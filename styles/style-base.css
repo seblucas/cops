@@ -52,6 +52,7 @@ a:hover { color:#000; text-decoration: none; }
   width: auto;
   max-width: 700px;
   margin: 20px auto;
+  min-height: 198px;
 }
 
 #email {
