@@ -50,6 +50,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/Magnific-Popup/magnific-popup.css") ?>" media="screen" />
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/doT/doT.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/lru/lru.js") ?>"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/typeahead/typeahead.js") ?>"></script>
 <?php } ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("util.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
@@ -71,7 +72,8 @@
                    $.get('templates/default/bookdetail.html'),
                    $.get('templates/default/main.html'),
                    $.get('templates/default/page.html'),
-                   $.getJSON(url)).done(function(header, footer, bookdetail, main, page, data){
+                   $.get('templates/default/suggestion.html'),
+                   $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
                 templateBookDetail = doT.template (bookdetail [0]);
                 
                 var defMain = {
@@ -88,6 +90,9 @@
                 };
                 
                 templatePage = doT.template (page [0], undefined, defPage);
+                
+                templateSuggestion = doT.template (suggestion [0]);
+                
                 currentData = data [0];
                 
                 updatePage (data [0]);

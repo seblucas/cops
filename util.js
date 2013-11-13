@@ -2,9 +2,12 @@
 // copyright Sébastien Lucas
 // https://github.com/seblucas/cops
 
-var templatePage, templateBookDetail, templateMain, currentData, before, filterList;
+/*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true */
+/*global LRUCache */
 
-if (typeof LRUCache!='undefined') {
+var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
+
+if (typeof LRUCache != 'undefined') {
     var cache = new LRUCache(30);
 }
 
@@ -19,8 +22,9 @@ function debug_log(text) {
     }
 }
 
+/*exported updateCookie */
 function updateCookie (id) {
-    if($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
+    if ($(id).prop('pattern') && !$(id).val().match(new RegExp ($(id).prop('pattern')))) {
         return;
     }
     var name = $(id).attr('id');
@@ -28,6 +32,7 @@ function updateCookie (id) {
     $.cookie(name, value, { expires: 365 });
 }
 
+/*exported updateCookieFromCheckbox */
 function updateCookieFromCheckbox (id) {
     var name = $(id).attr('id');
     if ((/^style/).test (name)) {
@@ -48,15 +53,16 @@ function updateCookieFromCheckbox (id) {
 }
 
 function elapsed () {
-    var elapsedTime = new Date () - before; 
+    var elapsedTime = new Date () - before;
     return "Elapsed : " + elapsedTime;
 }
 
-function retourMail(data, textStatus, jqXHR ) {
+function retourMail(data) {
     $("#mailButton :first-child").removeClass ("icon-spinner icon-spin").addClass ("icon-envelope");
     alert (data);
 }
 
+/*exported sendToMailAddress */
 function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
@@ -94,6 +100,7 @@ function getCurrentOption (option) {
     return $.cookie (option);
 }
 
+/*exported htmlspecialchars */
 function htmlspecialchars(str) {
     return String(str)
             .replace(/&/g, '&amp;')
@@ -121,35 +128,6 @@ function getTagList () {
         }
     });
     return tagList;
-}
-
-function doFilter () {
-    $(".books").removeClass("filtered");
-    if (jQuery.isEmptyObject(filterList)) {
-        updateFilters ();
-        return;
-    }
-    
-    $(".se").each (function(){
-        var taglist = ", " + $(this).text() + ", ";
-        var toBeFiltered = false;
-        for (var filter in filterList) {
-            var onlyThisTag = filterList [filter];
-            filter = ', ' + filter + ', ';
-            var myreg = new RegExp (filter);
-            if (myreg.test (taglist)) {
-                if (onlyThisTag === false) {
-                    toBeFiltered = true;
-                }
-            } else {
-                if (onlyThisTag === true) {
-                    toBeFiltered = true;
-                }
-            }
-        }
-        if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
-    });
-    updateFilters ();
 }
 
 function updateFilters () {
@@ -184,6 +162,35 @@ function updateFilters () {
     });
 }
 
+function doFilter () {
+    $(".books").removeClass("filtered");
+    if (jQuery.isEmptyObject(filterList)) {
+        updateFilters ();
+        return;
+    }
+    
+    $(".se").each (function(){
+        var taglist = ", " + $(this).text() + ", ";
+        var toBeFiltered = false;
+        for (var filter in filterList) {
+            var onlyThisTag = filterList [filter];
+            filter = ', ' + filter + ', ';
+            var myreg = new RegExp (filter);
+            if (myreg.test (taglist)) {
+                if (onlyThisTag === false) {
+                    toBeFiltered = true;
+                }
+            } else {
+                if (onlyThisTag === true) {
+                    toBeFiltered = true;
+                }
+            }
+        }
+        if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
+    });
+    updateFilters ();
+}
+
 function handleFilterEvents () {
     $("#filter ul").on ("click", "li", function(){
         var filter = $(this).text ();
@@ -200,7 +207,7 @@ function handleFilterEvents () {
                 filterList [filter] = false;
                 break;
             case "filter-exclude" :
-                $(this).removeClass ("filter-exclude"); 
+                $(this).removeClass ("filter-exclude");
                 delete filterList [filter];
                 break;
             default :
@@ -217,24 +224,9 @@ function handleFilterEvents () {
  ************************************************
  */
 
-function navigateTo (url) {
-    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
-    before = new Date ();
-    var jsonurl = url.replace ("index", "getJSON");
-    var cachedData = cache.get (jsonurl);
-    if (cachedData) {
-        history.pushState(jsonurl, "", url);
-        updatePage (cachedData);
-    } else {
-        $.getJSON(jsonurl, function(data) {
-            history.pushState(jsonurl, "", url);
-            cache.put (jsonurl, data);
-            updatePage (data);
-        });
-    }
-}
+var updatePage, navigateTo;
 
-function updatePage (data) {
+updatePage = function (data) {
     var result;
     filterList = {};
     data.c = currentData.c;
@@ -266,8 +258,97 @@ function updatePage (data) {
     } else {
         $("#sortForm").hide ();
     }
+    
+    $('input[name=query]').typeahead([
+    {
+        name: 'search',
+        allowDuplicates: true,
+        minLength : 3,
+        valueKey: 'title',
+        limit: 24,
+        template: templateSuggestion,
+        remote: {
+            url: 'getJSON.php?search=1&db=%DB&query=%QUERY',
+            replace: function (url, query) {
+                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
+            }
+        }
+    }
+    ]);
+    
+    $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
+        navigateTo (datum.navlink);
+    });
+};
+
+navigateTo = function (url) {
+    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
+    before = new Date ();
+    var jsonurl = url.replace ("index", "getJSON");
+    var cachedData = cache.get (jsonurl);
+    if (cachedData) {
+        history.pushState(jsonurl, "", url);
+        updatePage (cachedData);
+    } else {
+        $.getJSON(jsonurl, function(data) {
+            history.pushState(jsonurl, "", url);
+            cache.put (jsonurl, data);
+            updatePage (data);
+        });
+    }
+};
+
+function link_Clicked (event) {
+    var currentLink = $(this);
+    if (!isPushStateEnabled ||
+        currentData.page === "19") {
+        return;
+    }
+    event.preventDefault();
+    var url = currentLink.attr('href');
+    
+    if ($(".mfp-ready").length)
+    {
+        $.magnificPopup.close();
+    }
+    
+    // The bookdetail / about should be displayed in a lightbox
+    if (getCurrentOption ("use_fancyapps") === "1" &&
+        (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
+        before = new Date ();
+        var jsonurl = url.replace ("index", "getJSON");
+        $.getJSON(jsonurl, function(data) {
+            data.c = currentData.c;
+            var detail = "";
+            if (data.page === "16") {
+                detail = data.fullhtml;
+            } else {
+                detail = templateBookDetail (data);
+            }
+            $.magnificPopup.open({
+              items: {
+                src: detail,
+                type: 'inline'
+              }
+            });
+            debug_log (elapsed ());
+        });
+        return;
+    }
+    navigateTo (url);
 }
 
+function search_Submitted (event) {
+    if (!isPushStateEnabled ||
+        currentData.page === "19") {
+        return;
+    }
+    event.preventDefault();
+    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+    navigateTo (url);
+}
+
+/*exported handleLinks */
 function handleLinks () {
     $("body").on ("click", "a[href^='index']", link_Clicked);
     $("body").on ("submit", "#searchForm", search_Submitted);
@@ -299,60 +380,10 @@ function handleLinks () {
         disableOn: function() {
           if( getCurrentOption ("use_fancyapps") === "1" ) {
             return true;
-          } 
+          }
           return false;
         }
     });
-}
-
-function link_Clicked (event) {
-    var currentLink = $(this);
-    if (!isPushStateEnabled ||
-        currentData.page === "19") { 
-        return;
-    }
-    event.preventDefault();
-    var url = currentLink.attr('href');
-    
-    if ($(".mfp-ready").length)
-    {
-        $.magnificPopup.close();
-    }
-    
-    // The bookdetail / about should be displayed in a lightbox
-    if (getCurrentOption ("use_fancyapps") === "1" && 
-        (currentLink.hasClass ("fancydetail") || currentLink.hasClass ("fancyabout"))) {
-        before = new Date ();
-        var jsonurl = url.replace ("index", "getJSON");
-        $.getJSON(jsonurl, function(data) {
-            data.c = currentData.c;
-            var detail = "";
-            if (data.page === "16") {
-                detail = data.fullhtml;
-            } else {
-                detail = templateBookDetail (data);
-            }
-            $.magnificPopup.open({
-              items: {
-                src: detail,
-                type: 'inline'
-              }
-            });
-            debug_log (elapsed ());
-        });
-        return;
-    }
-    navigateTo (url);
-}
-
-function search_Submitted (event) {
-    if (!isPushStateEnabled ||
-        currentData.page === "19") { 
-        return;
-    }
-    event.preventDefault();
-    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
-    navigateTo (url);
 }
 
 window.onpopstate = function(event) {

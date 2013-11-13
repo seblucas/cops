@@ -97,7 +97,7 @@ class OPDSRenderer
                 if ($page->idPage)
                 {
                     $idPage = $page->idPage;
-                    if (!is_null (GetUrlParam (DB))) $idPage = GetUrlParam (DB) . ":" . $idPage;
+                    if (!is_null (GetUrlParam (DB))) $idPage = str_replace ("cops:", "cops:" . GetUrlParam (DB) . ":", $idPage);
                     self::getXmlStream ()->text ($idPage);
                 }
                 else

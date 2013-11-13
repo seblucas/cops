@@ -140,7 +140,7 @@ function str_format($format) {
  * This method is based on this page
  * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  */
-function localize($phrase, $count=-1) {
+function localize($phrase, $count=-1, $reset=false) {
     if ($count == 0)
         $phrase .= ".none";
     if ($count == 1)
@@ -150,6 +150,9 @@ function localize($phrase, $count=-1) {
 
     /* Static keyword is used to ensure the file is loaded only once */
     static $translations = NULL;
+    if ($reset) {
+        $translations = NULL;
+    }
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
         $lang = "en";
@@ -273,8 +276,8 @@ class Entry
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
-        "calibre:books$"             => 'images/allbook.png',
-        "calibre:books:letter"       => 'images/allbook.png'
+        "cops:books$"             => 'images/allbook.png',
+        "cops:books:letter"       => 'images/allbook.png'
     );
 
     public function getUpdatedTime () {
@@ -319,7 +322,7 @@ class Entry
             }
         }
 
-        if (!is_null (GetUrlParam (DB))) $this->id = GetUrlParam (DB) . ":" . $this->id;
+        if (!is_null (GetUrlParam (DB))) $this->id = str_replace ("cops:", "cops:" . GetUrlParam (DB) . ":", $this->id);
     }
 }
 
@@ -440,7 +443,7 @@ class Page
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 $nBooks = Book::getBookCount ($i);
-                array_push ($this->entryArray, new Entry ($key, "{$i}:cops:catalog",
+                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}"))));
                 $i++;
@@ -642,7 +645,12 @@ class PageAllBooks extends Page
     public function InitializeContent ()
     {
         $this->title = localize ("allbooks.title");
-        $this->entryArray = Book::getAllBooks ();
+        if (getCurrentOption ("titles_split_first_letter") == 1) {
+            $this->entryArray = Book::getAllBooks();
+        }
+        else {
+            list ($this->entryArray, $this->totalNumber) = Book::getBooks ($this->n);
+        }
         $this->idPage = Book::ALL_BOOKS_ID;
     }
 }

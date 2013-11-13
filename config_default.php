@@ -27,8 +27,8 @@
 
     /*
      * Full URL prefix (with trailing /)
-     * usefull especially for Opensearch where a full URL is sometimes required
-     * For example Mantano requires it.
+     * usefull especially for Opensearch where a full URL is often required
+     * For example Mantano, Aldiko and Marvin require it.
      */
     $config['cops_full_url'] = ''; 
     
@@ -137,6 +137,13 @@
      * 0 : No
      */
     $config['cops_author_split_first_letter'] = "1";  
+
+    /*
+     * split titles by first letter
+     * 1 : Yes
+     * 0 : No
+     */
+    $config['cops_titles_split_first_letter'] = "1";  
     
     /*
      * Enable the Lightboxes (for popups)

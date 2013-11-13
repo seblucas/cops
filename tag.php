@@ -9,7 +9,7 @@
 require_once('base.php');
 
 class tag extends Base {
-    const ALL_TAGS_ID = "calibre:tags";
+    const ALL_TAGS_ID = "cops:tags";
     
     public $id;
     public $name;

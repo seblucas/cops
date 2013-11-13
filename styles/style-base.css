@@ -7,7 +7,6 @@
     -moz-font-smoothing:antialiased;
     -o-font-smoothing:antialiased;
     font-smoothing:antialiased;
-    text-rendering:optimizeLegibility;
 }
 
 html { font-size: 100%; -webkit-text-size-adjust: 100%; 
@@ -53,6 +52,7 @@ a:hover { color:#000; text-decoration: none; }
   width: auto;
   max-width: 700px;
   margin: 20px auto;
+  min-height: 198px;
 }
 
 #email {
@@ -269,6 +269,7 @@ max-width:800px;
 
 section .bookpopup{
     padding: 8px 8px;
+    min-height: 175px;
 }
 
 /* =============================================================================
@@ -321,11 +322,15 @@ width:100%;
 
 
 /*-------------Search Aside-------------*/
-#tool input[type=text]
+#tool input[type=text], .twitter-typeahead
 {
 vertical-align: middle;
 width: 100%;
 }
+
+.tt-hint, .tt-query {
+    width: 100%;
+    }
 
 .stop select
 {
@@ -348,6 +353,35 @@ padding: 0 2px;
 display: table-cell;
 vertical-align: middle;
 width: 100%;
+}
+
+.tt-dropdown-menu {
+  width: 322px;
+  text-align: left;
+  margin-top: 6px;
+  color: #000066;   
+  padding: 4px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+.tt-header {
+    border-bottom: 1px solid #CCCCCC;
+    font-weight: bold;
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  line-height: 14px;
+}
+
+.tt-suggestion.tt-is-under-cursor {
+  color: #1c1c1c;
+  background-color: #778899;
+}
+
+.tt-suggestion p {
+  margin: 0;
 }
 
 /* =============================================================================

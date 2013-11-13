@@ -9,7 +9,7 @@
 require_once('base.php');
 
 class Author extends Base {
-    const ALL_AUTHORS_ID = "calibre:authors";
+    const ALL_AUTHORS_ID = "cops:authors";
     
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
