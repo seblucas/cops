@@ -173,7 +173,7 @@ function localize($phrase, $count=-1, $reset=false) {
         $translations = json_decode($lang_file_content, true);
 
         /* Clean the array of all unfinished translations */
-        foreach ($translations as $key => $val) {
+        foreach (array_keys ($translations) as $key) {
             if (preg_match ("/^##TODO##/", $key)) {
                 unset ($translations [$key]);
             }
@@ -441,7 +441,7 @@ class Page
         $database = GetUrlParam (DB);
         if (is_array ($config['calibre_directory']) && is_null ($database)) {
             $i = 0;
-            foreach ($config['calibre_directory'] as $key => $value) {
+            foreach (array_keys ($config['calibre_directory']) as $key) {
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
@@ -471,7 +471,6 @@ class Page
 
     public function isPaginated ()
     {
-        global $config;
         return (getCurrentOption ("max_item_per_page") != -1 &&
                 $this->totalNumber != -1 &&
                 $this->totalNumber > getCurrentOption ("max_item_per_page"));
@@ -479,7 +478,6 @@ class Page
 
     public function getNextLink ()
     {
-        global $config;
         $currentUrl = $_SERVER['QUERY_STRING'];
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
@@ -490,7 +488,6 @@ class Page
 
     public function getPrevLink ()
     {
-        global $config;
         $currentUrl = $_SERVER['QUERY_STRING'];
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
         if ($this->n > 1) {
@@ -501,7 +498,6 @@ class Page
 
     public function getMaxPage ()
     {
-        global $config;
         return ceil ($this->totalNumber / getCurrentOption ("max_item_per_page"));
     }
 
@@ -535,8 +531,6 @@ class PageAllAuthorsLetter extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
-
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
