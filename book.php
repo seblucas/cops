@@ -78,7 +78,6 @@ class Book extends Base {
 
     
     public function __construct($line) {
-        global $config;
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
@@ -177,7 +176,6 @@ class Book extends Base {
     }
     
     public function getDetailUrl ($permalink = false) {
-        global $config;
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
         return 'index.php' . $urlParam; 
@@ -416,7 +414,6 @@ class Book extends Base {
     
     public function getLinkArray ()
     {
-        global $config;
         $linkArray = array();
         
         if ($this->hasCover)
@@ -454,7 +451,6 @@ class Book extends Base {
     }
     
     public static function getBookCount($database = NULL) {
-        global $config;
         $nBooks = parent::getDb ($database)->query('select count(*) from books')->fetchColumn();
         return $nBooks;
     }
@@ -571,7 +567,7 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllRecentBooks() {
         global $config;
-        list ($entryArray, $totalNumber) = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
+        $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1) [0];
         return $entryArray;
     }
 
