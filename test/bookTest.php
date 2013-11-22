@@ -9,6 +9,15 @@
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
 
+/*
+Publishers:
+id:2 (2 books)   Macmillan and Co. London:   Lewis Caroll 
+id:3 (2 books)   D. Appleton and Company     Alexander Dumas 
+id:4 (1 book)    Macmillan Publishers USA:   Jack London 
+id:5 (1 book)    Pierson's Magazine:         H. G. Wells 
+id:6 (8 books)   Strand Magazine:            Arthur Conan Doyle
+*/
+
 class BookTest extends PHPUnit_Framework_TestCase
 {   
     public function testGetBookCount ()
@@ -74,6 +83,14 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals (-1, $totalNumber);
     }
     
+    public function testGetBooksByPublisher ()
+    {
+        // All books from Strand Magazine 
+        list ($entryArray, $totalNumber) = Book::getBooksByPublisher (6, -1);
+        $this->assertEquals (8, count($entryArray));
+        $this->assertEquals (-1, $totalNumber);
+    }
+
     public function testGetBooksByTag ()
     {
         // All book with the Fiction tag
@@ -132,6 +149,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment (false));
         $this->assertEquals ("English", $book->getLanguages ());
         $this->assertEquals ("", $book->getRating ());
+        $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
     }
     
     public function testTypeaheadSearch ()
@@ -167,6 +185,16 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
         $this->assertEquals ("1 series", $array[2]["title"]);
         $this->assertEquals ("D'Artagnan Romances", $array[3]["title"]);
+
+        $_GET["query"] = "Macmillan";
+        $_GET["search"] = "1";
+
+        $array = getJson ();
+
+        $this->assertCount (3, $array);
+        $this->assertEquals ("2 publishers", $array[0]["title"]);
+        $this->assertEquals ("Macmillan and Co. London", $array[1]["title"]);
+        $this->assertEquals ("Macmillan Publishers USA", $array[2]["title"]);
         
         $_GET["query"] = NULL;
         $_GET["search"] = NULL;
