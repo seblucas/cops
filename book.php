@@ -591,9 +591,10 @@ function getJson ($complete = false) {
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         
+        // Special case when no databases were chosen, we search on all databases
         if (is_array ($config['calibre_directory']) && $multi === "1") {
             $i = 0;
-            foreach ($config['calibre_directory'] as $key => $value) {
+            foreach (array_keys ($config['calibre_directory']) as $key) {
                 Base::clearDb ();
                 array_push ($out, array ("title" => $key,
                                          "class" => "tt-header",

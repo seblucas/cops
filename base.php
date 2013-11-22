@@ -723,7 +723,7 @@ class PageQueryResult extends Page
                 $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
                 break;
             case self::SCOPE_TAG :
-                $this->entryArray = Tag::getAllTagsByQuery ($this->query);
+                list ($this->entryArray, $this->totalNumber) = Tag::getAllTagsByQuery ($this->query, -1);
                 break;
             case self::SCOPE_SERIES :
                 $this->entryArray = Serie::getAllSeriesByQuery ($this->query);
