@@ -277,7 +277,8 @@ class Entry
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
         "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png'
+        "cops:books:letter"       => 'images/allbook.png',
+        "cops:publishers"            => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -410,6 +411,10 @@ class Page
                 return new PageQueryResult ($id, $query, $n);
             case Base::PAGE_BOOK_DETAIL :
                 return new PageBookDetail ($id, $query, $n);
+            case Base::PAGE_ALL_PUBLISHERS:
+                return new PageAllPublishers ($id, $query, $n);
+            case Base::PAGE_PUBLISHER_DETAIL :
+                return new PagePublisherDetail ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
             case Base::PAGE_CUSTOMIZE :
@@ -453,6 +458,10 @@ class Page
             array_push ($this->entryArray, Author::getCount());
             $series = Serie::getCount();
             if (!is_null ($series)) array_push ($this->entryArray, $series);
+
+            $publisher = Publisher::getCount();
+            if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
+
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
 			$languages = Language::getCount();
@@ -517,7 +526,7 @@ class PageAllAuthors extends Page
         global $config;
 
         $this->title = localize("authors.title");
-        if ($config['cops_author_split_first_letter'] == 1) {
+        if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
         else {
@@ -545,6 +554,27 @@ class PageAuthorDetail extends Page
         $this->idPage = $author->getEntryId ();
         $this->title = $author->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
+    }
+}
+
+class PageAllPublishers extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("publisher.title");
+        $this->entryArray = Publisher::getAllPublishers();
+        $this->idPage = Publisher::ALL_PUBLISHERS_ID;
+    }
+}
+
+class PagePublisherDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        $publisher = Publisher::getPublisherById ($this->idGet);
+        $this->title = $publisher->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher ($this->idGet, $this->n);
+        $this->idPage = $publisher->getEntryId ();
     }
 }
 
@@ -680,6 +710,7 @@ class PageQueryResult extends Page
     const SCOPE_SERIES = "series";
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
+    const SCOPE_PUBLISHER = "publisher";
 
     public function InitializeContent ()
     {
@@ -697,6 +728,9 @@ class PageQueryResult extends Page
                 break;
             case self::SCOPE_BOOK :
                 $this->title = str_format (localize ("search.result.book"), $this->query);
+                break;
+            case self::SCOPE_PUBLISHER :
+                $this->title = str_format (localize ("search.result.publisher"), $this->query);
                 break;
             default:
                 $this->title = str_format (localize ("search.result"), $this->query);
@@ -731,6 +765,9 @@ class PageQueryResult extends Page
             case self::SCOPE_BOOK :
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
                     array ($bad, $bad, $bad, $crit), $this->n);
+                break;
+            case self::SCOPE_PUBLISHER :
+                $this->entryArray = Publisher::getAllPublishersByQuery ($this->query);
                 break;
             default:
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
@@ -846,6 +883,8 @@ abstract class Base
     const PAGE_ALL_LANGUAGES = "17";
     const PAGE_LANGUAGE_DETAIL = "18";
     const PAGE_CUSTOMIZE = "19";
+    const PAGE_ALL_PUBLISHERS = "20";
+    const PAGE_PUBLISHER_DETAIL = "21";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
@@ -924,7 +963,6 @@ abstract class Base
 
             // Next modify the query and params
             $query .= " limit ?, ?";
-            
             array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
 
