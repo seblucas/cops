@@ -567,7 +567,8 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllRecentBooks() {
         global $config;
-        $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1) [0];
+        $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
+        $entryArray = $entryArray [0];
         return $entryArray;
     }
 
