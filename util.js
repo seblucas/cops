@@ -258,7 +258,7 @@ updatePage = function (data) {
     } else {
         $("#sortForm").hide ();
     }
-    
+
     $('input[name=query]').typeahead([
     {
         name: 'search',
@@ -268,9 +268,13 @@ updatePage = function (data) {
         limit: 24,
         template: templateSuggestion,
         remote: {
-            url: 'getJSON.php?search=1&db=%DB&query=%QUERY',
+            url: 'getJSON.php?search=1&db=%DB&query=%QUERY&multi=%MULTI',
             replace: function (url, query) {
-                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
+                var multi = 0;
+                if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
+                    multi = 1;
+                }
+                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId).replace ("%MULTI", multi);
             }
         }
     }

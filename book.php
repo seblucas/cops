@@ -78,7 +78,6 @@ class Book extends Base {
 
     
     public function __construct($line) {
-        global $config;
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
@@ -177,7 +176,6 @@ class Book extends Base {
     }
     
     public function getDetailUrl ($permalink = false) {
-        global $config;
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
         return 'index.php' . $urlParam; 
@@ -416,7 +414,6 @@ class Book extends Base {
     
     public function getLinkArray ()
     {
-        global $config;
         $linkArray = array();
         
         if ($this->hasCover)
@@ -454,7 +451,6 @@ class Book extends Base {
     }
     
     public static function getBookCount($database = NULL) {
-        global $config;
         $nBooks = parent::getDb ($database)->query('select count(*) from books')->fetchColumn();
         return $nBooks;
     }
@@ -553,12 +549,12 @@ order by substr (upper (sort), 1, 1)");
         return $entryArray;
     }
     
-    public static function getBooksByStartingLetter($letter, $n) {
-        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n);
+    public static function getBooksByStartingLetter($letter, $n, $database = NULL, $numberPerPage = NULL) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n, $database, $numberPerPage);
     }
     
-    public static function getEntryArray ($query, $params, $n, $database = NULL) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database);
+    public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
@@ -571,7 +567,8 @@ order by substr (upper (sort), 1, 1)");
     
     public static function getAllRecentBooks() {
         global $config;
-        list ($entryArray, $totalNumber) = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
+        $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
+        $entryArray = $entryArray [0];
         return $entryArray;
     }
 
@@ -582,30 +579,60 @@ function getJson ($complete = false) {
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $search = getURLParam ("search");
+    $multi = getURLParam ("multi");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
     
     if ($search) {
         $out = array ();
-        $arrayTag = Tag::getAllTagsByQuery ($query);
-        $arraySeries = Serie::getAllSeriesByQuery ($query);
-        $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
-        list ($arrayBook, $totalNumber) = Book::getBooksByStartingLetter ('%' . $query, -1);
+        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         
+        // Special case when no databases were chosen, we search on all databases
+        if (is_array ($config['calibre_directory']) && $multi === "1") {
+            $i = 0;
+            foreach (array_keys ($config['calibre_directory']) as $key) {
+                Base::clearDb ();
+                array_push ($out, array ("title" => $key,
+                                         "class" => "tt-header",
+                                         "navlink" => "index.php?db={$i}"));
+                list ($array, $total) = Book::getBooksByStartingLetter ('%' . $query, 1, $i, 5);
+                array_push ($out, array ("title" => str_format (localize("bookword", $total), $total),
+                                         "class" => "",
+                                         "navlink" => "index.php?page={$pagequery}&query={$query}&db={$i}&scope=book"));
+                $i++;
+            }
+            return $out;
+        }
+        
+        
+
+        $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
+
+        $arraySeries = Serie::getAllSeriesByQuery ($query);
+
+        $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
+
+        $arrayBook = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
+
         foreach (array ("book" => $arrayBook, 
                         "author" => $arrayAuthor, 
                         "series" => $arraySeries, 
                         "tag" => $arrayTag) as $key => $array) {
             $i = 0;
-            $pagequery = Base::PAGE_OPENSEARCH_QUERY;
-            if (count($array) > 0) {
+            if (count ($array) == 2 && is_array ($array [0])) {
+                $total = $array [1];
+                $array = $array [0];
+            } else {
+                $total = count($array);
+            }
+            if ($total > 0) {
                 // Comment to help the perl i18n script
                 // str_format (localize("bookword", count($array))
                 // str_format (localize("authorword", count($array)
                 // str_format (localize("seriesword", count($array)
                 // str_format (localize("tagword", count($array)
-                array_push ($out, array ("title" => str_format (localize("{$key}word", count($array)), count($array)),
+                array_push ($out, array ("title" => str_format (localize("{$key}word", $total), $total),
                                          "class" => "tt-header",
                                          "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
             }
@@ -636,6 +663,7 @@ function getJson ($complete = false) {
     $out ["databaseId"] = GetUrlParam (DB, "");
     $out ["databaseName"] = Base::getDbName ();
     $out ["page"] = $page;
+    $out ["multipleDatabase"] = Base::isMultipleDatabaseEnabled () ? 1 : 0;
     $out ["entries"] = $entries;
     $out ["isPaginated"] = 0;
     if ($currentPage->isPaginated ()) {
