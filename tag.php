@@ -62,14 +62,11 @@ order by tags.name');
         return $entryArray;
     }
     
-    public static function getAllTagsByQuery($query) {
-        $result = parent::getDb ()->prepare('select tags.id as id, tags.name as name, count(*) as count
-from tags, books_tags_link
-where tags.id = tag and tags.name like ?
-group by tags.id, tags.name
-order by tags.name');
+    public static function getAllTagsByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
+        $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";
+        $sql = 'select {0} from tags where tags.name like ? {1} order by tags.name';
+        list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), $n, $database, $numberPerPage);
         $entryArray = array();
-        $result->execute (array ('%' . $query . '%'));
         while ($post = $result->fetchObject ())
         {
             $tag = new Tag ($post->id, $post->name);
@@ -77,6 +74,6 @@ order by tags.name');
                 str_format (localize("bookword", $post->count), $post->count), "text", 
                 array ( new LinkNavigation ($tag->getUri ()))));
         }
-        return $entryArray;
+        return array ($entryArray, $totalNumber);
     }
 }
