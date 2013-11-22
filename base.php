@@ -850,6 +850,11 @@ abstract class Base
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     private static $db = NULL;
+    
+    public static function isMultipleDatabaseEnabled () {
+        global $config;
+        return is_array ($config['calibre_directory']);
+    }
 
     public static function getDbList () {
         global $config;
@@ -902,11 +907,15 @@ abstract class Base
         self::$db = NULL;
     }
 
-    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL) {
+    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         global $config;
         $totalResult = -1;
+        
+        if (is_null ($numberPerPage)) {
+            $numberPerPage = getCurrentOption ("max_item_per_page");
+        }
 
-        if (getCurrentOption ("max_item_per_page") != -1 && $n != -1)
+        if ($numberPerPage != -1 && $n != -1)
         {
             // First check total number of results
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
@@ -915,7 +924,8 @@ abstract class Base
 
             // Next modify the query and params
             $query .= " limit ?, ?";
-            array_push ($params, ($n - 1) * getCurrentOption ("max_item_per_page"), getCurrentOption ("max_item_per_page"));
+            
+            array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
 
         $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
