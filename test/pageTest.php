@@ -286,9 +286,22 @@ class PageTest extends PHPUnit_Framework_TestCase
         $n = "1";
         $database = NULL;
         
+        $config['cops_titles_split_first_letter'] = 0; 
+
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
+        $this->assertEquals ("All books", $currentPage->title);
+        $this->assertCount (14, $currentPage->entryArray);
+        $this->assertEquals ("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [1]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+
+        $config['cops_titles_split_first_letter'] = 1; 
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
         $this->assertEquals ("All books", $currentPage->title);
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("A", $currentPage->entryArray [0]->title);
