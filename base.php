@@ -889,15 +889,23 @@ abstract class Base
     public static function getDbFileName ($database = NULL) {
         return self::getDbDirectory ($database) .'metadata.db';
     }
+    
+    private static function error () {
+        header("location: checkconfig.php?err=1");
+        exit();
+    }
 
     public static function getDb ($database = NULL) {
         global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                if (file_exists (self::getDbFileName ($database))) {
+                    self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                } else {
+                    self::error ();
+                }
             } catch (Exception $e) {
-                header("location: checkconfig.php?err=1");
-                exit();
+                self::error ();
             }
         }
         return self::$db;

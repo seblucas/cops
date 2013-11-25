@@ -129,6 +129,7 @@ Please check
             }
             ?>
         </article>
+    <?php if (is_readable (Base::getDbFileName ($i))) { ?>
         <article class="frontpage">
             <h2>Check if Calibre database file can be opened with PHP</h2>
             <h4>
@@ -182,6 +183,7 @@ Please check
             </h4>
         </article>
         <?php } ?>
+    <?php } ?>
 <?php $i++; } ?>
     </section>
     <footer></footer>

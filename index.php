@@ -23,6 +23,10 @@
         exit ();
     }
     
+    // Access the database ASAP to be sure it's readable, redirect if that's not the case.
+    // It has to be done before any header is sent.
+    $test = Base::getDb ();
+    
     header ("Content-Type:text/html;charset=utf-8");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
