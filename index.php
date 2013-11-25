@@ -101,7 +101,9 @@
                 
                 updatePage (data [0]);
                 cache.put (url, data [0]);
-                history.replaceState(url, "", window.location);
+                if (isPushStateEnabled) {
+                    history.replaceState(url, "", window.location);
+                }
                 handleLinks ();
             });
             

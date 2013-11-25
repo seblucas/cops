@@ -281,7 +281,11 @@ updatePage = function (data) {
     ]);
     
     $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
-        navigateTo (datum.navlink);
+        if (isPushStateEnabled) {
+            navigateTo (datum.navlink);
+        } else {
+            window.location = datum.navlink;
+        }
     });
 };
 
