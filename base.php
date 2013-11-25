@@ -760,7 +760,6 @@ class PageCustomize extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
 
@@ -896,7 +895,6 @@ abstract class Base
     }
 
     public static function getDb ($database = NULL) {
-        global $config;
         if (is_null (self::$db)) {
             try {
                 if (is_readable (self::getDbFileName ($database))) {
@@ -916,7 +914,6 @@ abstract class Base
     }
 
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
-        global $config;
         $totalResult = -1;
         
         if (is_null ($numberPerPage)) {
