@@ -899,7 +899,7 @@ abstract class Base
         global $config;
         if (is_null (self::$db)) {
             try {
-                if (file_exists (self::getDbFileName ($database))) {
+                if (is_readable (self::getDbFileName ($database))) {
                     self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
                 } else {
                     self::error ();
