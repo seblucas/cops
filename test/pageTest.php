@@ -16,10 +16,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_INDEX;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -46,10 +44,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_INDEX;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $config['cops_calibre_custom_column'] = array ("type1");
         
@@ -93,10 +89,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_CUSTOMS;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $_GET ["custom"] = "1";
         
@@ -136,10 +130,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_CUSTOM_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         
         $_GET ["custom"] = "1";
         
@@ -180,10 +172,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_AUTHORS;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $config['cops_author_split_first_letter'] = "0";
         
@@ -211,10 +201,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_AUTHORS_FIRST_LETTER;
         $query = NULL;
-        $search = NULL;
         $qid = "C";
         $n = "1";
-        $database = NULL;
         
         // Author Lewis Carroll
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -230,10 +218,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
         
         $config['cops_max_item_per_page'] = 2; 
@@ -281,10 +267,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_BOOKS;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $config['cops_titles_split_first_letter'] = 0; 
 
@@ -314,10 +298,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_BOOKS_LETTER;
         $query = NULL;
-        $search = NULL;
         $qid = "C";
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -333,10 +315,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_SERIES;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -352,11 +332,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_SERIE_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
-        $n = "1";
-        $database = NULL;
-        
+        $n = "1";        
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
@@ -371,10 +348,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_TAGS;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -390,10 +365,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_TAG_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -409,10 +382,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_LANGUAGES;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -428,10 +399,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_LANGUAGE_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -447,10 +416,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_ALL_RECENT_BOOKS;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -488,10 +455,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_BOOK_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "2";
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -506,10 +471,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "alice";
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         // Only books returned
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -538,10 +501,8 @@ class PageTest extends PHPUnit_Framework_TestCase
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         $_GET ["scope"] = "author";
         
         // Match Lewis Carroll
@@ -561,10 +522,8 @@ class PageTest extends PHPUnit_Framework_TestCase
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         $_GET ["scope"] = "series";
         
         // Match Holmes
@@ -584,10 +543,8 @@ class PageTest extends PHPUnit_Framework_TestCase
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         $_GET ["scope"] = "book";
         
         // Match Holmes
@@ -606,10 +563,8 @@ class PageTest extends PHPUnit_Framework_TestCase
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         $_GET ["scope"] = "tag";
         
         // Match Holmes
