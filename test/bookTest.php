@@ -101,6 +101,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     {
         // All books by first letter
         list ($entryArray, $totalNumber) = Book::getBooksByStartingLetter ("T", -1);
+        $this->assertEquals (-1, $totalNumber);
         $this->assertCount (3, $entryArray);
     }
     
