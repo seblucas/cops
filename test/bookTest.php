@@ -172,4 +172,30 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = NULL;
     }
     
+    public function testTypeaheadSearchMultiDatabase ()
+    {
+        global $config;
+        $_GET["query"] = "art";
+        $_GET["search"] = "1";
+        $_GET["multi"] = "1";
+        
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        
+        $array = getJson ();
+        
+        $this->assertCount (4, $array);
+        $this->assertEquals ("Some books", $array[0]["title"]);
+        $this->assertEquals ("No book", $array[1]["title"]);
+        $this->assertEquals ("One book", $array[2]["title"]);
+        $this->assertEquals ("1 book", $array[3]["title"]);
+
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+    
+    public function tearDown () {
+        Base::clearDb ();
+    }
+    
 }
