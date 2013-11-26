@@ -308,7 +308,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageAllSeries ()
     {
-        global $config;
         $page = Base::PAGE_ALL_SERIES;
         $query = NULL;
         $qid = NULL;
