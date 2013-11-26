@@ -18,10 +18,8 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
         $page = Base::PAGE_INDEX;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -42,10 +40,8 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "art";
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
