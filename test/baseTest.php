@@ -42,4 +42,19 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize ("authors.title", -1, true);
     }
+    
+    public function testBaseFunction () {
+        global $config;
+        
+        $this->assertFalse (Base::isMultipleDatabaseEnabled ());
+        $this->assertEquals (array ("" => dirname(__FILE__) . "/BaseWithSomeBooks/"), Base::getDbList ());
+
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+
+        $this->assertTrue (Base::isMultipleDatabaseEnabled ());
+        $this->assertEquals ("Some books", Base::getDbName (0));
+        $this->assertEquals ("One book", Base::getDbName (1));
+        $this->assertEquals ($config['calibre_directory'], Base::getDbList ());
+    }
 }
