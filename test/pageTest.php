@@ -86,7 +86,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageAllCustom ()
     {
-        global $config;
         $page = Base::PAGE_ALL_CUSTOMS;
         $query = NULL;
         $qid = NULL;
@@ -127,7 +126,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageCustomDetail ()
     {
-        global $config;
         $page = Base::PAGE_CUSTOM_DETAIL;
         $query = NULL;
         $qid = "1";
@@ -198,7 +196,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageAuthorsFirstLetter ()
     {
-        global $config;
         $page = Base::PAGE_AUTHORS_FIRST_LETTER;
         $query = NULL;
         $qid = "C";
@@ -295,7 +292,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageAllBooksByLetter ()
     {
-        global $config;
         $page = Base::PAGE_ALL_BOOKS_LETTER;
         $query = NULL;
         $qid = "C";
@@ -329,7 +325,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSeriesDetail ()
     {
-        global $config;
         $page = Base::PAGE_SERIE_DETAIL;
         $query = NULL;
         $qid = "1";
@@ -345,7 +340,6 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function testPageAllTags ()
     {
-        global $config;
         $page = Base::PAGE_ALL_TAGS;
         $query = NULL;
         $qid = NULL;
@@ -362,7 +356,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageTagDetail ()
     {
-        global $config;
         $page = Base::PAGE_TAG_DETAIL;
         $query = NULL;
         $qid = "1";
@@ -379,7 +372,6 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function testPageAllLanguages ()
     {
-        global $config;
         $page = Base::PAGE_ALL_LANGUAGES;
         $query = NULL;
         $qid = NULL;
@@ -396,7 +388,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageLanguageDetail ()
     {
-        global $config;
         $page = Base::PAGE_LANGUAGE_DETAIL;
         $query = NULL;
         $qid = "1";
@@ -413,7 +404,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageRecent ()
     {
-        global $config;
         $page = Base::PAGE_ALL_RECENT_BOOKS;
         $query = NULL;
         $qid = NULL;
@@ -452,7 +442,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageBookDetail ()
     {
-        global $config;
         $page = Base::PAGE_BOOK_DETAIL;
         $query = NULL;
         $qid = "2";
@@ -468,7 +457,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearch ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "alice";
         $qid = NULL;
@@ -499,7 +487,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeAuthors ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -520,7 +507,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeSeries ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -541,7 +527,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeBooks ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -561,7 +546,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeTags ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
