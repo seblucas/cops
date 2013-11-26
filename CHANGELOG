@@ -9,7 +9,8 @@
   * Fixed the display of the rating stars with Chrome. Thanks to At_Libitum.
   * Added a new parameter ($config['cops_titles_split_first_letter']) to avoid splitting the books by first letter. Thanks to At_Libitum.
   * Fixed non compliant OPDS search (for Stanza, Moon+ Reader, ...). Reported by At_Libitum.
-  * Fixed the redirection in case the Calibre database is not found. Reported by At_Libitum.
+  * Fixed the redirection in case the Calibre database is not found. Reported by At_Libitum
+  * Changed .htaccess to allow the use of password protected catalogs with Sony's eReader (PRS-TX). Thanks to Ruud for the beta testing.
   * Updated Chinese, German, Norwegian, Portuguese, Russian translations. Thanks to all the translators.
 
 0.6.2 - 20130913
