@@ -10,8 +10,8 @@ script:
   - phpunit
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
+env:
+  - SAUCE_USERNAME=seblucas 
+  - secure: "VVxocvmz6WYr3tZSTA42M/LUhaHoBWw5onh85hnquoMaxspd3tDCyfQIowTTmEXikRh2T0CkTH7X3dhVwRTd/Ha9isja1qDo9Lc2flGCoWICF7WFZuom084+d+O+EWx4WZMAw4Lz4w6a5xflpPKnzNs9B0+de0BdTlQ5qSXVrcA="
 addons:
-  sauce_connect:
-    username: "seblucas"
-    access_key:
-      secure: "WSdTmwmxYJ5oDJKY+bsU5cbnOKFdQiXmvo3ciWsYSxZF9ksAjLOMcSgHtfMYgpS0jT0TlcLGLwI+PVSF5UrcfLcVEcQByUIDPby5prr8B5GQDHeItIx5Er34R97j9p3/xclJenmj+KoWjnYPzta53lMgm72486PUtZSnGYe/0Kc="
+  sauce_connect: true
