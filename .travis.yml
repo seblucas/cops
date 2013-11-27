@@ -6,7 +6,6 @@ php:
 before_script:
   - npm install jshint -g
   - jshint --version
-  - sudo apt-get install php-pear php5-curl php5-xdebug
   - curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
 script:
   - phpunit
