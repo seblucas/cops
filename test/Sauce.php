@@ -106,6 +106,8 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
             $text = $driver->byXPath('//h1')->text ();
             return $text == $value;
         };
+        
+        $this->implicitWait(3000);
 
         $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
         
