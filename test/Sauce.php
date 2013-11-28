@@ -107,7 +107,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
             return $text == $value;
         };
         
-        sleep(3);
+        sleep(10);
 
         $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
         
