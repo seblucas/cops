@@ -5,14 +5,14 @@ require_once 'vendor/autoload.php';
 class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
 {
     public static $browsers = array(
-        // run FF15 on Windows 8 on Sauce
-        array(
-            'browserName' => 'firefox',
-            'desiredCapabilities' => array(
-                'version' => '15',
-                'platform' => 'Windows 2012',
-            )
-        )
+        // // run FF15 on Windows 8 on Sauce
+        // array(
+            // 'browserName' => 'firefox',
+            // 'desiredCapabilities' => array(
+                // 'version' => '15',
+                // 'platform' => 'Windows 2012',
+            // )
+        // ),
         // // run IE9 on Windows 7 on Sauce
         // array(
             // 'browserName' => 'internet explorer',
@@ -21,14 +21,14 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
                 // 'platform' => 'Windows 7',
             // )
         // ),
-        // // run IE10 on Windows 8 on Sauce
-        // array(
-            // 'browserName' => 'internet explorer',
-            // 'desiredCapabilities' => array(
-                // 'version' => '10',
-                // 'platform' => 'Windows 8',
-            // )
-        // ),
+        // run IE10 on Windows 8 on Sauce
+        array(
+            'browserName' => 'internet explorer',
+            'desiredCapabilities' => array(
+                'version' => '10',
+                'platform' => 'Windows 8',
+            )
+        )
         // // run Opera 12 on Windows 7 on Sauce
         // array(
             // 'browserName' => 'opera',
@@ -109,7 +109,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
         
         //sleep(10);
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ], 20);
+        $this->spinAssert("Home Title", $title_test, [ "COPS" ], 25);
         
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
