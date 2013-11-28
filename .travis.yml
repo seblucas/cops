@@ -11,7 +11,7 @@ script:
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
 after_success:
-  - curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
+  - test/prepareSauceTest.sh
 env:
   global:
   - SAUCE_USERNAME=seblucas 
