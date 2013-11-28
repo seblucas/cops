@@ -14,4 +14,4 @@
      */
     $config['cops_title_default'] = "COPS";
     
-    // $config['cops_server_side_render'] = ".";
+    $config['cops_server_side_render'] = ".";
