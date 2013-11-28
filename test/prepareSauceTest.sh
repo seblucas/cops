@@ -15,4 +15,4 @@ echo "Good PHP version"
 curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
 cp test/config_local.php.sauce config_local.php
 php -S localhost:8888 2> /dev/null &
-vendor/bin/phpunit Sauce.php
+vendor/bin/phpunit test/Sauce.php
