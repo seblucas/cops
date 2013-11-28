@@ -75,10 +75,10 @@
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
 <?php if (!useServerSideRendering ()) { ?>
     <script type="text/javascript">
-    
+        console.log ("Start");
         $(document).ready(function() {
             // Handler for .ready() called.
-            
+            console.log ("Start Ready");
             try
             {
             var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
@@ -91,7 +91,7 @@
                    $.get('templates/default/suggestion.html'),
                    $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
                 templateBookDetail = doT.template (bookdetail [0]);
-                
+                console.log ("Start When");
                 var defMain = {
                     bookdetail: bookdetail [0]
                 };
@@ -120,6 +120,7 @@
             });
             }
             catch (e) {
+                console.log ("Catch");
                 alert (e.message);
             }
         });
