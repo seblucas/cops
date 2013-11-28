@@ -11,6 +11,7 @@ script:
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
 after_success:
+  - chmod +x test/prepareSauceTest.sh
   - test/prepareSauceTest.sh
 env:
   global:
