@@ -14,10 +14,4 @@
      */
     $config['cops_title_default'] = "COPS";
     
-    /*
-     * use URL rewriting for downloading of ebook in HTML catalog
-     * See README for more information
-     *  1 : enable
-     *  0 : disable
-     */
-    $config['cops_use_url_rewriting'] = "0";
+    $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201|cybook|MSIE";
