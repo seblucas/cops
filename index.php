@@ -43,8 +43,6 @@
         $test = Base::getDb ();
     }
     
-    $texteDebug = "Top ";
-    
     header ("Content-Type:text/html;charset=utf-8");
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -72,16 +70,16 @@
     <script type="text/javascript" src="<?php echo getUrlWithVersion("util.js") ?>"></script>
     <link rel="related" href="<?php echo $config['cops_full_url'] ?>feed.php" type="application/atom+xml;profile=opds-catalog" title="<?php echo $config['cops_title_default']; ?>" /> 
     <link rel="icon" type="image/vnd.microsoft.icon" href="<?php echo $config['cops_icon']; ?>" />
+    <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,800,300,400italic,600,600italic,700,700italic,800italic&subset=latin,cyrillic' />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/normalize/normalize.css") ?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/font-awesome.css") ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
-<?php if (!useServerSideRendering ()) { $texteDebug .= "Start "; ?>
+<?php if (!useServerSideRendering ()) { ?>
     <script type="text/javascript">
-        
+    
         $(document).ready(function() {
             // Handler for .ready() called.
-            try
-            {
+            
             var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
             
             $.when($.get('templates/default/header.html'),
@@ -92,7 +90,7 @@
                    $.get('templates/default/suggestion.html'),
                    $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
                 templateBookDetail = doT.template (bookdetail [0]);
-
+                
                 var defMain = {
                     bookdetail: bookdetail [0]
                 };
@@ -119,19 +117,16 @@
                 }
                 handleLinks ();
             });
-            }
-            catch (e) {
-                alert (e.message);
-            }
+            
         });
+        
         
 
     </script>
-<?php $texteDebug .= "EndScript "; } ?>
+<?php } ?>
 </head>
 <body>
 <?php
-echo $texteDebug;
 if (useServerSideRendering ()) {
     // Get the templates
     $header = file_get_contents('templates/default/header.html');
