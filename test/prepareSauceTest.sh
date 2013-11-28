@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PHP_VERSION=`php -v|grep --only-matching --perl-regexp "5\.\\d+\"`
 
