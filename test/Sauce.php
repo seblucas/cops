@@ -84,7 +84,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
     
     public function setUpPage()
     {
-        $this->url('http://cops-travis:8888/index.php');
+        $this->url('http://localhost:8888/index.php');
     }
     
     public function string_to_ascii($string)
