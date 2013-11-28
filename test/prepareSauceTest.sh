@@ -16,4 +16,4 @@ curl https://gist.github.com/seblucas/7692094/raw/e2a090e6ea639a0d700e6d02cee048
 curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
 cp -v test/config_local.php.sauce config_local.php
 php -S 127.0.0.1:8888 &
-vendor/bin/phpunit test/Sauce.php
+vendor/bin/phpunit --no-configuration test/Sauce.php
