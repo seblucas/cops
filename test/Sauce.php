@@ -107,9 +107,9 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
             return $text == $value;
         };
         
-        sleep(10);
+        //sleep(10);
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
+        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ], 20);
         
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
