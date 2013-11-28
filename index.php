@@ -79,6 +79,8 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             
+            try
+            {
             var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
             
             $.when($.get('templates/default/header.html'),
@@ -116,7 +118,10 @@
                 }
                 handleLinks ();
             });
-            
+            }
+            catch (e) {
+                alert (e.message);
+            }
         });
         
         
