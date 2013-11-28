@@ -115,7 +115,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
         
         $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
         
-        $cog = $this->byId ("searchImage");
+        // $cog = $this->byId ("searchImage");
         // try {
             // $search = $this->byName ("query");
             // $this->fail ();
