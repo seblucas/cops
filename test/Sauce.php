@@ -76,7 +76,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
     {
          $caps = $this->getDesiredCapabilities();
          $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
-         $caps['tunnel_id'] = getenv ("TRAVIS_JOB_NUMBER");
+         //$caps['tunnel_id'] = getenv ("TRAVIS_JOB_NUMBER");
          $caps['name'] = "COPS ";
          $this->setDesiredCapabilities($caps);
          parent::setUp ();
