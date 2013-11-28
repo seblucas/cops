@@ -5,14 +5,14 @@ require_once 'vendor/autoload.php';
 class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
 {
     public static $browsers = array(
-        // // run FF15 on Windows 8 on Sauce
-        // array(
-            // 'browserName' => 'firefox',
-            // 'desiredCapabilities' => array(
-                // 'version' => '15',
-                // 'platform' => 'Windows 2012',
-            // )
-        // ),
+        // run FF15 on Windows 8 on Sauce
+        array(
+            'browserName' => 'firefox',
+            'desiredCapabilities' => array(
+                'version' => '15',
+                'platform' => 'Windows 2012',
+            )
+        )
         // // run IE9 on Windows 7 on Sauce
         // array(
             // 'browserName' => 'internet explorer',
@@ -48,13 +48,13 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
             // )
         // ),
         // run Chrome on Linux on Sauce
-        array(
-            'browserName' => 'chrome',
-            'desiredCapabilities' => array(
-                'version' => '30',
-                'platform' => 'Linux'
-          )
-        )
+        // array(
+            // 'browserName' => 'chrome',
+            // 'desiredCapabilities' => array(
+                // 'version' => '30',
+                // 'platform' => 'Linux'
+          // )
+        // )
         // run Mobile Browser on Android 
         // array(
             // 'browserName' => 'Android',
@@ -84,7 +84,7 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
     
     public function setUpPage()
     {
-        $this->url('http://127.0.0.1:8888/checkconfig.php');
+        $this->url('http://127.0.0.1:8888/index.php');
     }
     
     public function string_to_ascii($string)
