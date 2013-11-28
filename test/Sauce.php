@@ -5,22 +5,22 @@ require_once 'vendor/autoload.php';
 class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
 {
     public static $browsers = array(
-        // // run FF15 on Windows 8 on Sauce
-        // array(
-            // 'browserName' => 'firefox',
-            // 'desiredCapabilities' => array(
-                // 'version' => '15',
-                // 'platform' => 'Windows 2012',
-            // )
-        // ),
-        // // run IE9 on Windows 7 on Sauce
-        // array(
-            // 'browserName' => 'internet explorer',
-            // 'desiredCapabilities' => array(
-                // 'version' => '9',
-                // 'platform' => 'Windows 7',
-            // )
-        // ),
+        // run FF15 on Windows 8 on Sauce
+        array(
+            'browserName' => 'firefox',
+            'desiredCapabilities' => array(
+                'version' => '15',
+                'platform' => 'Windows 2012',
+            )
+        ),
+        // run IE9 on Windows 7 on Sauce
+        array(
+            'browserName' => 'internet explorer',
+            'desiredCapabilities' => array(
+                'version' => '9',
+                'platform' => 'Windows 7',
+            )
+        ),
         // run IE10 on Windows 8 on Sauce
         array(
             'browserName' => 'internet explorer',
@@ -28,33 +28,33 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
                 'version' => '10',
                 'platform' => 'Windows 8',
             )
-        )
-        // // run Opera 12 on Windows 7 on Sauce
-        // array(
-            // 'browserName' => 'opera',
-            // 'desiredCapabilities' => array(
-                // 'version' => '12',
-                // 'platform' => 'Windows 7',
-            // )
-        // ),
-        // // run Mobile Safari on iOS
-        // array(
-            // 'browserName' => '',
-            // 'desiredCapabilities' => array(
-                // 'app' => 'safari',
-                // 'device' => 'iPhone Simulator',
-                // 'version' => '6.1',
-                // 'platform' => 'Mac 10.8',
-            // )
-        // ),
+        ),
+        // run Opera 12 on Windows 7 on Sauce
+        array(
+            'browserName' => 'opera',
+            'desiredCapabilities' => array(
+                'version' => '12',
+                'platform' => 'Windows 7',
+            )
+        ),
+        // run Mobile Safari on iOS
+        array(
+            'browserName' => '',
+            'desiredCapabilities' => array(
+                'app' => 'safari',
+                'device' => 'iPhone Simulator',
+                'version' => '6.1',
+                'platform' => 'Mac 10.8',
+            )
+        ),
         // run Chrome on Linux on Sauce
-        // array(
-            // 'browserName' => 'chrome',
-            // 'desiredCapabilities' => array(
-                // 'version' => '30',
-                // 'platform' => 'Linux'
-          // )
-        // )
+        array(
+            'browserName' => 'chrome',
+            'desiredCapabilities' => array(
+                'version' => '30',
+                'platform' => 'Linux'
+          )
+        )
         // run Mobile Browser on Android 
         // array(
             // 'browserName' => 'Android',
@@ -107,9 +107,8 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
             return $text == $value;
         };
         
-        //sleep(10);
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS" ], 25);
+        $this->spinAssert("Home Title", $title_test, [ "COPS" ]);
         
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
@@ -124,13 +123,12 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
         // catch (Exception $e) {
         // }
         
-        $search = $this->byName ("query");
-        $this->assertFalse ($search->displayed ());
+        // $search = $this->byName ("query");
+        // $this->assertFalse ($search->displayed ());
         
-        $cog->click ();
-        //$this->implicitWait(2000);
+        // $cog->click ();
         
-        $search = $this->byName ("query");
-        $this->assertTrue ($search->displayed ());
+        // $search = $this->byName ("query");
+        // $this->assertTrue ($search->displayed ());
     }
 }
