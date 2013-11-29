@@ -16,6 +16,13 @@ function useServerSideRendering () {
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
 }
 
+function getQueryString () {
+    if ( isset($_SERVER['QUERY_STRING']) ) {
+        return $_SERVER['QUERY_STRING'];
+    }
+    return "";
+}
+
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
@@ -481,8 +488,8 @@ class Page
 
     public function getNextLink ()
     {
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = getQueryString ();
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
         }
@@ -491,8 +498,8 @@ class Page
 
     public function getPrevLink ()
     {
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = getQueryString ();
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if ($this->n > 1) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
         }
