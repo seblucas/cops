@@ -192,6 +192,9 @@ function localize($phrase, $count=-1, $reset=false) {
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
+    if (empty ($urlParams)) {
+        $urlParams = "";
+    }
     $start = "";
     if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
         $start = "?";
