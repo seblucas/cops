@@ -89,6 +89,14 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         } else {
             $this->url('http://cops-demo.slucas.fr/index.php');
         }
+        
+        $driver = $this;
+        $title_test = function($value) use ($driver) {
+            $text = $driver->byXPath('//h1')->text ();
+            return $text == $value;
+        };
+        
+        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
     }
     
     public function string_to_ascii($string)
@@ -110,10 +118,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             $text = $driver->byXPath('//h1')->text ();
             return $text == $value;
         };
-        
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
-        
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
         
