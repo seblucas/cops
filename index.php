@@ -80,7 +80,7 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             
-            var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
+            var url = "<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>";
             
             $.when($.get('templates/default/header.html'),
                    $.get('templates/default/footer.html'),
