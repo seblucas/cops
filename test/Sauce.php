@@ -2,7 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
+class Cops extends Sauce\Sausage\WebDriverTestCase
 {
     public static $browsers = array(
         // run FF15 on Windows 8 on Sauce
@@ -74,17 +74,21 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
 
     public function setUp()
     {
-         $caps = $this->getDesiredCapabilities();
-         $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
-         //$caps['tunnel_id'] = getenv ("TRAVIS_JOB_NUMBER");
-         $caps['name'] = "COPS ";
-         $this->setDesiredCapabilities($caps);
-         parent::setUp ();
+        if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
+            $caps = $this->getDesiredCapabilities();
+            $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
+            $this->setDesiredCapabilities($caps);
+        }
+        parent::setUp ();
     }
     
     public function setUpPage()
     {
-        $this->url('http://127.0.0.1:8888/index.php');
+        if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
+            $this->url('http://127.0.0.1:8888/index.php');
+        } else {
+            $this->url('http://cops-demo.slucas.fr/index.php');
+        }
     }
     
     public function string_to_ascii($string)
@@ -108,27 +112,24 @@ class WebDriverDemo extends Sauce\Sausage\WebDriverTestCase
         };
         
 
-        $this->spinAssert("Home Title", $title_test, [ "COPS" ]);
+        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
         
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
         
         $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
+    }
+    
+    public function testCog()
+    {   
+        $cog = $this->byId ("searchImage");
         
-        // $cog = $this->byId ("searchImage");
-        // try {
-            // $search = $this->byName ("query");
-            // $this->fail ();
-        // }
-        // catch (Exception $e) {
-        // }
+        $search = $this->byName ("query");
+        $this->assertFalse ($search->displayed ());
         
-        // $search = $this->byName ("query");
-        // $this->assertFalse ($search->displayed ());
+        $cog->click ();
         
-        // $cog->click ();
-        
-        // $search = $this->byName ("query");
-        // $this->assertTrue ($search->displayed ());
+        $search = $this->byName ("query");
+        $this->assertTrue ($search->displayed ());
     }
 }

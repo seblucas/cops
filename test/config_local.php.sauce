@@ -12,6 +12,6 @@
     /*
      * Catalog's title
      */
-    $config['cops_title_default'] = "COPS";
+    $config['cops_title_default'] = "COPS DEMO";
     
     // $config['cops_server_side_render'] = ".";
