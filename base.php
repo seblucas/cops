@@ -278,7 +278,7 @@ class Entry
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
         "cops:books$"             => 'images/allbook.png',
         "cops:books:letter"       => 'images/allbook.png',
-        "cops:publishers"            => 'images/publisher.png'
+        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
