@@ -427,7 +427,7 @@ class Book extends Base {
         {
             if ($data->isKnownType ())
             {
-                array_push ($linkArray, $data->getDataLink (Link::OPDS_ACQUISITION_TYPE, "Download"));
+                array_push ($linkArray, $data->getDataLink (Link::OPDS_ACQUISITION_TYPE, $data->format));
             }
         }
                 
