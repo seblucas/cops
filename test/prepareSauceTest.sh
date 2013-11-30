@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ -z $SAUCE_API_KEY ]]
+  then
+    echo "No Sauce Api Key (Pull request)"
+    exit
+fi
+
 PHP_VERSION=`php -v|grep --only-matching --perl-regexp "PHP 5\.\\d+"`
 echo $PHP_VERSION
 
