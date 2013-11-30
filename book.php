@@ -52,7 +52,7 @@ class Book extends Base {
     
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
-	const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
+    const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
     const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
@@ -296,21 +296,21 @@ class Book extends Base {
         }
         return $this->datas;
     }
-	
-	public function GetMostInterestingDataToSendToKindle ()
-	{
-		$bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
-		$bestRank = -1;
-		$bestData = NULL;
-		foreach ($this->getDatas () as $data) {
-			$key = array_search ($data->format, $bestFormatForKindle);
-			if ($key !== false && $key > $bestRank) {
-				$bestRank = $key;
-				$bestData = $data;
-			}
-		}
-		return $bestData;
-	}
+    
+    public function GetMostInterestingDataToSendToKindle ()
+    {
+        $bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
+        $bestRank = -1;
+        $bestData = NULL;
+        foreach ($this->getDatas () as $data) {
+            $key = array_search ($data->format, $bestFormatForKindle);
+            if ($key !== false && $key > $bestRank) {
+                $bestRank = $key;
+                $bestData = $data;
+            }
+        }
+        return $bestData;
+    }
     
     public function getDataById ($idData)
     {
