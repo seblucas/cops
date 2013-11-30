@@ -2,7 +2,7 @@ DirectoryIndex index.php
 
 <IfModule mod_xsendfile.c>
 <Files fetch.php>
-	XSendFile on
+    XSendFile on
 </Files>
 </IfModule>
 

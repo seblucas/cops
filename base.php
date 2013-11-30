@@ -465,7 +465,7 @@ class Page
             if (!is_null ($series)) array_push ($this->entryArray, $series);
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-			$languages = Language::getCount();
+            $languages = Language::getCount();
             if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
