@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ -z $SAUCE_API_KEY ]]
+if [[ -z $SAUCE_ACCESS_KEY ]]
   then
     echo "No Sauce Api Key (Pull request)"
     exit
