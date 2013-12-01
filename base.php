@@ -523,8 +523,6 @@ class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
-
         $this->title = localize("authors.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();

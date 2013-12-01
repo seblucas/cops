@@ -178,7 +178,7 @@
      *
      * Note that for now only the first, second and forth type of custom columns are supported
      */
-    $config['cops_calibre_custom_column'] = array ();
+    $config['cops_calibre_custom_column'] = array ("type1", "type2", "type4");
     
     /*
      * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
