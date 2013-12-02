@@ -18,10 +18,8 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
         $page = Base::PAGE_INDEX;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -34,4 +32,31 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
+   
+    public function testPageSearchXXX ()
+    {
+        global $config;
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $query = "art";
+        $qid = NULL;
+        $n = "1";
+        
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $this->assertEquals ("Search result for *art*", $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Some books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("10 books", $currentPage->entryArray [0]->content);
+        $this->assertEquals ("One book", $currentPage->entryArray [1]->title);
+        $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+    
+    public static function tearDownAfterClass () {
+        Base::clearDb ();
+    }
+
 }

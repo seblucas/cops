@@ -24,12 +24,27 @@
         exit ();
     }
     
-    header ("Content-Type:text/html;charset=utf-8");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
+
+    
+    // Access the database ASAP to be sure it's readable, redirect if that's not the case.
+    // It has to be done before any header is sent.
+    if (is_array ($config['calibre_directory']) && is_null ($database)) {
+        $i = 0;
+        foreach (array_keys ($config['calibre_directory']) as $key) {
+            $test = Base::getDb ($i);
+            Base::clearDb ();
+            $i++;
+        }
+    } else {
+        $test = Base::getDb ();
+    }
+    
+    header ("Content-Type:text/html;charset=utf-8");
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -66,7 +81,7 @@
         $(document).ready(function() {
             // Handler for .ready() called.
             
-            var url = "<?php echo "getJSON.php?" . addURLParameter ($_SERVER["QUERY_STRING"], "complete", 1); ?>";
+            var url = "<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>";
             
             $.when($.get('templates/default/header.html'),
                    $.get('templates/default/footer.html'),
@@ -98,7 +113,9 @@
                 
                 updatePage (data [0]);
                 cache.put (url, data [0]);
-                history.replaceState(url, "", window.location);
+                if (isPushStateEnabled) {
+                    history.replaceState(url, "", window.location);
+                }
                 handleLinks ();
             });
             

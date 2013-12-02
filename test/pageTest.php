@@ -328,8 +328,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_SERIE_DETAIL;
         $query = NULL;
         $qid = "1";
-        $n = "1";
-        
+        $n = "1";        
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
@@ -374,7 +373,6 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function testPageAllTags ()
     {
-        global $config;
         $page = Base::PAGE_ALL_TAGS;
         $query = NULL;
         $qid = NULL;
@@ -522,7 +520,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeAuthors ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -543,7 +540,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeSeries ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -564,7 +560,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopeBooks ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
@@ -584,7 +579,6 @@ class PageTest extends PHPUnit_Framework_TestCase
     
     public function testPageSearchScopePublishers ()
     {
-        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";

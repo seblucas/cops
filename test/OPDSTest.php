@@ -38,10 +38,8 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_INDEX;
         $query = NULL;
-        $search = NULL;
         $qid = NULL;
         $n = "1";
-        $database = NULL;
 
         $_SERVER['QUERY_STRING'] = "";
         $config['cops_subtitle_default'] = "My subtitle";
@@ -66,10 +64,8 @@ class OpdsTest extends PHPUnit_Framework_TestCase
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
         $page = Base::PAGE_AUTHOR_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1";
         $_GET ["db"] = "0";
 
@@ -87,10 +83,8 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
         $query = NULL;
-        $search = NULL;
         $qid = "1";
         $n = "1";
-        $database = NULL;
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
 
         $config['cops_max_item_per_page'] = 2;

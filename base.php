@@ -16,6 +16,13 @@ function useServerSideRendering () {
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
 }
 
+function getQueryString () {
+    if ( isset($_SERVER['QUERY_STRING']) ) {
+        return $_SERVER['QUERY_STRING'];
+    }
+    return "";
+}
+
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
@@ -192,6 +199,9 @@ function localize($phrase, $count=-1, $reset=false) {
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
+    if (empty ($urlParams)) {
+        $urlParams = "";
+    }
     $start = "";
     if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
         $start = "?";
@@ -464,7 +474,7 @@ class Page
 
             $tags = Tag::getCount();
             if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-			$languages = Language::getCount();
+            $languages = Language::getCount();
             if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
@@ -487,8 +497,8 @@ class Page
 
     public function getNextLink ()
     {
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = getQueryString ();
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
         }
@@ -497,8 +507,8 @@ class Page
 
     public function getPrevLink ()
     {
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = getQueryString ();
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if ($this->n > 1) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
         }
@@ -795,7 +805,6 @@ class PageCustomize extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
 
@@ -926,15 +935,22 @@ abstract class Base
     public static function getDbFileName ($database = NULL) {
         return self::getDbDirectory ($database) .'metadata.db';
     }
+    
+    private static function error () {
+        header("location: checkconfig.php?err=1");
+        exit();
+    }
 
     public static function getDb ($database = NULL) {
-        global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                if (is_readable (self::getDbFileName ($database))) {
+                    self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                } else {
+                    self::error ();
+                }
             } catch (Exception $e) {
-                header("location: checkconfig.php?err=1");
-                exit();
+                self::error ();
             }
         }
         return self::$db;
@@ -945,7 +961,6 @@ abstract class Base
     }
 
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
-        global $config;
         $totalResult = -1;
         
         if (is_null ($numberPerPage)) {
