@@ -9,6 +9,7 @@
 require_once('base.php');
 require_once('serie.php');
 require_once('author.php');
+require_once('publisher.php');
 require_once('tag.php');
 require_once('language.php');
 require_once("customcolumn.php");
@@ -20,6 +21,8 @@ define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = book
                                 left outer join books_ratings_link on books_ratings_link.book = books.id 
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
 define ('SQL_BOOKS_ALL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " order by books.sort ");
+define ('SQL_BOOKS_BY_PUBLISHER', "select {0} from books_publishers_link, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher");
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -49,6 +52,7 @@ class Book extends Base {
     
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
+    const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
     const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
     const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
@@ -71,6 +75,7 @@ class Book extends Base {
     public $rating;
     public $datas = NULL;
     public $authors = NULL;
+    public $publisher = NULL;
     public $serie = NULL;
     public $tags = NULL;
     public $languages = NULL;
@@ -119,6 +124,17 @@ class Book extends Base {
                 array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
             }
         }
+
+        $publisher = $this->getPublisher();
+        if (is_null ($publisher)) {
+            $pn = "";
+            $pu = "";
+        } else {
+            $pn = $publisher->name;
+            $link = new LinkNavigation ($publisher->getUri ());
+            $pu = $link->hrefXhtml ();
+        }
+
         $serie = $this->getSerie ();
         if (is_null ($serie)) {
             $sn = "";
@@ -135,6 +151,8 @@ class Book extends Base {
                       "hasCover" => $this->hasCover,
                       "preferedData" => $preferedData,
                       "rating" => $this->getRating (),
+                      "publisherName" => $pn,
+                      "publisherurl" => $pu,
                       "pubDate" => $this->getPubDate (),
                       "languagesName" => $this->getLanguages (),
                       "authorsName" => $this->getAuthorsName (),
@@ -215,6 +233,13 @@ class Book extends Base {
         return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
     }
     
+    public function getPublisher () {
+        if (is_null ($this->publisher)) {
+            $this->publisher = Publisher::getPublisherByBookId ($this->id);
+        }
+        return $this->publisher;
+    }
+
     public function getSerie () {
         if (is_null ($this->serie)) {
             $this->serie = Serie::getSerieByBookId ($this->id);
@@ -271,21 +296,21 @@ class Book extends Base {
         }
         return $this->datas;
     }
-	
-	public function GetMostInterestingDataToSendToKindle ()
-	{
-		$bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
-		$bestRank = -1;
-		$bestData = NULL;
-		foreach ($this->getDatas () as $data) {
-			$key = array_search ($data->format, $bestFormatForKindle);
-			if ($key !== false && $key > $bestRank) {
-				$bestRank = $key;
-				$bestData = $data;
-			}
-		}
-		return $bestData;
-	}
+    
+    public function GetMostInterestingDataToSendToKindle ()
+    {
+        $bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
+        $bestRank = -1;
+        $bestData = NULL;
+        foreach ($this->getDatas () as $data) {
+            $key = array_search ($data->format, $bestFormatForKindle);
+            if ($key !== false && $key > $bestRank) {
+                $bestRank = $key;
+                $bestData = $data;
+            }
+        }
+        return $bestData;
+    }
     
     public function getDataById ($idData)
     {
@@ -478,6 +503,9 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR, array ($authorId), $n);
     }
 
+    public static function getBooksByPublisher($publisherId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_PUBLISHER, array ($publisherId), $n);
+    }
     
     public static function getBooksBySeries($serieId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_SERIE, array ($serieId), $n);
@@ -605,7 +633,7 @@ function getJson ($complete = false) {
             return $out;
         }
         
-        
+        $arrayPublisher = Publisher::getAllPublishersByQuery ($query);
 
         $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
 
@@ -618,7 +646,8 @@ function getJson ($complete = false) {
         foreach (array ("book" => $arrayBook, 
                         "author" => $arrayAuthor, 
                         "series" => $arraySeries, 
-                        "tag" => $arrayTag) as $key => $array) {
+                        "tag" => $arrayTag,
+                        "publisher" => $arrayPublisher) as $key => $array) {
             $i = 0;
             if (count ($array) == 2 && is_array ($array [0])) {
                 $total = $array [1];
@@ -629,9 +658,10 @@ function getJson ($complete = false) {
             if ($total > 0) {
                 // Comment to help the perl i18n script
                 // str_format (localize("bookword", count($array))
-                // str_format (localize("authorword", count($array)
-                // str_format (localize("seriesword", count($array)
-                // str_format (localize("tagword", count($array)
+                // str_format (localize("authorword", count($array))
+                // str_format (localize("seriesword", count($array))
+                // str_format (localize("tagword", count($array))
+                // str_format (localize("publisherword", count($array))
                 array_push ($out, array ("title" => str_format (localize("{$key}word", $total), $total),
                                          "class" => "tt-header",
                                          "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
@@ -697,6 +727,7 @@ function getJson ($complete = false) {
                        "homeAlt" => localize ("home.alternate"),
                        "cogAlt" => localize ("cog.alternate"),
                        "permalinkAlt" => localize ("permalink.alternate"),
+                       "publisherName" => localize("publisher.name"),
                        "pubdateTitle" => localize("pubdate.title"),
                        "languagesTitle" => localize("language.title"),
                        "contentTitle" => localize("content.summary"),

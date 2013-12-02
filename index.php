@@ -10,6 +10,7 @@
     require_once ("config.php");
     require_once ("base.php");
     require_once ("author.php");
+    require_once ("publisher.php");
     require_once ("serie.php");
     require_once ("tag.php");
     require_once ("language.php");
