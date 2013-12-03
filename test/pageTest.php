@@ -23,7 +23,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage->InitializeContent ();
         
         $this->assertEquals ($config['cops_title_default'], $currentPage->title);
-        $this->assertCount (10, $currentPage->entryArray);
+        $this->assertCount (7, $currentPage->entryArray);
         $this->assertEquals ("Authors", $currentPage->entryArray [0]->title);
         $this->assertEquals ("Alphabetical index of the 5 authors", $currentPage->entryArray [0]->content);
         $this->assertEquals ("Series", $currentPage->entryArray [1]->title);
@@ -34,15 +34,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alphabetical index of the 10 tags", $currentPage->entryArray [3]->content);
         $this->assertEquals ("Languages", $currentPage->entryArray [4]->title);
         $this->assertEquals ("Alphabetical index of the single language", $currentPage->entryArray [4]->content);
-        $this->assertEquals ("All books", $currentPage->entryArray [8]->title);
-        $this->assertEquals ("Alphabetical index of the 14 books", $currentPage->entryArray [8]->content);
-        $this->assertEquals ("Recent additions", $currentPage->entryArray [9]->title);
-        $this->assertEquals ("50 most recent books", $currentPage->entryArray [9]->content);
+        $this->assertEquals ("All books", $currentPage->entryArray [5]->title);
+        $this->assertEquals ("Alphabetical index of the 14 books", $currentPage->entryArray [5]->content);
+        $this->assertEquals ("Recent additions", $currentPage->entryArray [6]->title);
+        $this->assertEquals ("50 most recent books", $currentPage->entryArray [6]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
     
     public function testPageIndexWithCustomColumn ()
     {
+        global $config;
         $page = Base::PAGE_INDEX;
         $query = NULL;
         $qid = NULL;
@@ -53,7 +54,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
-        $this->assertCount (10, $currentPage->entryArray);
+        $this->assertCount (8, $currentPage->entryArray);
         $this->assertEquals ("Type1", $currentPage->entryArray [5]->title);
         $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [5]->content);
         
@@ -62,18 +63,18 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
-        $this->assertCount (10, $currentPage->entryArray);
-        $this->assertEquals ("Type2", $currentPage->entryArray [6]->title);
-        $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [6]->content);
+        $this->assertCount (8, $currentPage->entryArray);
+        $this->assertEquals ("Type2", $currentPage->entryArray [5]->title);
+        $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [5]->content);
         
         $config['cops_calibre_custom_column'] = array ("type4");
         
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
         
-        $this->assertCount (10, $currentPage->entryArray);
-        $this->assertEquals ("Type4", $currentPage->entryArray [7]->title);
-        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [7]->content);
+        $this->assertCount (8, $currentPage->entryArray);
+        $this->assertEquals ("Type4", $currentPage->entryArray [5]->title);
+        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [5]->content);
         
         $config['cops_calibre_custom_column'] = array ("type1", "type2", "type4");
         
