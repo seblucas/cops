@@ -153,6 +153,20 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
     }
     
+    public function testGetMostInterestingDataToSendToKindle ()
+    {
+        // Get Alice (available as MOBI, PDF, EPUB in that order)
+        $book = Book::getBookById(17);
+        $data = $book->GetMostInterestingDataToSendToKindle ();
+        $this->assertEquals ("MOBI", $data->format);
+        array_shift ($book->datas);
+        $data = $book->GetMostInterestingDataToSendToKindle ();
+        $this->assertEquals ("PDF", $data->format);
+        array_shift ($book->datas);
+        $data = $book->GetMostInterestingDataToSendToKindle ();
+        $this->assertEquals ("EPUB", $data->format);
+    }
+    
     public function testTypeaheadSearch ()
     {
         $_GET["query"] = "fic";
