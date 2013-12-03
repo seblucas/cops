@@ -167,6 +167,16 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("EPUB", $data->format);
     }
     
+    public function testGetDataById ()
+    {
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
+        $book = Book::getBookById(17);
+        $data = $book->getDataById (17);
+        $this->assertEquals ("MOBI", $data->format);
+        $data = $book->getDataById (20);
+        $this->assertEquals ("EPUB", $data->format);
+    }
+    
     public function testTypeaheadSearch ()
     {
         $_GET["query"] = "fic";
