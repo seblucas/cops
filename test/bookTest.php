@@ -122,6 +122,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertCount (3, $entryArray);
     }
     
+    public function testGetBookByDataId () 
+    {
+        $book = Book::getBookByDataId (17);
+        
+        $this->assertEquals ("Alice's Adventures in Wonderland", $book->getTitle ());
+    }
+    
     public function testGetAllRecentBooks ()
     {
         // All recent books
