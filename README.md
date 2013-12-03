@@ -10,3 +10,6 @@ See : http://blog.slucas.fr/en/oss/calibre-opds-php-server
 [![Code Coverage](https://scrutinizer-ci.com/g/seblucas/cops/badges/coverage.png?s=1e21d8c3bf96d7b0b7cc0e54429fa897ddea1506)](https://scrutinizer-ci.com/g/seblucas/cops/)
 
 [![Build Status](https://travis-ci.org/seblucas/cops.png)](https://travis-ci.org/seblucas/cops)
+
+[![Selenium Test Status](https://saucelabs.com/browser-matrix/seblucas.svg)](https://saucelabs.com/u/seblucas)
+
