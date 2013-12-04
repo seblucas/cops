@@ -6,9 +6,9 @@
             <directory suffix=".php">./</directory>
             <exclude>
                 <directory suffix=".php">./resources</directory>
-            </exclude>
-            <exclude>
                 <directory suffix=".php">./test</directory>
+                <file>config.php</file>
+                <file>config_default.php</file>
             </exclude>
         </whitelist>
     </filter>
