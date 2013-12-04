@@ -19,7 +19,15 @@ fi
 echo "Good PHP version"
 
 curl https://gist.github.com/seblucas/7692094/raw/e2a090e6ea639a0d700e6d02cee048fa2f6c8617/sauce_connect_setup.sh | bash
-curl -s https://raw.github.com/jlipps/sausage-bun/master/givememysausage.php | php
+wget http://getcomposer.org/composer.phar 
+php composer.phar install
+
+# Handle coveralls
+mkdir -p build/logs
+cp -v clover.xml build/logs/clover.xml
+php vendor/bin/coveralls -v
+
+# Handle Sauce
 cp -v test/config_local.php.sauce config_local.php
 php -S 127.0.0.1:8888 &
 vendor/bin/phpunit --no-configuration test/Sauce.php
