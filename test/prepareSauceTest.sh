@@ -25,7 +25,6 @@ php composer.phar install
 # Handle coveralls
 mkdir -p build/logs
 cp -v clover.xml build/logs/clover.xml
-echo "src_dir: ." > .coveralls.yml
 php vendor/bin/coveralls -v --exclude-no-stmt
 
 # Handle Sauce
