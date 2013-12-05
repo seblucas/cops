@@ -35,6 +35,11 @@
         <h3><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
     </p>
     {{?}}
+    {{? it.book.publisherName != ""}}
+    <p class="popupless">
+        <h3>{{=it.c.i18n.publisherName}}: </h3><a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a>
+    </p>
+    {{?}}
     {{? it.book.pubDate != ""}}
     <p class="popupless">
         <h3>{{=it.c.i18n.pubdateTitle}}: </h3>{{=it.book.pubDate}}
