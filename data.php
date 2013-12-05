@@ -15,7 +15,7 @@ class Data extends Base {
     public $realFormat;
     public $extension;
     public $book;
-    
+
     public static $mimetypes = array(
         'azw'   => 'application/x-mobipocket-ebook',
         'azw3'  => 'application/x-mobipocket-ebook',
@@ -44,7 +44,7 @@ class Data extends Base {
         'xpgt'  => 'application/adobe-page-template+xml',
         'zip'   => 'application/zip'
     );
-    
+
     public function __construct($post, $book = null) {
         $this->id = $post->id;
         $this->name = $post->name;
@@ -53,11 +53,11 @@ class Data extends Base {
         $this->extension = strtolower ($this->realFormat);
         $this->book = $book;
     }
-    
+
     public function isKnownType () {
         return array_key_exists ($this->extension, self::$mimetypes);
     }
-    
+
     public function getMimeType () {
         if ($this->isKnownType ()) {
             return self::$mimetypes [$this->extension];
@@ -65,11 +65,11 @@ class Data extends Base {
             return "application/octet-stream";
         }
     }
-    
+
     public function getFilename () {
         return $this->name . "." . strtolower ($this->format);
     }
-    
+
     public function getUpdatedFilename () {
         return $this->book->getAuthorsName () . " - " . $this->book->title;
     }
@@ -81,18 +81,18 @@ class Data extends Base {
     public function getUpdatedFilenameKepub () {
         return $this->getUpdatedFilename () . ".kepub.epub";
     }
-    
+
     public function getDataLink ($rel, $title = NULL) {
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
     }
-    
+
     public function getLocalPath () {
         return $this->book->path . "/" . $this->getFilename ();
     }
-    
+
     public function getHtmlLink () {
         global $config;
-        
+
         if ($config['cops_use_url_rewriting'] == "1")
         {
             $database = "";
@@ -108,13 +108,13 @@ class Data extends Base {
             return self::getLink ($this->book, $this->extension, $this->getMimeType (), NULL, $this->getFilename (), $this->id, NULL)->href;
         }
     }
-    
+
     public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
     {
         global $config;
-        
+
         $urlParam = addURLParameter("", "data", $idData);
-        
+
         if (preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
             preg_match ('/^\w\:/', Base::getDbDirectory ()) || // Windows X:
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
@@ -137,8 +137,8 @@ class Data extends Base {
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
             if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-            if ($config['cops_thumbnail_handling'] != "1" && 
-                !empty ($config['cops_thumbnail_handling']) && 
+            if ($config['cops_thumbnail_handling'] != "1" &&
+                !empty ($config['cops_thumbnail_handling']) &&
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {
                 return new Link ($config['cops_thumbnail_handling'], $mime, $rel, $title);
             } else {

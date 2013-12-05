@@ -17,8 +17,8 @@ require_once('data.php');
 require_once('resources/php-epub-meta/epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
-define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id 
-                                left outer join books_ratings_link on books_ratings_link.book = books.id 
+define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id
+                                left outer join books_ratings_link on books_ratings_link.book = books.id
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
 define ('SQL_BOOKS_ALL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " order by books.sort ");
 define ('SQL_BOOKS_BY_PUBLISHER', "select {0} from books_publishers_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -49,7 +49,7 @@ class Book extends Base {
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
     const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
-    
+
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
     const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
@@ -61,7 +61,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
-    
+
     public $id;
     public $title;
     public $timestamp;
@@ -81,7 +81,7 @@ class Book extends Base {
     public $languages = NULL;
     public $format = array ();
 
-    
+
     public function __construct($line) {
         $this->id = $line->id;
         $this->title = $line->title;
@@ -99,19 +99,19 @@ class Book extends Base {
         }
         $this->rating = $line->rating;
     }
-        
+
     public function getEntryId () {
         return self::ALL_BOOKS_UUID.":".$this->uuid;
     }
-    
+
     public static function getEntryIdByLetter ($startingLetter) {
         return self::ALL_BOOKS_ID.":letter:".$startingLetter;
     }
-    
+
     public function getUri () {
         return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
-    
+
     public function getContentArray () {
         global $config;
         $i = 0;
@@ -146,7 +146,7 @@ class Book extends Base {
             $link = new LinkNavigation ($serie->getUri ());
             $su = $link->hrefXhtml ();
         }
-        
+
         return array ("id" => $this->id,
                       "hasCover" => $this->hasCover,
                       "preferedData" => $preferedData,
@@ -160,13 +160,13 @@ class Book extends Base {
                       "seriesName" => $sn,
                       "seriesIndex" => $this->seriesIndex,
                       "seriesCompleteName" => $scn,
-                      "seriesurl" => $su);  
-    
+                      "seriesurl" => $su);
+
     }
     public function getFullContentArray () {
         global $config;
         $out = $this->getContentArray ();
-        
+
         $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml ();
         $out ["content"] = $this->getComment (false);
@@ -192,47 +192,47 @@ class Book extends Base {
         ;
         return $out;
     }
-    
+
     public function getDetailUrl ($permalink = false) {
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-        return 'index.php' . $urlParam; 
+        return 'index.php' . $urlParam;
     }
-    
+
     public function getTitle () {
         return $this->title;
     }
-    
+
     public function getAuthors () {
         if (is_null ($this->authors)) {
             $this->authors = Author::getAuthorByBookId ($this->id);
         }
         return $this->authors;
     }
-    
+
     public static function getFilterString () {
         $filter = getURLParam ("tag", NULL);
         if (empty ($filter)) return "";
-        
+
         $exists = true;
         if (preg_match ("/^!(.*)$/", $filter, $matches)) {
             $exists = false;
-            $filter = $matches[1];    
+            $filter = $matches[1];
         }
-        
+
         $result = "exists (select null from books_tags_link, tags where books_tags_link.book = books.id and books_tags_link.tag = tags.id and tags.name = '" . $filter . "')";
-        
+
         if (!$exists) {
             $result = "not " . $result;
         }
-    
+
         return "and " . $result;
     }
-    
+
     public function getAuthorsName () {
         return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
     }
-    
+
     public function getPublisher () {
         if (is_null ($this->publisher)) {
             $this->publisher = Publisher::getPublisherByBookId ($this->id);
@@ -246,7 +246,7 @@ class Book extends Base {
         }
         return $this->serie;
     }
-    
+
     public function getLanguages () {
         $lang = array ();
         $result = parent::getDb ()->prepare('select languages.lang_code
@@ -261,11 +261,11 @@ class Book extends Base {
         }
         return implode (", ", $lang);
     }
-    
+
     public function getTags () {
         if (is_null ($this->tags)) {
             $this->tags = array ();
-            
+
             $result = parent::getDb ()->prepare('select tags.id as id, name
                 from books_tags_link, tags
                 where tag = tags.id
@@ -279,16 +279,16 @@ class Book extends Base {
         }
         return $this->tags;
     }
-    
+
     public function getDatas ()
     {
         if (is_null ($this->datas)) {
             $this->datas = array ();
-        
+
             $result = parent::getDb ()->prepare('select id, format, name
     from data where book = ?');
             $result->execute (array ($this->id));
-            
+
             while ($post = $result->fetchObject ())
             {
                 array_push ($this->datas, new Data ($post, $this));
@@ -296,7 +296,7 @@ class Book extends Base {
         }
         return $this->datas;
     }
-    
+
     public function GetMostInterestingDataToSendToKindle ()
     {
         $bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
@@ -311,7 +311,7 @@ class Book extends Base {
         }
         return $bestData;
     }
-    
+
     public function getDataById ($idData)
     {
         foreach ($this->getDatas () as $data) {
@@ -322,11 +322,11 @@ class Book extends Base {
         return NULL;
     }
 
-    
+
     public function getTagsName () {
         return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
-    
+
     public function getRating () {
         if (is_null ($this->rating) || $this->rating == 0) {
             return "";
@@ -340,7 +340,7 @@ class Book extends Base {
         }
         return $retour;
     }
-     
+
     public function getPubDate () {
         if (is_null ($this->pubdate) || ($this->pubdate <= -58979923200)) {
             return "";
@@ -349,7 +349,7 @@ class Book extends Base {
             return date ("Y", $this->pubdate);
         }
     }
-    
+
     public function getComment ($withSerie = true) {
         $addition = "";
         $se = $this->getSerie ();
@@ -365,7 +365,7 @@ class Book extends Base {
             return $addition . htmlspecialchars ($this->comment);
         }
     }
-    
+
     public function getDataFormat ($format) {
         foreach ($this->getDatas () as $data)
         {
@@ -376,7 +376,7 @@ class Book extends Base {
         }
         return NULL;
     }
-    
+
     public function getFilePath ($extension, $idData = NULL, $relative = false)
     {
         $file = NULL;
@@ -400,16 +400,16 @@ class Book extends Base {
             return $this->path."/".$file;
         }
     }
-    
+
     public function getUpdatedEpub ($idData)
     {
         global $config;
         $data = $this->getDataById ($idData);
-            
+
         try
         {
             $epub = new EPub ($data->getLocalPath ());
-            
+
             $epub->Title ($this->title);
             $authorArray = array ();
             foreach ($this->getAuthors() as $author) {
@@ -436,18 +436,18 @@ class Book extends Base {
             echo "Exception : " . $e->getMessage();
         }
     }
-    
+
     public function getLinkArray ()
     {
         $linkArray = array();
-        
+
         if ($this->hasCover)
         {
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
-            
+
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL));
         }
-        
+
         foreach ($this->getDatas () as $data)
         {
             if ($data->isKnownType ())
@@ -455,26 +455,26 @@ class Book extends Base {
                 array_push ($linkArray, $data->getDataLink (Link::OPDS_ACQUISITION_TYPE, $data->format));
             }
         }
-                
+
         foreach ($this->getAuthors () as $author) {
             array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
-        
+
         $serie = $this->getSerie ();
         if (!is_null ($serie)) {
             array_push ($linkArray, new LinkNavigation ($serie->getUri (), "related", str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name)));
         }
-        
+
         return $linkArray;
     }
 
-    
-    public function getEntry () {    
-        return new EntryBook ($this->getTitle (), $this->getEntryId (), 
-            $this->getComment (), "text/html", 
+
+    public function getEntry () {
+        return new EntryBook ($this->getTitle (), $this->getEntryId (),
+            $this->getComment (), "text/html",
             $this->getLinkArray (), $this);
     }
-    
+
     public static function getBookCount($database = NULL) {
         $nBooks = parent::getDb ($database)->query('select count(*) from books')->fetchColumn();
         return $nBooks;
@@ -484,21 +484,21 @@ class Book extends Base {
         global $config;
         $nBooks = parent::getDb ()->query('select count(*) from books')->fetchColumn();
         $result = array();
-        $entry = new Entry (localize ("allbooks.title"), 
-                          self::ALL_BOOKS_ID, 
-                          str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text", 
+        $entry = new Entry (localize ("allbooks.title"),
+                          self::ALL_BOOKS_ID,
+                          str_format (localize ("allbooks.alphabetical", $nBooks), $nBooks), "text",
                           array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS)));
         array_push ($result, $entry);
         if ($config['cops_recentbooks_limit'] > 0) {
-            $entry = new Entry (localize ("recent.title"), 
-                              self::ALL_RECENT_BOOKS_ID, 
-                              str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text", 
+            $entry = new Entry (localize ("recent.title"),
+                              self::ALL_RECENT_BOOKS_ID,
+                              str_format (localize ("recent.list"), $config['cops_recentbooks_limit']), "text",
                               array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RECENT_BOOKS)));
             array_push ($result, $entry);
         }
         return $result;
     }
-        
+
     public static function getBooksByAuthor($authorId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR, array ($authorId), $n);
     }
@@ -506,15 +506,15 @@ class Book extends Base {
     public static function getBooksByPublisher($publisherId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_PUBLISHER, array ($publisherId), $n);
     }
-    
+
     public static function getBooksBySeries($serieId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_SERIE, array ($serieId), $n);
     }
-    
+
     public static function getBooksByTag($tagId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_TAG, array ($tagId), $n);
     }
-    
+
     public static function getBooksByLanguage($languageId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_LANGUAGE, array ($languageId), $n);
     }
@@ -523,7 +523,7 @@ class Book extends Base {
         $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
         return self::getEntryArray ($query, array ($id), $n);
     }
-    
+
     public static function getBookById($bookId) {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
@@ -536,7 +536,7 @@ where books.id = ?');
         }
         return NULL;
     }
-    
+
     public static function getBookByDataId($dataId) {
         $result = parent::getDb ()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
@@ -552,7 +552,7 @@ where data.book = books.id and data.id = ?');
         }
         return NULL;
     }
-    
+
     public static function getBooksByQuery($query, $n, $database = NULL) {
         return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database);
     }
@@ -570,17 +570,17 @@ order by substr (upper (sort), 1, 1)");
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title), 
-                str_format (localize("bookword", $post->count), $post->count), "text", 
+            array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title),
+                str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
         }
         return $entryArray;
     }
-    
+
     public static function getBooksByStartingLetter($letter, $n, $database = NULL, $numberPerPage = NULL) {
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n, $database, $numberPerPage);
     }
-    
+
     public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
         list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
         $entryArray = array();
@@ -592,7 +592,7 @@ order by substr (upper (sort), 1, 1)");
         return array ($entryArray, $totalNumber);
     }
 
-    
+
     public static function getAllRecentBooks() {
         global $config;
         $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
@@ -611,11 +611,11 @@ function getJson ($complete = false) {
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
-    
+
     if ($search) {
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
-        
+
         // Special case when no databases were chosen, we search on all databases
         if (is_array ($config['calibre_directory']) && $multi === "1") {
             $i = 0;
@@ -632,7 +632,7 @@ function getJson ($complete = false) {
             }
             return $out;
         }
-        
+
         $arrayPublisher = Publisher::getAllPublishersByQuery ($query);
 
         $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
@@ -643,9 +643,9 @@ function getJson ($complete = false) {
 
         $arrayBook = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
 
-        foreach (array ("book" => $arrayBook, 
-                        "author" => $arrayAuthor, 
-                        "series" => $arraySeries, 
+        foreach (array ("book" => $arrayBook,
+                        "author" => $arrayAuthor,
+                        "series" => $arraySeries,
                         "tag" => $arrayTag,
                         "publisher" => $arrayPublisher) as $key => $array) {
             $i = 0;
@@ -678,10 +678,10 @@ function getJson ($complete = false) {
         }
         return $out;
     }
-    
+
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
-    
+
     $out = array ( "title" => $currentPage->title);
     $entries = array ();
     foreach ($currentPage->entryArray as $entry) {
@@ -711,7 +711,7 @@ function getJson ($complete = false) {
         $out ["maxPage"] = $currentPage->getMaxPage ();
         $out ["currentPage"] = $currentPage->n;
     }
-    if (!is_null (getURLParam ("complete")) || $complete) { 
+    if (!is_null (getURLParam ("complete")) || $complete) {
         $out ["c"] = array ("version" => VERSION, "i18n" => array (
                        "coverAlt" => localize("i18n.coversection"),
                        "authorsTitle" => localize("authors.title"),
@@ -754,17 +754,17 @@ function getJson ($complete = false) {
     if ($currentPage->containsBook ()) {
         $out ["containsBook"] = 1;
     }
-    
+
     $out["abouturl"] = "index.php" . addURLParameter ("?page=16", DB, $database);
-    
+
     if ($page == Base::PAGE_ABOUT) {
         $temp = preg_replace ("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . VERSION . "</h1>", file_get_contents('about.html'));
         $out ["fullhtml"] = $temp;
     }
-    
+
     $out ["homeurl"] = "index.php";
     if ($page != Base::PAGE_INDEX && !is_null ($database)) $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
-    
+
     return $out;
 }
 

@@ -55,7 +55,7 @@ foreach (explode (";", $emailDest) as $emailAddress) {
 
 $mail->AddAttachment($data->getLocalPath ());
 
-$mail->IsHTML(false); 
+$mail->IsHTML(false);
 $mail->Subject = 'Sent by COPS';
 $mail->Body    = 'Sent by COPS';
 

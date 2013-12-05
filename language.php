@@ -10,23 +10,23 @@ require_once('base.php');
 
 class language extends Base {
     const ALL_LANGUAGES_ID = "cops:languages";
-    
+
     public $id;
     public $lang_code;
-    
+
     public function __construct($pid, $plang_code) {
         $this->id = $pid;
         $this->lang_code = $plang_code;
     }
-    
+
     public function getUri () {
         return "?page=".parent::PAGE_LANGUAGE_DETAIL."&id=$this->id";
     }
-    
+
     public function getEntryId () {
         return self::ALL_LANGUAGES_ID.":".$this->id;
     }
-    
+
     public static function getLanguageString ($code) {
         $string = localize("languages.".$code);
         if (preg_match ("/^languages/", $string)) {
@@ -38,12 +38,12 @@ class language extends Base {
     public static function getCount() {
         $nLanguages = parent::getDb ()->query('select count(*) from languages')->fetchColumn();
         if ($nLanguages == 0) return NULL;
-        $entry = new Entry (localize("languages.title"), self::ALL_LANGUAGES_ID, 
-            str_format (localize("languages.alphabetical", $nLanguages), $nLanguages), "text", 
+        $entry = new Entry (localize("languages.title"), self::ALL_LANGUAGES_ID,
+            str_format (localize("languages.alphabetical", $nLanguages), $nLanguages), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_LANGUAGES)));
         return $entry;
     }
-       
+
     public static function getLanguageById ($languageId) {
         $result = parent::getDb ()->prepare('select id, lang_code  from languages where id = ?');
         $result->execute (array ($languageId));
@@ -52,7 +52,7 @@ class language extends Base {
         }
         return NULL;
     }
-    
+
 
 
     public static function getAllLanguages() {
@@ -65,8 +65,8 @@ order by languages.lang_code');
         while ($post = $result->fetchObject ())
         {
             $language = new Language ($post->id, $post->lang_code);
-            array_push ($entryArray, new Entry (Language::getLanguageString ($language->lang_code), $language->getEntryId (), 
-                str_format (localize("bookword", $post->count), $post->count), "text", 
+            array_push ($entryArray, new Entry (Language::getLanguageString ($language->lang_code), $language->getEntryId (),
+                str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ($language->getUri ()))));
         }
         return $entryArray;

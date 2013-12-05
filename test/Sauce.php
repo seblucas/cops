@@ -55,7 +55,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'platform' => 'Linux'
           )
         )
-        // run Mobile Browser on Android 
+        // run Mobile Browser on Android
         // array(
             // 'browserName' => 'Android',
             // 'desiredCapabilities' => array(
@@ -63,7 +63,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 // 'platform' => 'Linux',
             // )
         // )
-        
+
         // run Chrome locally
         //array(
             //'browserName' => 'chrome',
@@ -81,7 +81,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         }
         parent::setUp ();
     }
-    
+
     public function setUpPage()
     {
         if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
@@ -89,25 +89,25 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         } else {
             $this->url('http://cops-demo.slucas.fr/index.php');
         }
-        
+
         $driver = $this;
         $title_test = function($value) use ($driver) {
             $text = $driver->byXPath('//h1')->text ();
             return $text == $value;
         };
-        
+
         $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
     }
-    
+
     public function string_to_ascii($string)
     {
         $ascii = NULL;
-         
+
         for ($i = 0; $i < strlen($string); $i++)
         {
             $ascii += ord($string[$i]);
         }
-         
+
         return mb_detect_encoding($string) . "X" . $ascii;
     }
 
@@ -121,19 +121,19 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
 
         $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
         $author->click ();
-        
+
         $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
     }
-    
+
     public function testCog()
-    {   
+    {
         $cog = $this->byId ("searchImage");
-        
+
         $search = $this->byName ("query");
         $this->assertFalse ($search->displayed ());
-        
+
         $cog->click ();
-        
+
         $search = $this->byName ("query");
         $this->assertTrue ($search->displayed ());
     }

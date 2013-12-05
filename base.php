@@ -896,7 +896,7 @@ abstract class Base
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     private static $db = NULL;
-    
+
     public static function isMultipleDatabaseEnabled () {
         global $config;
         return is_array ($config['calibre_directory']);
@@ -935,7 +935,7 @@ abstract class Base
     public static function getDbFileName ($database = NULL) {
         return self::getDbDirectory ($database) .'metadata.db';
     }
-    
+
     private static function error () {
         header("location: checkconfig.php?err=1");
         exit();
@@ -962,7 +962,7 @@ abstract class Base
 
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
-        
+
         if (is_null ($numberPerPage)) {
             $numberPerPage = getCurrentOption ("max_item_per_page");
         }

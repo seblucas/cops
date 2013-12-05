@@ -14,7 +14,7 @@
     require_once ("tag.php");
     require_once ("book.php");
     require_once ("OPDS_renderer.php");
-    
+
     header ("Content-Type:application/xml");
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
@@ -22,9 +22,9 @@
     if ($query)
         $page = Base::PAGE_OPENSEARCH_QUERY;
     $qid = getURLParam ("id");
-    
+
     $OPDSRender = new OPDSRenderer ();
-    
+
     switch ($page) {
         case Base::PAGE_OPENSEARCH :
             echo $OPDSRender->getOpenSearch ();

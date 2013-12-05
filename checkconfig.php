@@ -8,12 +8,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
- 
+
     require_once ("config.php");
     require_once ("base.php");
-    
+
     header ("Content-Type:text/html; charset=UTF-8");
-    
+
     $err = getURLParam ("err", -1);
     $full = getURLParam ("full");
     $error = NULL;
@@ -51,7 +51,7 @@
         <article class="frontpage">
             <h2>Check if GD is properly installed and loaded</h2>
             <h4>
-            <?php 
+            <?php
             if (extension_loaded('gd') && function_exists('gd_info')) {
                 echo "OK";
             } else {
@@ -63,7 +63,7 @@
         <article class="frontpage">
             <h2>Check if Sqlite is properly installed and loaded</h2>
             <h4>
-            <?php 
+            <?php
             if (extension_loaded('pdo_sqlite')) {
                 echo "OK";
             } else {
@@ -75,7 +75,7 @@
         <article class="frontpage">
             <h2>Check if libxml is properly installed and loaded</h2>
             <h4>
-            <?php 
+            <?php
             if (extension_loaded('libxml')) {
                 echo "OK";
             } else {
@@ -87,7 +87,7 @@
         <article class="frontpage">
             <h2>Check if the rendering will be done on client side or server side</h2>
             <h4>
-            <?php 
+            <?php
             if (useServerSideRendering ()) {
                 echo "Server side rendering";
             } else {
@@ -96,9 +96,9 @@
             ?>
             </h4>
         </article>
-<?php 
+<?php
 $i = 0;
-foreach (Base::getDbList () as $name => $database) { 
+foreach (Base::getDbList () as $name => $database) {
 ?>
         <article class="frontpage">
             <h2>Check if Calibre database path is not an URL</h2>
@@ -114,12 +114,12 @@ foreach (Base::getDbList () as $name => $database) {
         </article>
         <article class="frontpage">
             <h2>Check if Calibre database file exists and is readable</h2>
-            <?php 
+            <?php
             if (is_readable (Base::getDbFileName ($i))) {
                 echo "{$name} OK";
             } else {
-                echo "{$name} File " . Base::getDbFileName ($i) . " not found, 
-Please check 
+                echo "{$name} File " . Base::getDbFileName ($i) . " not found,
+Please check
 <ul>
 <li>Value of \$config['calibre_directory'] in config_local.php</li>
 <li>Value of <a href='http://php.net/manual/en/ini.core.php#ini.open-basedir'>open_basedir</a> in your php.ini</li>
@@ -133,7 +133,7 @@ Please check
         <article class="frontpage">
             <h2>Check if Calibre database file can be opened with PHP</h2>
             <h4>
-            <?php 
+            <?php
             try {
                 $db = new PDO('sqlite:'. Base::getDbFileName ($i));
                 echo "{$name} OK";
@@ -146,7 +146,7 @@ Please check
         <article class="frontpage">
             <h2>Check if Calibre database file contains at least some of the needed tables</h2>
             <h4>
-            <?php 
+            <?php
             try {
                 $db = new PDO('sqlite:'. Base::getDbFileName ($i));
                 $count = $db->query("select count(*) FROM sqlite_master WHERE type='table' AND name in ('books', 'authors', 'tags', 'series')")->fetchColumn();
@@ -165,7 +165,7 @@ Please check
         <article class="frontpage">
             <h2>Check if all Calibre books are found</h2>
             <h4>
-            <?php 
+            <?php
             try {
                 $db = new PDO('sqlite:'. Base::getDbFileName ($i));
                 $result = $db->prepare("select books.path || '/' || data.name || '.' || lower (format) as fullpath from data join books on data.book = books.id");

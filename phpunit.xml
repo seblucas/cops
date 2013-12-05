@@ -1,5 +1,5 @@
 <phpunit>
-    
+
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <!-- this is the path of the files included in your clover report -->

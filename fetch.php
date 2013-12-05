@@ -1,11 +1,11 @@
 <?php
 /**
- * COPS (Calibre OPDS PHP Server) 
+ * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Gordon Page <gordon@incero.com> with integration/modification by Sébastien Lucas <sebastien@slucas.fr>
  */
-    
+
     require_once ("config.php");
     require_once ("book.php");
     require_once ("data.php");
@@ -16,7 +16,7 @@ function notFound () {
 
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
-    
+
     global $config;
     $expires = 60*60*24*14;
     header("Pragma: public");
@@ -33,12 +33,12 @@ function notFound () {
     {
         $book = Book::getBookById($bookId);
     }
-    
+
     if (!$book) {
         notFound ();
-        return;     
+        return;
     }
-    
+
     if ($book && ($type == "jpg" || empty ($config['calibre_internal_directory']))) {
         if ($type == "jpg") {
             $file = $book->getFilePath ($type);
@@ -50,7 +50,7 @@ function notFound () {
             return;
         }
     }
-     
+
     switch ($type)
     {
         case "jpg":
@@ -123,12 +123,12 @@ function notFound () {
     } else {
         header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
     }
-    
+
     $dir = $config['calibre_internal_directory'];
     if (empty ($config['calibre_internal_directory'])) {
         $dir = Base::getDbDirectory ();
     }
-    
+
     if (empty ($config['cops_x_accel_redirect'])) {
         $filename = $dir . $file;
         $fp = fopen($filename, 'rb');
