@@ -59,7 +59,7 @@ function notFound () {
             {
                 $file = $book->getFilePath ($type);
                 // get image size
-                if($size = GetImageSize($file)){
+                if ($size = GetImageSize($file)) {
                     $w = $size[0];
                     $h = $size[1];
                     //set new size
@@ -85,7 +85,7 @@ function notFound () {
             {
                 $file = $book->getFilePath ($type);
                 // get image size
-                if($size = GetImageSize($file)){
+                if ($size = GetImageSize($file)) {
                     $w = $size[0];
                     $h = $size[1];
                     //set new size

@@ -59,7 +59,7 @@ $mail->IsHTML(false);
 $mail->Subject = 'Sent by COPS';
 $mail->Body    = 'Sent by COPS';
 
-if(!$mail->Send()) {
+if (!$mail->Send()) {
    echo localize ("mail.messagenotsent");
    echo 'Mailer Error: ' . $mail->ErrorInfo;
    exit;
