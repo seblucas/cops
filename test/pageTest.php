@@ -354,7 +354,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("D. Appleton and Company", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
-	
+
     public function testPagePublishersDetail ()
     {
         $page = Base::PAGE_PUBLISHER_DETAIL;
