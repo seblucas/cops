@@ -395,6 +395,10 @@ function handleLinks () {
 }
 
 window.onpopstate = function(event) {
+    if (!isDefined (currentData)) {
+        return;
+    }
+
     before = new Date ();
     var data = cache.get (event.state);
     updatePage (data);
