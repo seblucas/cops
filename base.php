@@ -752,7 +752,7 @@ class PageQueryResult extends Page
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), $this->n, $i);
+                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
                                         str_format (localize ("bookword", count($array)), count($array)), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
