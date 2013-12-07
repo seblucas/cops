@@ -553,8 +553,8 @@ where data.book = books.id and data.id = ?');
         return NULL;
     }
 
-    public static function getBooksByQuery($query, $n, $database = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database);
+    public static function getBooksByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database, $numberPerPage);
     }
 
     public static function getBooks($n) {
