@@ -491,6 +491,7 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function testPageSearch ()
     {
+        global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "alice";
         $qid = NULL;
@@ -508,6 +509,17 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         // Match Lewis Caroll & Scarlet
         $query = "car";
+
+        $config ['cops_ingored_search_scope'] = array ("author");
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Search result for *car*", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+
+        $config ['cops_ingored_search_scope'] = array ();
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
