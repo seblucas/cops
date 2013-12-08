@@ -752,7 +752,7 @@ class PageQueryResult extends Page
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), 1, $i, 1);
+                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit, $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
                                         str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
@@ -772,14 +772,14 @@ class PageQueryResult extends Page
                 break;
             case self::SCOPE_BOOK :
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ($bad, $bad, $bad, $crit), $this->n);
+                    array ($bad, $bad, $bad, $bad, $crit), $this->n);
                 break;
             case self::SCOPE_PUBLISHER :
                 $this->entryArray = Publisher::getAllPublishersByQuery ($this->query);
                 break;
             default:
                 list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ($crit, $crit, $crit, $crit), $this->n);
+                    array ($crit, $crit, $crit, $crit, $crit), $this->n);
         }
     }
 }
