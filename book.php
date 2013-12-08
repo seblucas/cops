@@ -40,6 +40,7 @@ define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
                                                     exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
                                                     exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
+                                                    exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
                                                     title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
