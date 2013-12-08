@@ -234,3 +234,15 @@
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
     $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201|cybook";
+
+    /*
+     * Specify the ignored categories with autocomplete search and standard search
+     * Meaning that if you don't want to search in publishers or tags just add them from the list
+     * Only accepted values :
+     * - author
+     * - book
+     * - series
+     * - tag
+     * - publisher
+     */
+    $config ['cops_ingored_search_scope'] = array ();

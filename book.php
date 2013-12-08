@@ -63,6 +63,8 @@ class Book extends Base {
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
 
+    const BAD_SEARCH = "QQQQQ";
+
     public $id;
     public $title;
     public $timestamp;
@@ -555,7 +557,24 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getBooksByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, $query, $n, $database, $numberPerPage);
+        global $config;
+        $i = 0;
+        $critArray = array ();
+        foreach (array ("author", "tag", "series", "publisher", "book") as $key) {
+            if (in_array($key, $config ['cops_ingored_search_scope']) ||
+                (!array_key_exists ($key, $query) && !array_key_exists ("all", $query))) {
+                $critArray [$i] = self::BAD_SEARCH;
+            }
+            else {
+                if (array_key_exists ($key, $query)) {
+                    $critArray [$i] = $query [$key];
+                } else {
+                    $critArray [$i] = $query ["all"];
+                }
+            }
+            $i++;
+        }
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);
     }
 
     public static function getBooks($n) {
@@ -634,21 +653,28 @@ function getJson ($complete = false) {
             return $out;
         }
 
-        $arrayPublisher = Publisher::getAllPublishersByQuery ($query);
+        foreach (array ("book", "author", "series", "tag", "publisher") as $key) {
+            if (in_array($key, $config ['cops_ingored_search_scope'])) {
+                continue;
+            }
+            switch ($key) {
+                case "book" :
+                    $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
+                    break;
+                case "author" :
+                    $array = Author::getAuthorsByStartingLetter ('%' . $query);
+                    break;
+                case "series" :
+                    $array = Serie::getAllSeriesByQuery ($query);
+                    break;
+                case "tag" :
+                    $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
+                    break;
+                case "publisher" :
+                    $array = Publisher::getAllPublishersByQuery ($query);
+                    break;
+            }
 
-        $arrayTag = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
-
-        $arraySeries = Serie::getAllSeriesByQuery ($query);
-
-        $arrayAuthor = Author::getAuthorsByStartingLetter ('%' . $query);
-
-        $arrayBook = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
-
-        foreach (array ("book" => $arrayBook,
-                        "author" => $arrayAuthor,
-                        "series" => $arraySeries,
-                        "tag" => $arrayTag,
-                        "publisher" => $arrayPublisher) as $key => $array) {
             $i = 0;
             if (count ($array) == 2 && is_array ($array [0])) {
                 $total = $array [1];
