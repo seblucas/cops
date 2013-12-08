@@ -1,2 +1,5 @@
 syntax: glob
 feedbook/*
+coverage/*
+clover.xml
+test/text.atom
