@@ -245,4 +245,4 @@
      * - tag
      * - publisher
      */
-    $config ['cops_ingored_search_scope'] = array ();
+    $config ['cops_ignored_search_scope'] = array ();
