@@ -561,7 +561,7 @@ where data.book = books.id and data.id = ?');
         $i = 0;
         $critArray = array ();
         foreach (array ("author", "tag", "series", "publisher", "book") as $key) {
-            if (in_array($key, $config ['cops_ingored_search_scope']) ||
+            if (in_array($key, $config ['cops_ignored_search_scope']) ||
                 (!array_key_exists ($key, $query) && !array_key_exists ("all", $query))) {
                 $critArray [$i] = self::BAD_SEARCH;
             }
@@ -654,7 +654,7 @@ function getJson ($complete = false) {
         }
 
         foreach (array ("book", "author", "series", "tag", "publisher") as $key) {
-            if (in_array($key, $config ['cops_ingored_search_scope'])) {
+            if (in_array($key, $config ['cops_ignored_search_scope'])) {
                 continue;
             }
             switch ($key) {
