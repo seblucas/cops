@@ -44,6 +44,13 @@
         $test = Base::getDb ();
     }
 
+    if ($config ['cops_fetch_protect'] == "1") {
+        session_start();
+        if (!isset($_SESSION['connected'])) {
+            $_SESSION['connected'] = 0;
+        }
+    }
+
     header ("Content-Type:text/html;charset=utf-8");
 ?><!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -55,6 +62,8 @@
     <link rel="apple-touch-icon" sizes="72x72" href="./icons/icon72.png" />
     <link rel="apple-touch-icon" sizes="114x114" href="./icons/icon114.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="./icons/icon144.png" />
+    <meta name="msapplication-TileColor" content="#123456"/>
+    <meta name="msapplication-TileImage" content="./icons/icon144.png"/>
 
     <title>COPS</title>
 

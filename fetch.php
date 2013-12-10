@@ -17,6 +17,14 @@ function notFound () {
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
+    if ($config ['cops_fetch_protect'] == "1") {
+        session_start();
+        if (!isset($_SESSION['connected'])) {
+            notFound ();
+            return;
+        }
+    }
+
     global $config;
     $expires = 60*60*24*14;
     header("Pragma: public");
