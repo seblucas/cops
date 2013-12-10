@@ -23,6 +23,13 @@
         $page = Base::PAGE_OPENSEARCH_QUERY;
     $qid = getURLParam ("id");
 
+    if ($config ['cops_fetch_protect'] == "1") {
+        session_start();
+        if (!isset($_SESSION['connected'])) {
+            $_SESSION['connected'] = 0;
+        }
+    }
+
     $OPDSRender = new OPDSRenderer ();
 
     switch ($page) {
