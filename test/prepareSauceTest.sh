@@ -25,7 +25,7 @@ php composer.phar install
 # Handle coveralls
 mkdir -p build/logs
 cp -v clover.xml build/logs/clover.xml
-php vendor/bin/coveralls -v --exclude-no-stmt
+php vendor/bin/coveralls -v
 
 # Handle Sauce
 curl https://gist.github.com/seblucas/7692094/raw/e2a090e6ea639a0d700e6d02cee048fa2f6c8617/sauce_connect_setup.sh | bash
