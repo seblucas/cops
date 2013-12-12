@@ -90,19 +90,17 @@ opacity: 0.5;
 }
 
 .filter-include:after { 
-    content: "\fa99";
+    content: " ✓";
 }
-
-.filter-exclude:after { 
-    content: "\fa9d";
-}
-
 
 .filter-exclude { 
     border-right:thick solid red;
     opacity: 1;
 }
 
+.filter-exclude:after { 
+    content: " ✗";
+}
 
 img
 {
