@@ -137,4 +137,44 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $search = $this->byName ("query");
         $this->assertTrue ($search->displayed ());
     }
+    
+    public function testFilter()
+    {
+        // Click on the wrench to enable tag filtering
+        $this->byClassName ("icon-wrench")->click ();
+        
+        $this->byId ("html_tag_filter")->click ();
+        
+        // Go back to home screen
+        $this->byClassName ("icon-home")->click ();
+
+        $driver = $this;
+        $title_test = function($value) use ($driver) {
+            $text = $driver->byXPath('//h1')->text ();
+            return $text == $value;
+        };
+
+        // Go on the recent page
+        $author = $this->byXPath ('//h2[contains(text(), "Recent")]');
+        $author->click ();
+
+        $this->spinAssert("Recent book title", $title_test, [ "RECENT ADDITIONS" ]);
+
+        // Click on the cog to show tag filters
+        $cog = $this->byId ("searchImage");
+        $cog->click ();
+        sleep (1);
+        // Filter on War & Military
+        $filter = $this->byXPath ('//li[contains(text(), "War")]');
+        $filter->click ();
+        sleep (1);
+        // Only one book
+        $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
+        $this->assertEquals (1, count($filtered));
+        $filter->click ();
+        sleep (1);
+        // 13 book
+        $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
+        $this->assertEquals (13, count($filtered));
+    }
 }
