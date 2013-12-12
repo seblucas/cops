@@ -89,6 +89,15 @@ opacity: 0.5;
     opacity: 1;
 }
 
+.filter-include:after { 
+    content: "\fa99";
+}
+
+.filter-exclude:after { 
+    content: "\fa9d";
+}
+
+
 .filter-exclude { 
     border-right:thick solid red;
     opacity: 1;
