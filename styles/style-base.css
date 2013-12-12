@@ -9,7 +9,7 @@
     font-smoothing:antialiased;
 }
 
-html { font-size: 100%; -webkit-text-size-adjust: 100%; 
+html { font-size: 100%; -webkit-text-size-adjust: 100%;
                           -ms-text-size-adjust: 100%; }
 
 body {
@@ -30,7 +30,7 @@ img {
    Typography stuff goes here
    ========================================================================== */
 h1,h2,h3,h4,h5,h6 { font-weight: bold; margin:0; padding:0;}
-/*h1 see mediaqueries*/ 
+/*h1 see mediaqueries*/
 h2 {font-size: 1.2em;}
 h3 {font-size: 1.1em;}
 h4 {font-size: 1.0em; }
@@ -72,7 +72,7 @@ margin: 0;
 padding: 0;
 list-style-type: none;
 text-align: left;
-text-transform:none; 
+text-transform:none;
 }
 
 li {
@@ -84,21 +84,21 @@ background-color: white;
 opacity: 0.5;
 }
 
-.filter-include { 
+.filter-include {
     border-left:thick solid blue;
     opacity: 1;
 }
 
-.filter-include:after { 
+.filter-include:after {
     content: " ✓";
 }
 
-.filter-exclude { 
+.filter-exclude {
     border-right:thick solid red;
     opacity: 1;
 }
 
-.filter-exclude:after { 
+.filter-exclude:after {
     content: " ✗";
 }
 
@@ -120,10 +120,10 @@ border:0;
    Header stuff goes here
    ========================================================================== */
 header {
-    clear:both; 
-    color:white; 
-    text-align:center; 
-    text-transform:uppercase; 
+    clear:both;
+    color:white;
+    text-align:center;
+    text-transform:uppercase;
     display:block;
     min-height:70px;
 }
@@ -240,7 +240,7 @@ max-width:800px;
 }
 
 .download a {
-    background: darkgray;  
+    background: darkgray;
     color: #EEE;
     text-decoration : none;
     font-weight: bold;
@@ -259,7 +259,7 @@ max-width:800px;
 
 /*-------------books popup article-------------*/
 .bookpopup h2{
-    margin: 15px 15px; 
+    margin: 15px 15px;
 }
 
 .bookpopup h3{
@@ -321,7 +321,7 @@ line-height: 100%;
 
 /* =============================================================================
    Aside stuff goes here
-   ========================================================================== */   
+   ========================================================================== */
 #tool
 {
 width:100%;
@@ -366,7 +366,7 @@ width: 100%;
   width: 322px;
   text-align: left;
   margin-top: 6px;
-  color: #000066;   
+  color: #000066;
   padding: 4px 0;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -399,7 +399,7 @@ width: 100%;
 h1 {font-size: 1em;}
 .container { width:100%; }
 }
-   
+
 /* 320px and greater */
 @media only screen and (min-width: 320px) {
 h1 {font-size: 1.2em;}
@@ -416,7 +416,7 @@ body {  font-size: 1em;/*12px/16px */
 /* 768px and greater */
 @media only screen and (min-width: 768px) {
 h1 {font-size: 2em; line-height: 1em;}
-body {  margin: 5px; 
+body {  margin: 5px;
             font-size: 0.85em;/*12px/16px */
             font-weight:400; /* Better supported than 'lighter' attribute */
     }
