@@ -137,22 +137,24 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $search = $this->byName ("query");
         $this->assertTrue ($search->displayed ());
     }
-    
+
     public function testFilter()
     {
-        // Click on the wrench to enable tag filtering
-        $this->byClassName ("icon-wrench")->click ();
-        
-        $this->byId ("html_tag_filter")->click ();
-        
-        // Go back to home screen
-        $this->byClassName ("icon-home")->click ();
-
         $driver = $this;
         $title_test = function($value) use ($driver) {
             $text = $driver->byXPath('//h1')->text ();
             return $text == $value;
         };
+
+        // Click on the wrench to enable tag filtering
+        $this->byClassName ("icon-wrench")->click ();
+
+        $this->byId ("html_tag_filter")->click ();
+
+        // Go back to home screen
+        $this->byClassName ("icon-home")->click ();
+
+        $this->spinAssert("Home Title", $title_test, [ "COPS DEMO" ]);
 
         // Go on the recent page
         $author = $this->byXPath ('//h2[contains(text(), "Recent")]');
