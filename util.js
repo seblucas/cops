@@ -147,7 +147,7 @@ function updateFilters () {
     for (var tag in tagList) {
         var tagValue = tagList [tag];
         if (tagValue === -1) {
-            $("#filter ul li:contains('" + tag + "')").remove();
+            $("#filter ul li").filter (function () { return $.text([this]) === tag; }).remove();
         }
         if (tagValue === 1) {
             $("#filter ul").append ("<li>" + tag + "</li>");
