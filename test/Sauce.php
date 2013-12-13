@@ -111,32 +111,32 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         return mb_detect_encoding($string) . "X" . $ascii;
     }
 
-    public function testTitle()
-    {
-        $driver = $this;
-        $title_test = function($value) use ($driver) {
-            $text = $driver->byXPath('//h1')->text ();
-            return $text == $value;
-        };
+    // public function testTitle()
+    // {
+        // $driver = $this;
+        // $title_test = function($value) use ($driver) {
+            // $text = $driver->byXPath('//h1')->text ();
+            // return $text == $value;
+        // };
 
-        $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
-        $author->click ();
+        // $author = $this->byXPath ('//h2[contains(text(), "Authors")]');
+        // $author->click ();
 
-        $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
-    }
+        // $this->spinAssert("Author Title", $title_test, [ "AUTHORS" ]);
+    // }
 
-    public function testCog()
-    {
-        $cog = $this->byId ("searchImage");
+    // public function testCog()
+    // {
+        // $cog = $this->byId ("searchImage");
 
-        $search = $this->byName ("query");
-        $this->assertFalse ($search->displayed ());
+        // $search = $this->byName ("query");
+        // $this->assertFalse ($search->displayed ());
 
-        $cog->click ();
+        // $cog->click ();
 
-        $search = $this->byName ("query");
-        $this->assertTrue ($search->displayed ());
-    }
+        // $search = $this->byName ("query");
+        // $this->assertTrue ($search->displayed ());
+    // }
 
     public function testFilter()
     {
