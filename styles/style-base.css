@@ -90,7 +90,7 @@ opacity: 0.5;
 }
 
 .filter-include:after {
-    content: " ✓";
+    content: " \2713"; /* Tick mark */
 }
 
 .filter-exclude {
@@ -99,7 +99,7 @@ opacity: 0.5;
 }
 
 .filter-exclude:after {
-    content: " ✗";
+    content: " \2717"; /* Check mark */
 }
 
 img
