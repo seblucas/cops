@@ -188,6 +188,18 @@ function doFilter () {
         }
         if (toBeFiltered) { $(this).parents (".books").addClass ("filtered"); }
     });
+    
+    // Handle the books with no tags
+    var atLeastOneTagSelected = false;
+    for (var filter in filterList) {
+        if (filterList [filter] === true) {
+            atLeastOneTagSelected = true;
+        }
+    }
+    if (atLeastOneTagSelected) {
+        $(".books").not (":has(span.se)").addClass ("filtered");
+    }
+    
     updateFilters ();
 }
 
