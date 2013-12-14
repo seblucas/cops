@@ -724,24 +724,16 @@ class PageQueryResult extends Page
     {
         global $config;
         $scope = getURLParam ("scope");
-        switch ($scope) {
-            case self::SCOPE_AUTHOR :
-                $this->title = str_format (localize ("search.result.author"), $this->query);
-                break;
-            case self::SCOPE_TAG :
-                $this->title = str_format (localize ("search.result.tag"), $this->query);
-                break;
-            case self::SCOPE_SERIES :
-                $this->title = str_format (localize ("search.result.series"), $this->query);
-                break;
-            case self::SCOPE_BOOK :
-                $this->title = str_format (localize ("search.result.book"), $this->query);
-                break;
-            case self::SCOPE_PUBLISHER :
-                $this->title = str_format (localize ("search.result.publisher"), $this->query);
-                break;
-            default:
-                $this->title = str_format (localize ("search.result"), $this->query);
+        if (empty ($scope)) {
+            $this->title = str_format (localize ("search.result"), $this->query);
+        } else {
+            // Comment to help the perl i18n script
+            // str_format (localize ("search.result.author"), $this->query)
+            // str_format (localize ("search.result.tag"), $this->query)
+            // str_format (localize ("search.result.series"), $this->query)
+            // str_format (localize ("search.result.book"), $this->query)
+            // str_format (localize ("search.result.publisher"), $this->query)
+            $this->title = str_format (localize ("search.result.{$scope}"), $this->query);
         }
 
         $crit = "%" . $this->query . "%";
