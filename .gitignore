@@ -1,2 +1,6 @@
-config_local.php
-modlog.md
+feedbook/*
+coverage/*
+saucetest/*
+clover.xml
+test/text.atom
+cops.zip
