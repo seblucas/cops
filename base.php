@@ -903,7 +903,7 @@ abstract class Base
 
     public static function getDbList () {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             return $config['calibre_directory'];
         } else {
             return array ("" => $config['calibre_directory']);
@@ -912,7 +912,7 @@ abstract class Base
 
     public static function getDbName ($database = NULL) {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             $array = array_keys ($config['calibre_directory']);
             return  $array[$database];
@@ -922,7 +922,7 @@ abstract class Base
 
     public static function getDbDirectory ($database = NULL) {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
