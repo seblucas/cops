@@ -59,8 +59,6 @@ class BaseTest extends PHPUnit_Framework_TestCase
     }
 
     public function testCheckDatabaseAvailability_1 () {
-        global $config;
-
         $this->assertTrue (Base::checkDatabaseAvailability ());
     }
 
