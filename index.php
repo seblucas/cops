@@ -69,7 +69,7 @@
 
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jQuery/jquery-1.10.2.min.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jquery-cookie/jquery.cookies.js") ?>"></script>
-    <script type="text/javascript" src="<?php echo getUrlWithVersion("js/jquery.sortElements.js") ?>"></script>
+    <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/jquery-sortelements/jquery.sortElements.js") ?>"></script>
 <?php if (!useServerSideRendering ()) { ?>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/Magnific-Popup/jquery.magnific-popup.min.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/Magnific-Popup/magnific-popup.css") ?>" media="screen" />
