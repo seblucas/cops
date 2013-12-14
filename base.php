@@ -940,8 +940,10 @@ abstract class Base
     }
 
     private static function error () {
-        header("location: checkconfig.php?err=1");
-        exit();
+        if (php_sapi_name() != "cli") {
+            header("location: checkconfig.php?err=1");
+        }
+        throw new Exception('Database not found.');
     }
 
     public static function getDb ($database = NULL) {
@@ -968,6 +970,7 @@ abstract class Base
         } else {
             self::getDb ();
         }
+        return true;
     }
 
     public static function clearDb () {

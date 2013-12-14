@@ -57,4 +57,45 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("One book", Base::getDbName (1));
         $this->assertEquals ($config['calibre_directory'], Base::getDbList ());
     }
+
+    public function testCheckDatabaseAvailability_1 () {
+        global $config;
+
+        $this->assertTrue (Base::checkDatabaseAvailability ());
+    }
+
+    public function testCheckDatabaseAvailability_2 () {
+        global $config;
+
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+
+        $this->assertTrue (Base::checkDatabaseAvailability ());
+    }
+
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage not found
+     */
+    public function testCheckDatabaseAvailability_Exception1 () {
+        global $config;
+
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/OneBook/");
+
+        $this->assertTrue (Base::checkDatabaseAvailability ());
+    }
+
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage not found
+     */
+    public function testCheckDatabaseAvailability_Exception2 () {
+        global $config;
+
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/SomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+
+        $this->assertTrue (Base::checkDatabaseAvailability ());
+    }
 }
