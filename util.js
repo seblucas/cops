@@ -280,13 +280,12 @@ updatePage = function (data) {
         limit: 24,
         template: templateSuggestion,
         remote: {
-            url: 'getJSON.php?search=1&db=%DB&query=%QUERY&multi=%MULTI',
+            url: 'getJSON.php?search=1&db=%DB&query=%QUERY',
             replace: function (url, query) {
-                var multi = 0;
                 if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
-                    multi = 1;
+                    return url.replace('%QUERY', query).replace('&db=%DB', "")
                 }
-                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId).replace ("%MULTI", multi);
+                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
             }
         }
     }

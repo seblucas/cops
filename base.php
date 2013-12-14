@@ -453,8 +453,7 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        $database = GetUrlParam (DB);
-        if (is_array ($config['calibre_directory']) && is_null ($database)) {
+        if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (array_keys ($config['calibre_directory']) as $key) {
                 $nBooks = Book::getBookCount ($i);
@@ -484,7 +483,7 @@ class Page
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
-            if (!is_null ($database)) $this->title =  Base::getDbName ();
+            if (Base::isMultipleDatabaseEnabled ()) $this->title =  Base::getDbName ();
         }
     }
 
@@ -739,7 +738,7 @@ class PageQueryResult extends Page
         $crit = "%" . $this->query . "%";
 
         // Special case when we are doing a search and no database is selected
-        if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
+        if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach ($config['calibre_directory'] as $key => $value) {
                 Base::clearDb ();
@@ -891,6 +890,10 @@ abstract class Base
     public static function isMultipleDatabaseEnabled () {
         global $config;
         return is_array ($config['calibre_directory']);
+    }
+    
+    public static function noDatabaseSelected () {
+        return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
     }
 
     public static function getDbList () {
