@@ -1,7 +1,4 @@
 {
-    "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
-    },
     "require": {
         "sauce/sausage": ">=0.4.0"
     }
