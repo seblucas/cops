@@ -439,6 +439,42 @@ class Book extends Base {
             echo "Exception : " . $e->getMessage();
         }
     }
+    
+    public function getThumbnail ($width, $height) {
+        if (is_null ($width) && is_null ($height)) {
+            return false;
+        }
+        $file = $this->getFilePath ("jpg");
+        // get image size
+        if ($size = GetImageSize($file)) {
+            $w = $size[0];
+            $h = $size[1];
+            //set new size
+            if (!is_null ($width)) {
+                $nw = $width;
+                if ($nw > $w) { return false; }
+                $nh = ($nw*$h)/$w;
+            } else {
+                $nh = $height;
+                if ($nh > $h) { return false; }
+                $nw = ($nh*$w)/$h;
+            }
+        }
+        else{
+            //set new size
+            $nw = "160";
+            $nh = "120";
+        }
+        //draw the image
+        $src_img = imagecreatefromjpeg($file);
+        $dst_img = imagecreatetruecolor($nw,$nh);
+        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
+        imagejpeg($dst_img,null,80);
+        imagedestroy($src_img);
+        imagedestroy($dst_img);
+        
+        return true;
+    }
 
     public function getLinkArray ()
     {
