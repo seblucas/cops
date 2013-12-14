@@ -721,7 +721,6 @@ class PageQueryResult extends Page
 
     public function InitializeContent ()
     {
-        global $config;
         $scope = getURLParam ("scope");
         if (empty ($scope)) {
             $this->title = str_format (localize ("search.result"), $this->query);
