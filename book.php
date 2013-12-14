@@ -560,7 +560,11 @@ where data.book = books.id and data.id = ?');
         global $config;
         $i = 0;
         $critArray = array ();
-        foreach (array ("author", "tag", "series", "publisher", "book") as $key) {
+        foreach (array (PageQueryResult::SCOPE_AUTHOR,
+                        PageQueryResult::SCOPE_TAG,
+                        PageQueryResult::SCOPE_SERIES,
+                        PageQueryResult::SCOPE_PUBLISHER,
+                        PageQueryResult::SCOPE_BOOK) as $key) {
             if (in_array($key, $config ['cops_ignored_search_scope']) ||
                 (!array_key_exists ($key, $query) && !array_key_exists ("all", $query))) {
                 $critArray [$i] = self::BAD_SEARCH;
@@ -653,7 +657,11 @@ function getJson ($complete = false) {
             return $out;
         }
 
-        foreach (array ("book", "author", "series", "tag", "publisher") as $key) {
+        foreach (array (PageQueryResult::SCOPE_BOOK,
+                        PageQueryResult::SCOPE_AUTHOR,
+                        PageQueryResult::SCOPE_SERIES,
+                        PageQueryResult::SCOPE_TAG,
+                        PageQueryResult::SCOPE_PUBLISHER) as $key) {
             if (in_array($key, $config ['cops_ignored_search_scope'])) {
                 continue;
             }
