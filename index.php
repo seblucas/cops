@@ -33,7 +33,7 @@
 
     // Access the database ASAP to be sure it's readable, redirect if that's not the case.
     // It has to be done before any header is sent.
-    if (is_array ($config['calibre_directory']) && is_null ($database)) {
+    if (Base::noDatabaseSelected ()) {
         $i = 0;
         foreach (array_keys ($config['calibre_directory']) as $key) {
             $test = Base::getDb ($i);

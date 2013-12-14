@@ -631,7 +631,6 @@ function getJson ($complete = false) {
     $page = getURLParam ("page", Base::PAGE_INDEX);
     $query = getURLParam ("query");
     $search = getURLParam ("search");
-    $multi = getURLParam ("multi");
     $qid = getURLParam ("id");
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
@@ -641,7 +640,7 @@ function getJson ($complete = false) {
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
 
         // Special case when no databases were chosen, we search on all databases
-        if (is_array ($config['calibre_directory']) && $multi === "1") {
+        if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (array_keys ($config['calibre_directory']) as $key) {
                 Base::clearDb ();
