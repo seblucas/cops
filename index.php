@@ -33,16 +33,7 @@
 
     // Access the database ASAP to be sure it's readable, redirect if that's not the case.
     // It has to be done before any header is sent.
-    if (Base::noDatabaseSelected ()) {
-        $i = 0;
-        foreach (array_keys ($config['calibre_directory']) as $key) {
-            $test = Base::getDb ($i);
-            Base::clearDb ();
-            $i++;
-        }
-    } else {
-        $test = Base::getDb ();
-    }
+    Base::checkDatabaseAvailability ();
 
     if ($config ['cops_fetch_protect'] == "1") {
         session_start();

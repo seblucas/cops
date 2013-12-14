@@ -642,7 +642,7 @@ function getJson ($complete = false) {
         // Special case when no databases were chosen, we search on all databases
         if (Base::noDatabaseSelected ()) {
             $i = 0;
-            foreach (array_keys ($config['calibre_directory']) as $key) {
+            foreach (Base::getDbNameList () as $key) {
                 Base::clearDb ();
                 array_push ($out, array ("title" => $key,
                                          "class" => "tt-header",
