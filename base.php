@@ -455,7 +455,7 @@ class Page
         $this->subtitle = $config['cops_subtitle_default'];
         if (Base::noDatabaseSelected ()) {
             $i = 0;
-            foreach (array_keys ($config['calibre_directory']) as $key) {
+            foreach (Base::getDbNameList () as $key) {
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
@@ -740,7 +740,7 @@ class PageQueryResult extends Page
         // Special case when we are doing a search and no database is selected
         if (Base::noDatabaseSelected ()) {
             $i = 0;
-            foreach ($config['calibre_directory'] as $key => $value) {
+            foreach (Base::getDbNameList () as $key) {
                 Base::clearDb ();
                 list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
@@ -904,6 +904,15 @@ abstract class Base
             return array ("" => $config['calibre_directory']);
         }
     }
+    
+    public static function getDbNameList () {
+        global $config;
+        if (self::isMultipleDatabaseEnabled ()) {
+            return array_keys ($config['calibre_directory']);
+        } else {
+            return array ("");
+        }
+    }
 
     public static function getDbName ($database = NULL) {
         global $config;
@@ -948,6 +957,17 @@ abstract class Base
             }
         }
         return self::$db;
+    }
+    
+    public static function checkDatabaseAvailability () {
+        if (self::noDatabaseSelected ()) {
+            for ($i = 0; $i < count (self::getDbList ()); $i++) {
+                self::getDb ($i);
+                self::clearDb ();
+            }
+        } else {
+            self::getDb ();
+        }
     }
 
     public static function clearDb () {
