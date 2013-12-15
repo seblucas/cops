@@ -67,58 +67,6 @@ function notFound () {
                 // The cover had to be resized
                 return;
             }
-            // if (isset($_GET["width"]))
-            // {
-                // $file = $book->getFilePath ($type);
-                // // get image size
-                // if ($size = GetImageSize($file)) {
-                    // $w = $size[0];
-                    // $h = $size[1];
-                    // //set new size
-                    // $nw = $_GET["width"];
-                    // if ($nw > $w) { break; }
-                    // $nh = ($nw*$h)/$w;
-                // }
-                // else{
-                    // //set new size
-                    // $nw = "160";
-                    // $nh = "120";
-                // }
-                // //draw the image
-                // $src_img = imagecreatefromjpeg($file);
-                // $dst_img = imagecreatetruecolor($nw,$nh);
-                // imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                // imagejpeg($dst_img,null,80);
-                // imagedestroy($src_img);
-                // imagedestroy($dst_img);
-                // return;
-            // }
-            // if (isset($_GET["height"]))
-            // {
-                // $file = $book->getFilePath ($type);
-                // // get image size
-                // if ($size = GetImageSize($file)) {
-                    // $w = $size[0];
-                    // $h = $size[1];
-                    // //set new size
-                    // $nh = $_GET["height"];
-                    // if ($nh > $h) { break; }
-                    // $nw = ($nh*$w)/$h;
-                // }
-                // else{
-                    // //set new size
-                    // $nw = "160";
-                    // $nh = "120";
-                // }
-                // //draw the image
-                // $src_img = imagecreatefromjpeg($file);
-                // $dst_img = imagecreatetruecolor($nw,$nh);
-                // imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                // imagejpeg($dst_img,null,80);
-                // imagedestroy($src_img);
-                // imagedestroy($dst_img);
-                // return;
-            // }
             break;
         default:
             header("Content-Type: " . Data::$mimetypes[$type]);
