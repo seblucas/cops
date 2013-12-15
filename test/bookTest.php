@@ -269,6 +269,15 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $data->getHtmlLink ());
     }
 
+    public function testGetFilePath () {
+        $book = Book::getBookById(17);
+
+        $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath ("jpg", NULL, true));
+
+        $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath ("epub", 20, true));
+        $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath ("mobi", 17, true));
+    }
+
     public function testTypeaheadSearch ()
     {
         $_GET["query"] = "fic";
