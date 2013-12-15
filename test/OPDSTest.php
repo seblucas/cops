@@ -16,6 +16,13 @@ define ("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
 class OpdsTest extends PHPUnit_Framework_TestCase
 {
+    public static function tearDownAfterClass()
+    {
+        if (!file_exists (TEST_FEED)) {
+            return;
+        }
+        unlink (TEST_FEED);
+    }
 
     function opdsValidateSchema($feed) {
         $path = "";
