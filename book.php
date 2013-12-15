@@ -444,6 +444,11 @@ class Book extends Base {
         if (is_null ($width) && is_null ($height)) {
             return false;
         }
+        
+        // In case something bad happen below set a default size
+        $nw = "160";
+        $nh = "120";
+    
         $file = $this->getFilePath ("jpg");
         // get image size
         if ($size = GetImageSize($file)) {
@@ -460,11 +465,7 @@ class Book extends Base {
                 $nw = ($nh*$w)/$h;
             }
         }
-        else{
-            //set new size
-            $nw = "160";
-            $nh = "120";
-        }
+
         //draw the image
         $src_img = imagecreatefromjpeg($file);
         $dst_img = imagecreatetruecolor($nw,$nh);
