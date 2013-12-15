@@ -440,7 +440,7 @@ class Book extends Base {
         }
     }
     
-    public function getThumbnail ($width, $height) {
+    public function getThumbnail ($width, $height, $outputfile = NULL) {
         if (is_null ($width) && is_null ($height)) {
             return false;
         }
@@ -452,11 +452,11 @@ class Book extends Base {
             //set new size
             if (!is_null ($width)) {
                 $nw = $width;
-                if ($nw > $w) { return false; }
+                if ($nw >= $w) { return false; }
                 $nh = ($nw*$h)/$w;
             } else {
                 $nh = $height;
-                if ($nh > $h) { return false; }
+                if ($nh >= $h) { return false; }
                 $nw = ($nh*$w)/$h;
             }
         }
@@ -469,7 +469,7 @@ class Book extends Base {
         $src_img = imagecreatefromjpeg($file);
         $dst_img = imagecreatetruecolor($nw,$nh);
         imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-        imagejpeg($dst_img,null,80);
+        imagejpeg($dst_img,$outputfile,80);
         imagedestroy($src_img);
         imagedestroy($dst_img);
         

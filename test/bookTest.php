@@ -18,8 +18,35 @@ id:5 (1 book)    Pierson's Magazine:         H. G. Wells
 id:6 (8 books)   Strand Magazine:            Arthur Conan Doyle
 */
 
+define ("TEST_THUMBNAIL", dirname(__FILE__) . "/thumbnail.jpg");
+define ("COVER_WIDTH", 400);
+define ("COVER_HEIGHT", 600);
+
 class BookTest extends PHPUnit_Framework_TestCase
 {
+    public static function setUpBeforeClass()
+    {
+        $book = Book::getBookById(2);
+        if (!is_dir ($book->path)) {
+            mkdir ($book->path, 0777, true);
+        }
+        $im = imagecreatetruecolor(COVER_WIDTH, COVER_HEIGHT);
+        $text_color = imagecolorallocate($im, 255, 0, 0);
+        imagestring($im, 1, 5, 5,  'Book cover', $text_color);
+        imagejpeg ($im, $book->path . "/cover.jpg", 80);
+    }
+
+    public static function tearDownAfterClass()
+    {
+        $book = Book::getBookById(2);
+        if (!file_exists ($book->path . "/cover.jpg")) {
+            return;
+        }
+        unlink ($book->path . "/cover.jpg");
+        rmdir ($book->path);
+        rmdir (dirname ($book->path));
+    }
+
     public function testGetBookCount ()
     {
         $this->assertEquals (14, Book::getBookCount ());
@@ -149,6 +176,10 @@ class BookTest extends PHPUnit_Framework_TestCase
     {
         // also check most of book's class methods
         $book = Book::getBookById(2);
+
+        $linkArray = $book->getLinkArray ();
+        $this->assertCount (5, $linkArray);
+
         $this->assertEquals ("The Return of Sherlock Holmes", $book->getTitle ());
         $this->assertEquals ("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId ());
         $this->assertEquals ("index.php?page=13&id=2", $book->getDetailUrl ());
@@ -161,6 +192,43 @@ class BookTest extends PHPUnit_Framework_TestCase
         // 4 filled stars and one empty
         $this->assertEquals ("&#9733;&#9733;&#9733;&#9733;&#9734;", $book->getRating ());
         $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
+    }
+
+    public function testGetThumbnailNotNeeded ()
+    {
+        $book = Book::getBookById(2);
+
+        $this->assertFalse ($book->getThumbnail (NULL, NULL, NULL));
+
+        // Current cover is 400*600
+        $this->assertFalse ($book->getThumbnail (COVER_WIDTH, NULL, NULL));
+        $this->assertFalse ($book->getThumbnail (COVER_WIDTH + 1, NULL, NULL));
+        $this->assertFalse ($book->getThumbnail (NULL, COVER_HEIGHT, NULL));
+        $this->assertFalse ($book->getThumbnail (NULL, COVER_HEIGHT + 1, NULL));
+    }
+
+    /**
+     * @dataProvider providerThumbnail
+     */
+    public function testGetThumbnailByWidth ($width, $height, $expectedWidth, $expectedHeight)
+    {
+        $book = Book::getBookById(2);
+
+        $this->assertTrue ($book->getThumbnail ($width, $height, TEST_THUMBNAIL));
+
+        $size = GetImageSize(TEST_THUMBNAIL);
+        $this->assertEquals ($expectedWidth, $size [0]);
+        $this->assertEquals ($expectedHeight, $size [1]);
+
+        unlink (TEST_THUMBNAIL);
+    }
+
+    public function providerThumbnail ()
+    {
+        return array (
+            array (164, NULL, 164, 246),
+            array (NULL, 164, 109, 164)
+        );
     }
 
     public function testGetMostInterestingDataToSendToKindle ()
