@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Gordon Page <gordon@incero.com> with integration/modification by Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
     require_once ("config.php");
