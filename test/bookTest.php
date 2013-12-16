@@ -352,11 +352,12 @@ class BookTest extends PHPUnit_Framework_TestCase
 
         $array = getJson ();
 
-        $this->assertCount (4, $array);
+        $this->assertCount (5, $array);
         $this->assertEquals ("Some books", $array[0]["title"]);
-        $this->assertEquals ("No book", $array[1]["title"]);
-        $this->assertEquals ("One book", $array[2]["title"]);
-        $this->assertEquals ("1 book", $array[3]["title"]);
+        $this->assertEquals ("1 author", $array[1]["title"]);
+        $this->assertEquals ("1 series", $array[2]["title"]);
+        $this->assertEquals ("One book", $array[3]["title"]);
+        $this->assertEquals ("1 book", $array[4]["title"]);
 
         $_GET["query"] = NULL;
         $_GET["search"] = NULL;
