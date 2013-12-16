@@ -675,76 +675,79 @@ function getJson ($complete = false) {
     if ($search) {
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
-
+        $dbArray = array ("");
+        $d = $database; 
         // Special case when no databases were chosen, we search on all databases
         if (Base::noDatabaseSelected ()) {
-            $i = 0;
-            foreach (Base::getDbNameList () as $key) {
-                Base::clearDb ();
+            $dbArray = Base::getDbNameList ();
+            $d = 0;
+        }
+        foreach ($dbArray as $key) {
+            if (Base::noDatabaseSelected ()) {
                 array_push ($out, array ("title" => $key,
                                          "class" => "tt-header",
-                                         "navlink" => "index.php?db={$i}"));
-                list ($array, $total) = Book::getBooksByStartingLetter ('%' . $query, 1, $i, 5);
-                array_push ($out, array ("title" => str_format (localize("bookword", $total), $total),
-                                         "class" => "",
-                                         "navlink" => "index.php?page={$pagequery}&query={$query}&db={$i}&scope=book"));
-                $i++;
+                                         "navlink" => "index.php?db={$d}"));
+                Base::getDb ($d);
             }
-            return $out;
-        }
-
-        foreach (array (PageQueryResult::SCOPE_BOOK,
-                        PageQueryResult::SCOPE_AUTHOR,
-                        PageQueryResult::SCOPE_SERIES,
-                        PageQueryResult::SCOPE_TAG,
-                        PageQueryResult::SCOPE_PUBLISHER) as $key) {
-            if (in_array($key, $config ['cops_ignored_search_scope'])) {
-                continue;
-            }
-            switch ($key) {
-                case "book" :
-                    $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
-                    break;
-                case "author" :
-                    $array = Author::getAuthorsByStartingLetter ('%' . $query);
-                    break;
-                case "series" :
-                    $array = Serie::getAllSeriesByQuery ($query);
-                    break;
-                case "tag" :
-                    $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
-                    break;
-                case "publisher" :
-                    $array = Publisher::getAllPublishersByQuery ($query);
-                    break;
-            }
-
-            $i = 0;
-            if (count ($array) == 2 && is_array ($array [0])) {
-                $total = $array [1];
-                $array = $array [0];
-            } else {
-                $total = count($array);
-            }
-            if ($total > 0) {
-                // Comment to help the perl i18n script
-                // str_format (localize("bookword", count($array))
-                // str_format (localize("authorword", count($array))
-                // str_format (localize("seriesword", count($array))
-                // str_format (localize("tagword", count($array))
-                // str_format (localize("publisherword", count($array))
-                array_push ($out, array ("title" => str_format (localize("{$key}word", $total), $total),
-                                         "class" => "tt-header",
-                                         "navlink" => "index.php?page={$pagequery}&query={$query}&db={$database}&scope={$key}"));
-            }
-            foreach ($array as $entry) {
-                if ($entry instanceof EntryBook) {
-                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
-                } else {
-                    array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+            foreach (array (PageQueryResult::SCOPE_BOOK,
+                            PageQueryResult::SCOPE_AUTHOR,
+                            PageQueryResult::SCOPE_SERIES,
+                            PageQueryResult::SCOPE_TAG,
+                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+                if (in_array($key, $config ['cops_ignored_search_scope'])) {
+                    continue;
                 }
-                $i++;
-                if ($i > 4) { break; };
+                switch ($key) {
+                    case "book" :
+                        $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
+                        break;
+                    case "author" :
+                        $array = Author::getAuthorsByStartingLetter ('%' . $query);
+                        break;
+                    case "series" :
+                        $array = Serie::getAllSeriesByQuery ($query);
+                        break;
+                    case "tag" :
+                        $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
+                        break;
+                    case "publisher" :
+                        $array = Publisher::getAllPublishersByQuery ($query);
+                        break;
+                }
+
+                $i = 0;
+                if (count ($array) == 2 && is_array ($array [0])) {
+                    $total = $array [1];
+                    $array = $array [0];
+                } else {
+                    $total = count($array);
+                }
+                if ($total > 0) {
+                    // Comment to help the perl i18n script
+                    // str_format (localize("bookword", count($array))
+                    // str_format (localize("authorword", count($array))
+                    // str_format (localize("seriesword", count($array))
+                    // str_format (localize("tagword", count($array))
+                    // str_format (localize("publisherword", count($array))
+                    array_push ($out, array ("title" => str_format (localize("{$key}word", $total), $total),
+                                             "class" => Base::noDatabaseSelected () ? "" : "tt-header",
+                                             "navlink" => "index.php?page={$pagequery}&query={$query}&db={$d}&scope={$key}"));
+                }
+                if (!Base::noDatabaseSelected ()) {
+                    foreach ($array as $entry) {
+                        if ($entry instanceof EntryBook) {
+                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+                        } else {
+                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+                        }
+                        $i++;
+                        if ($i > 4) { break; };
+                    }
+                }
+            }
+            $d++;
+            if (Base::noDatabaseSelected ()) {
+                Base::clearDb ();
             }
         }
         return $out;
