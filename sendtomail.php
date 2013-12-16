@@ -55,9 +55,10 @@ foreach (explode (";", $emailDest) as $emailAddress) {
 
 $mail->AddAttachment($data->getLocalPath ());
 
-$mail->IsHTML(false);
+$mail->IsHTML(true);
 $mail->Subject = 'Sent by COPS : ' . $data->getUpdatedFilename ();
-$mail->Body    = 'Sent by COPS';
+$mail->Body    = "<h1>" . $book->title . "</h1><h2>" . $book->getAuthorsName () . "</h2>" . $book->getComment ();
+$mail->AltBody = "Sent by COPS";
 
 if (!$mail->Send()) {
    echo localize ("mail.messagenotsent");
