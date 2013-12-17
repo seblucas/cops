@@ -464,17 +464,25 @@ class Page
                 Base::clearDb ();
             }
         } else {
-            array_push ($this->entryArray, Author::getCount());
-            $series = Serie::getCount();
-            if (!is_null ($series)) array_push ($this->entryArray, $series);
-
-            $publisher = Publisher::getCount();
-            if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
-
-            $tags = Tag::getCount();
-            if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-            $languages = Language::getCount();
-            if (!is_null ($languages)) array_push ($this->entryArray, $languages);
+            if (!in_array ("author", $config ['cops_ignored_search_scope'])) {
+                array_push ($this->entryArray, Author::getCount());
+            }
+            if (!in_array ("series", $config ['cops_ignored_search_scope'])) {
+                $series = Serie::getCount();
+                if (!is_null ($series)) array_push ($this->entryArray, $series);
+            }
+            if (!in_array ("publisher", $config ['cops_ignored_search_scope'])) {
+                $publisher = Publisher::getCount();
+                if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
+            }
+            if (!in_array ("tag", $config ['cops_ignored_search_scope'])) {
+                $tags = Tag::getCount();
+                if (!is_null ($tags)) array_push ($this->entryArray, $tags);
+            }
+            if (!in_array ("language", $config ['cops_ignored_search_scope'])) {
+                $languages = Language::getCount();
+                if (!is_null ($languages)) array_push ($this->entryArray, $languages);
+            }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
                 if (!is_null ($customId)) {
