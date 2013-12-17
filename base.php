@@ -464,18 +464,18 @@ class Page
                 Base::clearDb ();
             }
         } else {
-            if (!in_array ("author", $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_AUTHOR, $config ['cops_ignored_categories'])) {
                 array_push ($this->entryArray, Author::getCount());
             }
-            if (!in_array ("series", $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_SERIES, $config ['cops_ignored_categories'])) {
                 $series = Serie::getCount();
                 if (!is_null ($series)) array_push ($this->entryArray, $series);
             }
-            if (!in_array ("publisher", $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_PUBLISHER, $config ['cops_ignored_categories'])) {
                 $publisher = Publisher::getCount();
                 if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
             }
-            if (!in_array ("tag", $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_TAG, $config ['cops_ignored_categories'])) {
                 $tags = Tag::getCount();
                 if (!is_null ($tags)) array_push ($this->entryArray, $tags);
             }
