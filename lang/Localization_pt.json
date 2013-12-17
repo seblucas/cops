@@ -23,6 +23,7 @@
 "customize.email":"Forneça seu email (para enviar o ebook)",
 "customize.fancybox":"Usar o Lightbox",
 "customize.filter":"Ativar filtro por etiqueta",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Número máximo de livros por página (-1 para desabilitar)",
 "customize.style":"Tema",
 "customize.title":"Personalizar a interface do COPS",

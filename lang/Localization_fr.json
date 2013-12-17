@@ -23,6 +23,7 @@
 "customize.email":"Adresse email (pour l'envoi automatique de livres)",
 "customize.fancybox":"Utiliser une Lightbox",
 "customize.filter":"Filtrage via les étiquettes",
+"customize.ignored":"Catégories ignorées",
 "customize.paging":"Nombre de livres par page (-1 pour désactiver)",
 "customize.style":"Thème",
 "customize.title":"Paramétrage de COPS",

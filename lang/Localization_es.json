@@ -23,6 +23,7 @@
 "##TODO##customize.email":"Set your email (to allow book emailing)",
 "##TODO##customize.fancybox":"Use a Lightbox",
 "##TODO##customize.filter":"Enable tag filtering",
+"##TODO##customize.ignored":"Ignored categories",
 "##TODO##customize.paging":"Max number of books per page (-1 to disable)",
 "##TODO##customize.style":"Theme",
 "##TODO##customize.title":"Customize COPS UI",

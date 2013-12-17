@@ -23,6 +23,7 @@
 "customize.email":"Email-adres ontvanger (om boeken te versturen per elektronische post)",
 "customize.fancybox":"Gebruik een Lightbox",
 "customize.filter":"Zet filteren op tag aan",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Maximaal aantal boeken per pagina (-1 voor oneindig aantal)",
 "customize.style":"Opmaak COPS gebruikersomgeving",
 "customize.title":"Aanpassen COPS gebruikersomgeving",

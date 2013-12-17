@@ -33,7 +33,11 @@ function getURLParam ($name, $default = NULL) {
 function getCurrentOption ($option) {
     global $config;
     if (isset($_COOKIE[$option])) {
-        return $_COOKIE[$option];
+        if (isset($config ["cops_" . $option]) && is_array ($config ["cops_" . $option])) {
+            return explode (",", $_COOKIE[$option]);
+        } else {
+            return $_COOKIE[$option];
+        }
     }
     if ($option == "style") {
         return "default";
@@ -464,22 +468,23 @@ class Page
                 Base::clearDb ();
             }
         } else {
-            if (!in_array (PageQueryResult::SCOPE_AUTHOR, $config ['cops_ignored_categories'])) {
+            //error_log (var_dump (getCurrentOption ('ignored_categories')));
+            if (!in_array (PageQueryResult::SCOPE_AUTHOR, getCurrentOption ('ignored_categories'))) {
                 array_push ($this->entryArray, Author::getCount());
             }
-            if (!in_array (PageQueryResult::SCOPE_SERIES, $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_SERIES, getCurrentOption ('ignored_categories'))) {
                 $series = Serie::getCount();
                 if (!is_null ($series)) array_push ($this->entryArray, $series);
             }
-            if (!in_array (PageQueryResult::SCOPE_PUBLISHER, $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_PUBLISHER, getCurrentOption ('ignored_categories'))) {
                 $publisher = Publisher::getCount();
                 if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
             }
-            if (!in_array (PageQueryResult::SCOPE_TAG, $config ['cops_ignored_categories'])) {
+            if (!in_array (PageQueryResult::SCOPE_TAG, getCurrentOption ('ignored_categories'))) {
                 $tags = Tag::getCount();
                 if (!is_null ($tags)) array_push ($this->entryArray, $tags);
             }
-            if (!in_array ("language", $config ['cops_ignored_categories'])) {
+            if (!in_array ("language", getCurrentOption ('ignored_categories'))) {
                 $languages = Language::getCount();
                 if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             }
@@ -813,7 +818,20 @@ class PageCustomize extends Page
         if (getCurrentOption ("html_tag_filter") == 1) {
             $html_tag_filter = "checked='checked'";
         }
-
+        
+        $ignored_categories = array ();
+        $ignoredBaseArray = array (PageQueryResult::SCOPE_AUTHOR,
+                                   PageQueryResult::SCOPE_TAG,
+                                   PageQueryResult::SCOPE_SERIES,
+                                   PageQueryResult::SCOPE_PUBLISHER,
+                                   "language");
+        foreach ($ignoredBaseArray as $key) {
+            if (in_array ($key, getCurrentOption ('ignored_categories'))) {
+                $ignored_categories [$key] = "checked='checked'";
+            } else {
+                $ignored_categories [$key] = "";
+            }
+        }
 
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
@@ -859,6 +877,15 @@ class PageCustomize extends Page
                                         array ()));
         $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $html_tag_filter . ' />';
         array_push ($this->entryArray, new Entry (localize ("customize.filter"), "",
+                                        $content, "text",
+                                        array ()));
+        $content = "";
+        foreach ($ignoredBaseArray as $key) {
+            $keyPlural = preg_replace ('/(ss)$/', 's', $key . "s");
+            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $ignored_categories [$key] . ' > ' . localize ("{$keyPlural}.title") . '</input> ';
+        }
+
+        array_push ($this->entryArray, new Entry (localize ("customize.ignored"), "",
                                         $content, "text",
                                         array ()));
     }

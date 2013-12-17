@@ -23,6 +23,7 @@
 "customize.email":"Sett e-pstadresse (for å sende bøker i e-post)",
 "customize.fancybox":"Bruk en Lightbox",
 "customize.filter":"Tillat filtrering på nøkkelord",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Maks antall bøker per side (-1 for å deaktivere)",
 "customize.style":"Tema",
 "customize.title":"Tilpass COPS brukergrensesnitt",
