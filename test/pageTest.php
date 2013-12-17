@@ -510,7 +510,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         // Match Lewis Caroll & Scarlet
         $query = "car";
 
-        $config ['cops_ignored_search_scope'] = array ("author");
+        $config ['cops_ignored_categories'] = array ("author");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
@@ -519,7 +519,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
 
-        $config ['cops_ignored_search_scope'] = array ();
+        $config ['cops_ignored_categories'] = array ();
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
