@@ -27,7 +27,7 @@ $book = Book::getBookByDataId($idData);
 $data = $book->getDataById ($idData);
 
 if (filesize ($data->getLocalPath ()) > 10 * 1024 * 1024) {
-    echo 'Attachement too big';
+    echo 'Attachment too big';
     exit;
 }
 
