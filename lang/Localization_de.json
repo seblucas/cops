@@ -23,6 +23,7 @@
 "customize.email":"Geben Sie Ihre E-Mail-Adresse an (erlaubt das Zusenden von Büchern)",
 "customize.fancybox":"Benutze die Lightbox",
 "customize.filter":"Erlaube das Filtern durch Tags",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Maximale Anzahl von Büchern pro Seite (-1 zum deaktivieren)",
 "customize.style":"Thema",
 "customize.title":"Anpassungen an COPS",

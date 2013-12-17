@@ -23,6 +23,7 @@
 "customize.email":"Укажите Ваш email (для отправки книг по электронной почте)",
 "customize.fancybox":"Использовать Lightbox",
 "customize.filter":"Включить фильтрацию по меткам",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Макс. число книг на странице (-1 - не ограничивать)",
 "customize.style":"Тема",
 "customize.title":"Изменить Интерфейс COPS",

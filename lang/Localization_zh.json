@@ -23,6 +23,7 @@
 "customize.email":"设置您的电子邮件(以允许发送邮件)",
 "customize.fancybox":"使用灯箱",
 "customize.filter":"打开标签过滤",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"页内最大书籍数(-1表示禁用)",
 "customize.style":"主题",
 "customize.title":"自定义界面",

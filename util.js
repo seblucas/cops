@@ -52,6 +52,19 @@ function updateCookieFromCheckbox (id) {
     }
 }
 
+/*exported updateCookieFromCheckboxGroup */
+function updateCookieFromCheckboxGroup (id) {
+    var name = $(id).attr('name');
+    var idBase = name.replace (/\[\]/, "");
+    var group = [];
+    $(':checkbox[name="' + name + '"]:checked').each (function () {
+        var id = $(this).attr("id");
+        group.push (id.replace (idBase + "_", ""));
+    });
+    $.cookie(idBase, group.join (), { expires: 365 });
+}
+
+
 function elapsed () {
     var elapsedTime = new Date () - before;
     return "Elapsed : " + elapsedTime;

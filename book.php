@@ -602,7 +602,7 @@ where data.book = books.id and data.id = ?');
                         PageQueryResult::SCOPE_SERIES,
                         PageQueryResult::SCOPE_PUBLISHER,
                         PageQueryResult::SCOPE_BOOK) as $key) {
-            if (in_array($key, $config ['cops_ignored_categories']) ||
+            if (in_array($key, getCurrentOption ('ignored_categories')) ||
                 (!array_key_exists ($key, $query) && !array_key_exists ("all", $query))) {
                 $critArray [$i] = self::BAD_SEARCH;
             }
@@ -694,7 +694,7 @@ function getJson ($complete = false) {
                             PageQueryResult::SCOPE_SERIES,
                             PageQueryResult::SCOPE_TAG,
                             PageQueryResult::SCOPE_PUBLISHER) as $key) {
-                if (in_array($key, $config ['cops_ignored_categories'])) {
+                if (in_array($key, getCurrentOption ('ignored_categories'))) {
                     continue;
                 }
                 switch ($key) {

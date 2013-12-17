@@ -23,6 +23,7 @@
 "customize.email":"Imposta la tua email (per permettere l'invio di email)",
 "customize.fancybox":"Usa una Lightbox",
 "customize.filter":"Abilita il filtro per argomento",
+"##TODO##customize.ignored":"Ignored categories",
 "customize.paging":"Numero massimo di libri per pagina (-1 per disabilitare)",
 "customize.style":"Tema",
 "customize.title":"Personalizza l'interfaccia di COPS",
