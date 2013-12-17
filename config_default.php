@@ -236,7 +236,7 @@
     $config['cops_server_side_render'] = "Kindle|EBRD1101|EBRD1201|cybook";
 
     /*
-     * Specify the ignored categories with autocomplete search and standard search
+     * Specify the ignored categories for the home screen and with search
      * Meaning that if you don't want to search in publishers or tags just add them from the list
      * Only accepted values :
      * - author
@@ -244,8 +244,9 @@
      * - series
      * - tag
      * - publisher
+     * - language
      */
-    $config ['cops_ignored_search_scope'] = array ();
+    $config ['cops_ignored_categories'] = array ();
 
     /*
      * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
