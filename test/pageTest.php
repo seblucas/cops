@@ -41,6 +41,29 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
+    public function testPageIndexWithIgnored ()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
+        
+        $config ['cops_ignored_categories'] = array ("author", "series", "tag", "publisher", "language");
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ($config['cops_title_default'], $currentPage->title);
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("All books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("Alphabetical index of the 14 books", $currentPage->entryArray [0]->content);
+        $this->assertEquals ("Recent additions", $currentPage->entryArray [1]->title);
+        $this->assertEquals ("50 most recent books", $currentPage->entryArray [1]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+
+    
     public function testPageIndexWithCustomColumn ()
     {
         global $config;
