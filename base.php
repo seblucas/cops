@@ -805,25 +805,42 @@ class PageAbout extends Page
 
 class PageCustomize extends Page
 {
-    private function isChecked ($key, $testedValue = NULL) {
+    private function isChecked ($key, $testedValue = 1) {
         $value = getCurrentOption ($key);
-        if (!is_null ($testedValue)) {
+        if (is_array ($value)) {
             if (in_array ($testedValue, $value)) {
                 return "checked='checked'";
             }
         } else {
-            if ($value == 1) {
+            if ($value == $testedValue) {
                 return "checked='checked'";
             }
         }
         return "";
     }
 
+    private function isSelected ($key, $value) {
+        if (getCurrentOption ($key) == $value) {
+            return "selected='selected'";
+        }
+        return "";
+    }
+
+    private function getStyleList () {
+        $result = array ();
+        foreach (glob ("styles/style-*.css") as $filename) {
+            if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
+                array_push ($result, $m [1]);
+            }
+        }
+        return $result;
+    }
+
     public function InitializeContent ()
     {
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
-        
+
         $ignoredBaseArray = array (PageQueryResult::SCOPE_AUTHOR,
                                    PageQueryResult::SCOPE_TAG,
                                    PageQueryResult::SCOPE_SERIES,
@@ -833,27 +850,14 @@ class PageCustomize extends Page
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
-        }
-            foreach (glob ("styles/style-*.css") as $filename) {
-                if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
-                    $filename = $m [1];
-                }
-                $selected = "";
-                if (getCurrentOption ("style") == $filename) {
-                    if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                        $selected = "selected='selected'";
-                    } else {
-                        $selected = "checked='checked'";
-                    }
-                }
-                if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                    $content .= "<option value='{$filename}' {$selected}>{$filename}</option>";
-                } else {
-                    $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' {$selected} /><label for='style-{$filename}'> {$filename} </label>";
-                }
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<option value='{$filename}' " . $this->isSelected ("style", $filename) . ">{$filename}</option>";
             }
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '</select>';
+        } else {
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked ("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label>";
+            }
         }
         array_push ($this->entryArray, new Entry (localize ("customize.style"), "",
                                         $content, "text",
@@ -922,7 +926,7 @@ abstract class Base
         global $config;
         return is_array ($config['calibre_directory']);
     }
-    
+
     public static function noDatabaseSelected () {
         return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
     }
@@ -935,7 +939,7 @@ abstract class Base
             return array ("" => $config['calibre_directory']);
         }
     }
-    
+
     public static function getDbNameList () {
         global $config;
         if (self::isMultipleDatabaseEnabled ()) {
@@ -991,7 +995,7 @@ abstract class Base
         }
         return self::$db;
     }
-    
+
     public static function checkDatabaseAvailability () {
         if (self::noDatabaseSelected ()) {
             for ($i = 0; $i < count (self::getDbList ()); $i++) {
