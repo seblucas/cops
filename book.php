@@ -439,16 +439,16 @@ class Book extends Base {
             echo "Exception : " . $e->getMessage();
         }
     }
-    
+
     public function getThumbnail ($width, $height, $outputfile = NULL) {
         if (is_null ($width) && is_null ($height)) {
             return false;
         }
-        
+
         // In case something bad happen below set a default size
         $nw = "160";
         $nh = "120";
-    
+
         $file = $this->getFilePath ("jpg");
         // get image size
         if ($size = GetImageSize($file)) {
@@ -473,7 +473,7 @@ class Book extends Base {
         imagejpeg($dst_img,$outputfile,80);
         imagedestroy($src_img);
         imagedestroy($dst_img);
-        
+
         return true;
     }
 
@@ -671,89 +671,12 @@ function getJson ($complete = false) {
     $n = getURLParam ("n", "1");
     $database = GetUrlParam (DB);
 
-    if ($search) {
-        $out = array ();
-        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
-        $dbArray = array ("");
-        $d = $database; 
-        // Special case when no databases were chosen, we search on all databases
-        if (Base::noDatabaseSelected ()) {
-            $dbArray = Base::getDbNameList ();
-            $d = 0;
-        }
-        foreach ($dbArray as $key) {
-            if (Base::noDatabaseSelected ()) {
-                array_push ($out, array ("title" => $key,
-                                         "class" => "tt-header",
-                                         "navlink" => "index.php?db={$d}"));
-                Base::getDb ($d);
-            }
-            foreach (array (PageQueryResult::SCOPE_BOOK,
-                            PageQueryResult::SCOPE_AUTHOR,
-                            PageQueryResult::SCOPE_SERIES,
-                            PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
-                if (in_array($key, getCurrentOption ('ignored_categories'))) {
-                    continue;
-                }
-                switch ($key) {
-                    case "book" :
-                        $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
-                        break;
-                    case "author" :
-                        $array = Author::getAuthorsByStartingLetter ('%' . $query);
-                        break;
-                    case "series" :
-                        $array = Serie::getAllSeriesByQuery ($query);
-                        break;
-                    case "tag" :
-                        $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
-                        break;
-                    case "publisher" :
-                        $array = Publisher::getAllPublishersByQuery ($query);
-                        break;
-                }
-
-                $i = 0;
-                if (count ($array) == 2 && is_array ($array [0])) {
-                    $total = $array [1];
-                    $array = $array [0];
-                } else {
-                    $total = count($array);
-                }
-                if ($total > 0) {
-                    // Comment to help the perl i18n script
-                    // str_format (localize("bookword", count($array))
-                    // str_format (localize("authorword", count($array))
-                    // str_format (localize("seriesword", count($array))
-                    // str_format (localize("tagword", count($array))
-                    // str_format (localize("publisherword", count($array))
-                    array_push ($out, array ("title" => str_format (localize("{$key}word", $total), $total),
-                                             "class" => Base::noDatabaseSelected () ? "" : "tt-header",
-                                             "navlink" => "index.php?page={$pagequery}&query={$query}&db={$d}&scope={$key}"));
-                }
-                if (!Base::noDatabaseSelected ()) {
-                    foreach ($array as $entry) {
-                        if ($entry instanceof EntryBook) {
-                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
-                        } else {
-                            array_push ($out, array ("class" => "", "title" => $entry->title, "navlink" => $entry->getNavLink ()));
-                        }
-                        $i++;
-                        if ($i > 4) { break; };
-                    }
-                }
-            }
-            $d++;
-            if (Base::noDatabaseSelected ()) {
-                Base::clearDb ();
-            }
-        }
-        return $out;
-    }
-
     $currentPage = Page::getPage ($page, $qid, $query, $n);
     $currentPage->InitializeContent ();
+
+    if ($search) {
+        return $currentPage->getContentArrayTypeahead ();
+    }
 
     $out = array ( "title" => $currentPage->title);
     $entries = array ();

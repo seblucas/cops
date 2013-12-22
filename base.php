@@ -281,6 +281,7 @@ class Entry
     public $contentType;
     public $linkArray;
     public $localUpdated;
+    public $className;
     private static $updated = NULL;
 
     public static $icons = array(
@@ -318,13 +319,14 @@ class Entry
         return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
     }
 
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "") {
         global $config;
         $this->title = $ptitle;
         $this->id = $pid;
         $this->content = $pcontent;
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
+        $this->className = $pclass;
 
         if ($config['cops_show_icons'] == 1)
         {
@@ -468,7 +470,6 @@ class Page
                 Base::clearDb ();
             }
         } else {
-            //error_log (var_dump (getCurrentOption ('ignored_categories')));
             if (!in_array (PageQueryResult::SCOPE_AUTHOR, getCurrentOption ('ignored_categories'))) {
                 array_push ($this->entryArray, Author::getCount());
             }
@@ -537,6 +538,22 @@ class Page
         if (count ($this->entryArray) == 0) return false;
         if (get_class ($this->entryArray [0]) == "EntryBook") return true;
         return false;
+    }
+
+    public function getContentArrayTypeahead () {
+        $out = array ();
+        foreach ($this->entryArray as $entry) {
+            if ($entry instanceof EntryBook) {
+                array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+            } else {
+                if (empty ($entry->className) xor Base::noDatabaseSelected ()) {
+                    array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+                } else {
+                    array_push ($out, array ("class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink ()));
+                }
+            }
+        }
+        return $out;
     }
 
 }
@@ -732,6 +749,90 @@ class PageQueryResult extends Page
     const SCOPE_BOOK = "book";
     const SCOPE_PUBLISHER = "publisher";
 
+    private function useTypeahead () {
+        return !is_null (getURLParam ("search"));
+    }
+
+    public function doSearchByCategory () {
+        $database = GetUrlParam (DB);
+        $out = array ();
+        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+        $dbArray = array ("");
+        $d = $database;
+        $query = $this->query;
+        // Special case when no databases were chosen, we search on all databases
+        if (Base::noDatabaseSelected ()) {
+            $dbArray = Base::getDbNameList ();
+            $d = 0;
+        }
+        foreach ($dbArray as $key) {
+            if (Base::noDatabaseSelected ()) {
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
+                                        " ", "text",
+                                        array ( new LinkNavigation ("?" . DB . "={$d}")), "tt-header"));
+                Base::getDb ($d);
+            }
+            foreach (array (PageQueryResult::SCOPE_BOOK,
+                            PageQueryResult::SCOPE_AUTHOR,
+                            PageQueryResult::SCOPE_SERIES,
+                            PageQueryResult::SCOPE_TAG,
+                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+                if (in_array($key, getCurrentOption ('ignored_categories'))) {
+                    continue;
+                }
+                switch ($key) {
+                    case "book" :
+                        $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
+                        break;
+                    case "author" :
+                        $array = Author::getAuthorsByStartingLetter ('%' . $query);
+                        break;
+                    case "series" :
+                        $array = Serie::getAllSeriesByQuery ($query);
+                        break;
+                    case "tag" :
+                        $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
+                        break;
+                    case "publisher" :
+                        $array = Publisher::getAllPublishersByQuery ($query);
+                        break;
+                }
+
+                $i = 0;
+                if (count ($array) == 2 && is_array ($array [0])) {
+                    $total = $array [1];
+                    $array = $array [0];
+                } else {
+                    $total = count($array);
+                }
+                if ($total > 0) {
+                    // Comment to help the perl i18n script
+                    // str_format (localize("bookword", count($array))
+                    // str_format (localize("authorword", count($array))
+                    // str_format (localize("seriesword", count($array))
+                    // str_format (localize("tagword", count($array))
+                    // str_format (localize("publisherword", count($array))
+                    array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}",
+                                        str_format (localize("{$key}word", $total), $total), "text",
+                                        array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
+                                        Base::noDatabaseSelected () ? "" : "tt-header"));
+                }
+                if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
+                    foreach ($array as $entry) {
+                        array_push ($this->entryArray, $entry);
+                        $i++;
+                        if ($i > 4) { break; };
+                    }
+                }
+            }
+            $d++;
+            if (Base::noDatabaseSelected ()) {
+                Base::clearDb ();
+            }
+        }
+        return $out;
+    }
+
     public function InitializeContent ()
     {
         $scope = getURLParam ("scope");
@@ -750,7 +851,7 @@ class PageQueryResult extends Page
         $crit = "%" . $this->query . "%";
 
         // Special case when we are doing a search and no database is selected
-        if (Base::noDatabaseSelected ()) {
+        if (Base::noDatabaseSelected () && !$this->useTypeahead ()) {
             $i = 0;
             foreach (Base::getDbNameList () as $key) {
                 Base::clearDb ();
@@ -760,6 +861,10 @@ class PageQueryResult extends Page
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
                 $i++;
             }
+            return;
+        }
+        if (empty ($scope) && $this->useTypeahead ()) {
+            $this->doSearchByCategory ();
             return;
         }
         switch ($scope) {
