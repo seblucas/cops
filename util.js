@@ -293,7 +293,7 @@ updatePage = function (data) {
         limit: 24,
         template: templateSuggestion,
         remote: {
-            url: 'getJSON.php?search=1&db=%DB&query=%QUERY',
+            url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
             replace: function (url, query) {
                 if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
                     return url.replace('%QUERY', query).replace('&db=%DB', "");
