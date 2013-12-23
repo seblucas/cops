@@ -525,10 +525,10 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage->InitializeContent ();
 
         $this->assertEquals ("Search result for *alice*", $currentPage->title);
-        $this->assertCount (2, $currentPage->entryArray);
-        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
-        $this->assertEquals ("Through the Looking Glass (And What Alice Found There)", $currentPage->entryArray [1]->title);
-        $this->assertTrue ($currentPage->ContainsBook ());
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Search result for *alice* in books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("2 books", $currentPage->entryArray [0]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
 
         // Match Lewis Caroll & Scarlet
         $query = "car";
@@ -539,19 +539,21 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals ("Search result for *car*", $currentPage->title);
         $this->assertCount (1, $currentPage->entryArray);
-        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
-        $this->assertTrue ($currentPage->ContainsBook ());
+        $this->assertEquals ("Search result for *car* in books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
 
         $config ['cops_ignored_categories'] = array ();
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
         $this->assertEquals ("Search result for *car*", $currentPage->title);
-        $this->assertCount (3, $currentPage->entryArray);
-        $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
-        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [1]->title);
-        $this->assertEquals ("Through the Looking Glass (And What Alice Found There)", $currentPage->entryArray [2]->title);
-        $this->assertTrue ($currentPage->ContainsBook ());
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("Search result for *car* in books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
+        $this->assertEquals ("Search result for *car* in authors", $currentPage->entryArray [1]->title);
+        $this->assertEquals ("1 author", $currentPage->entryArray [1]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
     }
 
     public function testPageSearchScopeAuthors ()

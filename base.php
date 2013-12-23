@@ -863,7 +863,7 @@ class PageQueryResult extends Page
             }
             return;
         }
-        if (empty ($scope) && $this->useTypeahead ()) {
+        if (empty ($scope)) {
             $this->doSearchByCategory ();
             return;
         }
