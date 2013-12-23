@@ -341,6 +341,35 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = NULL;
     }
 
+    public function testTypeaheadSearchWithIgnored ()
+    {
+        global $config;
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
+        $_GET["query"] = "car";
+        $_GET["search"] = "1";
+
+        $config ['cops_ignored_categories'] = array ("author");
+        $array = getJson ();
+
+        $this->assertCount (2, $array);
+        $this->assertEquals ("1 book", $array[0]["title"]);
+        $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
+
+
+        $_GET["query"] = "art";
+        $_GET["search"] = "1";
+
+        $config ['cops_ignored_categories'] = array ("series");
+        $array = getJson ();
+
+        $this->assertCount (2, $array);
+        $this->assertEquals ("1 author", $array[0]["title"]);
+        $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
+
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+
     public function testTypeaheadSearchMultiDatabase ()
     {
         global $config;
