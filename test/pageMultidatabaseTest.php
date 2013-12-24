@@ -33,7 +33,10 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    public function testPageSearchXXX ()
+    /**
+     * @dataProvider providerSearch
+     */
+    public function testPageSearchXXX ($maxItem)
     {
         global $config;
         $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
@@ -44,7 +47,7 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $n = "1";
 
         // Issue 124
-        $config['cops_max_item_per_page'] = 2;
+        $config['cops_max_item_per_page'] = $maxItem;
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
@@ -56,18 +59,14 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("One book", $currentPage->entryArray [1]->title);
         $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $config['cops_max_item_per_page'] = -1;
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
-
-        $this->assertEquals ("Search result for *art*", $currentPage->title);
-        $this->assertCount (2, $currentPage->entryArray);
-        $this->assertEquals ("Some books", $currentPage->entryArray [0]->title);
-        $this->assertEquals ("10 books", $currentPage->entryArray [0]->content);
-        $this->assertEquals ("One book", $currentPage->entryArray [1]->title);
-        $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
-        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+    
+    public function providerSearch ()
+    {
+        return array (
+            array (2),
+            array (-1)
+        );
     }
 
     public static function tearDownAfterClass () {
