@@ -69,7 +69,8 @@ function notFound () {
             }
             break;
         default:
-            header("Content-Type: " . Data::$mimetypes[$type]);
+            $data = $book->getDataById ($idData);
+            header("Content-Type: " . $data->getMimeType ());
             break;
     }
     $file = $book->getFilePath ($type, $idData, true);
