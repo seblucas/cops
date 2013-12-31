@@ -7,6 +7,7 @@
             <exclude>
                 <directory suffix=".php">./resources</directory>
                 <directory suffix=".php">./test</directory>
+                <directory suffix=".php">./saucetest</directory>
                 <file>config.php</file>
                 <file>config_default.php</file>
             </exclude>
