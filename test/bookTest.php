@@ -291,6 +291,29 @@ class BookTest extends PHPUnit_Framework_TestCase
 
         $this->assertNull ($book->getDataFormat ("FB2"));
     }
+    
+    public function testGetMimeType  () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
+        $data = $book->getDataFormat ("EPUB");
+        $this->assertEquals ("application/epub+zip", $data->getMimeType ());
+        $data = $book->getDataFormat ("MOBI");
+        $this->assertEquals ("application/x-mobipocket-ebook", $data->getMimeType ());
+        $data = $book->getDataFormat ("PDF");
+        $this->assertEquals ("application/pdf", $data->getMimeType ());
+        
+        // Alter a data to make a test for finfo_file if enabled 
+        $data->extension = "ico";
+        $data->format = "ICO";
+        $data->name = "favicon";
+        $data->book->path = realpath (dirname(__FILE__) . "/../");
+        if (function_exists('finfo_open') === true) {
+            $this->assertEquals ("image/x-icon", $data->getMimeType ());
+        } else {
+            $this->assertEquals ("application/octet-stream", $data->getMimeType ());
+        }
+    }
 
     public function testTypeaheadSearch ()
     {

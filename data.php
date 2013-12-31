@@ -64,11 +64,21 @@ class Data extends Base {
     }
 
     public function getMimeType () {
+        $result = "application/octet-stream";
         if ($this->isKnownType ()) {
             return self::$mimetypes [$this->extension];
-        } else {
-            return "application/octet-stream";
+        } elseif (function_exists('finfo_open') === true) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+
+            if (is_resource($finfo) === true)
+            {
+                $result = finfo_file($finfo, $this->getLocalPath ());
+            }
+
+            finfo_close($finfo);
+            
         }
+        return $result;
     }
 
     public function getFilename () {
