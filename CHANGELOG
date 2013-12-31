@@ -1,4 +1,4 @@
-0.7.0 - 201311XX
+0.9.0 - 20131231
   * Add a lot of unit testing. I hope it will limit the risks of regression.
   * Added a "smart / autocomplete" search.
   * Updated the way locales are handled. Should be easier to add new languages.
@@ -11,7 +11,13 @@
   * Fixed non compliant OPDS search (for Stanza, Moon+ Reader, ...). Reported by At_Libitum.
   * Fixed the redirection in case the Calibre database is not found. Reported by At_Libitum
   * Changed .htaccess to allow the use of password protected catalogs with Sony's eReader (PRS-TX). Thanks to Ruud for the beta testing.
-  * Updated Chinese, German, Norwegian, Portuguese, Russian translations. Thanks to all the translators.
+  * Updated Chinese, German, Norwegian, Portuguese, Russian translations. Huge thanks to all the translators.
+  * Fixed a small problem : If a book had no summary the cover could be cut.
+  * Fix COPS on Internet Explorer 9. Reported by At_Libitum.
+  * Added publishers in home categories / search / autocomplete search.
+  * Added a new configuration item ($config ['cops_ignored_categories']) to ignore some categories (author, tag, publisher, ...) in home screen and searches. It's also available in the "Customize UI" page.
+  * Updated .htaccess to allow downloading books with a password protected COPS on a Sony PRS-TX. Reported by Ruud.
+  * Changed the default search to search by categories also (should help with OPDS). Thanks to At_Libitum.
 
 0.6.2 - 20130913
   * Added server side rendering for devices like PRS-TX / Kindle / Cybook. Thanks to all the testers.
