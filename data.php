@@ -18,9 +18,13 @@ class Data extends Base {
 
     public static $mimetypes = array(
         'azw'   => 'application/x-mobipocket-ebook',
-        'azw3'  => 'application/x-mobipocket-ebook',
+        'azw1'  => 'application/x-topaz-ebook',
+        'azw2'  => 'application/x-kindle-application',
+        'azw3'  => 'application/x-mobi8-ebook',
         'cbz'   => 'application/x-cbz',
         'cbr'   => 'application/x-cbr',
+        'djv'   => 'image/vnd.djvu',
+        'djvu'  => 'image/vnd.djvu',
         'doc'   => 'application/msword',
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
@@ -39,6 +43,7 @@ class Data extends Base {
         'rtf'   => 'application/rtf',
         'svg'   => 'image/svg+xml',
         'ttf'   => 'application/x-font-truetype',
+        'tpz'   => 'application/x-topaz-ebook',
         'wmf'   => 'image/wmf',
         'xhtml' => 'application/xhtml+xml',
         'xpgt'  => 'application/adobe-page-template+xml',
