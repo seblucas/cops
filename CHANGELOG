@@ -18,6 +18,7 @@
   * Added a new configuration item ($config ['cops_ignored_categories']) to ignore some categories (author, tag, publisher, ...) in home screen and searches. It's also available in the "Customize UI" page.
   * Updated .htaccess to allow downloading books with a password protected COPS on a Sony PRS-TX. Reported by Ruud.
   * Changed the default search to search by categories also (should help with OPDS). Thanks to At_Libitum.
+  * Fixed the tag filtering in the HTML catalog when two tags starts by the same word. Reported by Tyler.
 
 0.6.2 - 20130913
   * Added server side rendering for devices like PRS-TX / Kindle / Cybook. Thanks to all the testers.
