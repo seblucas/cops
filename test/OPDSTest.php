@@ -13,6 +13,7 @@ require_once (dirname(__FILE__) . "/../OPDS_renderer.php");
 define ("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
 define ("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
 define ("JING_JAR", dirname(__FILE__) . "/jing.jar");
+define ("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
 define ("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
 class OpdsTest extends PHPUnit_Framework_TestCase
@@ -25,7 +26,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         unlink (TEST_FEED);
     }
 
-    function opdsValidateSchema($feed, $relax = OPDS_RELAX_NG) {
+    function jingValidateSchema($feed, $relax = OPDS_RELAX_NG) {
         $path = "";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // huge hack, not proud about it
@@ -39,7 +40,26 @@ class OpdsTest extends PHPUnit_Framework_TestCase
             return true;
     }
 
+    function opdsValidator($feed) {
+        $oldcwd = getcwd(); // Save the old working directory
+        chdir("test");
+        $path = "";
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            // huge hack, not proud about it
+            $path = "c:\\Progra~1\\Java\\jre7\\bin\\";
+        }
+        $res = system($path . 'java -jar ' . OPDSVALIDATOR_JAR . ' ' . $feed);
+        chdir($oldcwd);
+        if ($res != '') {
+            echo 'OPDS validation error: '.$res;
+            return false;
+        } else
+            return true;
+    }
 
+    function opdsCompleteValidation ($feed) {
+        return $this->jingValidateSchema($feed) && $this->opdsValidator($feed);
+    }
 
     public function testPageIndex ()
     {
@@ -58,13 +78,38 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $OPDSRender = new OPDSRenderer ();
 
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED));
-        file_put_contents (TEST_FEED, str_replace ("id>", "ido>", $OPDSRender->render ($currentPage)));
-        $this->AssertFalse ($this->opdsValidateSchema (TEST_FEED));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+
+        $_SERVER ["HTTP_USER_AGENT"] = "XXX";
+        $config['cops_generate_invalid_opds_stream'] = "1";
+
+        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
+        $this->AssertFalse ($this->jingValidateSchema (TEST_FEED));
+        $this->AssertFalse ($this->opdsValidator (TEST_FEED));
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
-    
+
+    public function testPageIndexMultipleDatabase ()
+    {
+        global $config;
+        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "";
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $OPDSRender = new OPDSRenderer ();
+
+        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+    }
+
     public function testOpenSearchDescription ()
     {
         $_SERVER['QUERY_STRING'] = "";
@@ -72,12 +117,12 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $OPDSRender = new OPDSRenderer ();
 
         file_put_contents (TEST_FEED, $OPDSRender->getOpenSearch ());
-        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
+        $this->AssertTrue ($this->jingValidateSchema (TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
 
-    public function testPageIndexMultipleDatabase ()
+    public function testPageAuthorMultipleDatabase ()
     {
         global $config;
         $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
@@ -95,7 +140,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $OPDSRender = new OPDSRenderer ();
 
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
     }
 
     public function testPageAuthorsDetail ()
@@ -118,7 +163,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $OPDSRender = new OPDSRenderer ();
 
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
 
         // Second page
 
@@ -129,7 +174,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $OPDSRender = new OPDSRenderer ();
 
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
 
         // No pagination
         $config['cops_max_item_per_page'] = -1;

@@ -1,0 +1,151 @@
+# -*- rnc -*- 
+# RELAX NG Compact Syntax Grammar for OPDS Catalog Feed & Entry Documents
+# Version 2010-08-18
+namespace atom = "http://www.w3.org/2005/Atom"
+namespace opds = "http://opds-spec.org/2010/catalog"
+namespace local = ""
+
+# The OPDS Catalog spec extends Atom (RFC4287), and the additions require some
+# patterns not used in the Atom schema. The first is atomUriExceptOPDS, which
+# is used to describe an atomLink whose rel value is an atomNCName (no-colon
+# name) or any URI other than these from OPDS Catalogs. In these cases, no
+# opds:price element should appear.
+atomUriExceptOPDS = string - ( string "http://opds-spec.org/acquisition/buy"
+                             | string "http://opds-spec.org/acquisition/borrow"
+                             | string "http://opds-spec.org/acquisition/subscribe"
+                             | string "http://opds-spec.org/acquisition/sample" )
+
+# Next is OPDSUrisExceptBuy, which is used to describe an atomLink whose
+# rel value is from OPDS Catalogs but is not ".../acquisition/buy". In such
+# cases, an opds:price element is optional.
+OPDSUrisExceptBuy = string "http://opds-spec.org/acquisition/borrow"
+                  | string "http://opds-spec.org/acquisition/subscribe"
+                  | string "http://opds-spec.org/acquisition/sample"
+
+# To simplify OPDS Catalog validation, we do not use Schematron to assert that
+# any atom:link with a rel value of ".../acquisition/buy" must be accompanied
+# by one or more opds:price elements.
+# Instead we rely on Relax NG to describe one of three situations:
+# - the rel value is ".../acquisition/buy" and at least one opds:price element
+#   is required
+# - the rel value is ".../acquisition/borrow" or ".../acquisition/subscribe" or
+#   ".../acquisition/sample", in case opds:price elements may be
+#   included; or
+# - the value of the rel attribute is any other URI or an Atom-defined no-colon
+#   name, and no opds:price element is permitted
+
+# Note that this OPDS Catalog schema includes atom.rnc, so that schema must be
+# present for validation.
+# 
+# Note also that atom.rnc defines atomUri as text and not as xsd:anyURI, and so
+# wherever the Atom spec requires an IRI, the schema will not check the value
+# against any URI pattern or logic. The OPDS Catalog schema overrides atom.rnc
+# to provide a relatively accurate test. With the approval of XSD 1.1, the
+# schema definition should change to xsd:anyURI to match what the spec text
+# says.
+include "atom.rnc" {
+
+undefinedAttribute =
+  attribute * - (xml:base | xml:lang | local:*| opds:* ) { text }
+
+  atomLink =
+    element atom:link {
+      atomCommonAttributes ,
+      attribute href { atomUri },
+      attribute type { atomMediaType }? ,
+      attribute hreflang { atomLanguageTag }? ,
+      attribute title { text }? ,
+      attribute length { text }? ,
+    ((attribute rel { "http://opds-spec.org/facet" }, (attribute opds:facetGroup { text }? & attribute opds:activeFacet { "true" }? ))
+      |
+     (attribute rel { "http://opds-spec.org/acquisition/buy" }, opdsPrice+ )
+     |
+     (attribute rel { OPDSUrisExceptBuy }, opdsPrice*)
+     |
+     (attribute rel { atomNCName | ( atomUriExceptOPDS ) } ))? ,
+      (opdsIndirectAcquisition |
+      anyOPDSForeignElement |
+      text)*
+    }
+
+    # Here is where OPDS Catalogs use John Cowan's pragmatic evaluation of an
+    # IRI. This modifies xsd:anyURI in XSD 1.0 to exclude ASCII characters not
+    # valid in 1.1 or IRI's without being escaped. This matches the OPDS and Atom
+    # specs, but not the non-normative atom.rnc.
+    atomUri = xsd:anyURI - xsd:string {pattern = '.*[ <>{}|^`"\\\n\r\t].*'}
+
+    # Here we override Atom to account for HTML abuse in the summary element,
+    # restricting it in OPDS Catalog to text:
+    atomSummary = 
+      element atom:summary {
+        atomCommonAttributes,
+        attribute type { "text" }?,
+        text
+    }
+}
+
+
+anyOPDSForeignElement =
+  element * - ( atom:* | opds:* ) {
+      ( attribute * { text }
+      | text
+      | anyElement )*
+  } 
+
+
+# An opds:indirectAcquisition should use strictly MIME media type for
+#its type attribute
+opdsIndirectAcquisition = 
+  element opds:indirectAcquisition {
+    atomCommonAttributes,
+    attribute type { atomMediaType },
+    (  anyOPDSForeignElement | 
+      opdsIndirectAcquisition) *
+  }
+
+
+# An opds:price element should not contain a currency symbol; it is
+# restricted to non-negative decimal numbers.
+opdsPrice = 
+  element opds:price {
+    atomCommonAttributes,
+    attribute currencycode { opdsPriceCurrencyCode },
+    xsd:decimal { minInclusive="0.0" } 
+  }
+
+
+# Instead of allowing every possible 3-letter or 3-digit combination as a
+# currency code, here the permissible codes (as identified in ISO4217 as of
+# 2010-08-25) are enumerated. In 2012 or so, that standard may add, remove or
+# change some currency codes, thus requiring this schema to be updated. Note
+# that codes for metals and funds are not included.
+opdsPriceCurrencyCode =  (   
+  "AED" | "AFN" | "ALL" | "AMD" | "ANG" | "AOA" | "ARS" | "AUD" | "AWG" | "AZN" | "BAM" | "BBD" | "BDT" | 
+  "BGN" | "BHD" | "BIF" | "BMD" | "BND" | "BOB" | "BOV" | "BRL" | "BSD" | "BTN" | "BWP" | "BYR" | "BZD" | 
+  "CAD" | "CDF" | "CHE" | "CHF" | "CHW" | "CLF" | "CLP" | "CNY" | "COP" | "COU" | "CRC" | "CUC" | "CUP" | 
+  "CVE" | "CZK" | "DJF" | "DKK" | "DOP" | "DZD" | "EEK" | "EGP" | "ERN" | "ETB" | "EUR" | "FJD" | "FKP" | 
+  "GBP" | "GEL" | "GHS" | "GIP" | "GMD" | "GNF" | "GTQ" | "GYD" | "HKD" | "HNL" | "HRK" | "HTG" | "HUF" | 
+  "IDR" | "ILS" | "INR" | "IQD" | "IRR" | "ISK" | "JMD" | "JOD" | "JPY" | "KES" | "KGS" | "KHR" | "KMF" | 
+  "KPW" | "KRW" | "KWD" | "KYD" | "KZT" | "LAK" | "LBP" | "LKR" | "LRD" | "LSL" | "LTL" | "LVL" | "LYD" | 
+  "MAD" | "MDL" | "MGA" | "MKD" | "MMK" | "MNT" | "MOP" | "MRO" | "MUR" | "MVR" | "MWK" | "MXN" | "MXV" | 
+  "MYR" | "MZN" | "NAD" | "NGN" | "NIO" | "NOK" | "NPR" | "NZD" | "OMR" | "PAB" | "PEN" | "PGK" | "PHP" | 
+  "PKR" | "PLN" | "PYG" | "QAR" | "RON" | "RSD" | "RUB" | "RWF" | "SAR" | "SBD" | "SCR" | "SDG" | "SEK" | 
+  "SGD" | "SHP" | "SLL" | "SOS" | "SRD" | "STD" | "SVC" | "SYP" | "SZL" | "THB" | "TJS" | "TMT" | "TND" | 
+  "TOP" | "TRY" | "TTD" | "TWD" | "TZS" | "UAH" | "UGX" | "USD" | "USN" | "USS" | "UYI" | "UYU" | "UZS" | 
+  "VEF" | "VND" | "VUV" | "WST" | "XAF" | "XAG" | "XAU" | "XBA" | "XBB" | "XBC" | "XBD" | "XCD" | "XDR" | 
+  "XFU" | "XOF" | "XPD" | "XPF" | "XPT" | "XTS" | "XXX" | "YER" | "ZAR" | "ZMK" | "ZWL" | "008" | "012" | 
+  "032" | "036" | "044" | "048" | "050" | "051" | "052" | "060" | "064" | "068" | "072" | "084" | "090" | 
+  "096" | "104" | "108" | "116" | "124" | "132" | "136" | "144" | "152" | "156" | "170" | "174" | "188" | 
+  "191" | "192" | "203" | "208" | "214" | "222" | "230" | "232" | "233" | "238" | "242" | "262" | "270" | 
+  "292" | "320" | "324" | "328" | "332" | "340" | "344" | "348" | "352" | "356" | "360" | "364" | "368" | 
+  "376" | "388" | "392" | "398" | "400" | "404" | "408" | "410" | "414" | "417" | "418" | "422" | "426" | 
+  "428" | "430" | "434" | "440" | "446" | "454" | "458" | "462" | "478" | "480" | "484" | "496" | "498" | 
+  "504" | "512" | "516" | "524" | "532" | "533" | "548" | "554" | "558" | "566" | "578" | "586" | "590" | 
+  "598" | "600" | "604" | "608" | "634" | "643" | "646" | "654" | "678" | "682" | "690" | "694" | "702" | 
+  "704" | "706" | "710" | "748" | "752" | "756" | "760" | "764" | "776" | "780" | "784" | "788" | "800" | 
+  "807" | "818" | "826" | "834" | "840" | "858" | "860" | "882" | "886" | "894" | "901" | "931" | "932" | 
+  "934" | "936" | "937" | "938" | "940" | "941" | "943" | "944" | "946" | "947" | "948" | "949" | "950" | 
+  "951" | "952" | "953" | "955" | "956" | "957" | "958" | "959" | "960" | "961" | "962" | "963" | "964" | 
+  "968" | "969" | "970" | "971" | "972" | "973" | "974" | "975" | "976" | "977" | "978" | "979" | "980" | 
+  "981" | "984" | "985" | "986" | "990" | "997" | "998" | "999"
+)
