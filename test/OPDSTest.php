@@ -11,6 +11,7 @@ require_once (dirname(__FILE__) . "/../book.php");
 require_once (dirname(__FILE__) . "/../OPDS_renderer.php");
 
 define ("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
+define ("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
 define ("JING_JAR", dirname(__FILE__) . "/jing.jar");
 define ("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
@@ -24,13 +25,13 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         unlink (TEST_FEED);
     }
 
-    function opdsValidateSchema($feed) {
+    function opdsValidateSchema($feed, $relax = OPDS_RELAX_NG) {
         $path = "";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // huge hack, not proud about it
             $path = "c:\\Progra~1\\Java\\jre7\\bin\\";
         }
-        $res = system($path . 'java -jar ' . JING_JAR . ' ' . OPDS_RELAX_NG . ' ' . $feed);
+        $res = system($path . 'java -jar ' . JING_JAR . ' ' . $relax . ' ' . $feed);
         if ($res != '') {
             echo 'RelaxNG validation error: '.$res;
             return false;
@@ -60,6 +61,18 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED));
         file_put_contents (TEST_FEED, str_replace ("id>", "ido>", $OPDSRender->render ($currentPage)));
         $this->AssertFalse ($this->opdsValidateSchema (TEST_FEED));
+
+        $_SERVER['QUERY_STRING'] = NULL;
+    }
+    
+    public function testOpenSearchDescription ()
+    {
+        $_SERVER['QUERY_STRING'] = "";
+
+        $OPDSRender = new OPDSRenderer ();
+
+        file_put_contents (TEST_FEED, $OPDSRender->getOpenSearch ());
+        $this->AssertTrue ($this->opdsValidateSchema (TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
