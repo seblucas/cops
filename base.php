@@ -753,6 +753,37 @@ class PageQueryResult extends Page
         return !is_null (getURLParam ("search"));
     }
 
+    private function searchByScope ($scope, $limit = FALSE) {
+        $n = $this->n;
+        $numberPerPage = NULL;
+        if ($limit) {
+            $n = 1;
+            $numberPerPage = 5;
+        }
+        switch ($scope) {
+            case self::SCOPE_BOOK :
+                $array = Book::getBooksByStartingLetter ('%' . $this->query, $n, NULL, $numberPerPage);
+                break;
+            case self::SCOPE_AUTHOR :
+                $array = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                break;
+            case self::SCOPE_SERIES :
+                $array = Serie::getAllSeriesByQuery ($this->query);
+                break;
+            case self::SCOPE_TAG :
+                $array = Tag::getAllTagsByQuery ($this->query, $n, NULL, $numberPerPage);
+                break;
+            case self::SCOPE_PUBLISHER :
+                $array = Publisher::getAllPublishersByQuery ($this->query);
+                break;
+            default:
+                $array = Book::getBooksByQuery (
+                    array ("all" => "%" . $this->query . "%"), $n);
+        }
+
+        return $array;
+    }
+
     public function doSearchByCategory () {
         $database = GetUrlParam (DB);
         $out = array ();
@@ -780,23 +811,7 @@ class PageQueryResult extends Page
                 if (in_array($key, getCurrentOption ('ignored_categories'))) {
                     continue;
                 }
-                switch ($key) {
-                    case "book" :
-                        $array = Book::getBooksByStartingLetter ('%' . $query, 1, NULL, 5);
-                        break;
-                    case "author" :
-                        $array = Author::getAuthorsByStartingLetter ('%' . $query);
-                        break;
-                    case "series" :
-                        $array = Serie::getAllSeriesByQuery ($query);
-                        break;
-                    case "tag" :
-                        $array = Tag::getAllTagsByQuery ($query, 1, NULL, 5);
-                        break;
-                    case "publisher" :
-                        $array = Publisher::getAllPublishersByQuery ($query);
-                        break;
-                }
+                $array = $this->searchByScope ($key, TRUE);
 
                 $i = 0;
                 if (count ($array) == 2 && is_array ($array [0])) {
@@ -867,26 +882,12 @@ class PageQueryResult extends Page
             $this->doSearchByCategory ();
             return;
         }
-        switch ($scope) {
-            case self::SCOPE_AUTHOR :
-                $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
-                break;
-            case self::SCOPE_TAG :
-                list ($this->entryArray, $this->totalNumber) = Tag::getAllTagsByQuery ($this->query, -1);
-                break;
-            case self::SCOPE_SERIES :
-                $this->entryArray = Serie::getAllSeriesByQuery ($this->query);
-                break;
-            case self::SCOPE_BOOK :
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ("book" => $crit), $this->n);
-                break;
-            case self::SCOPE_PUBLISHER :
-                $this->entryArray = Publisher::getAllPublishersByQuery ($this->query);
-                break;
-            default:
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ("all" => $crit), $this->n);
+
+        $array = $this->searchByScope ($scope);
+        if (count ($array) == 2 && is_array ($array [0])) {
+            list ($this->entryArray, $this->totalNumber) = $array;
+        } else {
+            $this->entryArray = $array;
         }
     }
 }
