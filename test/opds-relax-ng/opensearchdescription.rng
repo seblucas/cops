@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Relax NG schema for OpenSearch 1.1 description documents.
+  See http://www.opensearch.org/Specifications/OpenSearch/1.1
+-->
+<grammar ns="http://a9.com/-/spec/opensearch/1.1/" xmlns:params="http://a9.com/-/spec/opensearch/extensions/parameters/1.0/" xmlns:moz="http://www.mozilla.org/2006/browser/search/" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!-- The root node of the OpenSearch description document. -->
+  <start>
+    <element name="OpenSearchDescription">
+      <interleave>
+        <!--
+          Contains a brief human-readable title that identifies this search
+          engine.  Not supposed to be longer than 16 characters but Mycroft
+          plugins don't obey this.
+        -->
+        <element name="ShortName">
+          <data type="token"/>
+        </element>
+        <!-- { maxLength="16" }}, -->
+        <!-- Contains a human-readable text description of the search engine. -->
+        <element name="Description">
+          <data type="string">
+            <param name="maxLength">1024</param>
+          </data>
+        </element>
+        <oneOrMore>
+          <!--
+            Describes an interface by which a client can make requests for an
+            external resource, such as search results, search suggestions, or
+            additional description documents.
+          -->
+          <element name="Url">
+            <!--
+              The URL template to be processed according to the OpenSearch
+              URL template syntax.
+            -->
+            <attribute name="template">
+              <data type="token"/>
+            </attribute>
+            <!-- The MIME type of the resource being described. -->
+            <attribute name="type">
+              <data type="token"/>
+            </attribute>
+            <optional>
+              <!--
+                The role of the resource being described in relation to the
+                description document.
+              -->
+              <attribute name="rel">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- The index number of the first search result. -->
+              <attribute name="indexOffset">
+                <data type="positiveInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- The page number of the first set of search results. -->
+              <attribute name="pageOffset">
+                <data type="positiveInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!--
+                Contains a case-insensitive string that identifies the HTTP
+                request method that the search client should use to perform the
+                search request.
+              -->
+              <attribute name="params:method">
+                <choice>
+                  <value>get</value>
+                  <value>post</value>
+                  <value>GET</value>
+                  <value>POST</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <!--
+                Technically, this attribute is defined by the OpenSearch
+                Parameter extension and thus needs a different namespace; see
+                above. But the extensions at Mycroft don't obey this so it is
+                defined here under the default namespace.
+              -->
+              <attribute name="method">
+                <choice>
+                  <value>get</value>
+                  <value>post</value>
+                  <value>GET</value>
+                  <value>POST</value>
+                </choice>
+              </attribute>
+            </optional>
+            <optional>
+              <!--
+                Contains a string that identifies the content encoding the
+                search client should use to perform the search request.
+              -->
+              <attribute name="params:enctype">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <zeroOrMore>
+              <!-- Describes a name/value pair to be included in the search request. -->
+              <element name="params:Parameter">
+                <ref name="parameter-attributes"/>
+              </element>
+            </zeroOrMore>
+            <zeroOrMore>
+              <!-- Non-standard version of the Parameter element above. -->
+              <element name="Param">
+                <ref name="parameter-attributes"/>
+              </element>
+            </zeroOrMore>
+          </element>
+        </oneOrMore>
+        <optional>
+          <!--
+            Contains an email address at which the maintainer of the
+            description document can be reached.
+          -->
+          <element name="Contact">
+            <data type="token"/>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Contains a set of words that are used as keywords to identify and
+            categorize this search content. Tags must be a single word and
+            are delimited by the space character (' ').
+          -->
+          <element name="Tags">
+            <data type="token">
+              <param name="maxLength">256</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Contains an extended human-readable title that identifies this
+            search engine.
+          -->
+          <element name="LongName">
+            <data type="token">
+              <param name="maxLength">48</param>
+            </data>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <!--
+            Contains a URL that identifies the location of an image that can
+            be used in association with this search content.
+          -->
+          <element name="Image">
+            <optional>
+              <!-- Contains the height, in pixels, of this image. -->
+              <attribute name="height">
+                <data type="nonNegativeInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- Contains the width, in pixels, of this image. -->
+              <attribute name="width">
+                <data type="nonNegativeInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!-- Contains the the MIME type of this image. -->
+              <attribute name="type">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <data type="anyURI"/>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <!-- Defines a search query that can be performed by search clients. -->
+          <element name="Query">
+            <!--
+              Contains a string identifying how the search client should
+              interpret the search request defined by this Query element.
+            -->
+            <attribute name="role">
+              <data type="QName"/>
+            </attribute>
+            <optional>
+              <!--
+                Contains a human-readable plain text string describing the
+                search request.
+              -->
+              <attribute name="title">
+                <data type="token">
+                  <param name="maxLength">256</param>
+                </data>
+              </attribute>
+            </optional>
+            <optional>
+              <!--
+                Contains the expected number of results to be found if the
+                search request were made.
+              -->
+              <attribute name="totalResults">
+                <data type="nonNegativeInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <!--
+                The following elements correspond to the parameters that may
+                appear in an OpenSearch URL template.
+              -->
+              <attribute name="searchTerms">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="count">
+                <data type="nonNegativeInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="startIndex">
+                <data type="positiveInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="startPage">
+                <data type="positiveInteger"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="language">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="inputEncoding">
+                <data type="token"/>
+              </attribute>
+            </optional>
+            <optional>
+              <attribute name="outputEncoding">
+                <data type="token"/>
+              </attribute>
+            </optional>
+          </element>
+        </zeroOrMore>
+        <optional>
+          <!--
+            Contains the human-readable name or identifier of the creator or
+            maintainer of the description document.
+          -->
+          <element name="Developer">
+            <data type="token">
+              <param name="maxLength">64</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Contains a list of all sources or entities that should be
+            credited for the content contained in the search feed.
+          -->
+          <element name="Attribution">
+            <data type="token">
+              <param name="maxLength">256</param>
+            </data>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Contains a value that indicates the degree to which the search
+            results provided by this search engine can be queried, displayed,
+            and redistributed.
+          -->
+          <element name="SyndicationRight">
+            <choice>
+              <value>open</value>
+              <value>limited</value>
+              <value>private</value>
+              <value>closed</value>
+            </choice>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Contains a boolean value that should be set to true if the search
+            results may contain material intended only for adults.
+          -->
+          <element name="AdultContent">
+            <data type="boolean"/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <!--
+            Contains a string that indicates that the search engine supports
+            search results in the specified language.
+          -->
+          <element name="Language">
+            <data type="token"/>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <!--
+            Contains a string that indicates that the search engine supports
+            search requests encoded with the specified character encoding.
+          -->
+          <element name="InputEncoding">
+            <data type="token"/>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <!--
+            Contains a string that indicates that the search engine supports
+            search responses encoded with the specified character encoding.
+          -->
+          <element name="OutputEncoding">
+            <data type="token"/>
+          </element>
+        </zeroOrMore>
+        <optional>
+          <!-- Mozilla extensions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+          <!--
+            The URL to go to to open up the search page at the site for which
+            the plugin is designed to search. This provides a way for Firefox
+            to let the user visit the web site directly. It should be a URI 
+            but the plugins at Mycroft have all kinds of garbage here.
+          -->
+          <element name="moz:SearchForm">
+            <data type="token"/>
+          </element>
+        </optional>
+        <optional>
+          <!--
+            Mozilla uses the following mechanisms for automtaically updating
+            search plugins.
+          -->
+          <element name="moz:UpdateUrl">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="moz:IconUpdateUrl">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="moz:UpdateInterval">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+        <optional>
+          <!-- Some naughty plugin developers don't namespace the Mozilla elements. -->
+          <element name="SearchForm">
+            <data type="token"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="UpdateUrl">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="IconUpdateUrl">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+        <optional>
+          <element name="UpdateInterval">
+            <data type="anyURI"/>
+          </element>
+        </optional>
+      </interleave>
+      <!-- end Mozilla extensions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    </element>
+  </start>
+  <!-- end OpenSearchDescription element -->
+  <define name="parameter-attributes">
+    <!-- Contains the name of the parameter. -->
+    <attribute name="name">
+      <data type="token"/>
+    </attribute>
+    <optional>
+      <!--
+        Contains a string that will be processed according to the
+        rules of the OpenSearch URL template syntax.
+      -->
+      <attribute name="value">
+        <data type="token"/>
+      </attribute>
+    </optional>
+    <optional>
+      <!--
+        Contains a string that identifies the minimum number of
+        times this parameter must be included in the search
+        request.
+      -->
+      <attribute name="minimum">
+        <data type="nonNegativeInteger"/>
+      </attribute>
+    </optional>
+    <optional>
+      <!--
+        Contains a string that identifies the maximum number of
+        times this parameter must be included in the search
+        request. The literal string "*" will be interpreted to mean
+        that the parameter may repeat an arbitrary number of times.
+      -->
+      <attribute name="maximum">
+        <data type="token"/>
+      </attribute>
+    </optional>
+  </define>
+</grammar>
+<!-- end grammar -->
