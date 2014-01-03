@@ -89,6 +89,42 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
+    
+    /**
+     * @dataProvider providerPage
+     */
+    public function testMostPages ($page, $query)
+    {
+        $qid = NULL;
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "?page={$page}";
+        if (!empty ($query)) {
+            $_SERVER['QUERY_STRING'] .= "&query={$query}";
+        }
+        $_SERVER['REQUEST_URI'] = "feed.php" . $_SERVER['QUERY_STRING'];
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        
+        $OPDSRender = new OPDSRenderer ();
+        
+        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+    }
+    
+    public function providerPage ()
+    {
+        return array (
+            array (Base::PAGE_OPENSEARCH, "car"),
+            array (Base::PAGE_ALL_AUTHORS, NULL),
+            array (Base::PAGE_ALL_SERIES, NULL),
+            array (Base::PAGE_ALL_TAGS, NULL),
+            array (Base::PAGE_ALL_PUBLISHERS, NULL),
+            array (Base::PAGE_ALL_LANGUAGES, NULL),
+            array (Base::PAGE_ALL_RECENT_BOOKS, NULL),
+            array (Base::PAGE_ALL_BOOKS, NULL)
+        );
+    }
 
     public function testPageIndexMultipleDatabase ()
     {
