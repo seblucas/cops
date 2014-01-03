@@ -12,15 +12,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'version' => '25',
                 'platform' => 'Windows 8.1',
             )
-        ),
-        // run IE8 on Windows 7 on Sauce
-        array(
-            'browserName' => 'internet explorer',
-            'desiredCapabilities' => array(
-                'version' => '8',
-                'platform' => 'Windows 7',
-            )
-        ),
+        // ),
         // run IE9 on Windows 7 on Sauce
         array(
             'browserName' => 'internet explorer',
@@ -79,7 +71,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'platform' => 'Linux'
           )
         )
-        
+
 
         // run Chrome locally
         //array(
@@ -94,6 +86,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $caps = $this->getDesiredCapabilities();
             $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
+            $caps['idle-timeout'] = "180";
             $this->setDesiredCapabilities($caps);
         }
         parent::setUp ();
