@@ -9,8 +9,16 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'firefox',
             'desiredCapabilities' => array(
-                'version' => '15',
-                'platform' => 'Windows 2012',
+                'version' => '25',
+                'platform' => 'Windows 8.1',
+            )
+        ),
+        // run IE8 on Windows 7 on Sauce
+        array(
+            'browserName' => 'internet explorer',
+            'desiredCapabilities' => array(
+                'version' => '8',
+                'platform' => 'Windows 7',
             )
         ),
         // run IE9 on Windows 7 on Sauce
@@ -25,8 +33,8 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'internet explorer',
             'desiredCapabilities' => array(
-                'version' => '10',
-                'platform' => 'Windows 8',
+                'version' => '11',
+                'platform' => 'Windows 8.1',
             )
         ),
         // run Opera 12 on Windows 7 on Sauce
@@ -35,6 +43,14 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             'desiredCapabilities' => array(
                 'version' => '12',
                 'platform' => 'Windows 7',
+            )
+        ),
+        // run Safari 7 on Maverick on Sauce
+        array(
+            'browserName' => 'safari',
+            'desiredCapabilities' => array(
+                'version' => '7',
+                'platform' => 'OS X 10.9',
             )
         ),
         // run Mobile Safari on iOS
@@ -47,6 +63,14 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'platform' => 'Mac 10.8',
             )
         ),
+        // run Mobile Browser on Android
+        array(
+            'browserName' => 'Android',
+            'desiredCapabilities' => array(
+                'version' => '4.0',
+                'platform' => 'Linux',
+            )
+        ),
         // run Chrome on Linux on Sauce
         array(
             'browserName' => 'chrome',
@@ -55,14 +79,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'platform' => 'Linux'
           )
         )
-        // run Mobile Browser on Android
-        // array(
-            // 'browserName' => 'Android',
-            // 'desiredCapabilities' => array(
-                // 'version' => '4.0',
-                // 'platform' => 'Linux',
-            // )
-        // )
+        
 
         // run Chrome locally
         //array(
