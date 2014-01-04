@@ -12,7 +12,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'version' => '25',
                 'platform' => 'Windows 8.1',
             )
-        // ),
+        ),
         // run IE9 on Windows 7 on Sauce
         array(
             'browserName' => 'internet explorer',
