@@ -11,6 +11,10 @@ if (typeof LRUCache != 'undefined') {
     var cache = new LRUCache(30);
 }
 
+$.ajaxSetup({
+    cache: false
+});
+
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
   // pushState isn't reliable on iOS until 5.
