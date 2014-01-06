@@ -16,6 +16,28 @@ function useServerSideRendering () {
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
 }
 
+function serverSideRender ($data) {
+    // Get the templates
+    $header = file_get_contents('templates/default/header.html');
+    $footer = file_get_contents('templates/default/footer.html');
+    $main = file_get_contents('templates/default/main.html');
+    $bookdetail = file_get_contents('templates/default/bookdetail.html');
+    $page = file_get_contents('templates/default/page.html');
+
+    // Generate the function for the template
+    $template = new doT ();
+    $dot = $template->template ($page, array ("bookdetail" => $bookdetail,
+                                              "header" => $header,
+                                              "footer" => $footer,
+                                              "main" => $main));
+    // Execute the template
+    if (!empty ($data)) {
+        return $dot ($data);
+    }
+    
+    return NULL;
+}
+
 function getQueryString () {
     if ( isset($_SERVER['QUERY_STRING']) ) {
         return $_SERVER['QUERY_STRING'];

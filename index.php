@@ -129,24 +129,10 @@
 <body>
 <?php
 if (useServerSideRendering ()) {
-    // Get the templates
-    $header = file_get_contents('templates/default/header.html');
-    $footer = file_get_contents('templates/default/footer.html');
-    $main = file_get_contents('templates/default/main.html');
-    $bookdetail = file_get_contents('templates/default/bookdetail.html');
-    $page = file_get_contents('templates/default/page.html');
-
     // Get the data
     $data = getJson (true);
-
-    // Generate the function for the template
-    $template = new doT ();
-    $dot = $template->template ($page, array ("bookdetail" => $bookdetail,
-                                              "header" => $header,
-                                              "footer" => $footer,
-                                              "main" => $main));
-    // Execute the template
-    echo $dot ($data);
+    
+    echo serverSideRender ($data);
 }
 ?>
 </body>
