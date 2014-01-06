@@ -34,7 +34,7 @@ function serverSideRender ($data) {
     if (!empty ($data)) {
         return $dot ($data);
     }
-    
+
     return NULL;
 }
 
