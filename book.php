@@ -115,6 +115,18 @@ class Book extends Base {
         return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
 
+    public function getDetailUrl ($permalink = false) {
+        $urlParam = $this->getUri ();
+        if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
+        return 'index.php' . $urlParam;
+    }
+
+    public function getTitle () {
+        return $this->title;
+    }
+
+    /* Json export */
+
     public function getContentArray () {
         global $config;
         $i = 0;
@@ -166,6 +178,7 @@ class Book extends Base {
                       "seriesurl" => $su);
 
     }
+
     public function getFullContentArray () {
         global $config;
         $out = $this->getContentArray ();
@@ -196,40 +209,15 @@ class Book extends Base {
         return $out;
     }
 
-    public function getDetailUrl ($permalink = false) {
-        $urlParam = $this->getUri ();
-        if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
-        return 'index.php' . $urlParam;
-    }
+    /* End of Json export */
 
-    public function getTitle () {
-        return $this->title;
-    }
+    /* Other class (author, series, tag, ...) initialization and accessors */
 
     public function getAuthors () {
         if (is_null ($this->authors)) {
             $this->authors = Author::getAuthorByBookId ($this->id);
         }
         return $this->authors;
-    }
-
-    public static function getFilterString () {
-        $filter = getURLParam ("tag", NULL);
-        if (empty ($filter)) return "";
-
-        $exists = true;
-        if (preg_match ("/^!(.*)$/", $filter, $matches)) {
-            $exists = false;
-            $filter = $matches[1];
-        }
-
-        $result = "exists (select null from books_tags_link, tags where books_tags_link.book = books.id and books_tags_link.tag = tags.id and tags.name = '" . $filter . "')";
-
-        if (!$exists) {
-            $result = "not " . $result;
-        }
-
-        return "and " . $result;
     }
 
     public function getAuthorsName () {
@@ -282,6 +270,10 @@ class Book extends Base {
         }
         return $this->tags;
     }
+    
+    public function getTagsName () {
+        return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
+    }
 
     public function getDatas ()
     {
@@ -298,6 +290,27 @@ class Book extends Base {
             }
         }
         return $this->datas;
+    }
+
+    /* End of other class (author, series, tag, ...) initialization and accessors */
+
+    public static function getFilterString () {
+        $filter = getURLParam ("tag", NULL);
+        if (empty ($filter)) return "";
+
+        $exists = true;
+        if (preg_match ("/^!(.*)$/", $filter, $matches)) {
+            $exists = false;
+            $filter = $matches[1];
+        }
+
+        $result = "exists (select null from books_tags_link, tags where books_tags_link.book = books.id and books_tags_link.tag = tags.id and tags.name = '" . $filter . "')";
+
+        if (!$exists) {
+            $result = "not " . $result;
+        }
+
+        return "and " . $result;
     }
 
     public function GetMostInterestingDataToSendToKindle ()
@@ -324,12 +337,7 @@ class Book extends Base {
         }
         return NULL;
     }
-
-
-    public function getTagsName () {
-        return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
-    }
-
+    
     public function getRating () {
         if (is_null ($this->rating) || $this->rating == 0) {
             return "";
