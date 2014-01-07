@@ -10,9 +10,6 @@ require_once ("base.php");
 
 class OPDSRenderer
 {
-    const PAGE_OPENSEARCH = "8";
-    const PAGE_OPENSEARCH_QUERY = "9";
-
     private $xmlStream = NULL;
     private $updated = NULL;
 
@@ -130,7 +127,7 @@ class OPDSRenderer
             if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
             if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
                 // Good and compliant way of handling search
-                $urlparam = addURLParameter ($urlparam, "page", self::PAGE_OPENSEARCH);
+                $urlparam = addURLParameter ($urlparam, "page", Base::PAGE_OPENSEARCH);
                 $link = new Link ("feed.php" . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
             }
             else
