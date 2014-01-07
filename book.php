@@ -125,92 +125,6 @@ class Book extends Base {
         return $this->title;
     }
 
-    /* Json export */
-
-    public function getContentArray () {
-        global $config;
-        $i = 0;
-        $preferedData = array ();
-        foreach ($config['cops_prefered_format'] as $format)
-        {
-            if ($i == 2) { break; }
-            if ($data = $this->getDataFormat ($format)) {
-                $i++;
-                array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
-            }
-        }
-
-        $publisher = $this->getPublisher();
-        if (is_null ($publisher)) {
-            $pn = "";
-            $pu = "";
-        } else {
-            $pn = $publisher->name;
-            $link = new LinkNavigation ($publisher->getUri ());
-            $pu = $link->hrefXhtml ();
-        }
-
-        $serie = $this->getSerie ();
-        if (is_null ($serie)) {
-            $sn = "";
-            $scn = "";
-            $su = "";
-        } else {
-            $sn = $serie->name;
-            $scn = str_format (localize ("content.series.data"), $this->seriesIndex, $serie->name);
-            $link = new LinkNavigation ($serie->getUri ());
-            $su = $link->hrefXhtml ();
-        }
-
-        return array ("id" => $this->id,
-                      "hasCover" => $this->hasCover,
-                      "preferedData" => $preferedData,
-                      "rating" => $this->getRating (),
-                      "publisherName" => $pn,
-                      "publisherurl" => $pu,
-                      "pubDate" => $this->getPubDate (),
-                      "languagesName" => $this->getLanguages (),
-                      "authorsName" => $this->getAuthorsName (),
-                      "tagsName" => $this->getTagsName (),
-                      "seriesName" => $sn,
-                      "seriesIndex" => $this->seriesIndex,
-                      "seriesCompleteName" => $scn,
-                      "seriesurl" => $su);
-
-    }
-
-    public function getFullContentArray () {
-        global $config;
-        $out = $this->getContentArray ();
-
-        $out ["coverurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
-        $out ["thumbnailurl"] = Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml ();
-        $out ["content"] = $this->getComment (false);
-        $out ["datas"] = array ();
-        $dataKindle = $this->GetMostInterestingDataToSendToKindle ();
-        foreach ($this->getDatas() as $data) {
-            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0);
-            if (!empty ($config['cops_mail_configuration']) && !is_null ($dataKindle) && $data->id == $dataKindle->id) {
-                $tab ["mail"] = 1;
-            }
-            array_push ($out ["datas"], $tab);
-        }
-        $out ["authors"] = array ();
-        foreach ($this->getAuthors () as $author) {
-            $link = new LinkNavigation ($author->getUri ());
-            array_push ($out ["authors"], array ("name" => $author->name, "url" => $link->hrefXhtml ()));
-        }
-        $out ["tags"] = array ();
-        foreach ($this->getTags () as $tag) {
-            $link = new LinkNavigation ($tag->getUri ());
-            array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
-        }
-        ;
-        return $out;
-    }
-
-    /* End of Json export */
-
     /* Other class (author, series, tag, ...) initialization and accessors */
 
     public function getAuthors () {
@@ -270,7 +184,7 @@ class Book extends Base {
         }
         return $this->tags;
     }
-    
+
     public function getTagsName () {
         return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
@@ -337,7 +251,7 @@ class Book extends Base {
         }
         return NULL;
     }
-    
+
     public function getRating () {
         if (is_null ($this->rating) || $this->rating == 0) {
             return "";
@@ -669,106 +583,3 @@ order by substr (upper (sort), 1, 1)");
     }
 
 }
-
-function getJson ($complete = false) {
-    global $config;
-    $page = getURLParam ("page", Base::PAGE_INDEX);
-    $query = getURLParam ("query");
-    $search = getURLParam ("search");
-    $qid = getURLParam ("id");
-    $n = getURLParam ("n", "1");
-    $database = GetUrlParam (DB);
-
-    $currentPage = Page::getPage ($page, $qid, $query, $n);
-    $currentPage->InitializeContent ();
-
-    if ($search) {
-        return $currentPage->getContentArrayTypeahead ();
-    }
-
-    $out = array ( "title" => $currentPage->title);
-    $entries = array ();
-    foreach ($currentPage->entryArray as $entry) {
-        array_push ($entries, $entry->getContentArray ());
-    }
-    if (!is_null ($currentPage->book)) {
-        $out ["book"] = $currentPage->book->getFullContentArray ();
-    }
-    $out ["databaseId"] = GetUrlParam (DB, "");
-    $out ["databaseName"] = Base::getDbName ();
-    $out ["page"] = $page;
-    $out ["multipleDatabase"] = Base::isMultipleDatabaseEnabled () ? 1 : 0;
-    $out ["entries"] = $entries;
-    $out ["isPaginated"] = 0;
-    if ($currentPage->isPaginated ()) {
-        $prevLink = $currentPage->getPrevLink ();
-        $nextLink = $currentPage->getNextLink ();
-        $out ["isPaginated"] = 1;
-        $out ["prevLink"] = "";
-        if (!is_null ($prevLink)) {
-            $out ["prevLink"] = $prevLink->hrefXhtml ();
-        }
-        $out ["nextLink"] = "";
-        if (!is_null ($nextLink)) {
-            $out ["nextLink"] = $nextLink->hrefXhtml ();
-        }
-        $out ["maxPage"] = $currentPage->getMaxPage ();
-        $out ["currentPage"] = $currentPage->n;
-    }
-    if (!is_null (getURLParam ("complete")) || $complete) {
-        $out ["c"] = array ("version" => VERSION, "i18n" => array (
-                       "coverAlt" => localize("i18n.coversection"),
-                       "authorsTitle" => localize("authors.title"),
-                       "bookwordTitle" => localize("bookword.title"),
-                       "tagsTitle" => localize("tags.title"),
-                       "seriesTitle" => localize("series.title"),
-                       "customizeTitle" => localize ("customize.title"),
-                       "aboutTitle" => localize ("about.title"),
-                       "previousAlt" => localize ("paging.previous.alternate"),
-                       "nextAlt" => localize ("paging.next.alternate"),
-                       "searchAlt" => localize ("search.alternate"),
-                       "sortAlt" => localize ("sort.alternate"),
-                       "homeAlt" => localize ("home.alternate"),
-                       "cogAlt" => localize ("cog.alternate"),
-                       "permalinkAlt" => localize ("permalink.alternate"),
-                       "publisherName" => localize("publisher.name"),
-                       "pubdateTitle" => localize("pubdate.title"),
-                       "languagesTitle" => localize("language.title"),
-                       "contentTitle" => localize("content.summary"),
-                       "sortorderAsc" => localize("search.sortorder.asc"),
-                       "sortorderDesc" => localize("search.sortorder.desc"),
-                       "customizeEmail" => localize("customize.email")),
-                   "url" => array (
-                       "detailUrl" => "index.php?page=13&id={0}&db={1}",
-                       "coverUrl" => "fetch.php?id={0}&db={1}",
-                       "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
-                   "config" => array (
-                       "use_fancyapps" => $config ["cops_use_fancyapps"],
-                       "max_item_per_page" => $config['cops_max_item_per_page'],
-                       "server_side_rendering" => useServerSideRendering (),
-                       "html_tag_filter" => $config['cops_html_tag_filter']));
-        if ($config['cops_thumbnail_handling'] == "1") {
-            $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
-        } else if (!empty ($config['cops_thumbnail_handling'])) {
-            $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
-        }
-   }
-
-    $out ["containsBook"] = 0;
-    if ($currentPage->containsBook ()) {
-        $out ["containsBook"] = 1;
-    }
-
-    $out["abouturl"] = "index.php" . addURLParameter ("?page=16", DB, $database);
-
-    if ($page == Base::PAGE_ABOUT) {
-        $temp = preg_replace ("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . VERSION . "</h1>", file_get_contents('about.html'));
-        $out ["fullhtml"] = $temp;
-    }
-
-    $out ["homeurl"] = "index.php";
-    if ($page != Base::PAGE_INDEX && !is_null ($database)) $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
-
-    return $out;
-}
-

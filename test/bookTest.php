@@ -8,6 +8,7 @@
 
 require_once (dirname(__FILE__) . "/config_test.php");
 require_once (dirname(__FILE__) . "/../book.php");
+require_once (dirname(__FILE__) . "/../JSON_renderer.php");
 
 /*
 Publishers:
@@ -321,7 +322,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "fic";
         $_GET["search"] = "1";
 
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (3, $array);
         $this->assertEquals ("2 tags", $array[0]["title"]);
@@ -331,7 +332,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "car";
         $_GET["search"] = "1";
 
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (4, $array);
         $this->assertEquals ("1 book", $array[0]["title"]);
@@ -342,7 +343,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "art";
         $_GET["search"] = "1";
 
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (4, $array);
         $this->assertEquals ("1 author", $array[0]["title"]);
@@ -353,7 +354,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "Macmillan";
         $_GET["search"] = "1";
 
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (3, $array);
         $this->assertEquals ("2 publishers", $array[0]["title"]);
@@ -372,7 +373,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = "1";
 
         $config ['cops_ignored_categories'] = array ("author");
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (2, $array);
         $this->assertEquals ("1 book", $array[0]["title"]);
@@ -383,7 +384,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = "1";
 
         $config ['cops_ignored_categories'] = array ("series");
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (2, $array);
         $this->assertEquals ("1 author", $array[0]["title"]);
@@ -404,7 +405,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
 
-        $array = getJson ();
+        $array = JSONRenderer::getJson ();
 
         $this->assertCount (5, $array);
         $this->assertEquals ("Some books", $array[0]["title"]);

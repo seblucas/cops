@@ -337,10 +337,6 @@ class Entry
         return "#";
     }
 
-    public function getContentArray () {
-        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
-    }
-
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "") {
         global $config;
         $this->title = $ptitle;
@@ -373,12 +369,6 @@ class EntryBook extends Entry
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
-    }
-
-    public function getContentArray () {
-        $entry = array ( "title" => $this->title);
-        $entry ["book"] = $this->book->getContentArray ();
-        return $entry;
     }
 
     public function getCoverThumbnail () {
