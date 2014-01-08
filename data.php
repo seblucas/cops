@@ -76,7 +76,7 @@ class Data extends Base {
             }
 
             finfo_close($finfo);
-            
+
         }
         return $result;
     }
@@ -122,6 +122,19 @@ class Data extends Base {
         {
             return self::getLink ($this->book, $this->extension, $this->getMimeType (), NULL, $this->getFilename (), $this->id, NULL)->href;
         }
+    }
+
+    public static function getDataByBook ($book) {
+        $out = array ();
+        $result = parent::getDb ()->prepare('select id, format, name
+                                             from data where book = ?');
+        $result->execute (array ($book->id));
+
+        while ($post = $result->fetchObject ())
+        {
+            array_push ($out, new Data ($post, $book));
+        }
+        return $out;
     }
 
     public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
