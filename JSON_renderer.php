@@ -101,6 +101,22 @@ class JSONRenderer
         return array ( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink () );
     }
 
+    public static function getContentArrayTypeahead ($page) {
+        $out = array ();
+        foreach ($page->entryArray as $entry) {
+            if ($entry instanceof EntryBook) {
+                array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
+            } else {
+                if (empty ($entry->className) xor Base::noDatabaseSelected ()) {
+                    array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink ()));
+                } else {
+                    array_push ($out, array ("class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink ()));
+                }
+            }
+        }
+        return $out;
+    }
+
     public static function getJson ($complete = false) {
     global $config;
     $page = getURLParam ("page", Base::PAGE_INDEX);
@@ -114,7 +130,7 @@ class JSONRenderer
     $currentPage->InitializeContent ();
 
     if ($search) {
-        return $currentPage->getContentArrayTypeahead ();
+        return self::getContentArrayTypeahead ($currentPage);
     }
 
     $out = array ( "title" => $currentPage->title);
