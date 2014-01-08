@@ -551,23 +551,6 @@ class Page
         if (get_class ($this->entryArray [0]) == "EntryBook") return true;
         return false;
     }
-
-    public function getContentArrayTypeahead () {
-        $out = array ();
-        foreach ($this->entryArray as $entry) {
-            if ($entry instanceof EntryBook) {
-                array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl ()));
-            } else {
-                if (empty ($entry->className) xor Base::noDatabaseSelected ()) {
-                    array_push ($out, array ("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink ()));
-                } else {
-                    array_push ($out, array ("class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink ()));
-                }
-            }
-        }
-        return $out;
-    }
-
 }
 
 class PageAllAuthors extends Page
