@@ -192,16 +192,7 @@ class Book extends Base {
     public function getDatas ()
     {
         if (is_null ($this->datas)) {
-            $this->datas = array ();
-
-            $result = parent::getDb ()->prepare('select id, format, name
-    from data where book = ?');
-            $result->execute (array ($this->id));
-
-            while ($post = $result->fetchObject ())
-            {
-                array_push ($this->datas, new Data ($post, $this));
-            }
+            $this->datas = Data::getDataByBook ($this);
         }
         return $this->datas;
     }
