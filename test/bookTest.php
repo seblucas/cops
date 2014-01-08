@@ -290,7 +290,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $data = $book->getDataFormat ("PDF");
         $this->assertEquals (19, $data->id);
 
-        $this->assertNull ($book->getDataFormat ("FB2"));
+        $this->assertFalse ($book->getDataFormat ("FB2"));
     }
     
     public function testGetMimeType  () {
