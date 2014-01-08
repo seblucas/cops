@@ -235,12 +235,10 @@ class Book extends Base {
 
     public function getDataById ($idData)
     {
-        foreach ($this->getDatas () as $data) {
-            if ($data->id == $idData) {
-                return $data;
-            }
-        }
-        return NULL;
+        $reduced = array_filter ($this->getDatas (), function ($data) use ($idData) {
+            return $data->id == $idData;
+        });
+        return reset ($reduced);
     }
 
     public function getRating () {
@@ -283,14 +281,10 @@ class Book extends Base {
     }
 
     public function getDataFormat ($format) {
-        foreach ($this->getDatas () as $data)
-        {
-            if ($data->format == $format)
-            {
-                return $data;
-            }
-        }
-        return NULL;
+        $reduced = array_filter ($this->getDatas (), function ($data) use ($format) {
+            return $data->format == $format;
+        });
+        return reset ($reduced);
     }
 
     public function getFilePath ($extension, $idData = NULL, $relative = false)
