@@ -252,22 +252,22 @@ class BookTest extends PHPUnit_Framework_TestCase
 
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $book = Book::getBookById(17);
-        $data = $book->getDataById (17);
-        $this->assertEquals ("MOBI", $data->format);
-        $data = $book->getDataById (20);
-        $this->assertEquals ("EPUB", $data->format);
-        $this->assertEquals ("Carroll, Lewis - Alice's Adventures in Wonderland.epub", $data->getUpdatedFilenameEpub ());
-        $this->assertEquals ("Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub", $data->getUpdatedFilenameKepub ());
-        $this->assertEquals (dirname(__FILE__) . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $data->getLocalPath ());
+        $mobi = $book->getDataById (17);
+        $this->assertEquals ("MOBI", $mobi->format);
+        $epub = $book->getDataById (20);
+        $this->assertEquals ("EPUB", $epub->format);
+        $this->assertEquals ("Carroll, Lewis - Alice's Adventures in Wonderland.epub", $epub->getUpdatedFilenameEpub ());
+        $this->assertEquals ("Carroll, Lewis - Alice's Adventures in Wonderland.kepub.epub", $epub->getUpdatedFilenameKepub ());
+        $this->assertEquals (dirname(__FILE__) . "/BaseWithSomeBooks/Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $epub->getLocalPath ());
 
         $config['cops_use_url_rewriting'] = "1";
         $config['cops_provide_kepub'] = "1";
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
-        $this->assertEquals ("download/20/Carroll%2C+Lewis+-+Alice%27s+Adventures+in+Wonderland.kepub.epub", $data->getHtmlLink ());
+        $this->assertEquals ("download/20/Carroll%2C+Lewis+-+Alice%27s+Adventures+in+Wonderland.kepub.epub", $epub->getHtmlLink ());
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $this->assertEquals ("download/20/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.epub", $data->getHtmlLink ());
         $config['cops_use_url_rewriting'] = "0";
-        $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $data->getHtmlLink ());
+        $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $epub->getHtmlLink ());
     }
 
     public function testGetFilePath () {
