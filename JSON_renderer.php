@@ -117,6 +117,49 @@ class JSONRenderer
         return $out;
     }
 
+    public static function addCompleteArray ($in) {
+        global $config;
+        $out = $in;
+
+        $out ["c"] = array ("version" => VERSION, "i18n" => array (
+                           "coverAlt" => localize("i18n.coversection"),
+                           "authorsTitle" => localize("authors.title"),
+                           "bookwordTitle" => localize("bookword.title"),
+                           "tagsTitle" => localize("tags.title"),
+                           "seriesTitle" => localize("series.title"),
+                           "customizeTitle" => localize ("customize.title"),
+                           "aboutTitle" => localize ("about.title"),
+                           "previousAlt" => localize ("paging.previous.alternate"),
+                           "nextAlt" => localize ("paging.next.alternate"),
+                           "searchAlt" => localize ("search.alternate"),
+                           "sortAlt" => localize ("sort.alternate"),
+                           "homeAlt" => localize ("home.alternate"),
+                           "cogAlt" => localize ("cog.alternate"),
+                           "permalinkAlt" => localize ("permalink.alternate"),
+                           "publisherName" => localize("publisher.name"),
+                           "pubdateTitle" => localize("pubdate.title"),
+                           "languagesTitle" => localize("language.title"),
+                           "contentTitle" => localize("content.summary"),
+                           "sortorderAsc" => localize("search.sortorder.asc"),
+                           "sortorderDesc" => localize("search.sortorder.desc"),
+                           "customizeEmail" => localize("customize.email")),
+                       "url" => array (
+                           "detailUrl" => "index.php?page=13&id={0}&db={1}",
+                           "coverUrl" => "fetch.php?id={0}&db={1}",
+                           "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
+                       "config" => array (
+                           "use_fancyapps" => $config ["cops_use_fancyapps"],
+                           "max_item_per_page" => $config['cops_max_item_per_page'],
+                           "server_side_rendering" => useServerSideRendering (),
+                           "html_tag_filter" => $config['cops_html_tag_filter']));
+        if ($config['cops_thumbnail_handling'] == "1") {
+            $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
+        } else if (!empty ($config['cops_thumbnail_handling'])) {
+            $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+        }
+        return $out;
+    }
+
     public static function getJson ($complete = false) {
         global $config;
         $page = getURLParam ("page", Base::PAGE_INDEX);
@@ -163,42 +206,7 @@ class JSONRenderer
             $out ["currentPage"] = $currentPage->n;
         }
         if (!is_null (getURLParam ("complete")) || $complete) {
-            $out ["c"] = array ("version" => VERSION, "i18n" => array (
-                           "coverAlt" => localize("i18n.coversection"),
-                           "authorsTitle" => localize("authors.title"),
-                           "bookwordTitle" => localize("bookword.title"),
-                           "tagsTitle" => localize("tags.title"),
-                           "seriesTitle" => localize("series.title"),
-                           "customizeTitle" => localize ("customize.title"),
-                           "aboutTitle" => localize ("about.title"),
-                           "previousAlt" => localize ("paging.previous.alternate"),
-                           "nextAlt" => localize ("paging.next.alternate"),
-                           "searchAlt" => localize ("search.alternate"),
-                           "sortAlt" => localize ("sort.alternate"),
-                           "homeAlt" => localize ("home.alternate"),
-                           "cogAlt" => localize ("cog.alternate"),
-                           "permalinkAlt" => localize ("permalink.alternate"),
-                           "publisherName" => localize("publisher.name"),
-                           "pubdateTitle" => localize("pubdate.title"),
-                           "languagesTitle" => localize("language.title"),
-                           "contentTitle" => localize("content.summary"),
-                           "sortorderAsc" => localize("search.sortorder.asc"),
-                           "sortorderDesc" => localize("search.sortorder.desc"),
-                           "customizeEmail" => localize("customize.email")),
-                       "url" => array (
-                           "detailUrl" => "index.php?page=13&id={0}&db={1}",
-                           "coverUrl" => "fetch.php?id={0}&db={1}",
-                           "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
-                       "config" => array (
-                           "use_fancyapps" => $config ["cops_use_fancyapps"],
-                           "max_item_per_page" => $config['cops_max_item_per_page'],
-                           "server_side_rendering" => useServerSideRendering (),
-                           "html_tag_filter" => $config['cops_html_tag_filter']));
-            if ($config['cops_thumbnail_handling'] == "1") {
-                $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
-            } else if (!empty ($config['cops_thumbnail_handling'])) {
-                $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
-            }
+            $out = self::addCompleteArray ($out);
        }
 
         $out ["containsBook"] = 0;
