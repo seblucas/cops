@@ -72,9 +72,12 @@ class JSONRenderer
         $out ["datas"] = array ();
         $dataKindle = $book->GetMostInterestingDataToSendToKindle ();
         foreach ($book->getDatas() as $data) {
-            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0);
+            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0, "readerUrl" => "");
             if (!empty ($config['cops_mail_configuration']) && !is_null ($dataKindle) && $data->id == $dataKindle->id) {
                 $tab ["mail"] = 1;
+            }
+            if ($data->format == "EPUB") {
+                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db=0"; //TODO fix the database
             }
             array_push ($out ["datas"], $tab);
         }
