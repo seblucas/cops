@@ -65,6 +65,7 @@ class JSONRenderer
     public static function getFullBookContentArray ($book) {
         global $config;
         $out = self::getBookContentArray ($book);
+        $database = GetUrlParam (DB);
 
         $out ["coverurl"] = Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml ();
@@ -77,7 +78,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db=0"; //TODO fix the database
+                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}";
             }
             array_push ($out ["datas"], $tab);
         }
