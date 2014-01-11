@@ -1,8 +1,8 @@
 <?php
 
 /*
-TbsZip version 2.12
-Date    : 2013-03-16
+TbsZip version 2.15
+Date    : 2013-10-16
 Author  : Skrol29 (email: http://www.tinybutstrong.com/onlyyou.html)
 Licence : LGPL
 This class is independent from any other classes and has been originally created for the OpenTbs plug-in
@@ -42,10 +42,16 @@ class clsTbsZip {
 		if (!isset($this->Meth8Ok)) $this->__construct();  // for PHP 4 compatibility
 		$this->Close(); // close handle and init info
 		$this->Error = false;
-		$this->ArchFile = $ArchFile;
 		$this->ArchIsNew = false;
-		// open the file
-		$this->ArchHnd = fopen($ArchFile, 'rb', $UseIncludePath);
+		$this->ArchIsStream = (is_resource($ArchFile) && (get_resource_type($ArchFile)=='stream'));
+		if ($this->ArchIsStream) {
+			$this->ArchFile = 'from_stream.zip';
+			$this->ArchHnd = $ArchFile;
+		} else {
+			// open the file
+			$this->ArchFile = $ArchFile;
+			$this->ArchHnd = fopen($ArchFile, 'rb', $UseIncludePath);
+		}
 		$ok = !($this->ArchHnd===false);
 		if ($ok) $ok = $this->CentralDirRead();
 		return $ok;
@@ -90,9 +96,18 @@ class clsTbsZip {
 		$cd_pos = -22;
 		$this->_MoveTo($cd_pos, SEEK_END);
 		$b = $this->_ReadData(4);
-		if ($b!==$cd_info) return $this->RaiseError('The End of Central Rirectory Record is not found.');
-
-		$this->CdEndPos = ftell($this->ArchHnd) - 4;
+		if ($b===$cd_info) {
+			$this->CdEndPos = ftell($this->ArchHnd) - 4;
+		} else {
+			$p = $this->_FindCDEnd($cd_info);
+			//echo 'p='.var_export($p,true); exit;
+			if ($p===false) {
+				return $this->RaiseError('The End of Central Directory Record is not found.');
+			} else {
+				$this->CdEndPos = $p;
+				$this->_MoveTo($p+4);
+			}
+		}
 		$this->CdInfo = $this->CentralDirRead_End($cd_info);
 		$this->CdFileLst = array();
 		$this->CdFileNbr = $this->CdInfo['file_nbr_curr'];
@@ -161,7 +176,13 @@ class clsTbsZip {
 	}
 
 	function RaiseError($Msg) {
-		if ($this->DisplayError) echo '<strong>'.get_class($this).' ERROR :</strong> '.$Msg.'<br>'."\r\n";
+		if ($this->DisplayError) {
+			if (PHP_SAPI==='cli') {
+				echo get_class($this).' ERROR with the zip archive: '.$Msg."\r\n";
+			} else {
+				echo '<strong>'.get_class($this).' ERROR with the zip archive:</strong> '.$Msg.'<br>'."\r\n";
+			}
+		}
 		$this->Error = $Msg;
 		return false;
 	}
@@ -182,10 +203,10 @@ class clsTbsZip {
 				$idx++;
 			}
 		}
-		
+
 		$nl = "\r\n";
 		echo "<pre>";
-		
+
 		echo "-------------------------------".$nl;
 		echo "End of Central Directory record".$nl;
 		echo "-------------------------------".$nl;
@@ -206,7 +227,7 @@ class clsTbsZip {
 		}
 
 		echo "</pre>";
-		
+
 	}
 
 	function DebugArray($arr) {
@@ -219,7 +240,7 @@ class clsTbsZip {
 		}
 		return $arr;
 	}
-	
+
 	function FileExists($NameOrIdx) {
 		return ($this->FileGetIdx($NameOrIdx)!==false);
 	}
@@ -293,7 +314,7 @@ class clsTbsZip {
 	// read the file header (and maybe the data ) in the archive, assuming the cursor in at a new file position
 
 		$b = $this->_ReadData(30);
-		
+
 		$x = $this->_GetHex($b,0,4);
 		if ($x!=='h:04034b50') return $this->RaiseError("Signature of Local File Header #".$idx." (data section) expected but not found at position ".$this->_TxtPos(ftell($this->ArchHnd)-30).".");
 
@@ -335,7 +356,7 @@ class clsTbsZip {
 		} else {
 			$this->_MoveTo($len, SEEK_CUR);
 		}
-		
+
 		// Description information
 		$desc_ok = ($x['purp'][2+3]=='1');
 		if ($desc_ok) {
@@ -392,6 +413,32 @@ class clsTbsZip {
 		$this->ReplByPos[$pos] = $idx;
 
 		return $Result;
+
+	}
+
+	/**
+	 * Return the state of the file.
+	 * @return {string} 'u'=unchanged, 'm'=modified, 'd'=deleted, 'a'=added, false=unknown
+	 */
+	function FileGetState($NameOrIdx) {
+
+		$idx = $this->FileGetIdx($NameOrIdx);
+		if ($idx===false) {
+			$idx = $this->FileGetIdxAdd($NameOrIdx);
+			if ($idx===false) {
+				return false;
+			} else {
+				return 'a';
+			}
+		} elseif (isset($this->ReplInfo[$idx])) {
+			if ($this->ReplInfo[$idx]===false) {
+				return 'd';
+			} else {
+				return 'm';
+			}
+		} else {
+			return 'u';
+		}
 
 	}
 
@@ -585,8 +632,7 @@ class clsTbsZip {
 			if (''.$File=='') $File = basename($this->ArchFile).'.zip';
 			$this->OutputHandle = @fopen($File, 'w');
 			if ($this->OutputHandle===false) {
-				$this->RaiseError('Method Flush() cannot overwrite the target file \''.$File.'\'. This may not be a valid file path or the file may be locked by another process or because of a denied permission.');
-				return false;
+				return $this->RaiseError('Method Flush() cannot overwrite the target file \''.$File.'\'. This may not be a valid file path or the file may be locked by another process or because of a denied permission.');
 			}
 		} elseif (($Render & TBSZIP_STRING)==TBSZIP_STRING) {
 			$this->OutputMode = TBSZIP_STRING;
@@ -608,6 +654,8 @@ class clsTbsZip {
 				$Len = $this->_EstimateNewArchSize();
 				if ($Len!==false) header('Content-Length: '.$Len); 
 			}
+		} else {
+			return $this->RaiseError('Method Flush is called with a unsupported render option.');
 		}
 
 		return true;
@@ -748,6 +796,34 @@ class clsTbsZip {
 		// Return the human readable position in both decimal and hexa
 		return $pos." (h:".dechex($pos).")";
 	}
+
+	/**
+	 * Search the record of end of the Central Directory.
+	 * Return the position of the record in the file.
+	 * Return false if the record is not found. The comment cannot exceed 65335 bytes (=FFFF).
+	 * The method is read backwards a block of 256 bytes and search the key in this block.
+	 */
+	function _FindCDEnd($cd_info) {
+		$nbr = 1;
+		$p = false;
+		$pos = ftell($this->ArchHnd) - 4 - 256;
+		while ( ($p===false) && ($nbr<256) ) {
+			if ($pos<=0) {
+				$pos = 0;
+				$nbr = 256; // in order to make this a last check
+			}
+			$this->_MoveTo($pos);
+			$x = $this->_ReadData(256);
+			$p = strpos($x, $cd_info);
+			if ($p===false) {
+				$nbr++;
+				$pos = $pos - 256 - 256;
+			} else {
+				return $pos + $p;
+			}
+		}
+		return false;
+	}
 	
 	function _DataOuputAddedFile($Idx, $PosLoc) {
 
@@ -880,6 +956,9 @@ class clsTbsZip {
 
 		if ($this->ArchIsNew) {
 			$Len = strlen($this->CdInfo['bin']);
+		} elseif ($this->ArchIsStream) {
+			$x = fstat($this->ArchHnd);
+			$Len = $x['size'];
 		} else {
 			$Len = filesize($this->ArchFile);
 		}

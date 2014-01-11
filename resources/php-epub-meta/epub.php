@@ -3,7 +3,7 @@
  * PHP EPub Meta library
  *
  * @author Andreas Gohr <andi@splitbrain.org>
- * @author SÃ©bastien Lucas <sebastien@slucas.fr>
+ * @author Sébastien Lucas <sebastien@slucas.fr>
  */
 
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
@@ -161,8 +161,6 @@ class EPub {
         }
 
         $data = $this->zip->FileRead($path);
-        $data = preg_replace ("/src=[\"']([\w\/\.]*?)[\"']/", "src='epubfs.php?comp=$1'", $data);
-        $data = preg_replace ("/href=[\"']([\w\/\.]*?)[\"']/", "href='epubfs.php?comp=$1'", $data);
         return $data;
     }
 
@@ -189,7 +187,6 @@ class EPub {
         return $contents;
     }
 
-
     /**
      * Get or set the book author(s)
      *
@@ -200,7 +197,7 @@ class EPub {
      *
      * array(
      *      'Pratchett, Terry'   => 'Terry Pratchett',
-     *      'Simpson, Jacqeline' => 'Jacqueline Simpson',
+     *      'Simpson, Jacqueline' => 'Jacqueline Simpson',
      * )
      *
      * @params array $authors
@@ -400,7 +397,7 @@ class EPub {
      * @param string $serie
      */
     public function Serie($serie=false){
-        return $this->getset('opf:meta',$serie,'name','calibre:series','content');
+        return $this->getset('opf:meta',$serie,'name','cops:series','content');
     }
 
     /**
@@ -409,7 +406,7 @@ class EPub {
      * @param string $serieIndex
      */
     public function SerieIndex($serieIndex=false){
-        return $this->getset('opf:meta',$serieIndex,'name','calibre:series_index','content');
+        return $this->getset('opf:meta',$serieIndex,'name','cops:series_index','content');
     }
 
     /**
