@@ -89,6 +89,7 @@ function xml2xhtml($xml) {
 
 function display_xml_error($error)
 {
+    $return = "";
     $return .= str_repeat('-', $error->column) . "^\n";
 
     switch ($error->level) {
@@ -522,7 +523,6 @@ class Page
 
     public function getNextLink ()
     {
-        $currentUrl = getQueryString ();
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
@@ -532,7 +532,6 @@ class Page
 
     public function getPrevLink ()
     {
-        $currentUrl = getQueryString ();
         $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if ($this->n > 1) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
