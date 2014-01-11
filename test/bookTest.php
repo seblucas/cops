@@ -265,7 +265,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
         $this->assertEquals ("download/20/Carroll%2C+Lewis+-+Alice%27s+Adventures+in+Wonderland.kepub.epub", $epub->getHtmlLink ());
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $this->assertEquals ("download/20/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.epub", $data->getHtmlLink ());
+        $this->assertEquals ("download/20/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.epub", $epub->getHtmlLink ());
         $config['cops_use_url_rewriting'] = "0";
         $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $epub->getHtmlLink ());
     }
