@@ -34,17 +34,17 @@ try {
     $callback = function ($m) use ($book, $component, $add) {
         $method = $m[1];
         $path = $m[2];
+        $end = "";
+        if (preg_match ("/^src:/", $method)) {
+            $end = ")";
+        }
         if (preg_match ("/^#/", $path)) {
-            return $path;
+            return "{$method}'{$path}'{$end}";
         }
         $hash = "";
         if (preg_match ("/^(.+)#(.+)$/", $path, $matches)) {
             $path = $matches [1];
             $hash = "#" . $matches [2];
-        }
-        $end = "";
-        if (preg_match ("/^src:/", $method)) {
-            $end = ")";
         }
         $comp = $book->getComponentName ($component, $path);
         if (!$comp) return "#";
