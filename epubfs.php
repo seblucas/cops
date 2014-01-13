@@ -48,7 +48,7 @@ try {
             $hash = "#" . $matches [2];
         }
         $comp = $book->getComponentName ($component, $path);
-        if (!$comp) return "#";
+        if (!$comp) return "{$method}'#'{$end}";
         $out = "{$method}'epubfs.php?{$add}comp={$comp}{$hash}'{$end}";
         if ($end) {
             return $out;
