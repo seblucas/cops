@@ -21,11 +21,12 @@ $book = new EPub ($myBook->getFilePath ("EPUB", $idData));
 
 $book->initSpineComponent ();
 
-$component = $_GET["comp"];
-
-if (empty ($component)) {
+if (!isset ($_GET["comp"])) {
     notFound ();
+    return;
 }
+
+$component = $_GET["comp"];
 
 try {
     $data = $book->component ($component);
@@ -48,13 +49,17 @@ try {
         }
         $comp = $book->getComponentName ($component, $path);
         if (!$comp) return "#";
-        return str_replace ("&", "&amp;", "{$method}'epubfs.php?{$add}comp={$comp}{$hash}'{$end}");
+        $out = "{$method}'epubfs.php?{$add}comp={$comp}{$hash}'{$end}";
+        if ($end) {
+            return $out;
+        }
+        return str_replace ("&", "&amp;", $out);
     };
     
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
-    $data = preg_replace_callback ("/(src:\s+url\()(.*?)\)/", $callback, $data);
+    $data = preg_replace_callback ("/(src:\s*url\()(.*?)\)/", $callback, $data);
     
     $expires = 60*60*24*14;
     header("Pragma: public");
