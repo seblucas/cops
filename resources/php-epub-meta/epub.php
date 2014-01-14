@@ -146,7 +146,7 @@ class EPub {
         $nodes = $this->xpath->query('//opf:spine/opf:itemref');
         foreach($nodes as $node){
             $idref =  $node->getAttribute('idref');
-            $spine[] = str_replace ("/", "-SLASH-", $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href'));
+            $spine[] = $this->encodeComponentName ($this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href'));
         }
         return $spine;
     }
@@ -155,10 +155,10 @@ class EPub {
      * Get the component content
      */
     public function component($comp) {
-        $path = str_replace ("-SLASH-", "/", $comp);
+        $path = $this->decodeComponentName ($comp);
         $path = $this->getFullPath ($path);
         if (!$this->zip->FileExists($path)) {
-            throw new Exception ("Unable to find " . $path);
+            throw new Exception ("Unable to find {$path} <{$comp}>");
         }
 
         $data = $this->zip->FileRead($path);
@@ -166,7 +166,7 @@ class EPub {
     }
 
     public function getComponentName ($comp, $elementPath) {
-        $path = str_replace ("-SLASH-", "/", $comp);
+        $path = $this->decodeComponentName ($comp);
         $path = $this->getFullPath ($path, $elementPath);
         if (!$this->zip->FileExists($path)) {
             error_log ("Unable to find " . $path);
@@ -178,21 +178,40 @@ class EPub {
         if (strlen ($ref) > 0) {
             $path = str_replace ($ref . "/", "", $path);
         }
-        return str_replace ("/", "-SLASH-", $path);
+        return $this->encodeComponentName ($path);
     }
+
+    /**
+     * Encode the component name (to replace / and -)
+     */
+    private function encodeComponentName ($src) {
+        return str_replace (array ("/", "-"),
+                            array ("~SLASH~", "~DASH~"),
+                            $src);
+    }
+
+    /**
+     * Decode the component name (to replace / and -)
+     */
+    private function decodeComponentName ($src) {
+        return str_replace (array ("~SLASH~", "~DASH~"),
+                            array ("/", "-"),
+                            $src);
+    }
+
 
     /**
      * Get the component content type
      */
     public function componentContentType($comp) {
-        $comp = str_replace ("-SLASH-", "/", $comp);
+        $comp = $this->decodeComponentName ($comp);
         return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
     }
 
     private function getNavPointDetail ($node) {
         $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
         $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
-        $src = str_replace ("/", "-SLASH-", $src);
+        $src = $this->decodeComponentName ($src);
         return array("title" => $title, "src" => $src);
     }
 
