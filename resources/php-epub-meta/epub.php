@@ -74,7 +74,7 @@ class EPub {
         $spine = $this->xpath->query('//opf:spine')->item(0);
         $tocid = $spine->getAttribute('toc');
         $tochref = $this->xpath->query("//opf:manifest/opf:item[@id='$tocid']")->item(0)->attr('href');
-        $tocpath = dirname($this->meta).'/'.$tochref;
+        $tocpath = $this->getFullPath ($tochref);
         // read epub toc
         if (!$this->zip->FileExists($tocpath)) {
             throw new Exception ("Unable to find " . $tocpath);
@@ -146,7 +146,7 @@ class EPub {
         $nodes = $this->xpath->query('//opf:spine/opf:itemref');
         foreach($nodes as $node){
             $idref =  $node->getAttribute('idref');
-            $spine[] = $this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href');
+            $spine[] = $this->encodeComponentName ($this->xpath->query("//opf:manifest/opf:item[@id='$idref']")->item(0)->getAttribute('href'));
         }
         return $spine;
     }
@@ -155,20 +155,64 @@ class EPub {
      * Get the component content
      */
     public function component($comp) {
-        $path = dirname($this->meta).'/'.$comp;
+        $path = $this->decodeComponentName ($comp);
+        $path = $this->getFullPath ($path);
         if (!$this->zip->FileExists($path)) {
-            throw new Exception ("Unable to find " . $path);
+            throw new Exception ("Unable to find {$path} <{$comp}>");
         }
 
         $data = $this->zip->FileRead($path);
         return $data;
     }
 
+    public function getComponentName ($comp, $elementPath) {
+        $path = $this->decodeComponentName ($comp);
+        $path = $this->getFullPath ($path, $elementPath);
+        if (!$this->zip->FileExists($path)) {
+            error_log ("Unable to find " . $path);
+            return false;
+        }
+        $ref = dirname('/'.$this->meta);
+        $ref = ltrim($ref,'\\');
+        $ref = ltrim($ref,'/');
+        if (strlen ($ref) > 0) {
+            $path = str_replace ($ref . "/", "", $path);
+        }
+        return $this->encodeComponentName ($path);
+    }
+
+    /**
+     * Encode the component name (to replace / and -)
+     */
+    private function encodeComponentName ($src) {
+        return str_replace (array ("/", "-"),
+                            array ("~SLASH~", "~DASH~"),
+                            $src);
+    }
+
+    /**
+     * Decode the component name (to replace / and -)
+     */
+    private function decodeComponentName ($src) {
+        return str_replace (array ("~SLASH~", "~DASH~"),
+                            array ("/", "-"),
+                            $src);
+    }
+
+
     /**
      * Get the component content type
      */
     public function componentContentType($comp) {
+        $comp = $this->decodeComponentName ($comp);
         return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
+    }
+
+    private function getNavPointDetail ($node) {
+        $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
+        $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
+        $src = $this->decodeComponentName ($src);
+        return array("title" => $title, "src" => $src);
     }
 
     /**
@@ -180,9 +224,12 @@ class EPub {
         $contents = array();
         $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
         foreach($nodes as $node){
-            $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
-            $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
-            $contents[] =  array("title" => $title, "src" => $src);
+            $contents[] = $this->getNavPointDetail ($node);
+
+            $insidenodes = $this->toc_xpath->query('x:navPoint', $node);
+            foreach($insidenodes as $insidenode){
+                $contents[] = $this->getNavPointDetail ($insidenode);
+            }
         }
         return $contents;
     }
@@ -541,6 +588,53 @@ class EPub {
         if(!$nodes->length) return NULL;
 
         return $nodes->item(0);
+    }
+
+    public function Combine($a, $b)
+    {
+        $isAbsolute = false;
+        if ($a[0] == "/")
+            $isAbsolute = true;
+
+        if ($b[0] == "/")
+            throw new InvalidArgumentException("Second path part must not start with " . $m_Separator);
+
+        $splittedA = split("/", $a);
+        $splittedB = split("/", $b);
+
+        $pathParts = array();
+        $mergedPath = array_merge($splittedA, $splittedB);
+
+        foreach($mergedPath as $item)
+        {
+            if ($item == null || $item == "" || $item == ".")
+                continue;
+
+            if ($item == "..")
+            {
+                array_pop($pathParts);
+                continue;
+            }
+
+            array_push($pathParts, $item);
+        }
+
+        $path = implode("/", $pathParts);
+        if ($isAbsolute)
+            return("/" . $path);
+        else
+            return($path);
+    }
+
+    private function getFullPath ($file, $context = NULL) {
+        $path = dirname('/'.$this->meta).'/'.$file;
+        $path = ltrim($path,'\\');
+        $path = ltrim($path,'/');
+        if (!empty ($context)) {
+            $path = $this->combine (dirname ($path), $context);
+        }
+        //error_log ("FullPath : $path ($file / $context)");
+        return $path;
     }
 
     public function updateForKepub () {
