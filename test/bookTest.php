@@ -264,6 +264,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $config['cops_provide_kepub'] = "1";
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
         $this->assertEquals ("download/20/Carroll%2C+Lewis+-+Alice%27s+Adventures+in+Wonderland.kepub.epub", $epub->getHtmlLink ());
+        $this->assertEquals ("download/17/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.mobi", $mobi->getHtmlLink ());
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $this->assertEquals ("download/20/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.epub", $epub->getHtmlLink ());
         $config['cops_use_url_rewriting'] = "0";
@@ -292,7 +293,7 @@ class BookTest extends PHPUnit_Framework_TestCase
 
         $this->assertFalse ($book->getDataFormat ("FB2"));
     }
-    
+
     public function testGetMimeType  () {
         $book = Book::getBookById(17);
 
@@ -303,8 +304,8 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("application/x-mobipocket-ebook", $data->getMimeType ());
         $data = $book->getDataFormat ("PDF");
         $this->assertEquals ("application/pdf", $data->getMimeType ());
-        
-        // Alter a data to make a test for finfo_file if enabled 
+
+        // Alter a data to make a test for finfo_file if enabled
         $data->extension = "ico";
         $data->format = "ICO";
         $data->name = "favicon";
