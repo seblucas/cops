@@ -28,6 +28,7 @@ class Data extends Base {
         'doc'   => 'application/msword',
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
+        'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'mobi'  => 'application/x-mobipocket-ebook',
         'lit'   => 'application/x-ms-reader',
@@ -81,6 +82,10 @@ class Data extends Base {
         return $result;
     }
 
+    public function isEpubValidOnKobo () {
+        return $this->format == "EPUB" || $this->format == "KEPUB";
+    }
+
     public function getFilename () {
         return $this->name . "." . strtolower ($this->format);
     }
@@ -112,7 +117,9 @@ class Data extends Base {
         {
             $database = "";
             if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
-            if ($config['cops_provide_kepub'] == "1" && preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
+            if ($config['cops_provide_kepub'] == "1" &&
+                $this->isEpubValidOnKobo () &&
+                preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
                 return "download/" . $this->id . "/" . $database . urlencode ($this->getUpdatedFilenameKepub ());
             } else {
                 return "download/" . $this->id . "/" . $database . urlencode ($this->getFilename ());
