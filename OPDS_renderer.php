@@ -121,7 +121,7 @@ class OPDSRenderer
             self::getXmlStream ()->endElement ();
             $link = new LinkNavigation ("", "start", "Home");
             self::renderLink ($link);
-            $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
+            $link = new LinkNavigation ("?" . getQueryString (), "self");
             self::renderLink ($link);
             $urlparam = "?";
             if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
@@ -142,7 +142,7 @@ class OPDSRenderer
             if ($page->containsBook () && !is_null ($config['cops_books_filter']) && count ($config['cops_books_filter']) > 0) {
                 $Urlfilter = getURLParam ("tag", "");
                 foreach ($config['cops_books_filter'] as $lib => $filter) {
-                    $link = new LinkFacet ("?" . addURLParameter ($_SERVER['QUERY_STRING'], "tag", $filter), $lib, localize ("tagword.title"), $filter == $Urlfilter);
+                    $link = new LinkFacet ("?" . addURLParameter (getQueryString (), "tag", $filter), $lib, localize ("tagword.title"), $filter == $Urlfilter);
                     self::renderLink ($link);
                 }
             }
