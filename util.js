@@ -3,7 +3,7 @@
 // https://github.com/seblucas/cops
 
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
-/*global LRUCache */
+/*global LRUCache, doT */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
@@ -441,6 +441,7 @@ $(document).keydown(function(e){
     }
 });
 
+/*exported initiateAjax */
 function initiateAjax (url, theme) {
     $.when($.get('templates/' + theme + '/header.html'),
            $.get('templates/' + theme + '/footer.html'),
