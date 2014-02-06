@@ -131,7 +131,7 @@
 if (useServerSideRendering ()) {
     // Get the data
     $data = getJson (true);
-    
+
     echo serverSideRender ($data);
 }
 ?>
