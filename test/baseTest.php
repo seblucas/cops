@@ -18,8 +18,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("?key=value&db=0", addURLParameter ("?key=value", "db", "0"));
         $this->assertEquals ("?key=value&otherKey=&db=0", addURLParameter ("?key=value&otherKey", "db", "0"));
     }
-    
-    /* For now I can't manager to make phpunit fail if a syntax error happens ... */
+
+    /* For now I can't manage to make phpunit fail if a syntax error happens ... */
     public function testServerSideRender ()
     {
         $this->assertNull (serverSideRender (NULL));
