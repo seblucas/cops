@@ -79,7 +79,8 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            initiateAjax ("<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>");
+            initiateAjax ("<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>",
+                          "<?php echo getCurrentTemplate (); ?>");
         });
 
 

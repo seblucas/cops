@@ -441,13 +441,13 @@ $(document).keydown(function(e){
     }
 });
 
-function initiateAjax (url) {
-    $.when($.get('templates/default/header.html'),
-           $.get('templates/default/footer.html'),
-           $.get('templates/default/bookdetail.html'),
-           $.get('templates/default/main.html'),
-           $.get('templates/default/page.html'),
-           $.get('templates/default/suggestion.html'),
+function initiateAjax (url, theme) {
+    $.when($.get('templates/' + theme + '/header.html'),
+           $.get('templates/' + theme + '/footer.html'),
+           $.get('templates/' + theme + '/bookdetail.html'),
+           $.get('templates/' + theme + '/main.html'),
+           $.get('templates/' + theme + '/page.html'),
+           $.get('templates/' + theme + '/suggestion.html'),
            $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
         templateBookDetail = doT.template (bookdetail [0]);
 
