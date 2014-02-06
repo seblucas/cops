@@ -79,46 +79,7 @@
     <script type="text/javascript">
 
         $(document).ready(function() {
-            // Handler for .ready() called.
-
-            var url = "<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>";
-
-            $.when($.get('templates/default/header.html'),
-                   $.get('templates/default/footer.html'),
-                   $.get('templates/default/bookdetail.html'),
-                   $.get('templates/default/main.html'),
-                   $.get('templates/default/page.html'),
-                   $.get('templates/default/suggestion.html'),
-                   $.getJSON(url)).done(function(header, footer, bookdetail, main, page, suggestion, data){
-                templateBookDetail = doT.template (bookdetail [0]);
-
-                var defMain = {
-                    bookdetail: bookdetail [0]
-                };
-
-                templateMain = doT.template (main [0], undefined, defMain);
-
-                var defPage = {
-                    header: header [0],
-                    footer: footer [0],
-                    main  : main [0],
-                    bookdetail: bookdetail [0]
-                };
-
-                templatePage = doT.template (page [0], undefined, defPage);
-
-                templateSuggestion = doT.template (suggestion [0]);
-
-                currentData = data [0];
-
-                updatePage (data [0]);
-                cache.put (url, data [0]);
-                if (isPushStateEnabled) {
-                    history.replaceState(url, "", window.location);
-                }
-                handleLinks ();
-            });
-
+            initiateAjax ("<?php echo "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1); ?>");
         });
 
 
