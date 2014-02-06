@@ -18,11 +18,12 @@ function useServerSideRendering () {
 
 function serverSideRender ($data) {
     // Get the templates
-    $header = file_get_contents('templates/default/header.html');
-    $footer = file_get_contents('templates/default/footer.html');
-    $main = file_get_contents('templates/default/main.html');
-    $bookdetail = file_get_contents('templates/default/bookdetail.html');
-    $page = file_get_contents('templates/default/page.html');
+    $theme = getCurrentTemplate ();
+    $header = file_get_contents('templates/' . $theme . '/header.html');
+    $footer = file_get_contents('templates/' . $theme . '/footer.html');
+    $main = file_get_contents('templates/' . $theme . '/main.html');
+    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
+    $page = file_get_contents('templates/' . $theme . '/page.html');
 
     // Generate the function for the template
     $template = new doT ();
@@ -74,6 +75,10 @@ function getCurrentOption ($option) {
 
 function getCurrentCss () {
     return "styles/style-" . getCurrentOption ("style") . ".css";
+}
+
+function getCurrentTemplate () {
+    return "default";
 }
 
 function getUrlWithVersion ($url) {
