@@ -78,7 +78,7 @@ function getCurrentCss () {
 }
 
 function getCurrentTemplate () {
-    return "bootstrap";
+    return "default";
 }
 
 function getUrlWithVersion ($url) {
