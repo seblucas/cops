@@ -599,8 +599,8 @@ class EPub {
         if ($b[0] == "/")
             throw new InvalidArgumentException("Second path part must not start with " . $m_Separator);
 
-        $splittedA = split("/", $a);
-        $splittedB = split("/", $b);
+        $splittedA = preg_split("/", $a);
+        $splittedB = preg_split("/", $b);
 
         $pathParts = array();
         $mergedPath = array_merge($splittedA, $splittedB);
