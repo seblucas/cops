@@ -12,23 +12,7 @@ function notFound () {
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
-$idData = getURLParam ("data", NULL);
-$add = "data=$idData&";
-if (!is_null (GetUrlParam (DB))) $add .= DB . "=" . GetUrlParam (DB) . "&";
-$myBook = Book::getBookByDataId($idData);
-
-$book = new EPub ($myBook->getFilePath ("EPUB", $idData));
-
-$book->initSpineComponent ();
-
-if (!isset ($_GET["comp"])) {
-    notFound ();
-    return;
-}
-
-$component = $_GET["comp"];
-
-try {
+function getComponentContent ($book, $component, $add) {
     $data = $book->component ($component);
     $directory = dirname ($component);
 
@@ -60,6 +44,30 @@ try {
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
     $data = preg_replace_callback ("/(src:\s*url\()(.*?)\)/", $callback, $data);
+
+    return $data;
+}
+
+if (php_sapi_name() === 'cli') { return; }
+
+$idData = getURLParam ("data", NULL);
+$add = "data=$idData&";
+if (!is_null (GetUrlParam (DB))) $add .= DB . "=" . GetUrlParam (DB) . "&";
+$myBook = Book::getBookByDataId($idData);
+
+$book = new EPub ($myBook->getFilePath ("EPUB", $idData));
+
+$book->initSpineComponent ();
+
+if (!isset ($_GET["comp"])) {
+    notFound ();
+    return;
+}
+
+$component = $_GET["comp"];
+
+try {
+    $data = getComponentContent ($book, $component, $add);
 
     $expires = 60*60*24*14;
     header("Pragma: public");
