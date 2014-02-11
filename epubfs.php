@@ -31,7 +31,7 @@ $component = $_GET["comp"];
 try {
     $data = $book->component ($component);
     $directory = dirname ($component);
-    
+
     $callback = function ($m) use ($book, $component, $add) {
         $method = $m[1];
         $path = $m[2];
@@ -55,12 +55,12 @@ try {
         }
         return str_replace ("&", "&amp;", $out);
     };
-    
+
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
     $data = preg_replace_callback ("/(src:\s*url\()(.*?)\)/", $callback, $data);
-    
+
     $expires = 60*60*24*14;
     header("Pragma: public");
     header("Cache-Control: maxage=".$expires);
