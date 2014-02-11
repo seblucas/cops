@@ -371,6 +371,8 @@ class Book extends Base {
                 if ($nh >= $h) { return false; }
                 $nw = ($nh*$w)/$h;
             }
+        } else {
+            return false;
         }
 
         //draw the image
