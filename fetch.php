@@ -17,6 +17,8 @@ function notFound () {
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
+    global $config;
+
     if ($config ['cops_fetch_protect'] == "1") {
         session_start();
         if (!isset($_SESSION['connected'])) {
@@ -25,7 +27,6 @@ function notFound () {
         }
     }
 
-    global $config;
     $expires = 60*60*24*14;
     header("Pragma: public");
     header("Cache-Control: maxage=".$expires);
