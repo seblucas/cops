@@ -14,7 +14,6 @@ function notFound () {
 
 function getComponentContent ($book, $component, $add) {
     $data = $book->component ($component);
-    $directory = dirname ($component);
 
     $callback = function ($m) use ($book, $component, $add) {
         $method = $m[1];
