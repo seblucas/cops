@@ -352,10 +352,6 @@ class Book extends Base {
             return false;
         }
 
-        // In case something bad happen below set a default size
-        $nw = "160";
-        $nh = "120";
-
         $file = $this->getFilePath ("jpg");
         // get image size
         if ($size = GetImageSize($file)) {
