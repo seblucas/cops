@@ -12,18 +12,22 @@ require_once (dirname(__FILE__) . "/../epubfs.php");
 
 class EpubFsTest extends PHPUnit_Framework_TestCase
 {
-    public function testUrlImage () {
+    private static $book;
+    private static $add;
+
+
+    public static function setUpBeforeClass()
+    {
         $idData = 20;
-        $add = "data=$idData&";
+        self::$add = "data=$idData&";
         $myBook = Book::getBookByDataId($idData);
 
-        $this->assertNotNull($myBook);
+        self::$book = new EPub ($myBook->getFilePath ("EPUB", $idData));
+        self::$book->initSpineComponent ();
+    }
 
-        $book = new EPub ($myBook->getFilePath ("EPUB", $idData));
-
-        $book->initSpineComponent ();
-
-        $data = getComponentContent ($book, "cover.xml", $add);
+    public function testUrlImage () {
+        $data = getComponentContent (self::$book, "cover.xml", self::$add);
 
         $src = "";
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
@@ -34,17 +38,7 @@ class EpubFsTest extends PHPUnit_Framework_TestCase
     }
 
     public function testUrlHref () {
-        $idData = 20;
-        $add = "data=$idData&";
-        $myBook = Book::getBookByDataId($idData);
-
-        $this->assertNotNull($myBook);
-
-        $book = new EPub ($myBook->getFilePath ("EPUB", $idData));
-
-        $book->initSpineComponent ();
-
-        $data = getComponentContent ($book, "title.xml", $add);
+        $data = getComponentContent (self::$book, "title.xml", self::$add);
 
         $src = "";
         if (preg_match("/src\=\'(.*?)\'/", $data, $matches)) {
@@ -61,17 +55,7 @@ class EpubFsTest extends PHPUnit_Framework_TestCase
     }
 
     public function testImportCss () {
-        $idData = 20;
-        $add = "data=$idData&";
-        $myBook = Book::getBookByDataId($idData);
-
-        $this->assertNotNull($myBook);
-
-        $book = new EPub ($myBook->getFilePath ("EPUB", $idData));
-
-        $book->initSpineComponent ();
-
-        $data = getComponentContent ($book, "css~SLASH~title.css", $add);
+        $data = getComponentContent (self::$book, "css~SLASH~title.css", self::$add);
 
         $import = "";
         if (preg_match("/import \'(.*?)\'/", $data, $matches)) {
