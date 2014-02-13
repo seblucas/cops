@@ -63,4 +63,14 @@ class EpubFsTest extends PHPUnit_Framework_TestCase
         }
         $this->assertEquals ('epubfs.php?data=20&amp;comp=css~SLASH~page.css', $import);
     }
+
+    public function testUrlInCss () {
+        $data = getComponentContent (self::$book, "css~SLASH~main.css", self::$add);
+
+        $src = "";
+        if (preg_match("/url\s*\(\'(.*?)\'\)/", $data, $matches)) {
+            $src = $matches [1];
+        }
+        $this->assertEquals ('epubfs.php?data=20&comp=fonts~SLASH~times.ttf', $src);
+    }
 }
