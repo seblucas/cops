@@ -115,7 +115,7 @@ class Book extends Base {
         return "?page=".parent::PAGE_BOOK_DETAIL."&id=$this->id";
     }
 
-    public function getDetailUrl ($permalink = false) {
+    public function getDetailUrl () {
         $urlParam = $this->getUri ();
         if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
         return 'index.php' . $urlParam;
@@ -289,7 +289,6 @@ class Book extends Base {
 
     public function getFilePath ($extension, $idData = NULL, $relative = false)
     {
-        $file = NULL;
         if ($extension == "jpg")
         {
             $file = "cover.jpg";
