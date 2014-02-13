@@ -10,13 +10,6 @@
     require_once ("book.php");
     require_once ("data.php");
 
-function notFound () {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    header("Status: 404 Not Found");
-
-    $_SERVER['REDIRECT_STATUS'] = 404;
-}
-
     global $config;
 
     if ($config ['cops_fetch_protect'] == "1") {

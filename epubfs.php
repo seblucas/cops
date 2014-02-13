@@ -5,13 +5,6 @@ require_once ("base.php");
 require_once ("book.php");
 require_once ("resources/php-epub-meta/epub.php");
 
-function notFound () {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    header("Status: 404 Not Found");
-
-    $_SERVER['REDIRECT_STATUS'] = 404;
-}
-
 function getComponentContent ($book, $component, $add) {
     $data = $book->component ($component);
 
