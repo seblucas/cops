@@ -19,7 +19,7 @@ function getComponentContent ($book, $component, $add) {
         $method = $m[1];
         $path = $m[2];
         $end = "";
-        if (preg_match ("/^src:/", $method)) {
+        if (preg_match ("/^src\s*:/", $method)) {
             $end = ")";
         }
         if (preg_match ("/^#/", $path)) {
@@ -42,7 +42,7 @@ function getComponentContent ($book, $component, $add) {
     $data = preg_replace_callback ("/(src=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(href=)[\"']([^:]*?)[\"']/", $callback, $data);
     $data = preg_replace_callback ("/(\@import\s+)[\"'](.*?)[\"'];/", $callback, $data);
-    $data = preg_replace_callback ("/(src:\s*url\()(.*?)\)/", $callback, $data);
+    $data = preg_replace_callback ("/(src\s*:\s*url\()(.*?)\)/", $callback, $data);
 
     return $data;
 }
