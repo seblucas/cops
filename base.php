@@ -46,6 +46,13 @@ function getQueryString () {
     return "";
 }
 
+function notFound () {
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    header("Status: 404 Not Found");
+
+    $_SERVER['REDIRECT_STATUS'] = 404;
+}
+
 function getURLParam ($name, $default = NULL) {
     if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
         return $_GET[$name];
