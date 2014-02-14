@@ -25,6 +25,28 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertNull (serverSideRender (NULL));
     }
 
+    /* The function for the head of the HTML catalog */
+    public function testGenerateHeader ()
+    {
+        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        global $config;
+        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . getCurrentTemplate () . '/file.html');
+        $template = new doT ();
+        $dot = $template->template ($headcontent, NULL);
+        $data = array("title"                 => $config['cops_title_default'],
+                  "version"               => VERSION,
+                  "opds_url"              => $config['cops_full_url'] . "feed.php",
+                  "template"              => getCurrentTemplate (),
+                  "server_side_rendering" => useServerSideRendering (),
+                  "current_css"           => getCurrentCss (),
+                  "favico"                => $config['cops_icon'],
+                  "getjson_url"           => "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1));
+
+        $head = $dot ($data);
+        $this->assertContains ("<head>", $head);
+        $this->assertContains ("</head>", $head);
+    }
+
     public function testLocalize ()
     {
         $this->assertEquals ("Authors", localize ("authors.title"));
