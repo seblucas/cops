@@ -60,4 +60,14 @@ class JsonTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Book 6.0 in the Sherlock Holmes series", $test ["seriesCompleteName"]);
         $this->assertStringEndsWith ("?page=7&id=1", $test ["seriesurl"]);
     }
+
+    public function testGetFullBookContentArray () {
+        $book = Book::getBookById(17);
+
+        $test = JSONRenderer::getFullBookContentArray($book);
+
+        $this->assertCount (1, $test ["authors"]);
+        $this->assertCount (3, $test ["tags"]);
+        $this->assertCount (3, $test ["datas"]);
+    }
 }
