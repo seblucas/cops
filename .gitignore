@@ -4,3 +4,4 @@ saucetest/*
 clover.xml
 test/text.atom
 cops.zip
+cops.sublime-*
