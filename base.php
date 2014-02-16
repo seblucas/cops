@@ -81,7 +81,7 @@ function getCurrentOption ($option) {
 }
 
 function getCurrentCss () {
-    return "styles/style-" . getCurrentOption ("style") . ".css";
+    return "templates/" . getCurrentTemplate () . "/styles/style-" . getCurrentOption ("style") . ".css";
 }
 
 function getCurrentTemplate () {
@@ -940,7 +940,7 @@ class PageCustomize extends Page
 
     private function getStyleList () {
         $result = array ();
-        foreach (glob ("styles/style-*.css") as $filename) {
+        foreach (glob ("templates/" . getCurrentTemplate () . "/styles/style-*.css") as $filename) {
             if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
                 array_push ($result, $m [1]);
             }
