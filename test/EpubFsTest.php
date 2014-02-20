@@ -73,4 +73,34 @@ class EpubFsTest extends PHPUnit_Framework_TestCase
         }
         $this->assertEquals ('epubfs.php?data=20&comp=fonts~SLASH~times.ttf', $src);
     }
+
+    public function testDirectLink () {
+        $data = getComponentContent (self::$book, "main10.xml", self::$add);
+
+        $src = "";
+        if (preg_match("/href\='(.*?)' title=\"Direct Link\"/", $data, $matches)) {
+            $src = $matches [1];
+        }
+        $this->assertEquals ('epubfs.php?data=20&amp;comp=main2.xml', $src);
+    }
+
+    public function testDirectLinkWithAnchor () {
+        $data = getComponentContent (self::$book, "main10.xml", self::$add);
+
+        $src = "";
+        if (preg_match("/href\='(.*?)' title=\"Direct Link with anchor\"/", $data, $matches)) {
+            $src = $matches [1];
+        }
+        $this->assertEquals ('epubfs.php?data=20&amp;comp=main2.xml#anchor', $src);
+    }
+
+    public function testAnchorOnly () {
+        $data = getComponentContent (self::$book, "main10.xml", self::$add);
+
+        $src = "";
+        if (preg_match("/href\='(.*?)' title=\"Link to anchor\"/", $data, $matches)) {
+            $src = $matches [1];
+        }
+        $this->assertEquals ('#anchor', $src);
+    }
 }
