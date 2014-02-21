@@ -12,7 +12,7 @@ require_once (dirname(__FILE__) . "/../sendtomail.php");
 
 class MailTest extends PHPUnit_Framework_TestCase
 {
-    public function testCheckConfiguration () {
+    public function testCheckConfigurationOk () {
         global $config;
 
         $this->assertFalse(checkConfiguration ());
@@ -51,6 +51,18 @@ class MailTest extends PHPUnit_Framework_TestCase
         $config['cops_mail_configuration']["address.from"] = "a";
 
         $this->markTestIncomplete();
+    }
+
+    public function testCheckRequest () {
+        $this->assertFalse (checkRequest (12, "a@a.com"));
+    }
+
+    public function testCheckRequestNoData () {
+        $this->assertStringStartsWith ("No", checkRequest (NULL, "a@a.com"));
+    }
+
+    public function testCheckRequestNoEmail () {
+        $this->assertStringStartsWith ("No", checkRequest (12, NULL));
     }
 
 }
