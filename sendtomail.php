@@ -4,22 +4,39 @@ require_once ("config.php");
 require_once "resources/PHPMailer/class.phpmailer.php";
 require_once "book.php";
 
-if (is_null ($config['cops_mail_configuration']) ||
-    !is_array ($config['cops_mail_configuration']) ||
-    empty ($config['cops_mail_configuration']["smtp.host"]) ||
-    empty ($config['cops_mail_configuration']["address.from"])) {
-    echo "NOK. bad configuration of $config ['cops_mail_configuration']";
+function checkConfiguration () {
+    global $config;
+
+    if (is_null ($config['cops_mail_configuration']) ||
+        !is_array ($config['cops_mail_configuration']) ||
+        empty ($config['cops_mail_configuration']["smtp.host"]) ||
+        empty ($config['cops_mail_configuration']["address.from"])) {
+        return "NOK. bad configuration.";
+    }
+    return False;
+}
+
+function checkRequest ($idData, $emailDest) {
+    if (empty ($idData)) {
+        return 'No data sent.';
+    }
+    if (empty ($emailDest)) {
+        return 'No email sent.';
+    }
+    return False;
+}
+
+if (php_sapi_name() === 'cli') { return; }
+
+if ($error = checkConfiguration ()) {
+    echo $error;
     exit;
 }
 
 $idData = $_REQUEST["data"];
-if (empty ($idData)) {
-    echo 'No data sent.';
-    exit;
-}
 $emailDest = $_REQUEST["email"];
-if (empty ($emailDest)) {
-    echo 'No email sent.';
+if ($error = checkRequest ($idData, $emailDest)) {
+    echo $error;
     exit;
 }
 
