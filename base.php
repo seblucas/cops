@@ -438,6 +438,10 @@ class Page
                 return new PageAllCustoms ($id, $query, $n);
             case Base::PAGE_CUSTOM_DETAIL :
                 return new PageCustomDetail ($id, $query, $n);
+            case Base::PAGE_ALL_RATINGS :
+                return new PageAllRating ($id, $query, $n);
+            case Base::PAGE_RATING_DETAIL :
+                return new PageRatingDetail ($id, $query, $n);
             case Base::PAGE_ALL_SERIES :
                 return new PageAllSeries ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS :
@@ -509,6 +513,10 @@ class Page
             if (!in_array (PageQueryResult::SCOPE_TAG, getCurrentOption ('ignored_categories'))) {
                 $tags = Tag::getCount();
                 if (!is_null ($tags)) array_push ($this->entryArray, $tags);
+            }
+            if (!in_array (PageQueryResult::SCOPE_RATING, getCurrentOption ('ignored_categories'))) {
+                $rating = Rating::getCount();
+                if (!is_null ($rating)) array_push ($this->entryArray, $rating);
             }
             if (!in_array ("language", getCurrentOption ('ignored_categories'))) {
                 $languages = Language::getCount();
@@ -707,6 +715,27 @@ class PageSerieDetail extends Page
     }
 }
 
+class PageAllRating extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("rating.title");
+        $this->entryArray = Rating::getAllRatings();
+        $this->idPage = Rating::ALL_RATING_ID;
+    }
+}
+
+class PageRatingDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        $rating = Rating::getRatingById ($this->idGet);
+        $this->idPage = $rating->getEntryId ();
+        $this->title = $rating->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByRating ($this->idGet, $this->n);
+    }
+}
+
 class PageAllBooks extends Page
 {
     public function InitializeContent ()
@@ -750,6 +779,7 @@ class PageRecentBooks extends Page
 class PageQueryResult extends Page
 {
     const SCOPE_TAG = "tag";
+    const SCOPE_RATING = "rating";
     const SCOPE_SERIES = "series";
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
@@ -1029,6 +1059,8 @@ abstract class Base
     const PAGE_CUSTOMIZE = "19";
     const PAGE_ALL_PUBLISHERS = "20";
     const PAGE_PUBLISHER_DETAIL = "21";
+    const PAGE_ALL_RATINGS = "22";
+    const PAGE_RATING_DETAIL = "23";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
