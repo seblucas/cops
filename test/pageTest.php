@@ -33,7 +33,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Tags", $currentPage->entryArray [3]->title);
         $this->assertEquals ("Alphabetical index of the 10 tags", $currentPage->entryArray [3]->content);
         $this->assertEquals ("Rating", $currentPage->entryArray [4]->title);
-        $this->assertEquals ("4 different ratings", $currentPage->entryArray [4]->content);
+        $this->assertEquals ("no ratings", $currentPage->entryArray [4]->content);
         $this->assertEquals ("Languages", $currentPage->entryArray [5]->title);
         $this->assertEquals ("Alphabetical index of the single language", $currentPage->entryArray [5]->content);
         $this->assertEquals ("All books", $currentPage->entryArray [6]->title);
