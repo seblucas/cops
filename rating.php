@@ -11,7 +11,7 @@ require_once('base.php');
 class Rating extends Base {
     const ALL_RATING_ID = "cops:rating";
 
-    const AUTHOR_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
+    const RATING_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
     const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
     public $id;
     public $name;
@@ -31,9 +31,9 @@ class Rating extends Base {
     }
 
     public static function getCount() {
-        $nAuthors = parent::getDb ()->query('select count(*) from ratings')->fetchColumn();
+        $nRatings = parent::getDb ()->query('select count(*) from ratings')->fetchColumn();
         $entry = new Entry (localize("rating.title"), self::ALL_RATING_ID,
-            str_format (localize("ratings", $nAuthors), $nAuthors), "text",
+            str_format (localize("ratings", $nRatings), $nRatings), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RATINGS)));
         return $entry;
     }
@@ -43,16 +43,16 @@ class Rating extends Base {
     }
 
     public static function getEntryArray ($query, $params) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
+        list ($totalNumber, $result) = parent::executeQuery ($query, self::RATING_COLUMNS, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            $rating = new Rating ($post->id, $post->rating);
-            $bewertung=$post->rating/2;
-            $bewertung.=" Sterne";
-            array_push ($entryArray, new Entry ($bewertung, $rating->getEntryId (),
+            $ratingObj = new Rating ($post->id, $post->rating);
+            $rating=$post->rating/2;
+            $rating = str_format (localize("ratingword", $rating), $rating);
+            array_push ($entryArray, new Entry ($rating, $ratingObj->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($rating->getUri ()))));
+                array ( new LinkNavigation ($ratingObj->getUri ()))));
         }
         return $entryArray;
     }
