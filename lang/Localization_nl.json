@@ -54,7 +54,7 @@
 "search.result":"Zoekresultaat voor *{0}*",
 "search.result.author":"Zoekresultaat voor *{0}* in auteurs",
 "search.result.book":"Zoekresultaat voor *{0}* in boeken",
-"##TODO##search.result.publisher":"Zoekresultaat voor *{0}* in uitgevers",
+"search.result.publisher":"Zoekresultaat voor *{0}* in uitgevers",
 "search.result.series":"Zoekresultaat voor *{0}* in series",
 "search.result.tag":"Zoekresultaat voor *{0}* in tags",
 "search.sortorder.asc":"A-Z",
