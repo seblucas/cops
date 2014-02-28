@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "0.9.1beta");
@@ -478,7 +478,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sï¿½bastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
@@ -731,7 +731,7 @@ class PageRatingDetail extends Page
     {
         $rating = Rating::getRatingById ($this->idGet);
         $this->idPage = $rating->getEntryId ();
-        $this->title = $rating->name;
+        $this->title =str_format (localize ("ratingword", $rating->name/2), $rating->name/2);
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByRating ($this->idGet, $this->n);
     }
 }
