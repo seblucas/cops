@@ -122,7 +122,7 @@ Monocle.Env = function () {
         "width:"+testFrameSize+"px"
       ].join(";");
       src = "javascript:'<!DOCTYPE html><html>"+
-        '<head><meta name="time" content="'+(new Date()).getTime()+'" />'+
+        '<head><meta charset="utf-8"><meta name="time" content="'+(new Date()).getTime()+'" />'+
         '<style>div{'+divStyle+'}</style></head>'+
         '<body>'+pgs.join("")+'</body>'+
         "</html>'";
