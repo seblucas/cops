@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-if [[ -z $SAUCE_ACCESS_KEY ]]
-  then
-    echo "No Sauce Api Key (Pull request)"
-    exit
-fi
-
 PHP_VERSION=`php -v|grep --only-matching --perl-regexp "PHP 5\.\\d+"`
 echo $PHP_VERSION
 
@@ -18,13 +12,19 @@ fi
 
 echo "Good PHP version"
 
-# Install dependencies
-wget http://getcomposer.org/composer.phar 
-php composer.phar install
-
 # Handle scrutinizer
 wget https://scrutinizer-ci.com/ocular.phar
 php ocular.phar code-coverage:upload --format=php-clover clover.xml
+
+if [[ -z $SAUCE_ACCESS_KEY ]]
+  then
+    echo "No Sauce Api Key (Pull request)"
+    exit
+fi
+
+# Install dependencies
+wget http://getcomposer.org/composer.phar
+php composer.phar install
 
 # Handle Sauce
 curl https://gist.githubusercontent.com/seblucas/7692094/raw/e2a090e6ea639a0d700e6d02cee048fa2f6c8617/sauce_connect_setup.sh | bash
