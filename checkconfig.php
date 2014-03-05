@@ -25,6 +25,7 @@
 
 ?>
 <head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COPS Configuration Check</title>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
@@ -114,6 +115,7 @@ foreach (Base::getDbList () as $name => $database) {
         </article>
         <article class="frontpage">
             <h2>Check if Calibre database file exists and is readable</h2>
+            <h4>
             <?php
             if (is_readable (Base::getDbFileName ($i))) {
                 echo "{$name} OK";
@@ -128,6 +130,7 @@ Please check
 </ul>";
             }
             ?>
+            </h4>
         </article>
     <?php if (is_readable (Base::getDbFileName ($i))) { ?>
         <article class="frontpage">
