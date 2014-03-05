@@ -32,7 +32,7 @@ class Rating extends Base {
 
     public static function getCount() {
         $nRatings = parent::getDb ()->query('select count(*) from ratings')->fetchColumn();
-        $entry = new Entry (localize("rating.title"), self::ALL_RATING_ID,
+        $entry = new Entry (localize("ratings.title"), self::ALL_RATING_ID,
             str_format (localize("ratings", $nRatings), $nRatings), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RATINGS)));
         return $entry;
