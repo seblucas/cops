@@ -719,7 +719,7 @@ class PageAllRating extends Page
 {
     public function InitializeContent ()
     {
-        $this->title = localize("rating.title");
+        $this->title = localize("ratings.title");
         $this->entryArray = Rating::getAllRatings();
         $this->idPage = Rating::ALL_RATING_ID;
     }
@@ -987,6 +987,7 @@ class PageCustomize extends Page
                                    PageQueryResult::SCOPE_TAG,
                                    PageQueryResult::SCOPE_SERIES,
                                    PageQueryResult::SCOPE_PUBLISHER,
+                                   PageQueryResult::SCOPE_RATING,
                                    "language");
 
         $content = "";

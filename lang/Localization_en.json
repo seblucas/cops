@@ -48,7 +48,7 @@
 "publisherword.many":"{0} publishers",
 "publisherword.none":"No publisher",
 "publisherword.one":"1 publisher",
-"rating.title":"Rating",
+"ratings.title":"Rating",
 "ratings.many":"{0} different ratings",
 "ratings.none":"no ratings",
 "ratings.one":"{0} ratings",
