@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) HTML main script
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  *
  */
 
@@ -60,7 +60,8 @@
 <?php
 if (useServerSideRendering ()) {
     // Get the data
-    $data = getJson (true);
+    require_once ("JSON_renderer.php");
+    $data = JSONRenderer::getJson (true);
 
     echo serverSideRender ($data);
 }
