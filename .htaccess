@@ -1,6 +1,8 @@
+DirectoryIndex index.php
+
 <IfModule mod_xsendfile.c>
 <Files fetch.php>
-	XSendFile on
+    XSendFile on
 </Files>
 </IfModule>
 
@@ -58,6 +60,12 @@ ExpiresByType text/javascript "access plus 1 year"
 
 ###########################################
 # Uncomment if you wish to protect access with a password
+###########################################
+# If your covers and books are not available as soon as you protect it
+# You can try replacing the FilesMatch directive by this one
+# <FilesMatch "(index|feed)\.php">
+# If helps for Sony PRS-TX and Aldiko, beware fetch.php can be accessed
+# with authentication (see $config ['cops_fetch_protect'] for a workaround).
 ###########################################
 #<FilesMatch "\.php$">
 #AuthUserFile /path/to/file

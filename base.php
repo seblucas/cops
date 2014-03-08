@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.7.0beta");
+define ("VERSION", "0.9.1beta");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
@@ -14,6 +14,43 @@ date_default_timezone_set($config['default_timezone']);
 function useServerSideRendering () {
     global $config;
     return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
+}
+
+function serverSideRender ($data) {
+    // Get the templates
+    $theme = getCurrentTemplate ();
+    $header = file_get_contents('templates/' . $theme . '/header.html');
+    $footer = file_get_contents('templates/' . $theme . '/footer.html');
+    $main = file_get_contents('templates/' . $theme . '/main.html');
+    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
+    $page = file_get_contents('templates/' . $theme . '/page.html');
+
+    // Generate the function for the template
+    $template = new doT ();
+    $dot = $template->template ($page, array ("bookdetail" => $bookdetail,
+                                              "header" => $header,
+                                              "footer" => $footer,
+                                              "main" => $main));
+    // Execute the template
+    if (!empty ($data)) {
+        return $dot ($data);
+    }
+
+    return NULL;
+}
+
+function getQueryString () {
+    if ( isset($_SERVER['QUERY_STRING']) ) {
+        return $_SERVER['QUERY_STRING'];
+    }
+    return "";
+}
+
+function notFound () {
+    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
+    header("Status: 404 Not Found");
+
+    $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
 function getURLParam ($name, $default = NULL) {
@@ -26,7 +63,11 @@ function getURLParam ($name, $default = NULL) {
 function getCurrentOption ($option) {
     global $config;
     if (isset($_COOKIE[$option])) {
-        return $_COOKIE[$option];
+        if (isset($config ["cops_" . $option]) && is_array ($config ["cops_" . $option])) {
+            return explode (",", $_COOKIE[$option]);
+        } else {
+            return $_COOKIE[$option];
+        }
     }
     if ($option == "style") {
         return "default";
@@ -40,7 +81,11 @@ function getCurrentOption ($option) {
 }
 
 function getCurrentCss () {
-    return "styles/style-" . getCurrentOption ("style") . ".css";
+    return "templates/" . getCurrentTemplate () . "/styles/style-" . getCurrentOption ("style") . ".css";
+}
+
+function getCurrentTemplate () {
+    return "default";
 }
 
 function getUrlWithVersion ($url) {
@@ -56,6 +101,7 @@ function xml2xhtml($xml) {
 
 function display_xml_error($error)
 {
+    $return = "";
     $return .= str_repeat('-', $error->column) . "^\n";
 
     switch ($error->level) {
@@ -173,7 +219,7 @@ function localize($phrase, $count=-1, $reset=false) {
         $translations = json_decode($lang_file_content, true);
 
         /* Clean the array of all unfinished translations */
-        foreach ($translations as $key => $val) {
+        foreach (array_keys ($translations) as $key) {
             if (preg_match ("/^##TODO##/", $key)) {
                 unset ($translations [$key]);
             }
@@ -192,6 +238,9 @@ function localize($phrase, $count=-1, $reset=false) {
 }
 
 function addURLParameter($urlParams, $paramName, $paramValue) {
+    if (empty ($urlParams)) {
+        $urlParams = "";
+    }
     $start = "";
     if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
         $start = "?";
@@ -267,6 +316,7 @@ class Entry
     public $contentType;
     public $linkArray;
     public $localUpdated;
+    public $className;
     private static $updated = NULL;
 
     public static $icons = array(
@@ -277,7 +327,8 @@ class Entry
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
         "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png'
+        "cops:books:letter"       => 'images/allbook.png',
+        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -299,17 +350,14 @@ class Entry
         return "#";
     }
 
-    public function getContentArray () {
-        return array ( "title" => $this->title, "content" => $this->content, "navlink" => $this->getNavLink () );
-    }
-
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray) {
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "") {
         global $config;
         $this->title = $ptitle;
         $this->id = $pid;
         $this->content = $pcontent;
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
+        $this->className = $pclass;
 
         if ($config['cops_show_icons'] == 1)
         {
@@ -334,12 +382,6 @@ class EntryBook extends Entry
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
-    }
-
-    public function getContentArray () {
-        $entry = array ( "title" => $this->title);
-        $entry ["book"] = $this->book->getContentArray ();
-        return $entry;
     }
 
     public function getCoverThumbnail () {
@@ -410,6 +452,10 @@ class Page
                 return new PageQueryResult ($id, $query, $n);
             case Base::PAGE_BOOK_DETAIL :
                 return new PageBookDetail ($id, $query, $n);
+            case Base::PAGE_ALL_PUBLISHERS:
+                return new PageAllPublishers ($id, $query, $n);
+            case Base::PAGE_PUBLISHER_DETAIL :
+                return new PagePublisherDetail ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
             case Base::PAGE_CUSTOMIZE :
@@ -438,10 +484,9 @@ class Page
         global $config;
         $this->title = $config['cops_title_default'];
         $this->subtitle = $config['cops_subtitle_default'];
-        $database = GetUrlParam (DB);
-        if (is_array ($config['calibre_directory']) && is_null ($database)) {
+        if (Base::noDatabaseSelected ()) {
             $i = 0;
-            foreach ($config['calibre_directory'] as $key => $value) {
+            foreach (Base::getDbNameList () as $key) {
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
@@ -450,13 +495,25 @@ class Page
                 Base::clearDb ();
             }
         } else {
-            array_push ($this->entryArray, Author::getCount());
-            $series = Serie::getCount();
-            if (!is_null ($series)) array_push ($this->entryArray, $series);
-            $tags = Tag::getCount();
-            if (!is_null ($tags)) array_push ($this->entryArray, $tags);
-			$languages = Language::getCount();
-            if (!is_null ($languages)) array_push ($this->entryArray, $languages);
+            if (!in_array (PageQueryResult::SCOPE_AUTHOR, getCurrentOption ('ignored_categories'))) {
+                array_push ($this->entryArray, Author::getCount());
+            }
+            if (!in_array (PageQueryResult::SCOPE_SERIES, getCurrentOption ('ignored_categories'))) {
+                $series = Serie::getCount();
+                if (!is_null ($series)) array_push ($this->entryArray, $series);
+            }
+            if (!in_array (PageQueryResult::SCOPE_PUBLISHER, getCurrentOption ('ignored_categories'))) {
+                $publisher = Publisher::getCount();
+                if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
+            }
+            if (!in_array (PageQueryResult::SCOPE_TAG, getCurrentOption ('ignored_categories'))) {
+                $tags = Tag::getCount();
+                if (!is_null ($tags)) array_push ($this->entryArray, $tags);
+            }
+            if (!in_array ("language", getCurrentOption ('ignored_categories'))) {
+                $languages = Language::getCount();
+                if (!is_null ($languages)) array_push ($this->entryArray, $languages);
+            }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
                 $customId = CustomColumn::getCustomId ($lookup);
                 if (!is_null ($customId)) {
@@ -465,13 +522,12 @@ class Page
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
-            if (!is_null ($database)) $this->title =  Base::getDbName ();
+            if (Base::isMultipleDatabaseEnabled ()) $this->title =  Base::getDbName ();
         }
     }
 
     public function isPaginated ()
     {
-        global $config;
         return (getCurrentOption ("max_item_per_page") != -1 &&
                 $this->totalNumber != -1 &&
                 $this->totalNumber > getCurrentOption ("max_item_per_page"));
@@ -479,9 +535,7 @@ class Page
 
     public function getNextLink ()
     {
-        global $config;
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if (($this->n) * getCurrentOption ("max_item_per_page") < $this->totalNumber) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n + 1), "next", localize ("paging.next.alternate"));
         }
@@ -490,9 +544,7 @@ class Page
 
     public function getPrevLink ()
     {
-        global $config;
-        $currentUrl = $_SERVER['QUERY_STRING'];
-        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . $_SERVER['QUERY_STRING']);
+        $currentUrl = preg_replace ("/\&n=.*?$/", "", "?" . getQueryString ());
         if ($this->n > 1) {
             return new LinkNavigation ($currentUrl . "&n=" . ($this->n - 1), "previous", localize ("paging.previous.alternate"));
         }
@@ -501,7 +553,6 @@ class Page
 
     public function getMaxPage ()
     {
-        global $config;
         return ceil ($this->totalNumber / getCurrentOption ("max_item_per_page"));
     }
 
@@ -511,17 +562,14 @@ class Page
         if (get_class ($this->entryArray [0]) == "EntryBook") return true;
         return false;
     }
-
 }
 
 class PageAllAuthors extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
-
         $this->title = localize("authors.title");
-        if ($config['cops_author_split_first_letter'] == 1) {
+        if (getCurrentOption ("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
         }
         else {
@@ -535,8 +583,6 @@ class PageAllAuthorsLetter extends Page
 {
     public function InitializeContent ()
     {
-        global $config;
-
         $this->idPage = Author::getEntryIdByLetter ($this->idGet);
         $this->entryArray = Author::getAuthorsByStartingLetter ($this->idGet);
         $this->title = str_format (localize ("splitByLetter.letter"), str_format (localize ("authorword", count ($this->entryArray)), count ($this->entryArray)), $this->idGet);
@@ -551,6 +597,27 @@ class PageAuthorDetail extends Page
         $this->idPage = $author->getEntryId ();
         $this->title = $author->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
+    }
+}
+
+class PageAllPublishers extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("publishers.title");
+        $this->entryArray = Publisher::getAllPublishers();
+        $this->idPage = Publisher::ALL_PUBLISHERS_ID;
+    }
+}
+
+class PagePublisherDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        $publisher = Publisher::getPublisherById ($this->idGet);
+        $this->title = $publisher->name;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher ($this->idGet, $this->n);
+        $this->idPage = $publisher->getEntryId ();
     }
 }
 
@@ -686,61 +753,147 @@ class PageQueryResult extends Page
     const SCOPE_SERIES = "series";
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
+    const SCOPE_PUBLISHER = "publisher";
+
+    private function useTypeahead () {
+        return !is_null (getURLParam ("search"));
+    }
+
+    private function searchByScope ($scope, $limit = FALSE) {
+        $n = $this->n;
+        $numberPerPage = NULL;
+        if ($limit) {
+            $n = 1;
+            $numberPerPage = 5;
+        }
+        switch ($scope) {
+            case self::SCOPE_BOOK :
+                $array = Book::getBooksByStartingLetter ('%' . $this->query, $n, NULL, $numberPerPage);
+                break;
+            case self::SCOPE_AUTHOR :
+                $array = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                break;
+            case self::SCOPE_SERIES :
+                $array = Serie::getAllSeriesByQuery ($this->query);
+                break;
+            case self::SCOPE_TAG :
+                $array = Tag::getAllTagsByQuery ($this->query, $n, NULL, $numberPerPage);
+                break;
+            case self::SCOPE_PUBLISHER :
+                $array = Publisher::getAllPublishersByQuery ($this->query);
+                break;
+            default:
+                $array = Book::getBooksByQuery (
+                    array ("all" => "%" . $this->query . "%"), $n);
+        }
+
+        return $array;
+    }
+
+    public function doSearchByCategory () {
+        $database = GetUrlParam (DB);
+        $out = array ();
+        $pagequery = Base::PAGE_OPENSEARCH_QUERY;
+        $dbArray = array ("");
+        $d = $database;
+        $query = $this->query;
+        // Special case when no databases were chosen, we search on all databases
+        if (Base::noDatabaseSelected ()) {
+            $dbArray = Base::getDbNameList ();
+            $d = 0;
+        }
+        foreach ($dbArray as $key) {
+            if (Base::noDatabaseSelected ()) {
+                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
+                                        " ", "text",
+                                        array ( new LinkNavigation ("?" . DB . "={$d}")), "tt-header"));
+                Base::getDb ($d);
+            }
+            foreach (array (PageQueryResult::SCOPE_BOOK,
+                            PageQueryResult::SCOPE_AUTHOR,
+                            PageQueryResult::SCOPE_SERIES,
+                            PageQueryResult::SCOPE_TAG,
+                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+                if (in_array($key, getCurrentOption ('ignored_categories'))) {
+                    continue;
+                }
+                $array = $this->searchByScope ($key, TRUE);
+
+                $i = 0;
+                if (count ($array) == 2 && is_array ($array [0])) {
+                    $total = $array [1];
+                    $array = $array [0];
+                } else {
+                    $total = count($array);
+                }
+                if ($total > 0) {
+                    // Comment to help the perl i18n script
+                    // str_format (localize("bookword", count($array))
+                    // str_format (localize("authorword", count($array))
+                    // str_format (localize("seriesword", count($array))
+                    // str_format (localize("tagword", count($array))
+                    // str_format (localize("publisherword", count($array))
+                    array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}",
+                                        str_format (localize("{$key}word", $total), $total), "text",
+                                        array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
+                                        Base::noDatabaseSelected () ? "" : "tt-header"));
+                }
+                if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
+                    foreach ($array as $entry) {
+                        array_push ($this->entryArray, $entry);
+                        $i++;
+                        if ($i > 4) { break; };
+                    }
+                }
+            }
+            $d++;
+            if (Base::noDatabaseSelected ()) {
+                Base::clearDb ();
+            }
+        }
+        return $out;
+    }
 
     public function InitializeContent ()
     {
-        global $config;
         $scope = getURLParam ("scope");
-        switch ($scope) {
-            case self::SCOPE_AUTHOR :
-                $this->title = str_format (localize ("search.result.author"), $this->query);
-                break;
-            case self::SCOPE_TAG :
-                $this->title = str_format (localize ("search.result.tag"), $this->query);
-                break;
-            case self::SCOPE_SERIES :
-                $this->title = str_format (localize ("search.result.series"), $this->query);
-                break;
-            case self::SCOPE_BOOK :
-                $this->title = str_format (localize ("search.result.book"), $this->query);
-                break;
-            default:
-                $this->title = str_format (localize ("search.result"), $this->query);
+        if (empty ($scope)) {
+            $this->title = str_format (localize ("search.result"), $this->query);
+        } else {
+            // Comment to help the perl i18n script
+            // str_format (localize ("search.result.author"), $this->query)
+            // str_format (localize ("search.result.tag"), $this->query)
+            // str_format (localize ("search.result.series"), $this->query)
+            // str_format (localize ("search.result.book"), $this->query)
+            // str_format (localize ("search.result.publisher"), $this->query)
+            $this->title = str_format (localize ("search.result.{$scope}"), $this->query);
         }
 
         $crit = "%" . $this->query . "%";
-        $bad = "QQQQQ";
 
         // Special case when we are doing a search and no database is selected
-        if (is_array ($config['calibre_directory']) && is_null (GetUrlParam (DB))) {
+        if (Base::noDatabaseSelected () && !$this->useTypeahead ()) {
             $i = 0;
-            foreach ($config['calibre_directory'] as $key => $value) {
+            foreach (Base::getDbNameList () as $key) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ($crit, $crit, $crit, $crit), $this->n, $i);
+                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
-                                        str_format (localize ("bookword", count($array)), count($array)), "text",
+                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
                                         array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
                 $i++;
             }
             return;
         }
-        switch ($scope) {
-            case self::SCOPE_AUTHOR :
-                $this->entryArray = Author::getAuthorsByStartingLetter ('%' . $this->query);
-                break;
-            case self::SCOPE_TAG :
-                $this->entryArray = Tag::getAllTagsByQuery ($this->query);
-                break;
-            case self::SCOPE_SERIES :
-                $this->entryArray = Serie::getAllSeriesByQuery ($this->query);
-                break;
-            case self::SCOPE_BOOK :
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ($bad, $bad, $bad, $crit), $this->n);
-                break;
-            default:
-                list ($this->entryArray, $this->totalNumber) = Book::getBooksByQuery (
-                    array ($crit, $crit, $crit, $crit), $this->n);
+        if (empty ($scope)) {
+            $this->doSearchByCategory ();
+            return;
+        }
+
+        $array = $this->searchByScope ($scope);
+        if (count ($array) == 2 && is_array ($array [0])) {
+            list ($this->entryArray, $this->totalNumber) = $array;
+        } else {
+            $this->entryArray = $array;
         }
     }
 }
@@ -764,52 +917,65 @@ class PageAbout extends Page
 
 class PageCustomize extends Page
 {
+    private function isChecked ($key, $testedValue = 1) {
+        $value = getCurrentOption ($key);
+        if (is_array ($value)) {
+            if (in_array ($testedValue, $value)) {
+                return "checked='checked'";
+            }
+        } else {
+            if ($value == $testedValue) {
+                return "checked='checked'";
+            }
+        }
+        return "";
+    }
+
+    private function isSelected ($key, $value) {
+        if (getCurrentOption ($key) == $value) {
+            return "selected='selected'";
+        }
+        return "";
+    }
+
+    private function getStyleList () {
+        $result = array ();
+        foreach (glob ("templates/" . getCurrentTemplate () . "/styles/style-*.css") as $filename) {
+            if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
+                array_push ($result, $m [1]);
+            }
+        }
+        return $result;
+    }
+
     public function InitializeContent ()
     {
-        global $config;
         $this->title = localize ("customize.title");
         $this->entryArray = array ();
 
-        $use_fancybox = "";
-        if (getCurrentOption ("use_fancyapps") == 1) {
-            $use_fancybox = "checked='checked'";
-        }
-        $html_tag_filter = "";
-        if (getCurrentOption ("html_tag_filter") == 1) {
-            $html_tag_filter = "checked='checked'";
-        }
-
+        $ignoredBaseArray = array (PageQueryResult::SCOPE_AUTHOR,
+                                   PageQueryResult::SCOPE_TAG,
+                                   PageQueryResult::SCOPE_SERIES,
+                                   PageQueryResult::SCOPE_PUBLISHER,
+                                   "language");
 
         $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
-        }
-            foreach (glob ("styles/style-*.css") as $filename) {
-                if (preg_match ('/styles\/style-(.*?)\.css/', $filename, $m)) {
-                    $filename = $m [1];
-                }
-                $selected = "";
-                if (getCurrentOption ("style") == $filename) {
-                    if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                        $selected = "selected='selected'";
-                    } else {
-                        $selected = "checked='checked'";
-                    }
-                }
-                if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
-                    $content .= "<option value='{$filename}' {$selected}>{$filename}</option>";
-                } else {
-                    $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' {$selected} /><label for='style-{$filename}'> {$filename} </label>";
-                }
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<option value='{$filename}' " . $this->isSelected ("style", $filename) . ">{$filename}</option>";
             }
-        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '</select>';
+        } else {
+            foreach ($this-> getStyleList () as $filename) {
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this);' id='style-{$filename}' name='style' value='{$filename}' " . $this->isChecked ("style", $filename) . " /><label for='style-{$filename}'> {$filename} </label>";
+            }
         }
         array_push ($this->entryArray, new Entry (localize ("customize.style"), "",
                                         $content, "text",
                                         array ()));
         if (!useServerSideRendering ()) {
-            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $use_fancybox . ' />';
+            $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="use_fancyapps" ' . $this->isChecked ("use_fancyapps") . ' />';
             array_push ($this->entryArray, new Entry (localize ("customize.fancybox"), "",
                                             $content, "text",
                                             array ()));
@@ -822,8 +988,17 @@ class PageCustomize extends Page
         array_push ($this->entryArray, new Entry (localize ("customize.email"), "",
                                         $content, "text",
                                         array ()));
-        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $html_tag_filter . ' />';
+        $content = '<input type="checkbox" onchange="updateCookieFromCheckbox (this);" id="html_tag_filter" ' . $this->isChecked ("html_tag_filter") . ' />';
         array_push ($this->entryArray, new Entry (localize ("customize.filter"), "",
+                                        $content, "text",
+                                        array ()));
+        $content = "";
+        foreach ($ignoredBaseArray as $key) {
+            $keyPlural = preg_replace ('/(ss)$/', 's', $key . "s");
+            $content .=  '<input type="checkbox" name="ignored_categories[]" onchange="updateCookieFromCheckboxGroup (this);" id="ignored_categories_' . $key . '" ' . $this->isChecked ("ignored_categories", $key) . ' > ' . localize ("{$keyPlural}.title") . '</input> ';
+        }
+
+        array_push ($this->entryArray, new Entry (localize ("customize.ignored"), "",
                                         $content, "text",
                                         array ()));
     }
@@ -852,23 +1027,43 @@ abstract class Base
     const PAGE_ALL_LANGUAGES = "17";
     const PAGE_LANGUAGE_DETAIL = "18";
     const PAGE_CUSTOMIZE = "19";
+    const PAGE_ALL_PUBLISHERS = "20";
+    const PAGE_PUBLISHER_DETAIL = "21";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
     private static $db = NULL;
 
+    public static function isMultipleDatabaseEnabled () {
+        global $config;
+        return is_array ($config['calibre_directory']);
+    }
+
+    public static function noDatabaseSelected () {
+        return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
+    }
+
     public static function getDbList () {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             return $config['calibre_directory'];
         } else {
             return array ("" => $config['calibre_directory']);
         }
     }
 
+    public static function getDbNameList () {
+        global $config;
+        if (self::isMultipleDatabaseEnabled ()) {
+            return array_keys ($config['calibre_directory']);
+        } else {
+            return array ("");
+        }
+    }
+
     public static function getDbName ($database = NULL) {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             $array = array_keys ($config['calibre_directory']);
             return  $array[$database];
@@ -878,7 +1073,7 @@ abstract class Base
 
     public static function getDbDirectory ($database = NULL) {
         global $config;
-        if (is_array ($config['calibre_directory'])) {
+        if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
@@ -891,28 +1086,52 @@ abstract class Base
         return self::getDbDirectory ($database) .'metadata.db';
     }
 
+    private static function error () {
+        if (php_sapi_name() != "cli") {
+            header("location: checkconfig.php?err=1");
+        }
+        throw new Exception('Database not found.');
+    }
+
     public static function getDb ($database = NULL) {
-        global $config;
         if (is_null (self::$db)) {
             try {
-                self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                if (is_readable (self::getDbFileName ($database))) {
+                    self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                } else {
+                    self::error ();
+                }
             } catch (Exception $e) {
-                header("location: checkconfig.php?err=1");
-                exit();
+                self::error ();
             }
         }
         return self::$db;
+    }
+
+    public static function checkDatabaseAvailability () {
+        if (self::noDatabaseSelected ()) {
+            for ($i = 0; $i < count (self::getDbList ()); $i++) {
+                self::getDb ($i);
+                self::clearDb ();
+            }
+        } else {
+            self::getDb ();
+        }
+        return true;
     }
 
     public static function clearDb () {
         self::$db = NULL;
     }
 
-    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL) {
-        global $config;
+    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
 
-        if (getCurrentOption ("max_item_per_page") != -1 && $n != -1)
+        if (is_null ($numberPerPage)) {
+            $numberPerPage = getCurrentOption ("max_item_per_page");
+        }
+
+        if ($numberPerPage != -1 && $n != -1)
         {
             // First check total number of results
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
@@ -921,7 +1140,7 @@ abstract class Base
 
             // Next modify the query and params
             $query .= " limit ?, ?";
-            array_push ($params, ($n - 1) * getCurrentOption ("max_item_per_page"), getCurrentOption ("max_item_per_page"));
+            array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
         }
 
         $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));

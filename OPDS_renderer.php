@@ -10,9 +10,6 @@ require_once ("base.php");
 
 class OPDSRenderer
 {
-    const PAGE_OPENSEARCH = "8";
-    const PAGE_OPENSEARCH_QUERY = "9";
-
     private $xmlStream = NULL;
     private $updated = NULL;
 
@@ -124,24 +121,28 @@ class OPDSRenderer
             self::getXmlStream ()->endElement ();
             $link = new LinkNavigation ("", "start", "Home");
             self::renderLink ($link);
-            $link = new LinkNavigation ("?" . $_SERVER['QUERY_STRING'], "self");
+            $link = new LinkNavigation ("?" . getQueryString (), "self");
             self::renderLink ($link);
-            $urlparam = "?page=" . self::PAGE_OPENSEARCH;
+            $urlparam = "?";
             if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
             if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
                 // Good and compliant way of handling search
+                $urlparam = addURLParameter ($urlparam, "page", Base::PAGE_OPENSEARCH);
                 $link = new Link ("feed.php" . $urlparam, "application/opensearchdescription+xml", "search", "Search here");
             }
             else
             {
                 // Bad way, will be removed when OPDS client are fixed
+                $urlparam = addURLParameter ($urlparam, "query", "{searchTerms}");
+                $urlparam = str_replace ("%7B", "{", $urlparam);
+                $urlparam = str_replace ("%7D", "}", $urlparam);
                 $link = new Link ($config['cops_full_url'] . 'feed.php' . $urlparam, "application/atom+xml", "search", "Search here");
             }
             self::renderLink ($link);
             if ($page->containsBook () && !is_null ($config['cops_books_filter']) && count ($config['cops_books_filter']) > 0) {
                 $Urlfilter = getURLParam ("tag", "");
                 foreach ($config['cops_books_filter'] as $lib => $filter) {
-                    $link = new LinkFacet ("?" . addURLParameter ($_SERVER['QUERY_STRING'], "tag", $filter), $lib, localize ("tagword.title"), $filter == $Urlfilter);
+                    $link = new LinkFacet ("?" . addURLParameter (getQueryString (), "tag", $filter), $lib, localize ("tagword.title"), $filter == $Urlfilter);
                     self::renderLink ($link);
                 }
             }

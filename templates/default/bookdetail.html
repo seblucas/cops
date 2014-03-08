@@ -12,6 +12,9 @@
         {{? data.mail == 1}}
         <a id="mailButton" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><i class="icon-envelope icon-large"></i></a>
         {{?}}
+        {{? data.readerUrl != ""}}
+        <a title="Reader" href="{{=data.readerUrl}}" target="blank"><i class="icon-eye-open icon-large"></i></a>
+        {{?}}
         <br />
         {{~}}
     </h2>
@@ -33,6 +36,11 @@
     {{? it.book.seriesName != ""}}
     <p class="popupless">
         <h3><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
+    </p>
+    {{?}}
+    {{? it.book.publisherName != ""}}
+    <p class="popupless">
+        <h3>{{=it.c.i18n.publisherName}}: </h3><a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a>
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}

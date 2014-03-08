@@ -1,0 +1,54 @@
+{{? it.containsBook == 0}}
+<div class="container">
+{{??}}
+<div class="container-fluid">
+{{?}}
+{{? it.page == 13 || it.page == 16}}
+    {{? it.page == 13}}
+        {{#def.bookdetail}}
+    {{??}}
+        {{= it.fullhtml}}
+    {{?}}
+{{??}}
+{{? it.containsBook == 1}}
+<div class="row">
+{{??}}
+<div class="list-group">
+{{?}}
+{{~it.entries:entry:i}}
+    {{? it.containsBook == 0}}
+        <a class="list-group-item" href="{{=entry.navlink}}">
+            {{=htmlspecialchars (entry.title)}}
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="badge">{{=entry.content}}</span>
+        </a>
+    {{??}}
+        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="panel panel-default" style="height: 320px;">
+          <div class="panel-heading">
+            <h3 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h3>
+          </div>
+          <div class="panel-body">
+            {{? entry.book.hasCover == 1}}
+                <div class="text-center">
+                <a href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
+                    <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                </a>
+                </div>
+            {{?}}
+            {{=it.c.i18n.authorsTitle}} : <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span>
+            {{? entry.book.tagsName != ""}}<br />{{=it.c.i18n.tagsTitle}} :<span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span>{{?}}
+            {{? entry.book.seriesName != ""}}<br />{{=it.c.i18n.seriesTitle}} : <span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span>{{?}}
+            <div class="text-center bottomright">
+            {{~entry.book.preferedData:data:j}}
+                <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
+            {{~}}
+            </div>
+          </div>
+        </div>
+        </div>
+    {{?}}
+{{~}}
+</div>
+{{?}}
+</div>

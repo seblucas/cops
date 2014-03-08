@@ -3,6 +3,7 @@ php:
   - 5.5
   - 5.4
   - 5.3
+  - hhvm
 before_script:
   - npm install jshint -g
   - jshint --version
@@ -10,4 +11,16 @@ script:
   - phpunit
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
-  
+after_success:
+  - chmod +x test/prepareSauceTest.sh
+  - test/prepareSauceTest.sh
+env:
+  global:
+  - SAUCE_USERNAME=seblucas 
+  - secure: VVxocvmz6WYr3tZSTA42M/LUhaHoBWw5onh85hnquoMaxspd3tDCyfQIowTTmEXikRh2T0CkTH7X3dhVwRTd/Ha9isja1qDo9Lc2flGCoWICF7WFZuom084+d+O+EWx4WZMAw4Lz4w6a5xflpPKnzNs9B0+de0BdTlQ5qSXVrcA=
+addons:
+  hosts:
+    - cops-travis
+matrix:
+  allow_failures:
+    - php: hhvm

@@ -3,21 +3,23 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Gordon Page <gordon@incero.com> with integration/modification by Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
-
+    
     require_once ("config.php");
     require_once ("book.php");
     require_once ("data.php");
 
-function notFound () {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    header("Status: 404 Not Found");
-
-    $_SERVER['REDIRECT_STATUS'] = 404;
-}
-
     global $config;
+
+    if ($config ['cops_fetch_protect'] == "1") {
+        session_start();
+        if (!isset($_SESSION['connected'])) {
+            notFound ();
+            return;
+        }
+}
+    
     $expires = 60*60*24*14;
     header("Pragma: public");
     header("Cache-Control: maxage=".$expires);
@@ -33,12 +35,12 @@ function notFound () {
     {
         $book = Book::getBookById($bookId);
     }
-
+    
     if (!$book) {
         notFound ();
         return;
     }
-
+    
     if ($book && ($type == "jpg" || empty ($config['calibre_internal_directory']))) {
         if ($type == "jpg") {
             $file = $book->getFilePath ($type);
@@ -50,66 +52,19 @@ function notFound () {
             return;
         }
     }
-
+     
     switch ($type)
     {
         case "jpg":
             header("Content-Type: image/jpeg");
-            if (isset($_GET["width"]))
-            {
-                $file = $book->getFilePath ($type);
-                // get image size
-                if($size = GetImageSize($file)){
-                    $w = $size[0];
-                    $h = $size[1];
-                    //set new size
-                    $nw = $_GET["width"];
-                    if ($nw > $w) { break; }
-                    $nh = ($nw*$h)/$w;
-                }
-                else{
-                    //set new size
-                    $nw = "160";
-                    $nh = "120";
-                }
-                //draw the image
-                $src_img = imagecreatefromjpeg($file);
-                $dst_img = imagecreatetruecolor($nw,$nh);
-                imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                imagejpeg($dst_img,null,80);
-                imagedestroy($src_img);
-                imagedestroy($dst_img);
-                return;
-            }
-            if (isset($_GET["height"]))
-            {
-                $file = $book->getFilePath ($type);
-                // get image size
-                if($size = GetImageSize($file)){
-                    $w = $size[0];
-                    $h = $size[1];
-                    //set new size
-                    $nh = $_GET["height"];
-                    if ($nh > $h) { break; }
-                    $nw = ($nh*$w)/$h;
-                }
-                else{
-                    //set new size
-                    $nw = "160";
-                    $nh = "120";
-                }
-                //draw the image
-                $src_img = imagecreatefromjpeg($file);
-                $dst_img = imagecreatetruecolor($nw,$nh);
-                imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-                imagejpeg($dst_img,null,80);
-                imagedestroy($src_img);
-                imagedestroy($dst_img);
+            if ($book->getThumbnail (getURLParam ("width"), getURLParam ("height"))) {
+                // The cover had to be resized
                 return;
             }
             break;
         default:
-            header("Content-Type: " . Data::$mimetypes[$type]);
+            $data = $book->getDataById ($idData);
+            header("Content-Type: " . $data->getMimeType ());
             break;
     }
     $file = $book->getFilePath ($type, $idData, true);
@@ -123,12 +78,12 @@ function notFound () {
     } else {
         header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
     }
-
+    
     $dir = $config['calibre_internal_directory'];
     if (empty ($config['calibre_internal_directory'])) {
         $dir = is_dir($book->path) ? '' : Base::getDbDirectory ();
     }
-
+    
     if (empty ($config['cops_x_accel_redirect'])) {
         $filename = $dir . $file;
         header("Content-Length: " . filesize($filename));

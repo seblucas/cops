@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="COPS" default="dist">
+    <target name="clean" >
+        <delete>
+           <fileset dir=".">
+              <include name="cops.zip" />
+           </fileset>
+        </delete>
+    </target>
+
+
+    <!-- ============================================  -->
+    <!-- (DEFAULT)  Target: dist                       -->
+    <!-- ============================================  -->
+    <target name="dist" depends="clean">
+        <echo msg="Creating archive..." />
+
+        <zip destfile="cops.zip">
+            <fileset dir=".">
+                <include name="**" />
+                <exclude name="test/**" />
+                <exclude name=".hg*/**" />
+                <exclude name=".git/**" />
+                <exclude name="tools/**" />
+                <exclude name="coverage/**" />
+                <exclude name="resources/epub-loader/**" />
+                <exclude name="*.phar" />
+                <exclude name="*.zip" />
+                <exclude name="*.zip" />
+                <exclude name="*.xml" />
+                <exclude name=".travis.yml" />
+                <exclude name=".coveralls.yml" />
+                <exclude name="composer.json" />
+            </fileset>
+        </zip>
+
+        <echo msg="Files copied and compressed in build directory OK!" />
+    </target>
+</project>

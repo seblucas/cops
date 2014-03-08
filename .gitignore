@@ -1,1 +1,8 @@
+feedbook/*
+coverage/*
+saucetest/*
+clover.xml
+test/text.atom
+cops.zip
+cops.sublime-*
 config_local.php

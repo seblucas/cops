@@ -10,52 +10,52 @@ require_once('base.php');
 
 class CustomColumn extends Base {
     const ALL_CUSTOMS_ID = "cops:custom";
-    
+
     public $id;
     public $name;
     public $customId;
-    
+
     public function __construct($pid, $pname, $pcustomId) {
         $this->id = $pid;
         $this->name = $pname;
         $this->customId = $pcustomId;
     }
-    
+
     public function getUri () {
         return "?page=".parent::PAGE_CUSTOM_DETAIL."&custom={$this->customId}&id={$this->id}";
     }
-    
+
     public function getEntryId () {
         return self::ALL_CUSTOMS_ID.":".$this->customId.":".$this->id;
     }
-    
+
     public static function getTableName ($customId) {
         return "custom_column_{$customId}";
     }
-    
+
     public static function getTableLinkName ($customId) {
         return "books_custom_column_{$customId}_link";
     }
-    
+
     public static function getTableLinkColumn ($customId) {
         return "value";
     }
-    
+
     public static function getAllCustomsId ($customId) {
         return self::ALL_CUSTOMS_ID . ":" . $customId;
     }
-    
+
     public static function getUriAllCustoms ($customId) {
         return "?page=" . parent::PAGE_ALL_CUSTOMS . "&custom={$customId}";
     }
-    
+
     public static function getAllTitle ($customId) {
         $result = parent::getDb ()->prepare('select name from custom_columns where id = ?');
         $result->execute (array ($customId));
         $post = $result->fetchObject ();
         return $post->name;
     }
-    
+
     public static function getCustomId ($lookup) {
         $result = parent::getDb ()->prepare('select id from custom_columns where label = ?');
         $result->execute (array ($lookup));
@@ -67,12 +67,12 @@ class CustomColumn extends Base {
 
     public static function getCount($customId) {
         $nCustoms = parent::getDb ()->query('select count(*) from ' . self::getTableName ($customId))->fetchColumn();
-        $entry = new Entry (self::getAllTitle ($customId), self::getAllCustomsId ($customId), 
-            str_format (localize("tags.alphabetical", $nCustoms), $nCustoms), "text", 
+        $entry = new Entry (self::getAllTitle ($customId), self::getAllCustomsId ($customId),
+            str_format (localize("tags.alphabetical", $nCustoms), $nCustoms), "text",
             array ( new LinkNavigation (self::getUriAllCustoms ($customId))));
         return $entry;
     }
-       
+
     public static function getCustomById ($customId, $id) {
         $result = parent::getDb ()->prepare('select id, value as name from ' . self::getTableName ($customId) . ' where id = ?');
         $result->execute (array ($id));
@@ -81,7 +81,7 @@ class CustomColumn extends Base {
         }
         return NULL;
     }
-    
+
     public static function getAllCustoms($customId) {
         $result = parent::getDb ()->query(str_format ('select {0}.id as id, {0}.value as name, count(*) as count
 from {0}, {1}
@@ -92,8 +92,8 @@ order by {0}.value', self::getTableName ($customId), self::getTableLinkName ($cu
         while ($post = $result->fetchObject ())
         {
             $customColumn = new CustomColumn ($post->id, $post->name, $customId);
-            array_push ($entryArray, new Entry ($customColumn->name, $customColumn->getEntryId (), 
-                str_format (localize("bookword", $post->count), $post->count), "text", 
+            array_push ($entryArray, new Entry ($customColumn->name, $customColumn->getEntryId (),
+                str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ($customColumn->getUri ()))));
         }
         return $entryArray;

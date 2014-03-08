@@ -1,14 +1,15 @@
 <phpunit>
-    
+
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
             <!-- this is the path of the files included in your clover report -->
             <directory suffix=".php">./</directory>
             <exclude>
                 <directory suffix=".php">./resources</directory>
-            </exclude>
-            <exclude>
                 <directory suffix=".php">./test</directory>
+                <directory suffix=".php">./saucetest</directory>
+                <file>config.php</file>
+                <file>config_default.php</file>
             </exclude>
         </whitelist>
     </filter>
