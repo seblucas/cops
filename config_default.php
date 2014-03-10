@@ -244,6 +244,7 @@
      * - series
      * - tag
      * - publisher
+     * - rating
      * - language
      */
     $config ['cops_ignored_categories'] = array ();
