@@ -50,7 +50,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $query = NULL;
         $qid = NULL;
         $n = "1";
-        
+
         $config ['cops_ignored_categories'] = array ("author", "series", "tag", "publisher", "language");
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -66,7 +66,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    
+
     public function testPageIndexWithCustomColumn ()
     {
         global $config;
