@@ -3,13 +3,14 @@
  * COPS (Calibre OPDS PHP Server) HTML main script
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  *
  */
 
     require_once ("config.php");
     require_once ("base.php");
     require_once ("author.php");
+    require_once ("rating.php");
     require_once ("publisher.php");
     require_once ("serie.php");
     require_once ("tag.php");
