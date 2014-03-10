@@ -144,6 +144,25 @@ class Data extends Base {
         return $out;
     }
 
+    public static function handleThumbnailLink ($urlParam, $height) {
+        global $config;
+
+        if (is_null ($height)) {
+            if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+                $height = $config['cops_opds_thumbnail_height'];
+            }
+            else
+            {
+                $height = $config['cops_html_thumbnail_height'];
+            }
+        }
+        if ($config['cops_thumbnail_handling'] != "1") {
+            $urlParam = addURLParameter($urlParam, "height", $height);
+        }
+
+        return $urlParam;
+    }
+
     public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
     {
         global $config;
@@ -156,18 +175,7 @@ class Data extends Base {
         {
             if ($type != "jpg") $urlParam = addURLParameter($urlParam, "type", $type);
             if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
-                if (is_null ($height)) {
-                    if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                        $height = $config['cops_opds_thumbnail_height'];
-                    }
-                    else
-                    {
-                        $height = $config['cops_html_thumbnail_height'];
-                    }
-                }
-                if ($config['cops_thumbnail_handling'] != "1") {
-                    $urlParam = addURLParameter($urlParam, "height", $height);
-                }
+                $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
             if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
