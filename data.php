@@ -150,8 +150,7 @@ class Data extends Base {
 
         $urlParam = addURLParameter("", "data", $idData);
 
-        if (preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
-            preg_match ('/^\w\:/', Base::getDbDirectory ()) || // Windows X:
+        if (Base::useAbsolutePath () ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
             ($type == "epub" && $config['cops_update_epub-metadata']))
         {

@@ -1072,6 +1072,13 @@ abstract class Base
         return is_array ($config['calibre_directory']);
     }
 
+    public static function useAbsolutePath () {
+        global $config;
+        $path = self::getDbDirectory();
+        return preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
+               preg_match ('/^\w\:/', Base::getDbDirectory ()); // Windows X:
+    }
+
     public static function noDatabaseSelected () {
         return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
     }
