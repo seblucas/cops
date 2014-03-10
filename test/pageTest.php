@@ -33,7 +33,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Tags", $currentPage->entryArray [3]->title);
         $this->assertEquals ("Alphabetical index of the 10 tags", $currentPage->entryArray [3]->content);
         $this->assertEquals ("Rating", $currentPage->entryArray [4]->title);
-        $this->assertEquals ("no ratings", $currentPage->entryArray [4]->content);
+        $this->assertEquals ("3 different ratings", $currentPage->entryArray [4]->content);
         $this->assertEquals ("Languages", $currentPage->entryArray [5]->title);
         $this->assertEquals ("Alphabetical index of the single language", $currentPage->entryArray [5]->content);
         $this->assertEquals ("All books", $currentPage->entryArray [6]->title);
@@ -458,6 +458,38 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals ("English", $currentPage->title);
         $this->assertCount (14, $currentPage->entryArray);
+        $this->assertEquals ("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
+        $this->assertTrue ($currentPage->ContainsBook ());
+    }
+
+    public function testPageAllRatings ()
+    {
+        $page = Base::PAGE_ALL_RATINGS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Rating", $currentPage->title);
+        $this->assertCount (3, $currentPage->entryArray);
+        $this->assertEquals ("2 stars", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+
+    public function testPageRatingDetail ()
+    {
+        $page = Base::PAGE_RATING_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("5 stars", $currentPage->title);
+        $this->assertCount (4, $currentPage->entryArray);
         $this->assertEquals ("The Adventures of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
     }
