@@ -1075,8 +1075,8 @@ abstract class Base
     public static function useAbsolutePath () {
         global $config;
         $path = self::getDbDirectory();
-        return preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
-               preg_match ('/^\w\:/', Base::getDbDirectory ()); // Windows X:
+        return preg_match ('/^\//', $path) || // Linux /
+               preg_match ('/^\w\:/', $path); // Windows X:
     }
 
     public static function noDatabaseSelected () {
