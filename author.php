@@ -68,8 +68,7 @@ order by substr (upper (sort), 1, 1)');
     }
 
     public static function getEntryArray ($query, $params) {
-        $result = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
-        $result = $result [1];
+        list (, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

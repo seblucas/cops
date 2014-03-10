@@ -43,7 +43,7 @@ class Rating extends Base {
     }
 
     public static function getEntryArray ($query, $params) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::RATING_COLUMNS, "", $params, -1);
+        list (, $result) = parent::executeQuery ($query, self::RATING_COLUMNS, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
