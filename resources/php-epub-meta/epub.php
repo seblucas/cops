@@ -205,7 +205,14 @@ class EPub {
      */
     public function componentContentType($comp) {
         $comp = $this->decodeComponentName ($comp);
-        return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
+        $item = $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0);
+        if ($item) return $item->getAttribute('media-type');
+
+        // I had at least one book containing %20 instead of spaces in the opf file
+        $comp = str_replace (" ", "%20", $comp);
+        $item = $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0);
+        if ($item) return $item->getAttribute('media-type');
+        return "application/octet-stream";
     }
 
     private function getNavPointDetail ($node) {
