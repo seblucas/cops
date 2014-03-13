@@ -1,6 +1,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <?php
+/**
+ * COPS (Calibre OPDS PHP Server) epub reader
+ *
+ * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
+ */
 
 require_once ("config.php");
 require_once ("base.php");
@@ -28,7 +34,7 @@ $book->initSpineComponent ();
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monocore.css") ?>" media="screen" />
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("resources/monocle/styles/monoctrl.css") ?>" media="screen" />
     <script type="text/javascript">
-        Monocle.DEBUG = true; 
+        Monocle.DEBUG = true;
         var bookData = {
           getComponents: function () {
             <?php echo "return [" . implode (", ", array_map (function ($comp) { return "'" . $comp . "'"; }, $book->components ())) . "];"; ?>
