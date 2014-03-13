@@ -451,7 +451,7 @@ class EPub {
      * @param string $serie
      */
     public function Serie($serie=false){
-        return $this->getset('opf:meta',$serie,'name','cops:series','content');
+        return $this->getset('opf:meta',$serie,'name','calibre:series','content');
     }
 
     /**
@@ -460,7 +460,7 @@ class EPub {
      * @param string $serieIndex
      */
     public function SerieIndex($serieIndex=false){
-        return $this->getset('opf:meta',$serieIndex,'name','cops:series_index','content');
+        return $this->getset('opf:meta',$serieIndex,'name','calibre:series_index','content');
     }
 
     /**
