@@ -46,7 +46,7 @@ define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
 define ('SQL_BOOKS_BY_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");												
+                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
@@ -453,8 +453,8 @@ class Book extends Base {
 
     public static function getBooksByRating($ratingId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_RATING, array ($ratingId), $n);
-    }	
-	
+    }
+
     public static function getBooksByPublisher($publisherId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_PUBLISHER, array ($publisherId), $n);
     }
