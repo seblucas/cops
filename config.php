@@ -7,5 +7,5 @@
  */
 
     require_once 'config_default.php';
-    if (file_exists(dirname(__FILE__). '/config_local.php'))
+    if (file_exists(dirname(__FILE__). '/config_local.php') && (php_sapi_name() !== 'cli'))
         require_once 'config_local.php';
