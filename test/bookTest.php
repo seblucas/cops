@@ -195,6 +195,40 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
     }
 
+    public function testBookGetLinkArrayWithUrlRewriting ()
+    {
+        global $config;
+
+        $book = Book::getBookById(2);
+        $config['cops_use_url_rewriting'] = "1";
+
+        $linkArray = $book->getLinkArray ();
+        foreach ($linkArray as $link) {
+            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB" ) {
+                $this->assertEquals ("download/1/The+Return+of+Sherlock+Holmes+-+Arthur+Conan+Doyle.epub", $link->href);
+                return;
+            }
+        }
+        $this->fail ();
+    }
+
+    public function testBookGetLinkArrayWithoutUrlRewriting ()
+    {
+        global $config;
+
+        $book = Book::getBookById(2);
+        $config['cops_use_url_rewriting'] = "0";
+
+        $linkArray = $book->getLinkArray ();
+        foreach ($linkArray as $link) {
+            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB" ) {
+                $this->assertEquals ("fetch.php?data=1&type=epub&id=2", $link->href);
+                return;
+            }
+        }
+        $this->fail ();
+    }
+
     public function testGetThumbnailNotNeeded ()
     {
         $book = Book::getBookById(2);

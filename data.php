@@ -103,32 +103,39 @@ class Data extends Base {
     }
 
     public function getDataLink ($rel, $title = NULL) {
+        global $config;
+
+        if ($rel == Link::OPDS_ACQUISITION_TYPE && $config['cops_use_url_rewriting'] == "1") {
+            return $this->getHtmlLinkWithRewriting($title);
+        }
+
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
+    }
+
+    public function getHtmlLink () {
+        return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE)->href;
     }
 
     public function getLocalPath () {
         return $this->book->path . "/" . $this->getFilename ();
     }
 
-    public function getHtmlLink () {
+    public function getHtmlLinkWithRewriting ($title = NULL) {
         global $config;
 
-        if ($config['cops_use_url_rewriting'] == "1")
-        {
-            $database = "";
-            if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
-            if ($config['cops_provide_kepub'] == "1" &&
-                $this->isEpubValidOnKobo () &&
-                preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
-                return "download/" . $this->id . "/" . $database . urlencode ($this->getUpdatedFilenameKepub ());
-            } else {
-                return "download/" . $this->id . "/" . $database . urlencode ($this->getFilename ());
-            }
+        $database = "";
+        if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
+
+        $href = "download/" . $this->id . "/" . $database;
+
+        if ($config['cops_provide_kepub'] == "1" &&
+            $this->isEpubValidOnKobo () &&
+            preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
+            $href .= urlencode ($this->getUpdatedFilenameKepub ());
+        } else {
+            $href .= urlencode ($this->getFilename ());
         }
-        else
-        {
-            return self::getLink ($this->book, $this->extension, $this->getMimeType (), NULL, $this->getFilename (), $this->id, NULL)->href;
-        }
+        return new Link ($href, $this->getMimeType (), Link::OPDS_ACQUISITION_TYPE, $title);
     }
 
     public static function getDataByBook ($book) {
