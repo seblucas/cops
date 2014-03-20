@@ -24,6 +24,7 @@
                 <exclude name=".git/**" />
                 <exclude name="tools/**" />
                 <exclude name="coverage/**" />
+                <exclude name="saucetest/**" />
                 <exclude name="resources/epub-loader/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
@@ -31,7 +32,9 @@
                 <exclude name="*.xml" />
                 <exclude name=".travis.yml" />
                 <exclude name=".coveralls.yml" />
+                <exclude name="config_local.php" />
                 <exclude name="composer.json" />
+                <exclude name="cops.sublime*" />
             </fileset>
         </zip>
 
