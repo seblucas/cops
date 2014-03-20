@@ -32,8 +32,8 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alphabetical index of the 5 publishers", $currentPage->entryArray [2]->content);
         $this->assertEquals ("Tags", $currentPage->entryArray [3]->title);
         $this->assertEquals ("Alphabetical index of the 10 tags", $currentPage->entryArray [3]->content);
-        $this->assertEquals ("Rating", $currentPage->entryArray [4]->title);
-        $this->assertEquals ("3 different ratings", $currentPage->entryArray [4]->content);
+        $this->assertEquals ("Ratings", $currentPage->entryArray [4]->title);
+        $this->assertEquals ("3 ratings", $currentPage->entryArray [4]->content);
         $this->assertEquals ("Languages", $currentPage->entryArray [5]->title);
         $this->assertEquals ("Alphabetical index of the single language", $currentPage->entryArray [5]->content);
         $this->assertEquals ("All books", $currentPage->entryArray [6]->title);
@@ -58,7 +58,7 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals ($config['cops_title_default'], $currentPage->title);
         $this->assertCount (3, $currentPage->entryArray);
-        $this->assertEquals ("Rating", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("Ratings", $currentPage->entryArray [0]->title);
         $this->assertEquals ("All books", $currentPage->entryArray [1]->title);
         $this->assertEquals ("Alphabetical index of the 14 books", $currentPage->entryArray [1]->content);
         $this->assertEquals ("Recent additions", $currentPage->entryArray [2]->title);
@@ -472,7 +472,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Rating", $currentPage->title);
+        $this->assertEquals ("Ratings", $currentPage->title);
         $this->assertCount (3, $currentPage->entryArray);
         $this->assertEquals ("2 stars", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
