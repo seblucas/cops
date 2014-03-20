@@ -40,7 +40,7 @@ $book->initSpineComponent ();
             <?php echo "return [" . implode (", ", array_map (function ($comp) { return "'" . $comp . "'"; }, $book->components ())) . "];"; ?>
           },
           getContents: function () {
-            <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . $content["title"] . "', src: '". $content["src"] . "'}"; }, $book->contents ())) . "];"; ?>
+            <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . addslashes($content["title"]) . "', src: '". $content["src"] . "'}"; }, $book->contents ())) . "];"; ?>
           },
           getComponent: function (componentId) {
             return { url: "epubfs.php?<?php echo $add ?>comp="  + componentId };
