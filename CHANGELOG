@@ -1,3 +1,17 @@
+1.0.0RC1 - ?
+  * Updated Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks all to the translators.
+  * Added Swedish translation. Thanks to Bo Rosén.
+  * Added Czech translation. Thanks to Zdenek Hadrava.
+  * Added a lot of refactoring to simplify the code.
+  * Added a lot of new unit tests.
+  * Fixed a caching bug causing problems with IE.
+  * Added an embedded Epub Reader based on Monocle. Thanks to all the beta testers.
+  * Cleaned up a lot of stuff to prepare for bootstrap template.
+  * Fixed the charset of most of the pages. Thanks to edent.
+  * Added a new category : ratings. Thanks to Michael.
+  * Fixed the URL rewriting in the OPDS stream, should fix file naming with FBReader. Reported by Rassie.
+
+
 0.9.0 - 20131231
   * Add a lot of unit testing. I hope it will limit the risks of regression.
   * Added a "smart / autocomplete" search.
