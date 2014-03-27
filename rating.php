@@ -15,7 +15,6 @@ class Rating extends Base {
     const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
     public $id;
     public $name;
-    public $sort;
 
     public function __construct($pid, $pname) {
         $this->id = $pid;
@@ -60,6 +59,6 @@ class Rating extends Base {
     public static function getRatingById ($ratingId) {
         $result = parent::getDb ()->prepare('select rating from ratings where id = ?');
         $result->execute (array ($ratingId));
-        return new Author ($ratingId, $result->fetchColumn ());
+        return new Rating ($ratingId, $result->fetchColumn ());
     }
 }
