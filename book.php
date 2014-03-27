@@ -142,6 +142,10 @@ class Book extends Base {
         return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
     }
 
+    public function getAuthorsSort () {
+        return implode (", ", array_map (function ($author) { return $author->sort; }, $this->getAuthors ()));
+    }
+
     public function getPublisher () {
         if (is_null ($this->publisher)) {
             $this->publisher = Publisher::getPublisherByBookId ($this->id);

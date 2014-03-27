@@ -254,7 +254,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Doyle, Arthur Conan", $currentPage->title);
+        $this->assertEquals ("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals (4, $currentPage->getMaxPage ());
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertTrue ($currentPage->ContainsBook ());
@@ -268,7 +268,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Doyle, Arthur Conan", $currentPage->title);
+        $this->assertEquals ("Arthur Conan Doyle", $currentPage->title);
         $this->assertEquals (2, $currentPage->getMaxPage ());
         $this->assertCount (3, $currentPage->entryArray);
         $this->assertTrue ($currentPage->ContainsBook ());
@@ -281,7 +281,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Doyle, Arthur Conan", $currentPage->title);
+        $this->assertEquals ("Arthur Conan Doyle", $currentPage->title);
         $this->assertCount (8, $currentPage->entryArray);
         $this->assertTrue ($currentPage->ContainsBook ());
         $this->assertFalse ($currentPage->IsPaginated ());

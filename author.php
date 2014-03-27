@@ -19,9 +19,10 @@ class Author extends Base {
     public $name;
     public $sort;
 
-    public function __construct($pid, $pname) {
+    public function __construct($pid, $pname, $psort) {
         $this->id = $pid;
         $this->name = $pname;
+        $this->sort = $psort;
     }
 
     public function getUri () {
@@ -72,7 +73,7 @@ order by substr (upper (sort), 1, 1)');
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
-            $author = new Author ($post->id, $post->sort);
+            $author = new Author ($post->id, $post->name, $post->sort);
             array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ($author->getUri ()))));
@@ -81,20 +82,20 @@ order by substr (upper (sort), 1, 1)');
     }
 
     public static function getAuthorById ($authorId) {
-        $result = parent::getDb ()->prepare('select sort from authors where id = ?');
+        $result = parent::getDb ()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors where id = ?');
         $result->execute (array ($authorId));
-        return new Author ($authorId, $result->fetchColumn ());
+        $post = $result->fetchObject ();
+        return new Author ($post->id, $post->name, $post->sort);
     }
 
     public static function getAuthorByBookId ($bookId) {
-        $result = parent::getDb ()->prepare('select authors.id as id, authors.sort as sort
-from authors, books_authors_link
+        $result = parent::getDb ()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors, books_authors_link
 where author = authors.id
 and book = ?');
         $result->execute (array ($bookId));
         $authorArray = array ();
         while ($post = $result->fetchObject ()) {
-            array_push ($authorArray, new Author ($post->id, $post->sort));
+            array_push ($authorArray, new Author ($post->id, $post->name, $post->sort));
         }
         return $authorArray;
     }
