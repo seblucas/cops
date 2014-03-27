@@ -91,7 +91,7 @@ class Data extends Base {
     }
 
     public function getUpdatedFilename () {
-        return $this->book->getAuthorsName () . " - " . $this->book->title;
+        return $this->book->getAuthorsSort () . " - " . $this->book->title;
     }
 
     public function getUpdatedFilenameEpub () {
