@@ -61,11 +61,6 @@ Monocle.DEBUG = true;
           var magnifier = new Monocle.Controls.Magnifier(reader);
           reader.addControl(magnifier, 'page');
 
-          /* The stencil activates internal links */
-          var stencil = new Monocle.Controls.Stencil(reader);
-          reader.addControl(stencil);
-          //stencil.toggleHighlights();
-
           /* BOOK TITLE RUNNING HEAD */
           var bookTitle = {}
           bookTitle.contentsMenu = Monocle.Controls.Contents(reader);
