@@ -6,11 +6,12 @@
   * Added a lot of new unit tests.
   * Fixed a caching bug causing problems with IE.
   * Added an embedded Epub Reader based on Monocle. Thanks to all the beta testers.
-  * Cleaned up a lot of stuff to prepare for bootstrap template.
+  * Cleaned up a lot of stuff to prepare for bootstrap template. Note to all CSS hackers, the stylesheets are now in templates/default/styles.
   * Fixed the charset of most of the pages. Thanks to edent.
   * Added a new category : ratings. Thanks to Michael.
   * Fixed the URL rewriting in the OPDS stream, should fix file naming with FBReader. Reported by Rassie.
-
+  * Fixed a confusion between author's name and author's sort. Reported by At_Libitum.
+  * Fixed the style of the tag filters to show that they're clickable. Thanks to cycojesus.
 
 0.9.0 - 20131231
   * Add a lot of unit testing. I hope it will limit the risks of regression.
