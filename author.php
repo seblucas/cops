@@ -21,7 +21,7 @@ class Author extends Base {
 
     public function __construct($pid, $pname, $psort) {
         $this->id = $pid;
-        $this->name = $pname;
+        $this->name = str_replace("|", ",", $pname);
         $this->sort = $psort;
     }
 
