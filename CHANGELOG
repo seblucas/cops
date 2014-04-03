@@ -1,5 +1,5 @@
-1.0.0RC1 - ?
-  * Updated Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks all to the translators.
+1.0.0RC1 - 20140404
+  * Updated English, Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks all to the translators.
   * Added Swedish translation. Thanks to Bo Rosén.
   * Added Czech translation. Thanks to Zdenek Hadrava.
   * Added a lot of refactoring to simplify the code.
@@ -12,6 +12,7 @@
   * Fixed the URL rewriting in the OPDS stream, should fix file naming with FBReader. Reported by Rassie.
   * Fixed a confusion between author's name and author's sort. Reported by At_Libitum.
   * Fixed the style of the tag filters to show that they're clickable. Thanks to cycojesus.
+  * Replaced | by space in author name.
 
 0.9.0 - 20131231
   * Add a lot of unit testing. I hope it will limit the risks of regression.
