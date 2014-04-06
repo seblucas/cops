@@ -337,6 +337,7 @@ width:100%;
 {
 vertical-align: middle;
 width: 100%;
+color: black;
 }
 
 .tt-hint, .tt-query {
@@ -386,7 +387,7 @@ width: 100%;
   line-height: 14px;
 }
 
-.tt-suggestion.tt-is-under-cursor {
+.tt-suggestion.tt-cursor {
   color: #1c1c1c;
   background-color: #778899;
 }
