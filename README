@@ -41,7 +41,7 @@ On any Debian base Linux you can use :
 = Install =
 
 1.  Extract the zip file to a folder in web space (visible to the web server).
-2.  If a first-time install, copy config_local.php.example to config_local.php
+2.  If you're doing a first-time install, copy config_local.php.example to config_local.php
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
 
