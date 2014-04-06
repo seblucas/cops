@@ -15,6 +15,23 @@ $.ajaxSetup({
     cache: false
 });
 
+var copsTypeahead = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    limit: 30,
+    remote: {
+                url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
+                replace: function (url, query) {
+                    if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
+                        return url.replace('%QUERY', query).replace('&db=%DB', "");
+                    }
+                    return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
+                }
+            }
+});
+
+copsTypeahead.initialize();
+
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
   // pushState isn't reliable on iOS until 5.
@@ -288,25 +305,19 @@ updatePage = function (data) {
         $("#sortForm").hide ();
     }
 
-    $('input[name=query]').typeahead([
+    $('input[name=query]').typeahead(
+    {
+        hint: true,
+        minLength : 3
+    },
     {
         name: 'search',
-        allowDuplicates: true,
-        minLength : 3,
-        valueKey: 'title',
-        limit: 24,
-        template: templateSuggestion,
-        remote: {
-            url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
-            replace: function (url, query) {
-                if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
-                    return url.replace('%QUERY', query).replace('&db=%DB', "");
-                }
-                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
-            }
-        }
-    }
-    ]);
+        displayKey: 'title',
+        templates: {
+            suggestion: templateSuggestion
+        },
+        source: copsTypeahead.ttAdapter()
+    });
 
     $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
         if (isPushStateEnabled) {
