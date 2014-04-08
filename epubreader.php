@@ -27,7 +27,7 @@ $book->initSpineComponent ();
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="imagetoolbar" content="no" />
-    <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>COPS's Epub Reader</title>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monocore.js") ?>"></script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("resources/monocle/scripts/monoctrl.js") ?>"></script>
