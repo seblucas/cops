@@ -189,4 +189,36 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
         $this->assertEquals (13, count($filtered));
     }
+    
+    public function normalSearch ($src, $out)
+    {
+        $driver = $this;
+        $title_test = function($value) use ($driver) {
+            $text = $driver->byXPath('//h1')->text ();
+            return $text == $value;
+        };
+
+        // Click on the cog to show the search
+        $cog = $this->byId ("searchImage");
+        $cog->click ();
+        sleep (1);
+
+        // Focus the input and type
+        $queryInput = $this->byName ("query");
+        $queryInput->click ();
+        $this->keys($src);
+        $queryInput->submit ();
+
+        $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
+    }
+
+    public function testSearchWithoutAccentuatedCharacters()
+    {
+        $this->normalSearch ("ali", "ALI");
+    }    
+
+    public function testSearchWithAccentuatedCharacters()
+    {
+        $this->normalSearch ("é", "É");
+    }
 }
