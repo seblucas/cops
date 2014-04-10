@@ -29,14 +29,6 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
                 'platform' => 'Windows 8.1',
             )
         ),
-        // run Opera 12 on Windows 7 on Sauce
-        array(
-            'browserName' => 'opera',
-            'desiredCapabilities' => array(
-                'version' => '12',
-                'platform' => 'Windows 7',
-            )
-        ),
         // run Safari 7 on Maverick on Sauce
         array(
             'browserName' => 'safari',
