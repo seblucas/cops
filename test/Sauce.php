@@ -181,7 +181,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
         $this->assertEquals (13, count($filtered));
     }
-    
+
     public function normalSearch ($src, $out)
     {
         $driver = $this;
@@ -198,7 +198,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         // Focus the input and type
         $queryInput = $this->byName ("query");
         $queryInput->click ();
-        $this->keys($src);
+        $queryInput->value ($src);
         $queryInput->submit ();
 
         $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
@@ -207,7 +207,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
     public function testSearchWithoutAccentuatedCharacters()
     {
         $this->normalSearch ("ali", "ALI");
-    }    
+    }
 
     public function testSearchWithAccentuatedCharacters()
     {
