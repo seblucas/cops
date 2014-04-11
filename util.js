@@ -391,7 +391,7 @@ function search_Submitted (event) {
         return;
     }
     event.preventDefault();
-    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
     navigateTo (url);
 }
 
