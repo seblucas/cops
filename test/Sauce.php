@@ -148,9 +148,15 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             return $text == $value;
         };
 
+        $element_present = function ($using, $id) use ($driver) {
+            $elements = $driver->elements ($driver->using($using)->value($id));
+            return count($elements) == 1;
+        };
+
         // Click on the wrench to enable tag filtering
         $this->byClassName ("icon-wrench")->click ();
 
+        $this->spinWait ("", $element_present, [ "id", "html_tag_filter"]);
         $this->byId ("html_tag_filter")->click ();
 
         // Go back to home screen
