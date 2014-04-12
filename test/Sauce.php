@@ -9,7 +9,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'firefox',
             'desiredCapabilities' => array(
-                'version' => '25',
+                'version' => '28',
                 'platform' => 'Windows 8.1',
             )
         ),
@@ -43,15 +43,15 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             'desiredCapabilities' => array(
                 'app' => 'safari',
                 'device' => 'iPhone Simulator',
-                'version' => '6.1',
-                'platform' => 'Mac 10.8',
+                'version' => '7.1',
+                'platform' => 'Mac 10.9',
             )
         ),
         // run Mobile Browser on Android
         array(
             'browserName' => 'Android',
             'desiredCapabilities' => array(
-                'version' => '4.0',
+                'version' => '4.3',
                 'platform' => 'Linux',
             )
         ),
@@ -59,7 +59,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
-                'version' => '30',
+                'version' => '33',
                 'platform' => 'Linux'
           )
         )
