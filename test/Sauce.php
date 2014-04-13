@@ -43,8 +43,8 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             'desiredCapabilities' => array(
                 'app' => 'safari',
                 'device' => 'iPhone Simulator',
-                'version' => '7.1',
-                'platform' => 'Mac 10.9',
+                'version' => '6.1',
+                'platform' => 'Mac 10.8',
             )
         ),
         // run Mobile Browser on Android
@@ -154,6 +154,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         };
 
         // Click on the wrench to enable tag filtering
+        $this->spinWait ("", $element_present, [ "class name", 'icon-wrench']);
         $this->byClassName ("icon-wrench")->click ();
 
         $this->spinWait ("", $element_present, [ "id", "html_tag_filter"]);
