@@ -218,6 +218,10 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
 
     public function testSearchWithAccentuatedCharacters()
     {
+        if ($this->getBrowser() == "Android") {
+            $this->markTestIncomplete();
+            return;
+        }
         $this->normalSearch ("é", "É");
     }
 }
