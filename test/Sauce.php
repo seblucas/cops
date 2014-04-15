@@ -9,7 +9,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'firefox',
             'desiredCapabilities' => array(
-                'version' => '25',
+                'version' => '28',
                 'platform' => 'Windows 8.1',
             )
         ),
@@ -27,14 +27,6 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             'desiredCapabilities' => array(
                 'version' => '11',
                 'platform' => 'Windows 8.1',
-            )
-        ),
-        // run Opera 12 on Windows 7 on Sauce
-        array(
-            'browserName' => 'opera',
-            'desiredCapabilities' => array(
-                'version' => '12',
-                'platform' => 'Windows 7',
             )
         ),
         // run Safari 7 on Maverick on Sauce
@@ -59,7 +51,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'Android',
             'desiredCapabilities' => array(
-                'version' => '4.0',
+                'version' => '4.3',
                 'platform' => 'Linux',
             )
         ),
@@ -67,7 +59,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'chrome',
             'desiredCapabilities' => array(
-                'version' => '30',
+                'version' => '33',
                 'platform' => 'Linux'
           )
         )
@@ -156,9 +148,16 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             return $text == $value;
         };
 
+        $element_present = function ($using, $id) use ($driver) {
+            $elements = $driver->elements ($driver->using($using)->value($id));
+            return count($elements) == 1;
+        };
+
         // Click on the wrench to enable tag filtering
+        $this->spinWait ("", $element_present, [ "class name", 'icon-wrench']);
         $this->byClassName ("icon-wrench")->click ();
 
+        $this->spinWait ("", $element_present, [ "id", "html_tag_filter"]);
         $this->byId ("html_tag_filter")->click ();
 
         // Go back to home screen
@@ -188,5 +187,41 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         // 13 book
         $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
         $this->assertEquals (13, count($filtered));
+    }
+
+    public function normalSearch ($src, $out)
+    {
+        $driver = $this;
+        $title_test = function($value) use ($driver) {
+            $text = $driver->byXPath('//h1')->text ();
+            return $text == $value;
+        };
+
+        // Click on the cog to show the search
+        $cog = $this->byId ("searchImage");
+        $cog->click ();
+        sleep (1);
+
+        // Focus the input and type
+        $queryInput = $this->byName ("query");
+        $queryInput->click ();
+        $queryInput->value ($src);
+        $queryInput->submit ();
+
+        $this->spinAssert("Home Title", $title_test, [ "SEARCH RESULT FOR *" . $out . "*" ]);
+    }
+
+    public function testSearchWithoutAccentuatedCharacters()
+    {
+        $this->normalSearch ("ali", "ALI");
+    }
+
+    public function testSearchWithAccentuatedCharacters()
+    {
+        if ($this->getBrowser() == "Android") {
+            $this->markTestIncomplete();
+            return;
+        }
+        $this->normalSearch ("é", "É");
     }
 }

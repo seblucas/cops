@@ -41,5 +41,4 @@
             $currentPage->InitializeContent ();
             echo $OPDSRender->render ($currentPage);
             return;
-            break;
     }

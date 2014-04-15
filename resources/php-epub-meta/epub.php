@@ -205,13 +205,20 @@ class EPub {
      */
     public function componentContentType($comp) {
         $comp = $this->decodeComponentName ($comp);
-        return $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0)->getAttribute('media-type');
+        $item = $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0);
+        if ($item) return $item->getAttribute('media-type');
+
+        // I had at least one book containing %20 instead of spaces in the opf file
+        $comp = str_replace (" ", "%20", $comp);
+        $item = $this->xpath->query("//opf:manifest/opf:item[@href='$comp']")->item(0);
+        if ($item) return $item->getAttribute('media-type');
+        return "application/octet-stream";
     }
 
     private function getNavPointDetail ($node) {
         $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
         $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
-        $src = $this->decodeComponentName ($src);
+        $src = $this->encodeComponentName ($src);
         return array("title" => $title, "src" => $src);
     }
 
@@ -444,7 +451,7 @@ class EPub {
      * @param string $serie
      */
     public function Serie($serie=false){
-        return $this->getset('opf:meta',$serie,'name','cops:series','content');
+        return $this->getset('opf:meta',$serie,'name','calibre:series','content');
     }
 
     /**
@@ -453,7 +460,7 @@ class EPub {
      * @param string $serieIndex
      */
     public function SerieIndex($serieIndex=false){
-        return $this->getset('opf:meta',$serieIndex,'name','cops:series_index','content');
+        return $this->getset('opf:meta',$serieIndex,'name','calibre:series_index','content');
     }
 
     /**

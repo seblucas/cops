@@ -9,6 +9,7 @@
 require_once('base.php');
 require_once('serie.php');
 require_once('author.php');
+require_once('rating.php');
 require_once('publisher.php');
 require_once('tag.php');
 require_once('language.php');
@@ -44,6 +45,8 @@ define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where 1=1 {1} order by timestamp desc limit ");
+define ('SQL_BOOKS_BY_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
@@ -62,6 +65,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
+    const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
 
     const BAD_SEARCH = "QQQQQ";
 
@@ -136,6 +140,10 @@ class Book extends Base {
 
     public function getAuthorsName () {
         return implode (", ", array_map (function ($author) { return $author->name; }, $this->getAuthors ()));
+    }
+
+    public function getAuthorsSort () {
+        return implode (", ", array_map (function ($author) { return $author->sort; }, $this->getAuthors ()));
     }
 
     public function getPublisher () {
@@ -447,6 +455,10 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_AUTHOR, array ($authorId), $n);
     }
 
+    public static function getBooksByRating($ratingId, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_RATING, array ($ratingId), $n);
+    }
+
     public static function getBooksByPublisher($publisherId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_PUBLISHER, array ($publisherId), $n);
     }
@@ -559,8 +571,7 @@ order by substr (upper (sort), 1, 1)");
 
     public static function getAllRecentBooks() {
         global $config;
-        $entryArray = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
-        $entryArray = $entryArray [0];
+        list ($entryArray, ) = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
         return $entryArray;
     }
 

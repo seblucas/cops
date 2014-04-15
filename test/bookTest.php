@@ -184,15 +184,49 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("The Return of Sherlock Holmes", $book->getTitle ());
         $this->assertEquals ("urn:uuid:87ddbdeb-1e27-4d06-b79b-4b2a3bfc6a5f", $book->getEntryId ());
         $this->assertEquals ("index.php?page=13&id=2", $book->getDetailUrl ());
-        $this->assertEquals ("Doyle, Arthur Conan", $book->getAuthorsName ());
+        $this->assertEquals ("Arthur Conan Doyle", $book->getAuthorsName ());
         $this->assertEquals ("Fiction, Mystery & Detective, Short Stories", $book->getTagsName ());
         $this->assertEquals ('<p class="description">The Return of Sherlock Holmes is a collection of 13 Sherlock Holmes stories, originally published in 1903-1904, by Arthur Conan Doyle.<br />The book was first published on March 7, 1905 by Georges Newnes, Ltd and in a Colonial edition by Longmans. 30,000 copies were made of the initial print run. The US edition by McClure, Phillips &amp; Co. added another 28,000 to the run.<br />This was the first Holmes collection since 1893, when Holmes had "died" in "The Adventure of the Final Problem". Having published The Hound of the Baskervilles in 1901–1902 (although setting it before Holmes\' death) Doyle came under intense pressure to revive his famous character.</p>', $book->getComment (false));
         $this->assertEquals ("English", $book->getLanguages ());
-        $this->assertEquals ("", $book->getRating ());
+        $this->assertEquals ("&#9733;&#9733;&#9733;&#9733;&#9733;", $book->getRating ());
         $book->rating = 8;
         // 4 filled stars and one empty
         $this->assertEquals ("&#9733;&#9733;&#9733;&#9733;&#9734;", $book->getRating ());
         $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
+    }
+
+    public function testBookGetLinkArrayWithUrlRewriting ()
+    {
+        global $config;
+
+        $book = Book::getBookById(2);
+        $config['cops_use_url_rewriting'] = "1";
+
+        $linkArray = $book->getLinkArray ();
+        foreach ($linkArray as $link) {
+            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB" ) {
+                $this->assertEquals ("download/1/The+Return+of+Sherlock+Holmes+-+Arthur+Conan+Doyle.epub", $link->href);
+                return;
+            }
+        }
+        $this->fail ();
+    }
+
+    public function testBookGetLinkArrayWithoutUrlRewriting ()
+    {
+        global $config;
+
+        $book = Book::getBookById(2);
+        $config['cops_use_url_rewriting'] = "0";
+
+        $linkArray = $book->getLinkArray ();
+        foreach ($linkArray as $link) {
+            if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB" ) {
+                $this->assertEquals ("fetch.php?data=1&type=epub&id=2", $link->href);
+                return;
+            }
+        }
+        $this->fail ();
     }
 
     public function testGetThumbnailNotNeeded ()

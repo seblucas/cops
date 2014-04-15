@@ -3,7 +3,7 @@
 // https://github.com/seblucas/cops
 
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
-/*global LRUCache, doT */
+/*global LRUCache, doT, Bloodhound */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
@@ -14,6 +14,23 @@ if (typeof LRUCache != 'undefined') {
 $.ajaxSetup({
     cache: false
 });
+
+var copsTypeahead = new Bloodhound({
+    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('title'),
+    queryTokenizer: Bloodhound.tokenizers.whitespace,
+    limit: 30,
+    remote: {
+                url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
+                replace: function (url, query) {
+                    if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
+                        return url.replace('%QUERY', query).replace('&db=%DB', "");
+                    }
+                    return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
+                }
+            }
+});
+
+copsTypeahead.initialize();
 
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
@@ -288,25 +305,19 @@ updatePage = function (data) {
         $("#sortForm").hide ();
     }
 
-    $('input[name=query]').typeahead([
+    $('input[name=query]').typeahead(
+    {
+        hint: true,
+        minLength : 3
+    },
     {
         name: 'search',
-        allowDuplicates: true,
-        minLength : 3,
-        valueKey: 'title',
-        limit: 24,
-        template: templateSuggestion,
-        remote: {
-            url: 'getJSON.php?page=9&search=1&db=%DB&query=%QUERY',
-            replace: function (url, query) {
-                if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
-                    return url.replace('%QUERY', query).replace('&db=%DB', "");
-                }
-                return url.replace('%QUERY', query).replace('%DB', currentData.databaseId);
-            }
-        }
-    }
-    ]);
+        displayKey: 'title',
+        templates: {
+            suggestion: templateSuggestion
+        },
+        source: copsTypeahead.ttAdapter()
+    });
 
     $('input[name=query]').bind('typeahead:selected', function(obj, datum) {
         if (isPushStateEnabled) {
@@ -380,7 +391,7 @@ function search_Submitted (event) {
         return;
     }
     event.preventDefault();
-    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, $("input[name=query]").val (), currentData.databaseId);
+    var url = str_format ("index.php?page=9&current={0}&query={1}&db={2}", currentData.page, encodeURIComponent ($("input[name=query]").val ()), currentData.databaseId);
     navigateTo (url);
 }
 

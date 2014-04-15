@@ -3,10 +3,10 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "0.9.1beta");
+define ("VERSION", "1.0.0RC2");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
@@ -438,6 +438,10 @@ class Page
                 return new PageAllCustoms ($id, $query, $n);
             case Base::PAGE_CUSTOM_DETAIL :
                 return new PageCustomDetail ($id, $query, $n);
+            case Base::PAGE_ALL_RATINGS :
+                return new PageAllRating ($id, $query, $n);
+            case Base::PAGE_RATING_DETAIL :
+                return new PageRatingDetail ($id, $query, $n);
             case Base::PAGE_ALL_SERIES :
                 return new PageAllSeries ($id, $query, $n);
             case Base::PAGE_ALL_BOOKS :
@@ -474,7 +478,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sï¿½bastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
@@ -509,6 +513,10 @@ class Page
             if (!in_array (PageQueryResult::SCOPE_TAG, getCurrentOption ('ignored_categories'))) {
                 $tags = Tag::getCount();
                 if (!is_null ($tags)) array_push ($this->entryArray, $tags);
+            }
+            if (!in_array (PageQueryResult::SCOPE_RATING, getCurrentOption ('ignored_categories'))) {
+                $rating = Rating::getCount();
+                if (!is_null ($rating)) array_push ($this->entryArray, $rating);
             }
             if (!in_array ("language", getCurrentOption ('ignored_categories'))) {
                 $languages = Language::getCount();
@@ -707,6 +715,27 @@ class PageSerieDetail extends Page
     }
 }
 
+class PageAllRating extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("ratings.title");
+        $this->entryArray = Rating::getAllRatings();
+        $this->idPage = Rating::ALL_RATING_ID;
+    }
+}
+
+class PageRatingDetail extends Page
+{
+    public function InitializeContent ()
+    {
+        $rating = Rating::getRatingById ($this->idGet);
+        $this->idPage = $rating->getEntryId ();
+        $this->title =str_format (localize ("ratingword", $rating->name/2), $rating->name/2);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByRating ($this->idGet, $this->n);
+    }
+}
+
 class PageAllBooks extends Page
 {
     public function InitializeContent ()
@@ -750,6 +779,7 @@ class PageRecentBooks extends Page
 class PageQueryResult extends Page
 {
     const SCOPE_TAG = "tag";
+    const SCOPE_RATING = "rating";
     const SCOPE_SERIES = "series";
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
@@ -957,6 +987,7 @@ class PageCustomize extends Page
                                    PageQueryResult::SCOPE_TAG,
                                    PageQueryResult::SCOPE_SERIES,
                                    PageQueryResult::SCOPE_PUBLISHER,
+                                   PageQueryResult::SCOPE_RATING,
                                    "language");
 
         $content = "";
@@ -1029,6 +1060,8 @@ abstract class Base
     const PAGE_CUSTOMIZE = "19";
     const PAGE_ALL_PUBLISHERS = "20";
     const PAGE_PUBLISHER_DETAIL = "21";
+    const PAGE_ALL_RATINGS = "22";
+    const PAGE_RATING_DETAIL = "23";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
 
@@ -1037,6 +1070,13 @@ abstract class Base
     public static function isMultipleDatabaseEnabled () {
         global $config;
         return is_array ($config['calibre_directory']);
+    }
+
+    public static function useAbsolutePath () {
+        global $config;
+        $path = self::getDbDirectory();
+        return preg_match ('/^\//', $path) || // Linux /
+               preg_match ('/^\w\:/', $path); // Windows X:
     }
 
     public static function noDatabaseSelected () {

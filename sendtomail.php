@@ -28,6 +28,8 @@ function checkRequest ($idData, $emailDest) {
 
 if (php_sapi_name() === 'cli') { return; }
 
+global $config;
+
 if ($error = checkConfiguration ()) {
     echo $error;
     exit;

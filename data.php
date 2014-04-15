@@ -15,7 +15,7 @@ class Data extends Base {
     public $realFormat;
     public $extension;
     public $book;
-    
+
     public static $mimetypes = array(
         'azw'   => 'application/x-mobipocket-ebook',
         'azw1'  => 'application/x-topaz-ebook',
@@ -50,7 +50,7 @@ class Data extends Base {
         'xpgt'  => 'application/adobe-page-template+xml',
         'zip'   => 'application/zip'
     );
-    
+
     public function __construct($post, $book = null) {
         $this->id = $post->id;
         $this->name = $post->name;
@@ -59,11 +59,11 @@ class Data extends Base {
         $this->extension = strtolower ($this->realFormat);
         $this->book = $book;
     }
-    
+
     public function isKnownType () {
         return array_key_exists ($this->extension, self::$mimetypes);
     }
-    
+
     public function getMimeType () {
         $result = "application/octet-stream";
         if ($this->isKnownType ()) {
@@ -74,7 +74,7 @@ class Data extends Base {
             if (is_resource($finfo) === true)
             {
                 $result = finfo_file($finfo, $this->getLocalPath ());
-        }
+            }
 
             finfo_close($finfo);
 
@@ -85,13 +85,13 @@ class Data extends Base {
     public function isEpubValidOnKobo () {
         return $this->format == "EPUB" || $this->format == "KEPUB";
     }
-    
+
     public function getFilename () {
         return $this->name . "." . strtolower ($this->format);
     }
-    
+
     public function getUpdatedFilename () {
-        return $this->book->getAuthorsName () . " - " . $this->book->title;
+        return $this->book->getAuthorsSort () . " - " . $this->book->title;
     }
 
     public function getUpdatedFilenameEpub () {
@@ -101,36 +101,43 @@ class Data extends Base {
     public function getUpdatedFilenameKepub () {
         return $this->getUpdatedFilename () . ".kepub.epub";
     }
-    
+
     public function getDataLink ($rel, $title = NULL) {
+        global $config;
+
+        if ($rel == Link::OPDS_ACQUISITION_TYPE && $config['cops_use_url_rewriting'] == "1") {
+            return $this->getHtmlLinkWithRewriting($title);
+        }
+
         return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
     }
-    
+
+    public function getHtmlLink () {
+        return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE)->href;
+    }
+
     public function getLocalPath () {
         return $this->book->path . "/" . $this->getFilename ();
     }
-    
-    public function getHtmlLink () {
+
+    public function getHtmlLinkWithRewriting ($title = NULL) {
         global $config;
-        
-        if ($config['cops_use_url_rewriting'] == "1")
-        {
+
             $database = "";
             if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
+
+        $href = "download/" . $this->id . "/" . $database;
+
             if ($config['cops_provide_kepub'] == "1" &&
                 $this->isEpubValidOnKobo () &&
                 preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
-                return "download/" . $this->id . "/" . $database . urlencode ($this->getUpdatedFilenameKepub ());
+            $href .= urlencode ($this->getUpdatedFilenameKepub ());
             } else {
-                return "download/" . $this->id . "/" . $database . urlencode ($this->getFilename ());
+            $href .= urlencode ($this->getFilename ());
             }
-        }
-        else
-        {
-            return self::getLink ($this->book, $this->extension, $this->getMimeType (), NULL, $this->getFilename (), $this->id, NULL)->href;
-        }
+        return new Link ($href, $this->getMimeType (), Link::OPDS_ACQUISITION_TYPE, $title);
     }
-    
+
     public static function getDataByBook ($book) {
         $out = array ();
         $result = parent::getDb ()->prepare('select id, format, name
@@ -144,28 +151,9 @@ class Data extends Base {
         return $out;
     }
 
-    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
-    {
+    public static function handleThumbnailLink ($urlParam, $height) {
         global $config;
-        
-        // Try to get the uri of the book if given
-        if ($type == 'epub') {
-        	$bookUri = $book->getBookIdentifierById($book->id, 'URI');
-        	if (isset($bookUri)) {
-        		$link = new Link ($bookUri, $mime, $rel, $title);
-        		return $link;
-        	}
-        }
 
-        $urlParam = addURLParameter("", "data", $idData);
-        
-        if (preg_match ('/^\//', Base::getDbDirectory ()) || // Linux /
-            preg_match ('/^\w\:/', Base::getDbDirectory ()) || // Windows X:
-            $rel == Link::OPDS_THUMBNAIL_TYPE ||
-            ($type == "epub" && $config['cops_update_epub-metadata']))
-        {
-            if ($type != "jpg") $urlParam = addURLParameter($urlParam, "type", $type);
-            if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
                 if (is_null ($height)) {
                     if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
                         $height = $config['cops_opds_thumbnail_height'];
@@ -178,6 +166,23 @@ class Data extends Base {
                 if ($config['cops_thumbnail_handling'] != "1") {
                     $urlParam = addURLParameter($urlParam, "height", $height);
                 }
+
+        return $urlParam;
+    }
+
+    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
+    {
+        global $config;
+
+        $urlParam = addURLParameter("", "data", $idData);
+
+        if (Base::useAbsolutePath () ||
+            $rel == Link::OPDS_THUMBNAIL_TYPE ||
+            ($type == "epub" && $config['cops_update_epub-metadata']))
+        {
+            if ($type != "jpg") $urlParam = addURLParameter($urlParam, "type", $type);
+            if ($rel == Link::OPDS_THUMBNAIL_TYPE) {
+                $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
             if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
