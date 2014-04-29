@@ -266,15 +266,30 @@ class BookTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetMostInterestingDataToSendToKindle ()
+    public function testGetMostInterestingDataToSendToKindle_WithMOBI ()
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
         $data = $book->GetMostInterestingDataToSendToKindle ();
         $this->assertEquals ("MOBI", $data->format);
+    }
+
+    public function testGetMostInterestingDataToSendToKindle_WithPdf ()
+    {
+        // Get Alice (available as MOBI, PDF, EPUB in that order)
+        $book = Book::getBookById(17);
+        $data = $book->GetMostInterestingDataToSendToKindle ();
         array_shift ($book->datas);
         $data = $book->GetMostInterestingDataToSendToKindle ();
         $this->assertEquals ("PDF", $data->format);
+    }
+
+    public function testGetMostInterestingDataToSendToKindle_WithEPUB ()
+    {
+        // Get Alice (available as MOBI, PDF, EPUB in that order)
+        $book = Book::getBookById(17);
+        $data = $book->GetMostInterestingDataToSendToKindle ();
+        array_shift ($book->datas);
         array_shift ($book->datas);
         $data = $book->GetMostInterestingDataToSendToKindle ();
         $this->assertEquals ("EPUB", $data->format);
