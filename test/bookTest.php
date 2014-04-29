@@ -305,37 +305,83 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $epub->getHtmlLink ());
     }
 
-    public function testGetFilePath () {
+    public function testGetFilePath_Cover () {
         $book = Book::getBookById(17);
 
         $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath ("jpg", NULL, true));
+    }
+
+    public function testGetFilePath_Epub () {
+        $book = Book::getBookById(17);
 
         $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath ("epub", 20, true));
+    }
+
+    public function testGetFilePath_Mobi () {
+        $book = Book::getBookById(17);
+
         $this->assertEquals ("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath ("mobi", 17, true));
     }
 
-    public function testGetDataFormat () {
+    public function testGetDataFormat_EPUB () {
         $book = Book::getBookById(17);
 
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("EPUB");
         $this->assertEquals (20, $data->id);
+    }
+
+    public function testGetDataFormat_MOBI () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("MOBI");
         $this->assertEquals (17, $data->id);
+    }
+
+    public function testGetDataFormat_PDF () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("PDF");
         $this->assertEquals (19, $data->id);
+    }
 
+    public function testGetDataFormat_NonAvailable () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $this->assertFalse ($book->getDataFormat ("FB2"));
     }
 
-    public function testGetMimeType  () {
+    public function testGetMimeType_EPUB () {
         $book = Book::getBookById(17);
 
         // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("EPUB");
         $this->assertEquals ("application/epub+zip", $data->getMimeType ());
+    }
+
+    public function testGetMimeType_MOBI () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("MOBI");
         $this->assertEquals ("application/x-mobipocket-ebook", $data->getMimeType ());
+    }
+
+    public function testGetMimeType_PDF  () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
+        $data = $book->getDataFormat ("PDF");
+        $this->assertEquals ("application/pdf", $data->getMimeType ());
+    }
+
+    public function testGetMimeType_Finfo () {
+        $book = Book::getBookById(17);
+
+        // Get Alice MOBI=>17, PDF=>19, EPUB=>20
         $data = $book->getDataFormat ("PDF");
         $this->assertEquals ("application/pdf", $data->getMimeType ());
 
@@ -351,7 +397,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         }
     }
 
-    public function testTypeaheadSearch ()
+    public function testTypeaheadSearch_Tag ()
     {
         $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "fic";
@@ -364,6 +410,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Fiction", $array[1]["title"]);
         $this->assertEquals ("Science Fiction", $array[2]["title"]);
 
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+
+    public function testTypeaheadSearch_BookAndAuthor ()
+    {
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "car";
         $_GET["search"] = "1";
 
@@ -375,6 +428,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("1 author", $array[2]["title"]);
         $this->assertEquals ("Carroll, Lewis", $array[3]["title"]);
 
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+
+    public function testTypeaheadSearch_AuthorAndSeries ()
+    {
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "art";
         $_GET["search"] = "1";
 
@@ -386,6 +446,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("2 series", $array[2]["title"]);
         $this->assertEquals ("D'Artagnan Romances", $array[3]["title"]);
 
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
+
+    public function testTypeaheadSearch_Publisher ()
+    {
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "Macmillan";
         $_GET["search"] = "1";
 
@@ -400,7 +467,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = NULL;
     }
 
-    public function testTypeaheadSearchWithIgnored ()
+    public function testTypeaheadSearchWithIgnored_SingleCategory ()
     {
         global $config;
         $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
@@ -414,7 +481,14 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("1 book", $array[0]["title"]);
         $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
 
+        $_GET["query"] = NULL;
+        $_GET["search"] = NULL;
+    }
 
+    public function testTypeaheadSearchWithIgnored_MultipleCategory ()
+    {
+        global $config;
+        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
         $_GET["query"] = "art";
         $_GET["search"] = "1";
 
