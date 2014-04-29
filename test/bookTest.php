@@ -50,7 +50,7 @@ class BookTest extends PHPUnit_Framework_TestCase
 
     public function testGetBookCount ()
     {
-        $this->assertEquals (14, Book::getBookCount ());
+        $this->assertEquals (15, Book::getBookCount ());
     }
 
     public function testGetCount ()
@@ -59,7 +59,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals (2, count($entryArray));
 
         $entryAllBooks = $entryArray [0];
-        $this->assertEquals ("Alphabetical index of the 14 books", $entryAllBooks->content);
+        $this->assertEquals ("Alphabetical index of the 15 books", $entryAllBooks->content);
 
         $entryRecentBooks = $entryArray [1];
         $this->assertEquals ("50 most recent books", $entryRecentBooks->content);
@@ -170,7 +170,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $config['cops_recentbooks_limit'] = 50;
 
         $entryArray = Book::getAllRecentBooks ();
-        $this->assertCount (14, $entryArray);
+        $this->assertCount (15, $entryArray);
     }
 
     public function testGetBookById ()
@@ -380,10 +380,10 @@ class BookTest extends PHPUnit_Framework_TestCase
 
         $array = JSONRenderer::getJson ();
 
-        $this->assertCount (4, $array);
+        $this->assertCount (5, $array);
         $this->assertEquals ("1 author", $array[0]["title"]);
         $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
-        $this->assertEquals ("1 series", $array[2]["title"]);
+        $this->assertEquals ("2 series", $array[2]["title"]);
         $this->assertEquals ("D'Artagnan Romances", $array[3]["title"]);
 
         $_GET["query"] = "Macmillan";
@@ -445,7 +445,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertCount (5, $array);
         $this->assertEquals ("Some books", $array[0]["title"]);
         $this->assertEquals ("1 author", $array[1]["title"]);
-        $this->assertEquals ("1 series", $array[2]["title"]);
+        $this->assertEquals ("2 series", $array[2]["title"]);
         $this->assertEquals ("One book", $array[3]["title"]);
         $this->assertEquals ("1 book", $array[4]["title"]);
 
