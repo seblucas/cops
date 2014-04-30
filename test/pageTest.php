@@ -548,7 +548,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    public function testPageSearch ()
+    public function testPageSearch_WithOnlyBooksReturned ()
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
@@ -565,9 +565,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Search result for *alice* in books", $currentPage->entryArray [0]->title);
         $this->assertEquals ("2 books", $currentPage->entryArray [0]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
+    }
 
+    public function testPageSearch_WithAuthorsIgnored ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
         // Match Lewis Caroll & Scarlet
         $query = "car";
+        $qid = NULL;
+        $n = "1";
 
         $config ['cops_ignored_categories'] = array ("author");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -580,6 +587,17 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $config ['cops_ignored_categories'] = array ();
+    }
+
+    public function testPageSearch_WithTwoCategories ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        // Match Lewis Caroll & Scarlet
+        $query = "car";
+        $qid = NULL;
+        $n = "1";
+
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
