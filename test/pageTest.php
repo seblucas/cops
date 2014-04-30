@@ -193,7 +193,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $_GET ["custom"] = NULL;
     }
 
-    public function testPageAllAuthors ()
+    public function testPageAllAuthors_WithFullName ()
     {
         global $config;
         $page = Base::PAGE_ALL_AUTHORS;
@@ -212,6 +212,15 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $config['cops_author_split_first_letter'] = "1";
+    }
+
+    public function testPageAllAuthors_SplittedByFirstLetter ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_AUTHORS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -287,7 +296,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->IsPaginated ());
     }
 
-    public function testPageAllBooks ()
+    public function testPageAllBooks_WithFullName ()
     {
         global $config;
         $page = Base::PAGE_ALL_BOOKS;
@@ -307,6 +316,15 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue ($currentPage->ContainsBook ());
 
         $config['cops_titles_split_first_letter'] = 1;
+    }
+
+    public function testPageAllBooks_SplittedByFirstLetter ()
+    {
+        global $config;
+        $page = Base::PAGE_ALL_BOOKS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
