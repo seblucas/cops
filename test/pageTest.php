@@ -509,8 +509,14 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (15, $currentPage->entryArray);
         $this->assertEquals ("La curée", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
+    }
 
-        // Test facets
+    public function testPageRecent_WithFacets_IncludedTag ()
+    {
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $_GET["tag"] = "Historical";
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -520,6 +526,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Twenty Years After", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
+
+        $_GET["tag"] = NULL;
+    }
+
+    public function testPageRecent_WithFacets_ExcludedTag ()
+    {
+        $page = Base::PAGE_ALL_RECENT_BOOKS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $_GET["tag"] = "!Romance";
         $currentPage = Page::getPage ($page, $qid, $query, $n);
