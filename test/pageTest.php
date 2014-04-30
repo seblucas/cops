@@ -681,6 +681,42 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
+    public function testAuthorSearch_ByName ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $query = "Lewis Carroll";
+        $_GET ["scope"] = "author";
+        $qid = NULL;
+        $n = "1";
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Search result for *Lewis Carroll* in authors", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+
+    public function testAuthorSearch_BySort ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $query = "Carroll, Lewis";
+        $_GET ["scope"] = "author";
+        $qid = NULL;
+        $n = "1";
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Search result for *Carroll, Lewis* in authors", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Carroll, Lewis", $currentPage->entryArray [0]->title);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+
     public function testPageSearchScopeAuthors ()
     {
         $page = Base::PAGE_OPENSEARCH_QUERY;
