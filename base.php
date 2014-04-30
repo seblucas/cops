@@ -801,7 +801,7 @@ class PageQueryResult extends Page
                 $array = Book::getBooksByStartingLetter ('%' . $this->query, $n, NULL, $numberPerPage);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                $array = Author::getAuthorsForSearch ('%' . $this->query);
                 break;
             case self::SCOPE_SERIES :
                 $array = Serie::getAllSeriesByQuery ($this->query);

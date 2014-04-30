@@ -13,6 +13,7 @@ class Author extends Base {
 
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
     const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_AUTHORS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) group by authors.id, authors.name, authors.sort order by sort";
     const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
 
     public $id;
@@ -62,6 +63,10 @@ order by substr (upper (sort), 1, 1)');
 
     public static function getAuthorsByStartingLetter($letter) {
         return self::getEntryArray (self::SQL_AUTHORS_BY_FIRST_LETTER, array ($letter . "%"));
+    }
+
+    public static function getAuthorsForSearch($query) {
+        return self::getEntryArray (self::SQL_AUTHORS_FOR_SEARCH, array ($query . "%", $query . "%"));
     }
 
     public static function getAllAuthors() {
