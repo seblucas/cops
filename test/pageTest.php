@@ -592,6 +592,25 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
+    public function testPageSearch_WithAccentuatedCharacters ()
+    {
+        global $config;
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $query = "curée";
+        $qid = NULL;
+        $n = "1";
+
+        // Only books returned
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $this->assertEquals ("Search result for *curée*", $currentPage->title);
+        $this->assertCount (1, $currentPage->entryArray);
+        $this->assertEquals ("Search result for *curée* in books", $currentPage->entryArray [0]->title);
+        $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
+        $this->assertFalse ($currentPage->ContainsBook ());
+    }
+
     public function testPageSearchScopeAuthors ()
     {
         $page = Base::PAGE_OPENSEARCH_QUERY;
