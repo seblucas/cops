@@ -539,10 +539,10 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getAllBooks() {
-        $result = parent::getDb ()->query("select substr (upper (sort), 1, 1) as title, count(*) as count
+        list (, $result) = parent::executeQuery ("select {0}
 from books
 group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)");
+order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", self::getFilterString (), array (), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
