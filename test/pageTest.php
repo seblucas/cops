@@ -670,6 +670,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
         $config ['cops_normalized_search'] = "1";
+        Base::clearDb ();
         if (!useNormAndUp ()) {
             $this->markTestIncomplete();
         }
@@ -684,6 +685,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $config ['cops_normalized_search'] = "0";
+        Base::clearDb ();
     }
 
     public function testAuthorSearch_ByName ()
