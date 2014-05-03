@@ -125,4 +125,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
 
         $this->assertTrue (Base::checkDatabaseAvailability ());
     }
+
+    public function testNormalizeUtf8String () {
+        $this->assertEquals ("AAAAAEACEEEEIIIIOEOOOOOEUUUUEYaaaaaeaceeeeiiiioedoooooeuuuueyyuny", normalizeUtf8String ("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ"));
+    }
 }
