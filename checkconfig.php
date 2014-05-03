@@ -86,6 +86,42 @@
             </h4>
         </article>
         <article class="frontpage">
+            <h2>Check if mbstring is properly installed and loaded</h2>
+            <h4>
+            <?php
+            if (extension_loaded('mbstring')) {
+                echo "OK";
+            } else {
+                echo "Please install the php5-mbstring extension and make sure it's enabled";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if intl is properly installed and loaded</h2>
+            <h4>
+            <?php
+            if (extension_loaded('intl')) {
+                echo "OK";
+            } else {
+                echo "Please install the php5-intl extension and make sure it's enabled";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
+            <h2>Check if Normalizer class is properly installed and loaded</h2>
+            <h4>
+            <?php
+            if (class_exists("Normalizer", $autoload = false)) {
+                echo "OK";
+            } else {
+                echo "Please make sure intl is enabled in your php.ini";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if the rendering will be done on client side or server side</h2>
             <h4>
             <?php

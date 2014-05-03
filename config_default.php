@@ -258,3 +258,10 @@
      * BEWARE : Do not touch this if you're not using password, not using PRS-TX or not using Aldiko.
      */
     $config ['cops_fetch_protect'] = "0";
+
+    /*
+     * Make the search better (don't care about diacritics, uppercase should work on Cyrillic) but slower.
+     * 1 : Yes (enable)
+     * 0 : No
+     */
+    $config ['cops_normalized_search'] = "0";

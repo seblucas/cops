@@ -669,16 +669,21 @@ class PageTest extends PHPUnit_Framework_TestCase
         $query = "curee";
         $qid = NULL;
         $n = "1";
+        $config ['cops_normalized_search'] = "1";
+        if (!useNormAndUp ()) {
+            $this->markTestIncomplete();
+        }
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->markTestIncomplete();
         $this->assertEquals ("Search result for *curee*", $currentPage->title);
         $this->assertCount (1, $currentPage->entryArray);
         $this->assertEquals ("Search result for *curee* in books", $currentPage->entryArray [0]->title);
         $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
+
+        $config ['cops_normalized_search'] = "0";
     }
 
     public function testAuthorSearch_ByName ()
