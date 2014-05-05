@@ -186,7 +186,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         sleep (1);
         // 13 book
         $filtered = $this->elements ($this->using('css selector')->value('*[class="books"]'));
-        $this->assertEquals (13, count($filtered));
+        $this->assertEquals (14, count($filtered));
     }
 
     public function normalSearch ($src, $out)
