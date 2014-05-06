@@ -278,7 +278,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
-        $data = $book->GetMostInterestingDataToSendToKindle ();
+        $book->GetMostInterestingDataToSendToKindle ();
         array_shift ($book->datas);
         $data = $book->GetMostInterestingDataToSendToKindle ();
         $this->assertEquals ("PDF", $data->format);
@@ -288,7 +288,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     {
         // Get Alice (available as MOBI, PDF, EPUB in that order)
         $book = Book::getBookById(17);
-        $data = $book->GetMostInterestingDataToSendToKindle ();
+        $book->GetMostInterestingDataToSendToKindle ();
         array_shift ($book->datas);
         array_shift ($book->datas);
         $data = $book->GetMostInterestingDataToSendToKindle ();
