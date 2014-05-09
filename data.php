@@ -28,6 +28,7 @@ class Data extends Base {
         'doc'   => 'application/msword',
         'epub'  => 'application/epub+zip',
         'fb2'   => 'text/fb2+xml',
+        'ibooks'=> 'application/x-ibooks+zip',
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
         'mobi'  => 'application/x-mobipocket-ebook',
