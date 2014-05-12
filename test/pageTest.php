@@ -714,6 +714,7 @@ class PageTest extends PHPUnit_Framework_TestCase
             array ("émile zola", 1, "1 author"),
             array ("Litterature", 1, "1 tag"),
             array ("Litterâture", 1, "1 tag"),
+            array ("Serie des Rougon", 1, "1 series"),
             array ("Eugene Fasquelle", 1, "1 publisher")
         );
     }
