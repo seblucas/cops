@@ -644,29 +644,46 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    public function testPageSearch_WithAccentuatedCharacters ()
+
+    /**
+     * @dataProvider providerAccentuatedCharacters
+     */
+    public function testPageSearch_WithAccentuatedCharacters ($query, $count, $content)
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $query = "curée";
         $qid = NULL;
         $n = "1";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Search result for *curée*", $currentPage->title);
-        $this->assertCount (1, $currentPage->entryArray);
-        $this->assertEquals ("Search result for *curée* in books", $currentPage->entryArray [0]->title);
-        $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
+        $this->assertEquals ("Search result for *$query*", $currentPage->title);
+        $this->assertCount ($count, $currentPage->entryArray);
+        if ($count > 0) {
+            $this->assertEquals ($content, $currentPage->entryArray [0]->content);
+        }
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    public function testPageSearch_WithNormalizedSearch ()
+    public function providerAccentuatedCharacters ()
+    {
+        return array (
+            array ("curée", 1, "1 book"),
+            array ("Émile zola", 1, "1 author"),
+            array ("émile zola", 0, NULL), // With standard search upper does not work with diacritics
+            array ("Littérature", 1, "1 tag"),
+            array ("Eugène Fasquelle", 1, "1 publisher")
+        );
+    }
+
+    /**
+     * @dataProvider providerNormalizedSearch
+     */
+    public function testPageSearch_WithNormalizedSearch_Book ($query, $count, $content)
     {
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
-        $query = "curee";
         $qid = NULL;
         $n = "1";
         $config ['cops_normalized_search'] = "1";
@@ -678,14 +695,27 @@ class PageTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        $this->assertEquals ("Search result for *curee*", $currentPage->title);
-        $this->assertCount (1, $currentPage->entryArray);
-        $this->assertEquals ("Search result for *curee* in books", $currentPage->entryArray [0]->title);
-        $this->assertEquals ("1 book", $currentPage->entryArray [0]->content);
+        $this->assertEquals ("Search result for *$query*", $currentPage->title);
+        $this->assertCount ($count, $currentPage->entryArray);
+        if ($count > 0) {
+            $this->assertEquals ($content, $currentPage->entryArray [0]->content);
+        }
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $config ['cops_normalized_search'] = "0";
         Base::clearDb ();
+    }
+
+    public function providerNormalizedSearch ()
+    {
+        return array (
+            array ("curee", 1, "1 book"),
+            array ("emile zola", 1, "1 author"),
+            array ("émile zola", 1, "1 author"),
+            array ("Litterature", 1, "1 tag"),
+            array ("Litterâture", 1, "1 tag"),
+            array ("Eugene Fasquelle", 1, "1 publisher")
+        );
     }
 
     public function testAuthorSearch_ByName ()

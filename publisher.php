@@ -76,13 +76,13 @@ order by publishers.name');
     }
 
     public static function getAllPublishersByQuery($query) {
-        $result = parent::getDb ()->prepare('select publishers.id as id, publishers.name as name, count(*) as count
-from publishers, books_publishers_link
-where publishers.id = publisher and publishers.name like ?
+        $columns  = "publishers.id as id, publishers.name as name, count(*) as count";
+        $sql = 'select {0} from publishers, books_publishers_link
+where publishers.id = publisher and upper (publishers.name) like ?
 group by publishers.id, publishers.name
-order by publishers.name');
+order by publishers.name';
+        list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
         $entryArray = array();
-        $result->execute (array ('%' . $query . '%'));
 
         while ($post = $result->fetchObject ())
         {
