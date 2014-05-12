@@ -64,7 +64,7 @@ order by tags.name');
 
     public static function getAllTagsByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
         $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";
-        $sql = 'select {0} from tags where tags.name like ? {1} order by tags.name';
+        $sql = 'select {0} from tags where upper (tags.name) like ? {1} order by tags.name';
         list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), $n, $database, $numberPerPage);
         $entryArray = array();
         while ($post = $result->fetchObject ())
