@@ -74,13 +74,13 @@ order by series.sort');
     }
 
     public static function getAllSeriesByQuery($query) {
-        $result = parent::getDb ()->prepare('select series.id as id, series.name as name, series.sort as sort, count(*) as count
-from series, books_series_link
-where series.id = series and series.name like ?
+        $columns  = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
+        $sql = 'select {0} from series, books_series_link
+where series.id = series and upper (series.name) like ?
 group by series.id, series.name, series.sort
-order by series.sort');
+order by series.sort';
+        list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
         $entryArray = array();
-        $result->execute (array ('%' . $query . '%'));
         while ($post = $result->fetchObject ())
         {
             $serie = new Serie ($post->id, $post->sort);
