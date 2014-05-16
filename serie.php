@@ -79,7 +79,7 @@ order by series.sort');
 where series.id = series and upper (series.name) like ?
 group by series.id, series.name, series.sort
 order by series.sort';
-        list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
+        list (, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
