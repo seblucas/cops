@@ -81,7 +81,7 @@ order by publishers.name');
 where publishers.id = publisher and upper (publishers.name) like ?
 group by publishers.id, publishers.name
 order by publishers.name';
-        list ($totalNumber, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
+        list (, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
         $entryArray = array();
 
         while ($post = $result->fetchObject ())
