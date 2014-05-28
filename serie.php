@@ -28,7 +28,7 @@ class Serie extends Base {
     }
 
     public static function getCount() {
-        $nSeries = parent::getDb ()->query('select count(*) from series')->fetchColumn();
+        $nSeries = parent::executeQuerySingle ('select count(*) from series');
         if ($nSeries == 0) return NULL;
         $entry = new Entry (localize("series.title"), self::ALL_SERIES_ID,
             str_format (localize("series.alphabetical", $nSeries), $nSeries), "text",

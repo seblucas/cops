@@ -36,7 +36,7 @@ class language extends Base {
     }
 
     public static function getCount() {
-        $nLanguages = parent::getDb ()->query('select count(*) from languages')->fetchColumn();
+        $nLanguages = parent::executeQuerySingle ('select count(*) from languages');
         if ($nLanguages == 0) return NULL;
         $entry = new Entry (localize("languages.title"), self::ALL_LANGUAGES_ID,
             str_format (localize("languages.alphabetical", $nLanguages), $nLanguages), "text",
