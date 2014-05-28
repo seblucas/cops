@@ -39,7 +39,7 @@ class Author extends Base {
     }
 
     public static function getCount() {
-        $nAuthors = parent::getDb ()->query('select count(*) from authors')->fetchColumn();
+        $nAuthors = parent::executeQuerySingle ('select count(*) from authors');
         $entry = new Entry (localize("authors.title"), self::ALL_AUTHORS_ID,
             str_format (localize("authors.alphabetical", $nAuthors), $nAuthors), "text",
             array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));

@@ -1248,6 +1248,10 @@ abstract class Base
         self::$db = NULL;
     }
 
+    public static function executeQuerySingle ($query, $database = NULL) {
+        return self::getDb ($database)->query($query)->fetchColumn();
+    }
+
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
 

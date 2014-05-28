@@ -428,13 +428,12 @@ class Book extends Base {
     }
 
     public static function getBookCount($database = NULL) {
-        $nBooks = parent::getDb ($database)->query('select count(*) from books')->fetchColumn();
-        return $nBooks;
+        return parent::executeQuerySingle ('select count(*) from books', $database);
     }
 
     public static function getCount() {
         global $config;
-        $nBooks = parent::getDb ()->query('select count(*) from books')->fetchColumn();
+        $nBooks = parent::executeQuerySingle ('select count(*) from books');
         $result = array();
         $entry = new Entry (localize ("allbooks.title"),
                           self::ALL_BOOKS_ID,
