@@ -86,6 +86,18 @@
             </h4>
         </article>
         <article class="frontpage">
+            <h2>Check if Json is properly installed and loaded</h2>
+            <h4>
+            <?php
+            if (extension_loaded('json')) {
+                echo "OK";
+            } else {
+                echo "Please install the php5-json extension and make sure it's enabled";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if mbstring is properly installed and loaded</h2>
             <h4>
             <?php
