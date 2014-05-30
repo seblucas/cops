@@ -28,12 +28,8 @@ class Publisher extends Base {
     }
 
     public static function getCount() {
-        $nPublishers = parent::executeQuerySingle ('select count(*) from publishers');
-        if ($nPublishers == 0) return NULL;
-        $entry = new Entry (localize("publishers.title"), self::ALL_PUBLISHERS_ID,
-            str_format (localize("publishers.alphabetical", $nPublishers), $nPublishers), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_PUBLISHERS)));
-        return $entry;
+        // str_format (localize("publishers.alphabetical", count(array))
+        return parent::getCountGeneric ("publishers", self::ALL_PUBLISHERS_ID, parent::PAGE_ALL_PUBLISHERS);
     }
 
     public static function getPublisherByBookId ($bookId) {

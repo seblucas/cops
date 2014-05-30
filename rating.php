@@ -30,11 +30,8 @@ class Rating extends Base {
     }
 
     public static function getCount() {
-        $nRatings = parent::executeQuerySingle ('select count(*) from ratings');
-        $entry = new Entry (localize("ratings.title"), self::ALL_RATING_ID,
-            str_format (localize("ratings", $nRatings), $nRatings), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RATINGS)));
-        return $entry;
+        // str_format (localize("ratings", count(array))
+        return parent::getCountGeneric ("ratings", self::ALL_RATING_ID, parent::PAGE_ALL_RATINGS, "ratings");
     }
 
     public static function getAllRatings() {

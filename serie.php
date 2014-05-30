@@ -28,12 +28,8 @@ class Serie extends Base {
     }
 
     public static function getCount() {
-        $nSeries = parent::executeQuerySingle ('select count(*) from series');
-        if ($nSeries == 0) return NULL;
-        $entry = new Entry (localize("series.title"), self::ALL_SERIES_ID,
-            str_format (localize("series.alphabetical", $nSeries), $nSeries), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_SERIES)));
-        return $entry;
+        // str_format (localize("series.alphabetical", count(array))
+        return parent::getCountGeneric ("series", self::ALL_SERIES_ID, parent::PAGE_ALL_SERIES);
     }
 
     public static function getSerieByBookId ($bookId) {

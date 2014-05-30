@@ -39,11 +39,8 @@ class Author extends Base {
     }
 
     public static function getCount() {
-        $nAuthors = parent::executeQuerySingle ('select count(*) from authors');
-        $entry = new Entry (localize("authors.title"), self::ALL_AUTHORS_ID,
-            str_format (localize("authors.alphabetical", $nAuthors), $nAuthors), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_AUTHORS)));
-        return $entry;
+        // str_format (localize("authors.alphabetical", count(array))
+        return parent::getCountGeneric ("authors", self::ALL_AUTHORS_ID, parent::PAGE_ALL_AUTHORS);
     }
 
     public static function getAllAuthorsByFirstLetter() {
