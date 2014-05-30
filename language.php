@@ -36,12 +36,8 @@ class language extends Base {
     }
 
     public static function getCount() {
-        $nLanguages = parent::executeQuerySingle ('select count(*) from languages');
-        if ($nLanguages == 0) return NULL;
-        $entry = new Entry (localize("languages.title"), self::ALL_LANGUAGES_ID,
-            str_format (localize("languages.alphabetical", $nLanguages), $nLanguages), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_LANGUAGES)));
-        return $entry;
+        // str_format (localize("languages.alphabetical", count(array))
+        return parent::getCountGeneric ("languages", self::ALL_LANGUAGES_ID, parent::PAGE_ALL_LANGUAGES);
     }
 
     public static function getLanguageById ($languageId) {

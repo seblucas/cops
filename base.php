@@ -1252,6 +1252,18 @@ abstract class Base
         return self::getDb ($database)->query($query)->fetchColumn();
     }
 
+    public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL) {
+        if (!$numberOfString) {
+            $numberOfString = $table . ".alphabetical";
+        }
+        $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        if ($count == 0) return NULL;
+        $entry = new Entry (localize($table . ".title"), $id,
+            str_format (localize($numberOfString, $count), $count), "text",
+            array ( new LinkNavigation ("?page=".$pageId)));
+        return $entry;
+    }
+
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
 

@@ -28,12 +28,8 @@ class tag extends Base {
     }
 
     public static function getCount() {
-        $nTags = parent::executeQuerySingle ('select count(*) from tags');
-        if ($nTags == 0) return NULL;
-        $entry = new Entry (localize("tags.title"), self::ALL_TAGS_ID,
-            str_format (localize("tags.alphabetical", $nTags), $nTags), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_TAGS)));
-        return $entry;
+        // str_format (localize("tags.alphabetical", count(array))
+        return parent::getCountGeneric ("tags", self::ALL_TAGS_ID, parent::PAGE_ALL_TAGS);
     }
 
     public static function getTagById ($tagId) {
