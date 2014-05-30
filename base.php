@@ -390,6 +390,7 @@ class Entry
     public $title;
     public $id;
     public $content;
+    public $numberOfElement;
     public $contentType;
     public $linkArray;
     public $localUpdated;
@@ -427,7 +428,7 @@ class Entry
         return "#";
     }
 
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "") {
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "", $pcount = 0) {
         global $config;
         $this->title = $ptitle;
         $this->id = $pid;
@@ -435,6 +436,7 @@ class Entry
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
         $this->className = $pclass;
+        $this->numberOfElement = $pcount;
 
         if ($config['cops_show_icons'] == 1)
         {
@@ -571,7 +573,7 @@ class Page
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                                        array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
                 $i++;
                 Base::clearDb ();
             }
@@ -1260,7 +1262,7 @@ abstract class Base
         if ($count == 0) return NULL;
         $entry = new Entry (localize($table . ".title"), $id,
             str_format (localize($numberOfString, $count), $count), "text",
-            array ( new LinkNavigation ("?page=".$pageId)));
+            array ( new LinkNavigation ("?page=".$pageId)), "", $count);
         return $entry;
     }
 

@@ -102,7 +102,7 @@ class JSONRenderer
             $out ["book"] = self::getBookContentArray ($entry->book);
             return $out;
         }
-        return array ( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink () );
+        return array ( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink (), "number" => $entry->numberOfElement );
     }
 
     public static function getContentArrayTypeahead ($page) {

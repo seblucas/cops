@@ -28,8 +28,10 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Some books", $currentPage->entryArray [0]->title);
         $this->assertEquals ("15 books", $currentPage->entryArray [0]->content);
+        $this->assertEquals (15, $currentPage->entryArray [0]->numberOfElement);
         $this->assertEquals ("One book", $currentPage->entryArray [1]->title);
         $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
+        $this->assertEquals (1, $currentPage->entryArray [1]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
@@ -60,7 +62,7 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("1 book", $currentPage->entryArray [1]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
-    
+
     public function providerSearch ()
     {
         return array (
