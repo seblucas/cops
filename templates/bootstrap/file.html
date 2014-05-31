@@ -48,6 +48,13 @@
 
     .bottomright {position:absolute; bottom:0;  margin-bottom:25px; right: 20px;}
 
+    .panel-title a {
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        display:block;
+    }
+
+    .panel-heading { padding: 10px 7px; }
+
     </style>
 
 {{? it.server_side_rendering == 0}}
