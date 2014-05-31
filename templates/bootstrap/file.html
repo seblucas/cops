@@ -90,6 +90,40 @@
       margin: 0;
     }
 
+    .filtered { display: none; }
+
+    #filter ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        text-align: left;
+        text-transform:none;
+    }
+
+    #filter ul li {
+        cursor: pointer;
+    }
+
+    #filter li {
+        display: inline-block;
+        padding: .2em 1em;
+        border: 2px solid #DDDDDD;
+        margin: 2px;
+        color: black;
+        background-color: white;
+        opacity: 0.5;
+    }
+
+    .filter-include {
+        border-left:thick solid blue;
+        opacity: 1;
+    }
+
+    .filter-exclude {
+        border-right:thick solid red;
+        opacity: 1;
+    }
+
     </style>
 
 {{? it.server_side_rendering == 0}}
