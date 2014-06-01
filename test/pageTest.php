@@ -91,6 +91,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type1", $currentPage->entryArray [6]->title);
         $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ("type2");
 
@@ -100,6 +101,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type2", $currentPage->entryArray [6]->title);
         $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals (3, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ("type4");
 
@@ -109,6 +111,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type4", $currentPage->entryArray [6]->title);
         $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ("type1", "type2", "type4");
 
@@ -236,6 +239,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Authors", $currentPage->title);
         $this->assertCount (5, $currentPage->entryArray);
         $this->assertEquals ("C", $currentPage->entryArray [0]->title);
+        $this->assertEquals (1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 

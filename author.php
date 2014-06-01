@@ -53,7 +53,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         {
             array_push ($entryArray, new Entry ($post->title, Author::getEntryIdByLetter ($post->title),
                 str_format (localize("authorword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title)))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode ($post->title))), "", $post->count));
         }
         return $entryArray;
     }
@@ -78,7 +78,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
             $author = new Author ($post->id, $post->name, $post->sort);
             array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($author->getUri ()))));
+                array ( new LinkNavigation ($author->getUri ())), "", $post->count));
         }
         return $entryArray;
     }
