@@ -20,10 +20,10 @@ class Author extends Base {
     public $name;
     public $sort;
 
-    public function __construct($pid, $pname, $psort) {
-        $this->id = $pid;
-        $this->name = str_replace("|", ",", $pname);
-        $this->sort = $psort;
+    public function __construct($post) {
+        $this->id = $post->id;
+        $this->name = str_replace("|", ",", $post->name);
+        $this->sort = $post->sort;
     }
 
     public function getUri () {
@@ -71,23 +71,14 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getEntryArray ($query, $params) {
-        list (, $result) = parent::executeQuery ($query, self::AUTHOR_COLUMNS, "", $params, -1);
-        $entryArray = array();
-        while ($post = $result->fetchObject ())
-        {
-            $author = new Author ($post->id, $post->name, $post->sort);
-            array_push ($entryArray, new Entry ($post->sort, $author->getEntryId (),
-                str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($author->getUri ())), "", $post->count));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber ($query, self::AUTHOR_COLUMNS, $params, "Author");
     }
 
     public static function getAuthorById ($authorId) {
         $result = parent::getDb ()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors where id = ?');
         $result->execute (array ($authorId));
         $post = $result->fetchObject ();
-        return new Author ($post->id, $post->name, $post->sort);
+        return new Author ($post);
     }
 
     public static function getAuthorByBookId ($bookId) {
@@ -97,7 +88,7 @@ and book = ?');
         $result->execute (array ($bookId));
         $authorArray = array ();
         while ($post = $result->fetchObject ()) {
-            array_push ($authorArray, new Author ($post->id, $post->name, $post->sort));
+            array_push ($authorArray, new Author ($post));
         }
         return $authorArray;
     }
