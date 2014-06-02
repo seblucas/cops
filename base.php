@@ -1266,6 +1266,19 @@ abstract class Base
         return $entry;
     }
 
+    public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
+        list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            $instance = new $category ($post);
+            array_push ($entryArray, new Entry ($post->sort, $instance->getEntryId (),
+                str_format (localize("bookword", $post->count), $post->count), "text",
+                array ( new LinkNavigation ($instance->getUri ())), "", $post->count));
+        }
+        return $entryArray;
+    }
+
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
 
