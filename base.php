@@ -949,7 +949,7 @@ class PageQueryResult extends Page
                     array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}",
                                         str_format (localize("{$key}word", $total), $total), "text",
                                         array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
-                                        Base::noDatabaseSelected () ? "" : "tt-header"));
+                                        Base::noDatabaseSelected () ? "" : "tt-header", $total));
                 }
                 if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
                     foreach ($array as $entry) {
@@ -992,7 +992,7 @@ class PageQueryResult extends Page
                 list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
                                         str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
+                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query)), "", $totalNumber));
                 $i++;
             }
             return;
