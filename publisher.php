@@ -10,13 +10,17 @@ require_once('base.php');
 
 class Publisher extends Base {
     const ALL_PUBLISHERS_ID = "cops:publishers";
+    const PUBLISHERS_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
+    const SQL_ALL_PUBLISHERS = "select {0} from publishers, books_publishers_link where publishers.id = publisher group by publishers.id, publishers.name order by publishers.name";
+    const SQL_PUBLISHERS_FOR_SEARCH = "select {0} from publishers, books_publishers_link where publishers.id = publisher and upper (publishers.name) like ? group by publishers.id, publishers.name order by publishers.name";
+
 
     public $id;
     public $name;
 
-    public function __construct($pid, $pname) {
-        $this->id = $pid;
-        $this->name = $pname;
+    public function __construct($post) {
+        $this->id = $post->id;
+        $this->name = $post->name;
     }
 
     public function getUri () {
@@ -38,7 +42,7 @@ from books_publishers_link, publishers
 where publishers.id = publisher and book = ?');
         $result->execute (array ($bookId));
         if ($post = $result->fetchObject ()) {
-            return new Publisher ($post->id, $post->name);
+            return new Publisher ($post);
         }
         return NULL;
     }
@@ -48,45 +52,16 @@ where publishers.id = publisher and book = ?');
 from publishers where id = ?');
         $result->execute (array ($publisherId));
         if ($post = $result->fetchObject ()) {
-            return new Publisher ($post->id, $post->name);
+            return new Publisher ($post);
         }
         return NULL;
     }
 
     public static function getAllPublishers() {
-        $result = parent::getDb ()->query('select publishers.id as id, publishers.name as name, count(*) as count
-from publishers, books_publishers_link
-where publishers.id = publisher
-group by publishers.id, publishers.name
-order by publishers.name');
-        $entryArray = array();
-
-        while ($post = $result->fetchObject ())
-        {
-            $publisher = new Publisher ($post->id, $post->name);
-            array_push ($entryArray, new Entry ($publisher->name, $publisher->getEntryId (),
-                str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($publisher->getUri ()))));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber (self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, array (), "Publisher");
     }
 
     public static function getAllPublishersByQuery($query) {
-        $columns  = "publishers.id as id, publishers.name as name, count(*) as count";
-        $sql = 'select {0} from publishers, books_publishers_link
-where publishers.id = publisher and upper (publishers.name) like ?
-group by publishers.id, publishers.name
-order by publishers.name';
-        list (, $result) = parent::executeQuery ($sql, $columns, "", array ('%' . $query . '%'), -1);
-        $entryArray = array();
-
-        while ($post = $result->fetchObject ())
-        {
-            $publisher = new Publisher ($post->id, $post->name);
-            array_push ($entryArray, new Entry ($publisher->name, $publisher->getEntryId (),
-                str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($publisher->getUri ()))));
-        }
-        return $entryArray;
+        return Base::getEntryArrayWithBookNumber (self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, array ('%' . $query . '%'), "Publisher");
     }
 }

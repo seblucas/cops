@@ -1272,7 +1272,12 @@ abstract class Base
         while ($post = $result->fetchObject ())
         {
             $instance = new $category ($post);
-            array_push ($entryArray, new Entry ($post->sort, $instance->getEntryId (),
+            if (property_exists($post, "sort")) {
+                $title = $post->sort;
+            } else {
+                $title = $post->name;
+            }
+            array_push ($entryArray, new Entry ($title, $instance->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
                 array ( new LinkNavigation ($instance->getUri ())), "", $post->count));
         }
