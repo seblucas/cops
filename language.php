@@ -63,7 +63,7 @@ order by languages.lang_code');
             $language = new Language ($post->id, $post->lang_code);
             array_push ($entryArray, new Entry (Language::getLanguageString ($language->lang_code), $language->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($language->getUri ()))));
+                array ( new LinkNavigation ($language->getUri ())), "", $post->count));
         }
         return $entryArray;
     }
