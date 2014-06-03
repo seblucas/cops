@@ -12,8 +12,6 @@ class tag extends Base {
     const ALL_TAGS_ID = "cops:tags";
     const TAG_COLUMNS = "tags.id as id, tags.name as name, count(*) as count";
     const SQL_ALL_TAGS = "select {0} from tags, books_tags_link where tags.id = tag group by tags.id, tags.name order by tags.name";
-    const SQL_TAGS_FOR_SEARCH = "select {0} from tags, books_tags_link where tags.id = tag group by tags.id, tags.name order by tags.name";
-
 
     public $id;
     public $name;
