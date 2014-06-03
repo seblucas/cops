@@ -187,7 +187,7 @@ class Book extends Base {
             $result->execute (array ($this->id));
             while ($post = $result->fetchObject ())
             {
-                array_push ($this->tags, new Tag ($post->id, $post->name));
+                array_push ($this->tags, new Tag ($post));
             }
         }
         return $this->tags;
