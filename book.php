@@ -547,7 +547,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         {
             array_push ($entryArray, new Entry ($post->title, Book::getEntryIdByLetter ($post->title),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title)))));
+                array ( new LinkNavigation ("?page=".parent::PAGE_ALL_BOOKS_LETTER."&id=". rawurlencode ($post->title))), "", $post->count));
         }
         return $entryArray;
     }

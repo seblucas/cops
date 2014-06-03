@@ -48,7 +48,7 @@ class Rating extends Base {
             $rating = str_format (localize("ratingword", $rating), $rating);
             array_push ($entryArray, new Entry ($rating, $ratingObj->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($ratingObj->getUri ()))));
+                array ( new LinkNavigation ($ratingObj->getUri ())), "", $post->count));
         }
         return $entryArray;
     }
