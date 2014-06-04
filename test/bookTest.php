@@ -191,6 +191,13 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Strand Magazine", $book->getPublisher()->name);
     }
 
+    public function testGetBookById_NotFound ()
+    {
+        $book = Book::getBookById(666);
+
+        $this->assertNull ($book);
+    }
+
     public function testGetRating_FiveStars ()
     {
         $book = Book::getBookById(2);
