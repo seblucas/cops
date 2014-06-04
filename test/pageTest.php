@@ -332,7 +332,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertFalse ($currentPage->ContainsBook ());
     }
 
-    public function testPageAuthorsDetail ()
+    public function testPageAuthorsDetail_FirstPage ()
     {
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
@@ -355,6 +355,18 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue ($currentPage->IsPaginated ());
         $this->assertNull ($currentPage->getPrevLink ());
 
+        $config['cops_max_item_per_page'] = -1;
+    }
+
+    public function testPageAuthorsDetail_LastPage ()
+    {
+        global $config;
+        $page = Base::PAGE_AUTHOR_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+
         // Last page
         $config['cops_max_item_per_page'] = 5;
         $n = "2";
@@ -368,6 +380,19 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertTrue ($currentPage->ContainsBook ());
         $this->assertTrue ($currentPage->IsPaginated ());
         $this->assertNull ($currentPage->getNextLink ());
+
+        // No pagination
+        $config['cops_max_item_per_page'] = -1;
+    }
+
+    public function testPageAuthorsDetail_NoPagination ()
+    {
+        global $config;
+        $page = Base::PAGE_AUTHOR_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
 
         // No pagination
         $config['cops_max_item_per_page'] = -1;
