@@ -75,7 +75,7 @@ class PageTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function testPageIndexWithCustomColumn ()
+    public function testPageIndexWithCustomColumn_Type1 ()
     {
         global $config;
         $page = Base::PAGE_INDEX;
@@ -93,6 +93,17 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
         $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
+        $config['cops_calibre_custom_column'] = array ();
+    }
+
+    public function testPageIndexWithCustomColumn_Type2 ()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
+
         $config['cops_calibre_custom_column'] = array ("type2");
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -102,6 +113,17 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Type2", $currentPage->entryArray [6]->title);
         $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [6]->content);
         $this->assertEquals (3, $currentPage->entryArray [6]->numberOfElement);
+
+        $config['cops_calibre_custom_column'] = array ();
+    }
+
+    public function testPageIndexWithCustomColumn_Type4 ()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $config['cops_calibre_custom_column'] = array ("type4");
 
@@ -113,6 +135,17 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
         $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
+        $config['cops_calibre_custom_column'] = array ();
+    }
+
+    public function testPageIndexWithCustomColumn_ManyTypes ()
+    {
+        global $config;
+        $page = Base::PAGE_INDEX;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
+
         $config['cops_calibre_custom_column'] = array ("type1", "type2", "type4");
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -123,7 +156,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array ();
     }
 
-    public function testPageAllCustom ()
+    public function testPageAllCustom_Type4 ()
     {
         $page = Base::PAGE_ALL_CUSTOMS;
         $query = NULL;
@@ -140,6 +173,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("SeriesLike", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
 
+        $_GET ["custom"] = NULL;
+    }
+
+    public function testPageAllCustom_Type2 ()
+    {
+        $page = Base::PAGE_ALL_CUSTOMS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
+
         $_GET ["custom"] = "2";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -149,6 +192,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (3, $currentPage->entryArray);
         $this->assertEquals ("tag1", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
+
+        $_GET ["custom"] = NULL;
+    }
+
+    public function testPageAllCustom_Type1 ()
+    {
+        $page = Base::PAGE_ALL_CUSTOMS;
+        $query = NULL;
+        $qid = NULL;
+        $n = "1";
 
         $_GET ["custom"] = "3";
 
@@ -163,7 +216,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $_GET ["custom"] = NULL;
     }
 
-    public function testPageCustomDetail ()
+    public function testPageCustomDetail_Type4 ()
     {
         $page = Base::PAGE_CUSTOM_DETAIL;
         $query = NULL;
@@ -180,6 +233,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
 
+        $_GET ["custom"] = NULL;
+    }
+
+    public function testPageCustomDetail_Type2 ()
+    {
+        $page = Base::PAGE_CUSTOM_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+
         $_GET ["custom"] = "2";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -189,6 +252,16 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
+
+        $_GET ["custom"] = NULL;
+    }
+
+    public function testPageCustomDetail_Type1 ()
+    {
+        $page = Base::PAGE_CUSTOM_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
 
         $_GET ["custom"] = "3";
         $qid = "2";
