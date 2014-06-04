@@ -89,7 +89,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
-    
+
     /**
      * @dataProvider providerPage
      */
@@ -105,13 +105,13 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        
+
         $OPDSRender = new OPDSRenderer ();
-        
+
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
         $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
     }
-    
+
     public function providerPage ()
     {
         return array (
