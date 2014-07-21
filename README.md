@@ -3,7 +3,9 @@ cops
 
 Calibre OPDS (and HTML) PHP Server : light alternative to Calibre content server / Calibre2OPDS
 
-See : http://blog.slucas.fr/en/oss/calibre-opds-php-server
+See : [COPS's home](http://blog.slucas.fr/en/oss/calibre-opds-php-server) for more details.
+
+Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/seblucas/cops/badges/quality-score.png?s=e1c87a92ef90b8d666cd9bd4f3612bd10db84364)](https://scrutinizer-ci.com/g/seblucas/cops/)
 
