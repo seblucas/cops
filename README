@@ -32,7 +32,8 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 
 1. 	PHP 5.3, 5.4, 5.5 or hhvm with GD image processing, Libxml, Json & SQLite3 support.
 2. 	A web server with PHP support. I only tested with various version of Nginx.
-    Other people reported it working with Apache and Cherokee.
+    Other people reported it working with Apache and Cherokee. You can also use PHP
+    embedded server (https://github.com/seblucas/cops/wiki/Howto---PhpEmbeddedServer)
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
 On any Debian base Linux you can use :
