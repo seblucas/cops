@@ -3,7 +3,7 @@
 // https://github.com/seblucas/cops
 
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
-/*global LRUCache, doT, Bloodhound */
+/*global LRUCache, doT, Bloodhound, postRefresh */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
