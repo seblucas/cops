@@ -10,6 +10,7 @@
  * Added an empty line at the end of .htaccess to make it easier to modify. Reported by Mariosipad.
  * Modified the README and checkconfig.php to check for php5-json. Reported by Mariosipad.
  * Added a new bootstrap template.
+ * Handled properly the cancelling of a mail. Reported by coach0742.
 
 1.0.0RC1 - 20140404
   * Updated English, Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks to all to the translators.

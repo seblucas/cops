@@ -101,6 +101,10 @@ function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
         email = window.prompt (currentData.c.i18n.customizeEmail, "");
+        if (email === null)
+        {
+            return;
+        }
         $.cookie ('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
