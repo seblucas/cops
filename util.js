@@ -330,6 +330,9 @@ updatePage = function (data) {
             window.location = datum.navlink;
         }
     });
+
+    if(typeof postRefresh == 'function')
+    { postRefresh(); }
 };
 
 navigateTo = function (url) {
