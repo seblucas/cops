@@ -72,6 +72,9 @@ function getCurrentOption ($option) {
     if ($option == "style") {
         return "default";
     }
+    if ($option == "template") {
+        return "default";
+    }
 
     if (isset($config ["cops_" . $option])) {
         return $config ["cops_" . $option];
@@ -85,7 +88,7 @@ function getCurrentCss () {
 }
 
 function getCurrentTemplate () {
-    return "default";
+    return getCurrentOption ("template");
 }
 
 function getUrlWithVersion ($url) {
@@ -1074,6 +1077,9 @@ class PageCustomize extends Page
                                    "language");
 
         $content = "";
+        array_push ($this->entryArray, new Entry ("Template", "",
+                                        "<span onclick='$.cookie(\"template\", \"bootstrap\", { expires: 365 });'>Click to switch to Bootstrap</span>", "text",
+                                        array ()));
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
             foreach ($this-> getStyleList () as $filename) {
