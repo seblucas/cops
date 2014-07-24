@@ -11,11 +11,11 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#" onclick='$.removeCookie("template"); window.location.reload(true); '>
-          <span class="glyphicon glyphicon-picture"></span>
+        <li><a href="#" onclick='$.removeCookie("template"); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Default COPS template">
+          <span class="glyphicon glyphicon-picture"></span><span class="visible-xs-inline"> Default COPS template</span>
         </a></li>
-        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.customizeTitle}}">
-          <span class="glyphicon glyphicon-info-sign"></span>
+        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+          <span class="glyphicon glyphicon-info-sign"></span><span class="visible-xs-inline"> {{=it.c.i18n.aboutTitle}}</span>
         </a></li>
       </ul>
       <form id="searchForm" class="navbar-form navbar-right" role="search">
