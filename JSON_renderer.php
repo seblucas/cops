@@ -102,7 +102,7 @@ class JSONRenderer
             $out ["book"] = self::getBookContentArray ($entry->book);
             return $out;
         }
-        return array ( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink () );
+        return array ( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink (), "number" => $entry->numberOfElement );
     }
 
     public static function getContentArrayTypeahead ($page) {
@@ -190,6 +190,13 @@ class JSONRenderer
         }
         $out ["databaseId"] = GetUrlParam (DB, "");
         $out ["databaseName"] = Base::getDbName ();
+        if ($out ["databaseId"] == "") {
+            $out ["databaseName"] = "";
+        }
+        $out ["fullTitle"] = $out ["title"];
+        if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
+            $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
+        }
         $out ["page"] = $page;
         $out ["multipleDatabase"] = Base::isMultipleDatabaseEnabled () ? 1 : 0;
         $out ["entries"] = $entries;

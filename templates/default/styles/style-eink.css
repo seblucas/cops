@@ -22,6 +22,11 @@ header {
 	letter-spacing: 2px;
 }
 
+#tool input[type=text], .twitter-typeahead
+{
+	font-variant: normal;
+}
+
 .hicon, .footcenter, .submit, .fullclickpopup{
     color:black;
 }

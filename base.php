@@ -72,6 +72,9 @@ function getCurrentOption ($option) {
     if ($option == "style") {
         return "default";
     }
+    if ($option == "template") {
+        return "default";
+    }
 
     if (isset($config ["cops_" . $option])) {
         return $config ["cops_" . $option];
@@ -85,7 +88,7 @@ function getCurrentCss () {
 }
 
 function getCurrentTemplate () {
-    return "default";
+    return getCurrentOption ("template");
 }
 
 function getUrlWithVersion ($url) {
@@ -256,6 +259,83 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
     return $start . http_build_query($params);
 }
 
+function useNormAndUp () {
+    global $config;
+    return extension_loaded('mbstring') &&
+           extension_loaded('intl') &&
+           class_exists("Normalizer", $autoload = false) &&
+           $config ['cops_normalized_search'] == "1";
+}
+
+function normalizeUtf8String( $s)
+{
+    $original_string = $s;
+
+    // maps German (umlauts) and other European characters onto two characters before just removing diacritics
+    $s    = preg_replace( '@\x{00c4}@u'    , "AE",    $s );    // umlaut Ä => AE
+    $s    = preg_replace( '@\x{00d6}@u'    , "OE",    $s );    // umlaut Ö => OE
+    $s    = preg_replace( '@\x{00dc}@u'    , "UE",    $s );    // umlaut Ü => UE
+    $s    = preg_replace( '@\x{00e4}@u'    , "ae",    $s );    // umlaut ä => ae
+    $s    = preg_replace( '@\x{00f6}@u'    , "oe",    $s );    // umlaut ö => oe
+    $s    = preg_replace( '@\x{00fc}@u'    , "ue",    $s );    // umlaut ü => ue
+    $s    = preg_replace( '@\x{00f1}@u'    , "ny",    $s );    // ñ => ny
+    $s    = preg_replace( '@\x{00ff}@u'    , "yu",    $s );    // ÿ => yu
+
+
+    // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
+        // exmaple:  Ú => U´,  á => a`
+    $s    = Normalizer::normalize( $s, Normalizer::FORM_D );
+
+
+    $s    = preg_replace( '@\pM@u'        , "",    $s );    // removes diacritics
+
+
+    $s    = preg_replace( '@\x{00df}@u'    , "ss",    $s );    // maps German ß onto ss
+    $s    = preg_replace( '@\x{00c6}@u'    , "AE",    $s );    // Æ => AE
+    $s    = preg_replace( '@\x{00e6}@u'    , "ae",    $s );    // æ => ae
+    $s    = preg_replace( '@\x{0132}@u'    , "IJ",    $s );    // ? => IJ
+    $s    = preg_replace( '@\x{0133}@u'    , "ij",    $s );    // ? => ij
+    $s    = preg_replace( '@\x{0152}@u'    , "OE",    $s );    // Œ => OE
+    $s    = preg_replace( '@\x{0153}@u'    , "oe",    $s );    // œ => oe
+
+    $s    = preg_replace( '@\x{00d0}@u'    , "D",    $s );    // Ð => D
+    $s    = preg_replace( '@\x{0110}@u'    , "D",    $s );    // Ð => D
+    $s    = preg_replace( '@\x{00f0}@u'    , "d",    $s );    // ð => d
+    $s    = preg_replace( '@\x{0111}@u'    , "d",    $s );    // d => d
+    $s    = preg_replace( '@\x{0126}@u'    , "H",    $s );    // H => H
+    $s    = preg_replace( '@\x{0127}@u'    , "h",    $s );    // h => h
+    $s    = preg_replace( '@\x{0131}@u'    , "i",    $s );    // i => i
+    $s    = preg_replace( '@\x{0138}@u'    , "k",    $s );    // ? => k
+    $s    = preg_replace( '@\x{013f}@u'    , "L",    $s );    // ? => L
+    $s    = preg_replace( '@\x{0141}@u'    , "L",    $s );    // L => L
+    $s    = preg_replace( '@\x{0140}@u'    , "l",    $s );    // ? => l
+    $s    = preg_replace( '@\x{0142}@u'    , "l",    $s );    // l => l
+    $s    = preg_replace( '@\x{014a}@u'    , "N",    $s );    // ? => N
+    $s    = preg_replace( '@\x{0149}@u'    , "n",    $s );    // ? => n
+    $s    = preg_replace( '@\x{014b}@u'    , "n",    $s );    // ? => n
+    $s    = preg_replace( '@\x{00d8}@u'    , "O",    $s );    // Ø => O
+    $s    = preg_replace( '@\x{00f8}@u'    , "o",    $s );    // ø => o
+    $s    = preg_replace( '@\x{017f}@u'    , "s",    $s );    // ? => s
+    $s    = preg_replace( '@\x{00de}@u'    , "T",    $s );    // Þ => T
+    $s    = preg_replace( '@\x{0166}@u'    , "T",    $s );    // T => T
+    $s    = preg_replace( '@\x{00fe}@u'    , "t",    $s );    // þ => t
+    $s    = preg_replace( '@\x{0167}@u'    , "t",    $s );    // t => t
+
+    // remove all non-ASCii characters
+    $s    = preg_replace( '@[^\0-\x80]@u'    , "",    $s );
+
+
+    // possible errors in UTF8-regular-expressions
+    if (empty($s))
+        return $original_string;
+    else
+        return $s;
+}
+
+function normAndUp ($a) {
+    return mb_strtoupper (normalizeUtf8String($a), 'UTF-8');
+}
+
 class Link
 {
     const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
@@ -313,6 +393,7 @@ class Entry
     public $title;
     public $id;
     public $content;
+    public $numberOfElement;
     public $contentType;
     public $linkArray;
     public $localUpdated;
@@ -350,7 +431,7 @@ class Entry
         return "#";
     }
 
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "") {
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass = "", $pcount = 0) {
         global $config;
         $this->title = $ptitle;
         $this->id = $pid;
@@ -358,6 +439,7 @@ class Entry
         $this->contentType = $pcontentType;
         $this->linkArray = $plinkArray;
         $this->className = $pclass;
+        $this->numberOfElement = $pcount;
 
         if ($config['cops_show_icons'] == 1)
         {
@@ -494,7 +576,7 @@ class Page
                 $nBooks = Book::getBookCount ($i);
                 array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
                                         str_format (localize ("bookword", $nBooks), $nBooks), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}"))));
+                                        array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
                 $i++;
                 Base::clearDb ();
             }
@@ -792,29 +874,33 @@ class PageQueryResult extends Page
     private function searchByScope ($scope, $limit = FALSE) {
         $n = $this->n;
         $numberPerPage = NULL;
+        $queryNormedAndUp = $this->query;
+        if (useNormAndUp ()) {
+            $queryNormedAndUp = normAndUp ($this->query);
+        }
         if ($limit) {
             $n = 1;
             $numberPerPage = 5;
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter ('%' . $this->query, $n, NULL, $numberPerPage);
+                $array = Book::getBooksByStartingLetter ('%' . $queryNormedAndUp, $n, NULL, $numberPerPage);
                 break;
             case self::SCOPE_AUTHOR :
-                $array = Author::getAuthorsByStartingLetter ('%' . $this->query);
+                $array = Author::getAuthorsForSearch ('%' . $queryNormedAndUp);
                 break;
             case self::SCOPE_SERIES :
-                $array = Serie::getAllSeriesByQuery ($this->query);
+                $array = Serie::getAllSeriesByQuery ($queryNormedAndUp);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery ($this->query, $n, NULL, $numberPerPage);
+                $array = Tag::getAllTagsByQuery ($queryNormedAndUp, $n, NULL, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
-                $array = Publisher::getAllPublishersByQuery ($this->query);
+                $array = Publisher::getAllPublishersByQuery ($queryNormedAndUp);
                 break;
             default:
                 $array = Book::getBooksByQuery (
-                    array ("all" => "%" . $this->query . "%"), $n);
+                    array ("all" => "%" . $queryNormedAndUp . "%"), $n);
         }
 
         return $array;
@@ -866,7 +952,7 @@ class PageQueryResult extends Page
                     array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}",
                                         str_format (localize("{$key}word", $total), $total), "text",
                                         array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
-                                        Base::noDatabaseSelected () ? "" : "tt-header"));
+                                        Base::noDatabaseSelected () ? "" : "tt-header", $total));
                 }
                 if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
                     foreach ($array as $entry) {
@@ -909,7 +995,7 @@ class PageQueryResult extends Page
                 list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
                 array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
                                         str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query))));
+                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query)), "", $totalNumber));
                 $i++;
             }
             return;
@@ -991,6 +1077,9 @@ class PageCustomize extends Page
                                    "language");
 
         $content = "";
+        array_push ($this->entryArray, new Entry ("Template", "",
+                                        "<span onclick='$.cookie(\"template\", \"bootstrap\", { expires: 365 });'>Click to switch to Bootstrap</span>", "text",
+                                        array ()));
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
             foreach ($this-> getStyleList () as $filename) {
@@ -1138,6 +1227,9 @@ abstract class Base
             try {
                 if (is_readable (self::getDbFileName ($database))) {
                     self::$db = new PDO('sqlite:'. self::getDbFileName ($database));
+                    if (useNormAndUp ()) {
+                        self::$db->sqliteCreateFunction ('normAndUp', 'normAndUp', 1);
+                    }
                 } else {
                     self::error ();
                 }
@@ -1164,8 +1256,47 @@ abstract class Base
         self::$db = NULL;
     }
 
+    public static function executeQuerySingle ($query, $database = NULL) {
+        return self::getDb ($database)->query($query)->fetchColumn();
+    }
+
+    public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL) {
+        if (!$numberOfString) {
+            $numberOfString = $table . ".alphabetical";
+        }
+        $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        if ($count == 0) return NULL;
+        $entry = new Entry (localize($table . ".title"), $id,
+            str_format (localize($numberOfString, $count), $count), "text",
+            array ( new LinkNavigation ("?page=".$pageId)), "", $count);
+        return $entry;
+    }
+
+    public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
+        list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
+        $entryArray = array();
+        while ($post = $result->fetchObject ())
+        {
+            $instance = new $category ($post);
+            if (property_exists($post, "sort")) {
+                $title = $post->sort;
+            } else {
+                $title = $post->name;
+            }
+            array_push ($entryArray, new Entry ($title, $instance->getEntryId (),
+                str_format (localize("bookword", $post->count), $post->count), "text",
+                array ( new LinkNavigation ($instance->getUri ())), "", $post->count));
+        }
+        return $entryArray;
+    }
+
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
         $totalResult = -1;
+
+        if (useNormAndUp ()) {
+            $query = preg_replace("/upper/", "normAndUp", $query);
+            $columns = preg_replace("/upper/", "normAndUp", $columns);
+        }
 
         if (is_null ($numberPerPage)) {
             $numberPerPage = getCurrentOption ("max_item_per_page");

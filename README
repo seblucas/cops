@@ -2,15 +2,15 @@
 
 COPS stands for Calibre OPDS (and HTML) Php Server.
 
-COPS output is valid the unofficial OPDS validator : 
+COPS output is valid the unofficial OPDS validator :
 http://opds-validator.appspot.com/
 
 = Why ? =
 
-In my opinion Calibre is a marvelous tool but is too big and has too much 
+In my opinion Calibre is a marvelous tool but is too big and has too much
 dependencies to be used for its content server.
 
-That's the main reason why I coded this OPDS server. I needed a simple 
+That's the main reason why I coded this OPDS server. I needed a simple
 tool to be installed on a small server (Seagate Dockstar in my case).
 
 I initially thought of Calibre2OPDS but as it generate static file no
@@ -25,18 +25,19 @@ So COPS's main advantages are :
  * Search is available.
  * With Dropbox / owncloud it's very easy to have an up to date OPDS server.
  * It was fun to code.
- 
+
 If you want to use the OPDS feed don't forget to specify feed.php at the end of your URL.
 
 = Prerequisites =
 
-1. 	PHP 5.3 or 5.4 with GD image processing & SQLite3 support.
+1. 	PHP 5.3, 5.4, 5.5 or hhvm with GD image processing, Libxml, Json & SQLite3 support.
 2. 	A web server with PHP support. I only tested with various version of Nginx.
-    Other people reported it working with Apache and Cherokee.
+    Other people reported it working with Apache and Cherokee. You can also use PHP
+    embedded server (https://github.com/seblucas/cops/wiki/Howto---PhpEmbeddedServer)
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
 On any Debian base Linux you can use :
- aptitude install php5-gd php5-sqlite
+ aptitude install php5-gd php5-sqlite php5-json
 
 = Install =
 
@@ -63,14 +64,14 @@ Please read https://github.com/seblucas/cops/wiki and check the FAQ.
 
 It's tested by me and many other users but there's still some little bugs around ;)
 
-= Credits = 
+= Credits =
 
  * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
- * All icons come from Font Awesome : http://fortawesome.github.io/Font-Awesome/
+ * All icons come from Font Awesome : http://fontawesome.github.io/Font-Awesome/
  * Thanks to all testers, translators and contributors.
- 
-External libraries used : 
+
+External libraries used :
  * JQuery : http://jquery.com/
  * Magnific Popup : http://dimsemenov.com/plugins/magnific-popup/
  * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me
@@ -82,7 +83,7 @@ External libraries used :
 
 = Copyright & License =
 
-COPS - 2012-2013 (c) Sébastien Lucas <sebastien@slucas.fr>
+COPS - 2012-2014 (c) Sébastien Lucas <sebastien@slucas.fr>
 
 See COPYING and file headers for license info
 

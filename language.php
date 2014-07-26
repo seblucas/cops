@@ -36,12 +36,8 @@ class language extends Base {
     }
 
     public static function getCount() {
-        $nLanguages = parent::getDb ()->query('select count(*) from languages')->fetchColumn();
-        if ($nLanguages == 0) return NULL;
-        $entry = new Entry (localize("languages.title"), self::ALL_LANGUAGES_ID,
-            str_format (localize("languages.alphabetical", $nLanguages), $nLanguages), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_LANGUAGES)));
-        return $entry;
+        // str_format (localize("languages.alphabetical", count(array))
+        return parent::getCountGeneric ("languages", self::ALL_LANGUAGES_ID, parent::PAGE_ALL_LANGUAGES);
     }
 
     public static function getLanguageById ($languageId) {
@@ -67,7 +63,7 @@ order by languages.lang_code');
             $language = new Language ($post->id, $post->lang_code);
             array_push ($entryArray, new Entry (Language::getLanguageString ($language->lang_code), $language->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($language->getUri ()))));
+                array ( new LinkNavigation ($language->getUri ())), "", $post->count));
         }
         return $entryArray;
     }

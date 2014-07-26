@@ -3,7 +3,7 @@
 // https://github.com/seblucas/cops
 
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
-/*global LRUCache, doT, Bloodhound */
+/*global LRUCache, doT, Bloodhound, postRefresh */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
@@ -101,6 +101,10 @@ function sendToMailAddress (component, dataid) {
     var email = $.cookie ('email');
     if (!$.cookie ('email')) {
         email = window.prompt (currentData.c.i18n.customizeEmail, "");
+        if (email === null)
+        {
+            return;
+        }
         $.cookie ('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
@@ -326,6 +330,9 @@ updatePage = function (data) {
             window.location = datum.navlink;
         }
     });
+
+    if(typeof postRefresh == 'function')
+    { postRefresh(); }
 };
 
 navigateTo = function (url) {

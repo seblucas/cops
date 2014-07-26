@@ -1,8 +1,4 @@
-{{? it.containsBook == 0}}
-<div class="container">
-{{??}}
 <div class="container-fluid">
-{{?}}
 {{? it.page == 13 || it.page == 16}}
     {{? it.page == 13}}
         {{#def.bookdetail}}
@@ -10,23 +6,30 @@
         {{= it.fullhtml}}
     {{?}}
 {{??}}
-{{? it.containsBook == 1}}
+<div id="filter">
+    <ul>
+    </ul>
+</div>
 <div class="row">
-{{??}}
-<div class="list-group">
-{{?}}
 {{~it.entries:entry:i}}
     {{? it.containsBook == 0}}
-        <a class="list-group-item" href="{{=entry.navlink}}">
-            {{=htmlspecialchars (entry.title)}}
-            <span class="glyphicon glyphicon-chevron-right"></span>
-            <span class="badge">{{=entry.content}}</span>
-        </a>
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
+            <div class="panel panel-default" style="height: 70px;">
+                <div class="panel-heading">
+                    <h2 class="panel-title">
+                        <a href="{{=entry.navlink}}" style="display: block;">{{=htmlspecialchars (entry.title)}}</a>
+                    </h2>
+                </div>
+                <div class="panel-body">
+                    <span class="badge bottomright">{{=entry.number}}</span>
+                </div>
+            </div>
+        </div>
     {{??}}
-        <div class="col-lg-2 col-md-4 col-sm-6 col-xs-12">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 books">
         <div class="panel panel-default" style="height: 320px;">
           <div class="panel-heading">
-            <h3 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h3>
+            <h2 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h2>
           </div>
           <div class="panel-body">
             {{? entry.book.hasCover == 1}}
@@ -36,9 +39,9 @@
                 </a>
                 </div>
             {{?}}
-            {{=it.c.i18n.authorsTitle}} : <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span>
-            {{? entry.book.tagsName != ""}}<br />{{=it.c.i18n.tagsTitle}} :<span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span>{{?}}
-            {{? entry.book.seriesName != ""}}<br />{{=it.c.i18n.seriesTitle}} : <span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span>{{?}}
+            <div class="ellipsis"><span class="glyphicon glyphicon-user"></span> <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span></div>
+            {{? entry.book.tagsName != ""}}<div class="ellipsis"><span class="glyphicon glyphicon-tag"></span> <span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span></div>{{?}}
+            {{? entry.book.seriesName != ""}}<div class="ellipsis"><span class="glyphicon glyphicon-list"></span> <span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span></div>{{?}}
             <div class="text-center bottomright">
             {{~entry.book.preferedData:data:j}}
                 <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
@@ -50,5 +53,12 @@
     {{?}}
 {{~}}
 </div>
+{{?}}
+{{? it.isPaginated == 1}}
+    <ul class="pager">
+        <li class="{{? it.prevLink == ""}}disabled{{?}}"><a id="prevLink" href="{{=it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{=it.c.i18n.previousAlt}}</a></li>
+        <li> {{=it.currentPage}} / {{=it.maxPage}} </li>
+        <li class="{{? it.nextLink == ""}}disabled{{?}}"><a id="nextLink" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+    </ul>
 {{?}}
 </div>

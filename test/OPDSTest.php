@@ -89,7 +89,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['QUERY_STRING'] = NULL;
     }
-    
+
     /**
      * @dataProvider providerPage
      */
@@ -105,13 +105,13 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        
+
         $OPDSRender = new OPDSRenderer ();
-        
+
         file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
         $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
     }
-    
+
     public function providerPage ()
     {
         return array (
@@ -189,7 +189,6 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
 
         $config['cops_max_item_per_page'] = 2;
-        $config['cops_books_filter'] = array ("Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories");
 
         // First page
 
@@ -214,6 +213,51 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         // No pagination
         $config['cops_max_item_per_page'] = -1;
+
+    }
+
+    public function testPageAuthorsDetail_WithFacets ()
+    {
+        global $config;
+        $page = Base::PAGE_AUTHOR_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_GET["tag"] = "Short Stories";
+
+        $config['cops_books_filter'] = array ("Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories");
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+
+        $OPDSRender = new OPDSRenderer ();
+
+        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+
+        $config['cops_books_filter'] = array ();
+    }
+
+    public function testPageAuthorsDetail_WithoutAnyId ()
+    {
+        global $config;
+        $page = Base::PAGE_AUTHOR_DETAIL;
+        $query = NULL;
+        $qid = "1";
+        $n = "1";
+        $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
+        $_SERVER['REQUEST_URI'] = "index.php?XXXX";
+
+
+        $currentPage = Page::getPage ($page, $qid, $query, $n);
+        $currentPage->InitializeContent ();
+        $currentPage->idPage = NULL;
+
+        $OPDSRender = new OPDSRenderer ();
+
+        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
+        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
 
     }
 }

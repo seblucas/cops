@@ -30,11 +30,8 @@ class Rating extends Base {
     }
 
     public static function getCount() {
-        $nRatings = parent::getDb ()->query('select count(*) from ratings')->fetchColumn();
-        $entry = new Entry (localize("ratings.title"), self::ALL_RATING_ID,
-            str_format (localize("ratings", $nRatings), $nRatings), "text",
-            array ( new LinkNavigation ("?page=".parent::PAGE_ALL_RATINGS)));
-        return $entry;
+        // str_format (localize("ratings", count(array))
+        return parent::getCountGeneric ("ratings", self::ALL_RATING_ID, parent::PAGE_ALL_RATINGS, "ratings");
     }
 
     public static function getAllRatings() {
@@ -51,7 +48,7 @@ class Rating extends Base {
             $rating = str_format (localize("ratingword", $rating), $rating);
             array_push ($entryArray, new Entry ($rating, $ratingObj->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($ratingObj->getUri ()))));
+                array ( new LinkNavigation ($ratingObj->getUri ())), "", $post->count));
         }
         return $entryArray;
     }
