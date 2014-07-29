@@ -36,6 +36,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $data = array("title"                 => $config['cops_title_default'],
                   "version"               => VERSION,
                   "opds_url"              => $config['cops_full_url'] . "feed.php",
+                  "customHeader"          => "",
                   "template"              => getCurrentTemplate (),
                   "server_side_rendering" => useServerSideRendering (),
                   "current_css"           => getCurrentCss (),
