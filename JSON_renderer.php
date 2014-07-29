@@ -154,12 +154,16 @@ class JSONRenderer
                        "config" => array (
                            "use_fancyapps" => $config ["cops_use_fancyapps"],
                            "max_item_per_page" => $config['cops_max_item_per_page'],
+                           "kindleHack"        => "",
                            "server_side_rendering" => useServerSideRendering (),
                            "html_tag_filter" => $config['cops_html_tag_filter']));
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } else if (!empty ($config['cops_thumbnail_handling'])) {
             $out ["c"]["url"]["thumbnailUrl"] = $config['cops_thumbnail_handling'];
+        }
+        if (preg_match("/./", $_SERVER['HTTP_USER_AGENT'])) {
+          $out ["c"]["config"]["kindleHack"] = 'style="text-decoration: none !important;"';
         }
         return $out;
     }
