@@ -10,7 +10,7 @@
     {{? it.containsBook == 0}}
     <article>
         <div class="frontpage">
-            {{? entry.navlink != "#"}}<a href="{{=entry.navlink}}">{{?}}
+            {{? entry.navlink != "#"}}<a href="{{=entry.navlink}}" {{=it.c.config.kindleHack}}>{{?}}
                 <h2>{{=htmlspecialchars (entry.title)}}</h2>
                 <h4>{{=entry.content}}</h4> 
             {{? entry.navlink != "#"}}</a>{{?}}
@@ -20,17 +20,17 @@
     <article class="books">
             <span class="cover">
             {{? entry.book.hasCover == 1}}
-                <a class="fancycover" href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
+                <a class="fancycover" href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}>
                     <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
             {{?}}
             </span>
             <h2 class="download">
                 {{~entry.book.preferedData:data:j}}
-                 <a href="{{=data.url}}">{{=data.name}}</a><br />
+                 <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.name}}</a><br />
                 {{~}}
             </h2>
-            <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
+            <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}>
             <div class="fullclickpopup">
                 <h2><span class="st">{{=htmlspecialchars (entry.title)}}</span>
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}

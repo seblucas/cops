@@ -1,15 +1,15 @@
 <footer>
     <div class="footleft">
-        <a href="index.php?page=19"><div title="{{=it.c.i18n.customizeTitle}}" class="hicon hicon32"><i class="icon-wrench icon-2x"></i></div></a>
+        <a href="index.php?page=19" {{=it.c.config.kindleHack}}><div title="{{=it.c.i18n.customizeTitle}}" class="hicon hicon32"><i class="icon-wrench icon-2x"></i></div></a>
     </div>
     <div class="footright">
-        <a class="fancyabout" href="{{=it.abouturl}}"><div title="{{=it.c.i18n.aboutTitle}}" class="hicon hicon32"><i class="icon-info-sign icon-2x"></i></div></a>
+        <a class="fancyabout" href="{{=it.abouturl}}" {{=it.c.config.kindleHack}}><div title="{{=it.c.i18n.aboutTitle}}" class="hicon hicon32"><i class="icon-info-sign icon-2x"></i></div></a>
     </div>
     {{? it.isPaginated == 1}}
     <div class="footcenter">
-        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" ><div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon32"><i class="icon-angle-left icon-2x"></i></div></a>{{?}}
+        {{? it.prevLink != ""}}<a id="prevLink" href="{{=it.prevLink}}" {{=it.c.config.kindleHack}}><div title="{{=it.c.i18n.previousAlt}}" class="hicon hicon32"><i class="icon-angle-left icon-2x"></i></div></a>{{?}}
         <p> {{=it.currentPage}} / {{=it.maxPage}} </p>
-        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" ><div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon32"><i class="icon-angle-right icon-2x"></i></div></a>{{?}}
+        {{? it.nextLink != ""}}<a id="nextLink" href="{{=it.nextLink}}" {{=it.c.config.kindleHack}}><div title="{{=it.c.i18n.nextAlt}}" class="hicon hicon32"><i class="icon-angle-right icon-2x"></i></div></a>{{?}}
     </div>
     {{?}}
 </footer>

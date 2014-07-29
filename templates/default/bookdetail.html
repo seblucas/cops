@@ -1,24 +1,24 @@
 <article class="bookpopup">
     <span class="cover">
         {{? it.book.hasCover == 1}}
-        <a href="{{=it.book.coverurl}}">
+        <a href="{{=it.book.coverurl}}" {{=it.c.config.kindleHack}}>
           <img src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
         </a>
         {{?}}
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a href="{{=data.url}}">{{=data.format}}</a>
+        <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.format}}</a>
         {{? data.mail == 1}}
-        <a id="mailButton" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;"><i class="icon-envelope icon-large"></i></a>
+        <a id="mailButton" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="icon-envelope icon-large"></i></a>
         {{?}}
         {{? data.readerUrl != ""}}
-        <a title="Reader" href="{{=data.readerUrl}}" target="blank"><i class="icon-eye-open icon-large"></i></a>
+        <a title="Reader" href="{{=data.readerUrl}}" target="blank" {{=it.c.config.kindleHack}}><i class="icon-eye-open icon-large"></i></a>
         {{?}}
         <br />
         {{~}}
     </h2>
-    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}"><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
+    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.c.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:i}}
@@ -29,18 +29,18 @@
     <p class="popupless">
         <h3>{{=it.c.i18n.tagsTitle}}: </h3>
         {{~it.book.tags:tag:i}}
-        {{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>
+        {{? i > 0}}, {{?}}<a href="{{=tag.url}}" {{=it.c.config.kindleHack}}>{{=htmlspecialchars (tag.name)}}</a>
         {{~}}
     </p>
     {{?}}
     {{? it.book.seriesName != ""}}
     <p class="popupless">
-        <h3><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
+        <h3><a href="{{=it.book.seriesurl}}" {{=it.c.config.kindleHack}}>{{=it.c.i18n.seriesTitle}}</a> : </h3>{{=htmlspecialchars (it.book.seriesCompleteName)}}
     </p>
     {{?}}
     {{? it.book.publisherName != ""}}
     <p class="popupless">
-        <h3>{{=it.c.i18n.publisherName}}: </h3><a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a>
+        <h3>{{=it.c.i18n.publisherName}}: </h3><a href="{{=it.book.publisherurl}}" {{=it.c.config.kindleHack}}>{{=htmlspecialchars (it.book.publisherName)}}</a>
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}
