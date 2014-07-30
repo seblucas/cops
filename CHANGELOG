@@ -1,7 +1,8 @@
-1.0.0RC2 - 201406XX
+1.0.0RC2 - 201407XX
  * Updated Italian, Spanish, Portuguese, Norwegian translations.
  * Added Polish translation. Thanks to macak_pl.
  * Added Haitian Creole translation. Thanks to Ian Macdonald & Jacinta.
+ * Added Basque translation. Thanks to Turutarena.
  * Upgraded to JQuery 1.11.0, Magnific Popup 0.9.9, Normalize 3.0.1, Typeahead 0.10.2
  * Fixed search with accentuated characters on Internet Explorer.
  * Author can now be searched by sort or by name (Carroll, Lewis or Lewis Carroll will work).
@@ -9,8 +10,8 @@
  * Added correct mimetype for *.ibooks. Reported by Flowney.
  * Added an empty line at the end of .htaccess to make it easier to modify. Reported by Mariosipad.
  * Modified the README and checkconfig.php to check for php5-json. Reported by Mariosipad.
- * Added a new bootstrap template.
  * Handled properly the cancelling of a mail. Reported by coach0742.
+ * Added an ugly hack to try to fix bad rendering with Kindle. Please report if it's better or not.
 
 1.0.0RC1 - 20140404
   * Updated English, Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks to all to the translators.
