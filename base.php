@@ -31,6 +31,11 @@ function serverSideRender ($data) {
                                               "header" => $header,
                                               "footer" => $footer,
                                               "main" => $main));
+    // If there is a syntax error in the function created
+    // $dot will be equal to FALSE
+    if (!$dot) {
+        return FALSE;
+    }
     // Execute the template
     if (!empty ($data)) {
         return $dot ($data);
