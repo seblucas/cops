@@ -171,6 +171,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Type4", $currentPage->title);
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("SeriesLike", $currentPage->entryArray [0]->title);
+        $this->assertEquals (2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $_GET ["custom"] = NULL;
@@ -191,6 +192,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Type2", $currentPage->title);
         $this->assertCount (3, $currentPage->entryArray);
         $this->assertEquals ("tag1", $currentPage->entryArray [0]->title);
+        $this->assertEquals (2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $_GET ["custom"] = NULL;
@@ -211,6 +213,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Type1", $currentPage->title);
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("other", $currentPage->entryArray [0]->title);
+        $this->assertEquals (1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
 
         $_GET ["custom"] = NULL;

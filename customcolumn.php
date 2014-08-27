@@ -94,7 +94,7 @@ order by {0}.value', self::getTableName ($customId), self::getTableLinkName ($cu
             $customColumn = new CustomColumn ($post->id, $post->name, $customId);
             array_push ($entryArray, new Entry ($customColumn->name, $customColumn->getEntryId (),
                 str_format (localize("bookword", $post->count), $post->count), "text",
-                array ( new LinkNavigation ($customColumn->getUri ()))));
+                array ( new LinkNavigation ($customColumn->getUri ())), "", $post->count));
         }
         return $entryArray;
     }
