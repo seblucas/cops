@@ -1,6 +1,6 @@
 <?php
 /**
- * PHP renderer for doT templating engine 
+ * PHP renderer for doT templating engine
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Sébastien Lucas <sebastien@slucas.fr>
@@ -11,7 +11,7 @@ class doT {
     public $functionBody;
     private $functionCode;
     public $def;
-    
+
     public function resolveDefs ($block) {
         $me = $this;
         return preg_replace_callback ("/\{\{#([\s\S]+?)\}\}/", function ($m) use ($me) {
@@ -27,20 +27,21 @@ class doT {
             }
         }, $block);
     }
-    
+
     public function handleDotNotation ($string) {
         $out = preg_replace ("/(\w+)\.(.*?)([\s,\)])/", "\$$1[\"$2\"]$3", $string);
         $out = preg_replace ("/(\w+)\.([\w\.]*?)$/", "\$$1[\"$2\"] ", $out);
         $out = preg_replace ("/\./", '"]["', $out);
-        
+
         // Special hideous case : shouldn't be committed
         $out = preg_replace ("/^i /", ' $i ', $out);
         return $out;
     }
-    
+
     public function template ($string, $def) {
         $me = $this;
-        $func = preg_replace ("/'|\\\/", "\\$&", $string);
+
+        $func = $string;
 
         // deps
         if (empty ($def)) {
@@ -49,6 +50,9 @@ class doT {
             $this->def = $def;
             $func = $this->resolveDefs ($func);
         }
+
+        $func = preg_replace ("/'|\\\/", "\\$&", $func);
+
         // interpolate
         $func = preg_replace_callback ("/\{\{=([\s\S]+?)\}\}/", function ($m) use ($me) {
             return "' . " . $me->handleDotNotation ($m[1]) . " . '";
@@ -77,20 +81,19 @@ class doT {
                 $iterate = $m[1];
                 $vname = $m[2];
                 $iname = $m[3];
-                $iterate = $me->handleDotNotation ($iterate); 
+                $iterate = $me->handleDotNotation ($iterate);
                 return "'; for (\$$iname = 0; \$$iname < count($iterate); \$$iname++) { \$$vname = $iterate [\$$iname]; \$out.='";
             } else {
                 return "';} $" . "out.='";
             }
         }, $func);
         $func = '$out = \'' . $func . '\'; return $out;';
-        
+
         $this->functionBody = $func;
-        
-        //$this->functionCode = create_function ('$it', $func);
+
         return create_function ('$it', $func);
     }
-    
+
     public function execute ($data) {
         return $this->functionCode ($data);
     }
