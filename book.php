@@ -228,7 +228,7 @@ class Book extends Base {
 
     public function GetMostInterestingDataToSendToKindle ()
     {
-        $bestFormatForKindle = array ("EPUB", "PDF", "MOBI");
+        $bestFormatForKindle = array ("EPUB", "PDF", "AZW3", "MOBI");
         $bestRank = -1;
         $bestData = NULL;
         foreach ($this->getDatas () as $data) {
