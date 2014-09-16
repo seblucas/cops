@@ -5,7 +5,7 @@
  * COPS (Calibre OPDS PHP Server) Configuration check
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sè¡¡stien Lucas <sebastien@slucas.fr>
  *
  */
 
@@ -19,7 +19,7 @@
     $error = NULL;
     switch ($err) {
         case 1 :
-            $error = "Database error";
+            $error = "Database error open";
             break;
     }
 
