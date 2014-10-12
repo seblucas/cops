@@ -34,11 +34,9 @@
           <div class="panel-body">
             <div class="cover-image">
             {{? entry.book.hasCover == 1}}
-                <div class="text-center">
                 <a href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
                     <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                 </a>
-                </div>
             {{?}}
             </div>
             <div class="ellipsis"><span class="glyphicon glyphicon-user"></span> <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span></div>
