@@ -20,7 +20,7 @@ if(!is_null($config['cops_basic_authentication']) &&
     {
         header('WWW-Authenticate: Basic realm="COPS Authentication"');
         header('HTTP/1.0 401 Unauthorized');
-        echo 'Text to send if user hits Cancel button';
+        echo 'This site is password protected';
         exit;
     }
 }
