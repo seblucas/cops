@@ -1,10 +1,10 @@
 @import url("style-base.css");
 /* =============================================================================
-   Main container  goes here and other globals
+   Main container stuff goes here and other globals
    ========================================================================== */
 
 .st, .sp, .sa, .se, .ss {
-  font: normal normal 400 14px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-body;
   color: #007aff; }
 
 .st {
@@ -28,19 +28,19 @@ a {
 
 /*iphone - reduction des tailles de police et taille fixe en px*/
 body {
-  font: normal normal 300 12px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-body;
   color: black; }
 
 h2 {
-  font: normal normal 400 16px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-subheadline;
   color: #007aff; }
 
 h3 {
-  font: normal normal 400 14px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-subheadline;
   color: black; }
 
 h4 {
-  font: normal normal 400 14px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-subheadline;
   color: black; }
 
 /*iphone - Suppression des arrondis
@@ -72,11 +72,11 @@ iphone - Suppression des arrondis
 header h1 {
   vertical-align: middle;
   text-align: center;
-  font: normal normal 500 24px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-headline;
   color: #007aff; }
 
 .download a {
-  font: normal normal 400 16px Helvetica Neue Interface, Helvetica Neue, Helvetica;
+  font: -apple-system-subheadline;
   color: #007aff;
   box-shadow: 0 0 10px #c8c7cc;
   color: #007aff;
