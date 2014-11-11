@@ -265,3 +265,11 @@
      * 0 : No
      */
     $config ['cops_normalized_search'] = "0";
+
+    /*
+     * Enable PHP password protection (You can use if htpasswd is not possible for you)
+     * If possible prefer htpasswd !
+     * array( "username" => "xxx", "password" => "secret") : Enable PHP password protection
+     * NULL : Disable PHP password protection (You can still use htpasswd)
+     */
+    $config['cops_basic_authentication'] = NULL;
