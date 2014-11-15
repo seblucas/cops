@@ -145,25 +145,25 @@ class BaseExport
 		case 'xml':
 			$contentType = 'text/xml';
 			if (!empty($inCodeSet)) {
-				$contentType .= '; charset=' . $inCodeSet . '"';
+				$contentType .= '; charset=' . $inCodeSet;
 			}
 			break;
 		case 'txt':
 			$contentType = 'text/plain';
 			if (!empty($inCodeSet)) {
-				$contentType .= '; charset=' . $inCodeSet . '"';
+				$contentType .= '; charset=' . $inCodeSet;
 			}
 			break;
 		case 'csv':
 			$contentType = 'text/csv';
 			if (!empty($inCodeSet)) {
-				$contentType .= '; charset=' . $inCodeSet . '"';
+				$contentType .= '; charset=' . $inCodeSet;
 			}
 			break;
 		case 'html':
 			$contentType = 'text/html';
 			if (!empty($inCodeSet)) {
-				$contentType .= '; charset=' . $inCodeSet . '"';
+				$contentType .= '; charset=' . $inCodeSet;
 			}
 			break;
 		default:
