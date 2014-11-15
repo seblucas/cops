@@ -19,32 +19,48 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("?key=value&otherKey=&db=0", addURLParameter ("?key=value&otherKey", "db", "0"));
     }
 
-    /* For now I can't manage to make phpunit fail if a syntax error happens ... */
-    public function testServerSideRender ()
+    /**
+     * FALSE is returned if the create_function failed (meaning there was a syntax error)
+     * @dataProvider providerTemplate
+     */
+    public function testServerSideRender ($template)
     {
+        $_COOKIE["template"] = $template;
         $this->assertNull (serverSideRender (NULL));
     }
 
-    /* The function for the head of the HTML catalog */
-    public function testGenerateHeader ()
+    /**
+     * The function for the head of the HTML catalog
+     * @dataProvider providerTemplate
+     */
+    public function testGenerateHeader ($templateName)
     {
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         global $config;
-        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . getCurrentTemplate () . '/file.html');
+        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT ();
-        $dot = $template->template ($headcontent, NULL);
+        $tpl = $template->template ($headcontent, NULL);
         $data = array("title"                 => $config['cops_title_default'],
                   "version"               => VERSION,
                   "opds_url"              => $config['cops_full_url'] . "feed.php",
-                  "template"              => getCurrentTemplate (),
+                  "customHeader"          => "",
+                  "template"              => $templateName,
                   "server_side_rendering" => useServerSideRendering (),
                   "current_css"           => getCurrentCss (),
                   "favico"                => $config['cops_icon'],
                   "getjson_url"           => "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1));
 
-        $head = $dot ($data);
+        $head = $tpl ($data);
         $this->assertContains ("<head>", $head);
         $this->assertContains ("</head>", $head);
+    }
+
+    public function providerTemplate ()
+    {
+        return array (
+            array ("bootstrap"),
+            array ("default")
+        );
     }
 
     public function testLocalize ()

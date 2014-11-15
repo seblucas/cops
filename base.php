@@ -6,7 +6,7 @@
  * @author     S�bastien Lucas <sebastien@slucas.fr>
  */
 
-define ("VERSION", "1.0.0RC2");
+define ("VERSION", "1.0.0RC3");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
@@ -31,6 +31,11 @@ function serverSideRender ($data) {
                                               "header" => $header,
                                               "footer" => $footer,
                                               "main" => $main));
+    // If there is a syntax error in the function created
+    // $dot will be equal to FALSE
+    if (!$dot) {
+        return FALSE;
+    }
     // Execute the template
     if (!empty ($data)) {
         return $dot ($data);
@@ -1078,7 +1083,7 @@ class PageCustomize extends Page
 
         $content = "";
         array_push ($this->entryArray, new Entry ("Template", "",
-                                        "<span onclick='$.cookie(\"template\", \"bootstrap\", { expires: 365 });'>Click to switch to Bootstrap</span>", "text",
+                                        "<span style='cursor: pointer;' onclick='$.cookie(\"template\", \"bootstrap\", { expires: 365 });window.location=$(\".headleft\").attr(\"href\");'>Click to switch to Bootstrap</span>", "text",
                                         array ()));
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';

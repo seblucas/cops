@@ -14,7 +14,7 @@
 
     <title>{{=it.title}}</title>
 
-    <script type="text/javascript" src="resources/jQuery/jquery-1.11.0.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="resources/jQuery/jquery-1.11.1.min.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="resources/jquery-cookie/jquery.cookies.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="resources/jquery-sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
 {{? it.server_side_rendering == 0}}
@@ -57,6 +57,14 @@
     .ellipsis {
         overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         display:block;
+    }
+
+    .cover-image { height:164px; text-align: center;}
+
+    .cover-image img {
+        max-width:100%;
+        max-height:100%;
+        color: white;
     }
 
     .panel-heading { padding: 10px 7px; }
