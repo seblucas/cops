@@ -200,11 +200,13 @@ class CalibreDbLoader
 				}
 				continue;
 			}
-			$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
+			$uncompressedSize = filesize($fileName);
+			$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, :uncompressedSize)';
 			$stmt = $this->mDb->prepare($sql);
 			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-			$stmt->bindParam(':format', $format);
+			$stmt->bindParam(':format', strtoupper($format)); // Calibre format is uppercase
 			$stmt->bindParam(':name', $inBookInfo->mName);
+			$stmt->bindParam(':uncompressedSize', $uncompressedSize);
 			$stmt->execute();
 		}
 		// Add the book comments
