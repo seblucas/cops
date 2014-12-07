@@ -50,6 +50,22 @@
         }
         ?>
         <article class="frontpage">
+            <h2>Check if PHP version is correct</h2>
+            <h4>
+            <?php
+            if (defined('PHP_VERSION_ID')) {
+                if (PHP_VERSION_ID >= 50300) {
+                    echo "OK (" . PHP_VERSION . ")";
+                } else {
+                    echo "Please install PHP >= 5.3 (" . PHP_VERSION . ")";
+                }
+            } else {
+                echo "Please install PHP >= 5.3";
+            }
+            ?>
+            </h4>
+        </article>
+        <article class="frontpage">
             <h2>Check if GD is properly installed and loaded</h2>
             <h4>
             <?php
