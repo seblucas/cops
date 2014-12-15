@@ -1,13 +1,16 @@
-1.0.0RC3 - 201411XX
+1.0.0RC3 - 201412XX
  * Fixed server side render with Bootstrap template (a proper test was added).
  * Upgraded to latest doT-php, Typeahead 0.10.5, jquery-cookie 1.4.1, JQuery 1.11.1
  * Fixed book count with custom columns.
- * Updated Catalan, Dutch and French translations.
+ * Updated Catalan, Dutch, French and Russian translations.
  * Added AZW3 to the format that can be sent to Kindle (by mail).
  * Fixed $config['cops_thumbnail_handling'] with bootstrap template.
  * Added Hungarian translation.
  * Added full PHP password check (without any need from specific webserver configuration).
  * Added new IOS7 style with default template.
+ * Fixed display of books with many authors.
+ * Added PHP version to checkconfig.php (will help debugging for me).
+
 
 1.0.0RC2 - 201407XX
  * Updated Italian, Spanish, Portuguese, Norwegian translations.
