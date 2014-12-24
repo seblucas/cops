@@ -273,3 +273,6 @@
      * NULL : Disable PHP password protection (You can still use htpasswd)
      */
     $config['cops_basic_authentication'] = NULL;
+
+    /* Whitch template is used */
+    $config['cops_template']= 'default';
