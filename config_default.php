@@ -274,5 +274,5 @@
      */
     $config['cops_basic_authentication'] = NULL;
 
-    /* Whitch template is used */
+    /* Which template is used */
     $config['cops_template']= 'default';
