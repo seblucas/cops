@@ -275,4 +275,10 @@
     $config['cops_basic_authentication'] = NULL;
 
     /* Which template is used */
-    $config['cops_template']= 'default';
+    $config['cops_template'] = 'default';
+
+    /*
+     * Set language code to force a language (see lang/ directory for available languages).
+     * When empty it will auto detect the language.
+     */
+    $config['cops_language'] = '';
