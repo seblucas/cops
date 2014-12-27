@@ -77,9 +77,6 @@ function getCurrentOption ($option) {
     if ($option == "style") {
         return "default";
     }
-    if ($option == "template") {
-        return "default";
-    }
 
     if (isset($config ["cops_" . $option])) {
         return $config ["cops_" . $option];
