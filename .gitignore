@@ -6,3 +6,4 @@ test/text.atom
 cops.zip
 cops.sublime-*
 config_local.php
+config_local.*.php
