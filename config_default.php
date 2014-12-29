@@ -274,7 +274,11 @@
      */
     $config['cops_basic_authentication'] = NULL;
 
-    /* Which template is used */
+    /*
+     * Which template is used by default :
+     * 'default'
+     * 'bootstrap'
+     */
     $config['cops_template'] = 'default';
 
     /*
