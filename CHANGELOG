@@ -1,15 +1,20 @@
 1.0.0RC3 - 201412XX
- * Fixed server side render with Bootstrap template (a proper test was added).
+ * Fixed server side render with Bootstrap template (a proper unit test was also added).
  * Upgraded to latest doT-php, Typeahead 0.10.5, jquery-cookie 1.4.1, JQuery 1.11.1
  * Fixed book count with custom columns.
  * Updated Catalan, Dutch, French and Russian translations.
  * Added AZW3 to the format that can be sent to Kindle (by mail).
  * Fixed $config['cops_thumbnail_handling'] with bootstrap template.
- * Added Hungarian translation.
- * Added full PHP password check (without any need from specific webserver configuration).
- * Added new IOS7 style with default template.
+ * Added Hungarian translation. Thanks to harunibn.
+ * Added Ukrainian translation. Thanks to Anatoliy Zavalinich
+ * Added full PHP password check (without any need from specific webserver configuration). Thanks to Mark Bond.
+ * Added new IOS7 style with default template. Thanks to an anonymous source ;).
  * Fixed display of books with many authors.
  * Added PHP version to checkconfig.php (will help debugging for me).
+ * Added a configuration item ($config['cops_template']) to change the default template. Thanks to Shin.
+ * Added a configuration item ($config['cops_language']) to force COPS language. Thanks to Sandy Pleyte.
+ * Added a trick to have user based configuration, check https://github.com/seblucas/cops/wiki/User-based-config for more information. Thanks to Sandy Pleyte.
+ * Changed the default sort order on books by author page to show books in a series before all other books.
 
 
 1.0.0RC2 - 201407XX
