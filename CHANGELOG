@@ -9,7 +9,7 @@
  * Added Ukrainian translation. Thanks to Anatoliy Zavalinich
  * Added full PHP password check (without any need from specific webserver configuration). Thanks to Mark Bond.
  * Added new IOS7 style with default template. Thanks to an anonymous source ;).
- * Fixed display of books with many authors.
+ * Fixed display of authors names for books with more than one author.
  * Added PHP version to checkconfig.php (will help debugging for me).
  * Added a configuration item ($config['cops_template']) to change the default template. Thanks to Shin.
  * Added a configuration item ($config['cops_language']) to force COPS language. Thanks to Sandy Pleyte.
