@@ -27,7 +27,8 @@ define ('SQL_BOOKS_BY_PUBLISHER', "select {0} from books_publishers_link, books 
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_authors_link.book = books.id and author = ? {1} order by pubdate");
+                                                    left outer join books_series_link on books_series_link.book = books.id
+                                                    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc");
 define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_series_link.book = books.id and series = ? {1} order by series_index");
 define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
