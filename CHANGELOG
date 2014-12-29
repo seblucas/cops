@@ -1,4 +1,4 @@
-1.0.0RC3 - 201412XX
+1.0.0RC3 - 20141229
  * Fixed server side render with Bootstrap template (a proper unit test was also added).
  * Upgraded to latest doT-php, Typeahead 0.10.5, jquery-cookie 1.4.1, JQuery 1.11.1
  * Fixed book count with custom columns.
