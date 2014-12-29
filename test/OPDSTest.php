@@ -30,7 +30,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $path = "";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // huge hack, not proud about it
-            $path = "c:\\Progra~1\\Java\\jre7\\bin\\";
+            $path = "c:\\Progra~1\\Java\\jre1.8.0_25\\bin\\";
         }
         $res = system($path . 'java -jar ' . JING_JAR . ' ' . $relax . ' ' . $feed);
         if ($res != '') {
@@ -46,7 +46,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $path = "";
         if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
             // huge hack, not proud about it
-            $path = "c:\\Progra~1\\Java\\jre7\\bin\\";
+            $path = "c:\\Progra~1\\Java\\jre1.8.0_25\\bin\\";
         }
         $res = system($path . 'java -jar ' . OPDSVALIDATOR_JAR . ' ' . $feed);
         chdir($oldcwd);
