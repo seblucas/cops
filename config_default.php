@@ -260,6 +260,7 @@
     $config ['cops_fetch_protect'] = "0";
 
     /*
+     * WARNING NOT READY FOR PRODUCTION USE
      * Make the search better (don't care about diacritics, uppercase should work on Cyrillic) but slower.
      * 1 : Yes (enable)
      * 0 : No
