@@ -188,6 +188,74 @@ function str_format($format) {
 }
 
 /**
+ * Get all accepted languages from the browser and put them in a sorted array
+ * languages id are normalized : fr-fr -> fr_FR
+ * @return array of languages
+ */
+function getAcceptLanguages() {
+    $langs = array();
+
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        // break up string into pieces (languages and q factors)
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
+
+        if (count($lang_parse[1])) {
+            $langs = array();
+            foreach ($lang_parse[1] as $lang) {
+                if (strlen($lang) == 5) {
+                    $lang = str_replace("-", "_", $lang);
+                    $splitted = preg_split("/_/", $lang);
+                    $lang = $splitted[0] . "_" . strtoupper($splitted[1]);
+                }
+                array_push($langs, $lang);
+            }
+            // create a list like "en" => 0.8
+            $langs = array_combine($langs, $lang_parse[4]);
+
+            // set default to 1 for any without q factor
+            foreach ($langs as $lang => $val) {
+                if ($val === '') $langs[$lang] = 1;
+            }
+
+            // sort list based on value
+            arsort($langs, SORT_NUMERIC);
+        }
+    }
+
+    return $langs;
+}
+
+/**
+ * Find the best translation file possible based on the accepted languages
+ * @return array of language and language file
+ */
+function getLangAndTranslationFile() {
+    global $config;
+    $langs = array();
+    $lang = "en";
+    if (!empty($config['cops_language'])) {
+        $lang = $config['cops_language'];
+    }
+    elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $langs = getAcceptLanguages();
+    }
+    //echo var_dump($langs);
+    $lang_file = NULL;
+    foreach ($langs as $language => $val) {
+        $temp_file = dirname(__FILE__). '/lang/Localization_' . $language . '.json';
+        if (file_exists($temp_file)) {
+            $lang = $language;
+            $lang_file = $temp_file;
+            break;
+        }
+    }
+    if (empty ($lang_file)) {
+        $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
+    }
+    return array($lang, $lang_file);
+}
+
+/**
  * This method is based on this page
  * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  */
@@ -207,21 +275,12 @@ function localize($phrase, $count=-1, $reset=false) {
     }
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
-        $lang = "en";
-        if (!empty($config['cops_language'])) {
-            $lang = $config['cops_language'];
-        }
-        elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-            $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
-        }
         $lang_file_en = NULL;
-        $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
-        if (!file_exists($lang_file)) {
-            $lang_file = dirname(__FILE__). '/lang/' . 'Localization_en.json';
-        }
-        elseif ($lang != "en") {
+        list ($lang, $lang_file) = getLangAndTranslationFile();
+        if ($lang != "en") {
             $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
         }
+
         $lang_file_content = file_get_contents($lang_file);
         /* Load the language file as a JSON object and transform it into an associative array */
         $translations = json_decode($lang_file_content, true);

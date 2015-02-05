@@ -88,6 +88,54 @@ class BaseTest extends PHPUnit_Framework_TestCase
         localize ("authors.title", -1, true);
     }
 
+    /**
+     * @dataProvider providerGetLangAndTranslationFile
+     */
+    public function testGetLangAndTranslationFile ($acceptLanguage, $result)
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
+        list ($lang, $lang_file) = GetLangAndTranslationFile ();
+        $this->assertEquals ($result, $lang);
+
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
+        localize ("authors.title", -1, true);
+    }
+
+    public function providerGetLangAndTranslationFile ()
+    {
+        return array (
+            array ("en", "en"),
+            array ("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"),
+            array ("pt-br,en-us;q=0.7,en;q=0.3", "en"),
+            array ("zl", "en"),
+        );
+    }
+
+    /**
+     * @dataProvider providerGetAcceptLanguages
+     */
+    public function testGetAcceptLanguages ($acceptLanguage, $result)
+    {
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
+        $langs = GetAcceptLanguages ();
+        $this->assertEquals ($result, array_keys($langs)[0]);
+
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
+        localize ("authors.title", -1, true);
+    }
+
+    public function providerGetAcceptLanguages ()
+    {
+        return array (
+            array ("en", "en"),
+            array ("en-US", "en_US"),
+            array ("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"),
+            array ("fr-fr,fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr_FR"),
+            array ("pt-br,en-us;q=0.7,en;q=0.3", "pt_BR"),
+            array ("zl", "zl"),
+        );
+    }
+
     public function testBaseFunction () {
         global $config;
 
