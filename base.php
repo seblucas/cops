@@ -197,7 +197,12 @@ function getAcceptLanguages() {
 
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         // break up string into pieces (languages and q factors)
-        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang_parse);
+        $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+        if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
+            // Special fix for IE11 which send fr-FR and nothing else
+            $accept = $accept . "," . $matches[1] . ";q=0.8";
+        }
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
 
         if (count($lang_parse[1])) {
             $langs = array();
