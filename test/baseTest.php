@@ -106,7 +106,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         return array (
             array ("en", "en"),
             array ("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"),
-            array ("pt-br,en-us;q=0.7,en;q=0.3", "en"),
+            array ("pt,en-us;q=0.7,en;q=0.3", "en"),
             array ("zl", "en"),
         );
     }
@@ -131,7 +131,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
             array ("en-US", "en_US"),
             array ("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"),
             array ("fr-fr,fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr_FR"),
-            array ("pt-br,en-us;q=0.7,en;q=0.3", "pt_BR"),
+            array ("pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3", "pt_BR"),
             array ("zl", "zl"),
         );
     }
