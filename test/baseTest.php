@@ -117,8 +117,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     public function testGetAcceptLanguages ($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        $langs = GetAcceptLanguages ();
-        $this->assertEquals ($result, array_keys($langs)[0]);
+        $langs = array_keys(GetAcceptLanguages ());
+        $this->assertEquals ($result, $langs[0]);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
         localize ("authors.title", -1, true);
