@@ -207,6 +207,7 @@ function getAcceptLanguages() {
         if (count($lang_parse[1])) {
             $langs = array();
             foreach ($lang_parse[1] as $lang) {
+                // Format the language code (not standard among browsers)
                 if (strlen($lang) == 5) {
                     $lang = str_replace("-", "_", $lang);
                     $splitted = preg_split("/_/", $lang);
