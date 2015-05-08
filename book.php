@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -95,7 +95,9 @@ class Book extends Base {
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
-        $this->path = Base::getDbDirectory () . $line->path;
+        // -DC- Remove calibre base directory as path is full
+        //$this->path = Base::getDbDirectory () . $line->path;
+        $this->path = $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;
