@@ -233,7 +233,7 @@
      * For now : Kindle, Sony PRS-T1, Sony PRS-T2, All Cybook devices (maybe a little extreme).
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
-    $config['cops_server_side_render'] = "Kindle\/1\.0|Kindle\/2\.0|EBRD1101|EBRD1201|cybook";
+    $config['cops_server_side_render'] = "Kindle\/1\.0|Kindle\/2\.0|Kindle\/3\.0|EBRD1101|EBRD1201|cybook";
 
     /*
      * Specify the ignored categories for the home screen and with search
