@@ -10,7 +10,7 @@ require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
 
 /**
  * Calibre database sql file that comes unmodified from Calibre project:
- *   /calibre/resources/metadata_sqlite.sql
+ *   https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
  */
 define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql');
 

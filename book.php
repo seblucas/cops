@@ -95,7 +95,7 @@ class Book extends Base {
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
-        // -DC- Remove calibre base directory as path is full
+        // -DC- Remove calibre base directory as book path stored in database is a full path
         //$this->path = Base::getDbDirectory () . $line->path;
         $this->path = $line->path;
         $this->relativePath = $line->path;
@@ -103,9 +103,16 @@ class Book extends Base {
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
-        if (!file_exists ($this->getFilePath ("jpg"))) {
-            // double check
-            $this->hasCover = 0;
+        $this->coverFileName = '';
+        $extTab = array('jpg', 'png');
+        foreach ($extTab as $ext) {
+        	$fileName = $this->getFilePath($ext);
+	        if (file_exists($fileName)) {
+	        	$this->coverFileName = $fileName;
+	        }
+        }
+        if (empty($this->coverFileName)) {
+					$this->hasCover = 0;
         }
         $this->rating = $line->rating;
     }
@@ -300,9 +307,16 @@ class Book extends Base {
 
     public function getFilePath ($extension, $idData = NULL, $relative = false)
     {
-        if ($extension == "jpg")
+        if ($extension == "jpg" || $extension == "png")
         {
-            $file = "cover.jpg";
+            $file = "cover." . $extension;
+
+            // -DC- Get external image
+            $data = $this->getDataById($this->id);
+            if ($data) {
+           		$fileName = sprintf('/opt/atoll/data_img/atoll-en/classic-literature/%s/Images/%s', $data->name, $file);
+         			return $fileName;
+           	}
         }
         else
         {
@@ -362,7 +376,7 @@ class Book extends Base {
             return false;
         }
 
-        $file = $this->getFilePath ("jpg");
+        $file = $this->coverFileName; //$this->getFilePath ("jpg");
         // get image size
         if ($size = GetImageSize($file)) {
             $w = $size[0];
@@ -398,9 +412,15 @@ class Book extends Base {
 
         if ($this->hasCover)
         {
+        	$ext = pathinfo($this->coverFileName, PATHINFO_EXTENSION);
+        	if ($ext == 'png') {
+            array_push ($linkArray, Data::getLink ($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", NULL));
+            array_push ($linkArray, Data::getLink ($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", NULL));
+        	}
+        	else {
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL));
-
             array_push ($linkArray, Data::getLink ($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL));
+        	}
         }
 
         foreach ($this->getDatas () as $data)
