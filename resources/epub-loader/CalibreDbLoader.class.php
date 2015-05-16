@@ -159,7 +159,7 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->execute();
 		while ($post = $stmt->fetchObject()) {
-			$error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $post->format, $post->title);
+			$error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $inBookInfo->mFormat, $post->title);
 			throw new Exception($error);
 		}
 		// Add the book

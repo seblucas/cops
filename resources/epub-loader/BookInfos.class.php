@@ -64,7 +64,13 @@ class BookInfos
 		$this->mDescription = $ePub->Description();
 		$this->mSubjects = $ePub->Subjects();
 		$cover = $ePub->Cover();
-		$this->mCover = ($cover['found'] !== false) ? $cover['found'] : '';
+		$cover = $cover['found'];
+		if (($cover !== false)) {
+			// Remove meta base path
+			$meta = $ePub->meta();
+			$len = strlen(dirname('/'.$meta));
+			$this->mCover = substr($cover, $len);
+		}
 		$this->mIsbn = $ePub->ISBN();
 		$this->mRights = $ePub->Copyright();
 		$this->mPublisher = $ePub->Publisher();

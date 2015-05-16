@@ -97,6 +97,13 @@ class EPub {
     }
 
     /**
+     * meta file getter
+     */
+    public function meta() {
+    	return $this->meta;
+    }
+
+    /**
      * Close the epub file
      */
     public function close (){
