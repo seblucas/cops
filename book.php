@@ -396,10 +396,24 @@ class Book extends Base {
         }
 
         //draw the image
-        $src_img = imagecreatefromjpeg($file);
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+       	if ($ext == 'png') {
+	        $src_img = imagecreatefrompng($file);
+       	}
+       	else {
+	        $src_img = imagecreatefromjpeg($file);
+       	}
         $dst_img = imagecreatetruecolor($nw,$nh);
-        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-        imagejpeg($dst_img,$outputfile,80);
+        $res = imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
+        if ($res === false) {
+        	return false;
+        }
+        if ($ext == 'png') {
+        	imagepng($dst_img,$outputfile);
+        }
+        else {
+        	imagejpeg($dst_img,$outputfile,80);
+        }
         imagedestroy($src_img);
         imagedestroy($dst_img);
 

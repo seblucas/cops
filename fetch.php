@@ -3,9 +3,9 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
-    
+
     require_once ("config.php");
     require_once ("book.php");
     require_once ("data.php");
@@ -19,7 +19,7 @@
             return;
         }
 }
-    
+
     $expires = 60*60*24*14;
     header("Pragma: public");
     header("Cache-Control: maxage=".$expires);
@@ -35,28 +35,36 @@
     {
         $book = Book::getBookById($bookId);
     }
-    
+
     if (!$book) {
         notFound ();
         return;
     }
-    
-    if ($book && ($type == "jpg" || empty ($config['calibre_internal_directory']))) {
-        if ($type == "jpg") {
+
+    if ($book && ($type == "jpg" || $type == "png" || empty ($config['calibre_internal_directory']))) {
+        /*if ($type == "jpg") {
             $file = $book->getFilePath ($type);
         } else {
             $file = $book->getFilePath ($type, $idData);
-        }
+        }*/
+    		$file = $book->coverFileName;
         if (!$file || !file_exists ($file)) {
             notFound ();
             return;
         }
     }
-     
+
     switch ($type)
     {
         case "jpg":
             header("Content-Type: image/jpeg");
+            if ($book->getThumbnail (getURLParam ("width"), getURLParam ("height"))) {
+                // The cover had to be resized
+                return;
+            }
+            break;
+        case "png":
+            header("Content-Type: image/png");
             if ($book->getThumbnail (getURLParam ("width"), getURLParam ("height"))) {
                 // The cover had to be resized
                 return;
@@ -73,17 +81,17 @@
         $book->getUpdatedEpub ($idData);
         return;
     }
-    if ($type == "jpg") {
+    if ($type == "jpg" || $type == "png") {
         header('Content-Disposition: filename="' . basename ($file) . '"');
     } else {
         header('Content-Disposition: attachment; filename="' . basename ($file) . '"');
     }
-    
+
     $dir = $config['calibre_internal_directory'];
     if (empty ($config['calibre_internal_directory'])) {
         $dir = is_dir($book->path) ? '' : Base::getDbDirectory ();
     }
-    
+
     if (empty ($config['cops_x_accel_redirect'])) {
         $filename = $dir . $file;
         header("Content-Length: " . filesize($filename));
