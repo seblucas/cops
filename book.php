@@ -77,7 +77,6 @@ class Book extends Base {
     public $path;
     public $uuid;
     public $hasCover;
-    public $relativePath;
     public $seriesIndex;
     public $comment;
     public $rating;
@@ -88,17 +87,20 @@ class Book extends Base {
     public $tags = NULL;
     public $languages = NULL;
     public $format = array ();
-
+    private $imgPath = '';
+    private $coverFileName = '';
 
     public function __construct($line) {
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
-        // -DC- Remove calibre base directory as book path stored in database is a full path
-        //$this->path = Base::getDbDirectory () . $line->path;
+        // -DC- Init paths
+        $this->imgPath = Base::getImgDirectory();
         $this->path = $line->path;
-        $this->relativePath = $line->path;
+        if (!is_dir($this->path)) {
+        	$this->path = Base::getDbDirectory() . $line->path;
+        }
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
@@ -109,6 +111,7 @@ class Book extends Base {
         	$fileName = $this->getFilePath($ext);
 	        if (file_exists($fileName)) {
 	        	$this->coverFileName = $fileName;
+	        	break;
 	        }
         }
         if (empty($this->coverFileName)) {
@@ -309,14 +312,17 @@ class Book extends Base {
     {
         if ($extension == "jpg" || $extension == "png")
         {
-            $file = "cover." . $extension;
+        	if (!empty($this->coverFileName)) {
+        		return $this->coverFileName;
+        	}
 
-            // -DC- Get external image
-            $data = $this->getDataById($this->id);
-            if ($data) {
-           		$fileName = sprintf('/opt/atoll/data_img/atoll-en/classic-literature/%s/Images/%s', $data->name, $file);
-         			return $fileName;
-           	}
+          $file = "cover." . $extension;
+          // -DC- Get external image
+          $data = $this->getDataById($this->id);
+          if ($data) {
+         		$fileName = sprintf('%s/%s/Images/%s', $this->imgPath, $data->name, $file);
+       			return $fileName;
+         	}
         }
         else
         {
@@ -325,14 +331,7 @@ class Book extends Base {
             $file = $data->name . "." . strtolower ($data->format);
         }
 
-        if ($relative)
-        {
-            return $this->relativePath."/".$file;
-        }
-        else
-        {
-            return $this->path."/".$file;
-        }
+        return $this->path . '/' . $file;
     }
 
     public function getUpdatedEpub ($idData)
