@@ -167,6 +167,7 @@ class CalibreDbLoader
 		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
 		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
 		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
+		$cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', $inBookInfo->mTitle);
@@ -176,7 +177,7 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
 		$stmt->bindParam(':hascover', $hasCover, PDO::PARAM_INT);
-		$stmt->bindParam(':cover', str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover));
+		$stmt->bindParam(':cover', $cover);
 		$stmt->bindParam(':isbn', $inBookInfo->mIsbn);
 		$stmt->execute();
 		// Get the book id
@@ -415,6 +416,11 @@ class CalibreDbLoader
 			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
 			$stmt->bindParam(':idSubject', $idSubject, PDO::PARAM_INT);
 			$stmt->execute();
+		}
+		// Send warnings
+		if (empty($cover)) {
+			$error = 'Warning: Cover not found';
+			throw new Exception($error);
 		}
 	}
 

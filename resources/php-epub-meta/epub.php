@@ -3,7 +3,7 @@
  * PHP EPub Meta library
  *
  * @author Andreas Gohr <andi@splitbrain.org>
- * @author Sébastien Lucas <sebastien@slucas.fr>
+ * @author Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
@@ -576,6 +576,7 @@ class EPub {
             throw new Exception('Failed to read epub file');
         }
         $data = $zip->getFromName($path);
+        $zip->close();
 
         return array(
             'mime'  => $mime,

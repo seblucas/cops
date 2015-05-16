@@ -19,6 +19,17 @@
     $config['calibre_directory'] = './';
 
     /*
+     * -DC- The base directory for image covers
+     */
+    $config['image_directory'] = './';
+
+    /*
+     * -DC- Calibre database field for the cover file name
+     * BEWARE : Set this value only if you have added that field into your Calibre database
+     */
+    $config['calibre_database_field_cover'] = '';
+
+    /*
      * SPECIFIC TO NGINX
      * The internal directory set in nginx config file
      * Leave empty if you don't know what you're doing
