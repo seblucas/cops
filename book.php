@@ -53,7 +53,7 @@ class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
+    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, cover, ratings.rating";
 
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
@@ -87,7 +87,6 @@ class Book extends Base {
     public $tags = NULL;
     public $languages = NULL;
     public $format = array ();
-    private $imgPath = '';
     private $coverFileName = '';
 
     public function __construct($line) {
@@ -96,7 +95,6 @@ class Book extends Base {
         $this->timestamp = strtotime ($line->timestamp);
         $this->pubdate = strtotime ($line->pubdate);
         // -DC- Init paths
-        $this->imgPath = Base::getImgDirectory();
         $this->path = $line->path;
         if (!is_dir($this->path)) {
         	$this->path = Base::getDbDirectory() . $line->path;
@@ -105,17 +103,15 @@ class Book extends Base {
         $this->comment = $line->comment;
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
-        $this->coverFileName = '';
-        $extTab = array('jpg', 'png');
-        foreach ($extTab as $ext) {
-        	$fileName = $this->getFilePath($ext);
-	        if (file_exists($fileName)) {
-	        	$this->coverFileName = $fileName;
-	        	break;
-	        }
+        $cover = $line->cover;
+        if (!file_exists($cover)) {
+        	$cover = Base::getImgDirectory() . $line->cover;
         }
-        if (empty($this->coverFileName)) {
+        if (!file_exists($cover)) {
 					$this->hasCover = 0;
+        }
+        else {
+        	$this->coverFileName = $cover;
         }
         $this->rating = $line->rating;
     }
@@ -312,26 +308,21 @@ class Book extends Base {
     {
         if ($extension == "jpg" || $extension == "png")
         {
-        	if (!empty($this->coverFileName)) {
+        	$ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+        	if ($ext == $extension) {
         		return $this->coverFileName;
         	}
-
-          $file = "cover." . $extension;
-          // -DC- Get external image
-          $data = $this->getDataById($this->id);
-          if ($data) {
-         		$fileName = sprintf('%s/%s/Images/%s', $this->imgPath, $data->name, $file);
-       			return $fileName;
-         	}
+        	return false;
         }
         else
         {
             $data = $this->getDataById ($idData);
-            if (!$data) return NULL;
+            if (!$data) {
+            	return NULL;
+            }
             $file = $data->name . "." . strtolower ($data->format);
+        		return $this->path . '/' . $file;
         }
-
-        return $this->path . '/' . $file;
     }
 
     public function getUpdatedEpub ($idData)
@@ -395,7 +386,7 @@ class Book extends Base {
         }
 
         //draw the image
-        $ext = pathinfo($file, PATHINFO_EXTENSION);
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
        	if ($ext == 'png') {
 	        $src_img = imagecreatefrompng($file);
        	}
@@ -425,7 +416,7 @@ class Book extends Base {
 
         if ($this->hasCover)
         {
-        	$ext = pathinfo($this->coverFileName, PATHINFO_EXTENSION);
+        	$ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
         	if ($ext == 'png') {
             array_push ($linkArray, Data::getLink ($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", NULL));
             array_push ($linkArray, Data::getLink ($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", NULL));

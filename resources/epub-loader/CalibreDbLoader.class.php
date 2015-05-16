@@ -80,6 +80,9 @@ class CalibreDbLoader
 				if (strpos($str, 'title_sort') !== false) {
 					continue;
 				}
+				if (strpos($sql, 'has_cover BOOL DEFAULT 0,') !== false) {
+					$sql = str_replace('has_cover BOOL DEFAULT 0,', 'has_cover BOOL DEFAULT 0, cover TEXT NOT NULL DEFAULT "",', $sql);
+				}
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->execute();
 			}
@@ -160,7 +163,7 @@ class CalibreDbLoader
 			throw new Exception($error);
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :isbn)';
+		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
 		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
 		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
 		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
@@ -173,6 +176,7 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
 		$stmt->bindParam(':hascover', $hasCover, PDO::PARAM_INT);
+		$stmt->bindParam(':cover', str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover));
 		$stmt->bindParam(':isbn', $inBookInfo->mIsbn);
 		$stmt->execute();
 		// Get the book id
