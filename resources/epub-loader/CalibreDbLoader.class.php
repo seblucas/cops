@@ -209,7 +209,8 @@ class CalibreDbLoader
 			$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, :uncompressedSize)';
 			$stmt = $this->mDb->prepare($sql);
 			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-			$stmt->bindParam(':format', strtoupper($format)); // Calibre format is uppercase
+			$format = strtoupper($format);
+			$stmt->bindParam(':format', $format); // Calibre format is uppercase
 			$stmt->bindParam(':name', $inBookInfo->mName);
 			$stmt->bindParam(':uncompressedSize', $uncompressedSize);
 			$stmt->execute();
