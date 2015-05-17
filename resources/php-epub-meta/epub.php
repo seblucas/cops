@@ -64,7 +64,8 @@ class EPub {
         }
         $this->xml =  new DOMDocument();
         $this->xml->registerNodeClass('DOMElement','EPubDOMElement');
-        $this->xml->loadXML($data);
+        // -DC- Remove PHP Notice:  DOMDocument::loadXML(): Unsupported version '1.1' in Entity, line: 1
+        @$this->xml->loadXML($data);
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
