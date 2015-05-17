@@ -126,9 +126,16 @@ class Book extends Base
 			if (!empty($config['calibre_database_field_cover'])) {
 				$this->coverFileName = $line->cover;
 				if (!file_exists($this->coverFileName)) {
-					$this->coverFileName = Base::getImgDirectory() . $line->cover;
+					$this->coverFileName = sprintf('%s%s', Base::getImgDirectory(), $line->cover);
 					if (!file_exists($this->coverFileName)) {
-						$this->coverFileName = NULL;
+							$this->coverFileName = NULL;
+					}
+					$data = $this->getDataById($this->id);
+					if ($data) {
+						$this->coverFileName = sprintf('%s%s/%s', Base::getImgDirectory(), $data->name, $line->cover);
+						if (!file_exists($this->coverFileName)) {
+							$this->coverFileName = NULL;
+						}
 					}
 				}
 			}
