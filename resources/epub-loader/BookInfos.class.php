@@ -68,7 +68,7 @@ class BookInfos
 		if (($cover !== false)) {
 			// Remove meta base path
 			$meta = $ePub->meta();
-			$len = strlen(dirname('/'.$meta));
+			$len = strlen($meta) - strlen(pathinfo($meta, PATHINFO_BASENAME));
 			$this->mCover = substr($cover, $len);
 		}
 		$this->mIsbn = $ePub->ISBN();
