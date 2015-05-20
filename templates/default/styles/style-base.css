@@ -13,7 +13,7 @@ html { font-size: 100%; -webkit-text-size-adjust: 100%;
                           -ms-text-size-adjust: 100%; }
 
 body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif;
     line-height:18px;
     color: #1c1c1c; /* Lighter on the eyes than #000 Black */
     margin: 0px; background: #cccccc; background-size: cover;
