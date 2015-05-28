@@ -331,10 +331,11 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
 
 function useNormAndUp () {
     global $config;
-    return extension_loaded('mbstring') &&
-           extension_loaded('intl') &&
-           class_exists("Normalizer", $autoload = false) &&
-           $config ['cops_normalized_search'] == "1";
+    return $config ['cops_normalized_search'] == "1";
+//    return extension_loaded('mbstring') &&
+//           extension_loaded('intl') &&
+//           class_exists("Normalizer", $autoload = false) &&
+//           $config ['cops_normalized_search'] == "1";
 }
 
 function normalizeUtf8String( $s)
@@ -402,8 +403,14 @@ function normalizeUtf8String( $s)
         return $s;
 }
 
+function transliterate ($a) {
+    include_once 'transliteration.php';
+    return _transliteration_process($a);
+}
+
 function normAndUp ($a) {
-    return mb_strtoupper (normalizeUtf8String($a), 'UTF-8');
+    //return mb_strtoupper (normalizeUtf8String($a), 'UTF-8');
+    return mb_strtoupper (transliterate($a), 'UTF-8');
 }
 
 class Link
