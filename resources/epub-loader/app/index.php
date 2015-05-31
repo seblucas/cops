@@ -135,13 +135,16 @@ else {
 		$str .= '</tr>' . "\n";
 		$actionTitle = $gConfig['actions'][$action];
 		foreach ($gConfig['databases'] as $dbNum => $dbConfig) {
-			$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
+			$dbConfig = $gConfig['databases'][$dbNum];
+			$dbPath = $dbConfig['db_path'];
+			$epubPath = $dbConfig['epub_path'];
+			$fileList = RecursiveGlob($dbPath . DIRECTORY_SEPARATOR . $epubPath, '*.epub');
 			$str .= '<tr>' . "\n";
 			$str .= '<td>' . $dbNum . '</td>' . "\n";
 			$str .= '<td>' . $dbConfig['name'] . '</td>' . "\n";
 			$str .= '<td>' . '<a href="./index.php?action=' . $action . '&dbnum=' . $dbNum . '">' . $actionTitle . '</a>' . '</td>' . "\n";
 			$str .= '<td>' . $dbConfig['db_path'] . '</td>' . "\n";
-			$str .= '<td>' . $dbConfig['epub_path'] . '</td>' . "\n";
+			$str .= '<td>' . $epubPath . '</td>' . "\n";
 			$str .= '<td>' . count($fileList) . '</td>' . "\n";
 			$str .= '</tr>' . "\n";
 		}

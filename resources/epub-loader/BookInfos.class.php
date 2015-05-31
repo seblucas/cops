@@ -15,6 +15,7 @@ require_once(realpath(dirname(dirname(__FILE__))) . '/php-epub-meta/epub.php');
  */
 class BookInfos
 {
+	public $mBasePath = '';
 	public $mPath = '';
 	public $mName = '';
 	public $mFormat = '';
@@ -37,23 +38,26 @@ class BookInfos
 	/**
 	 * Loads book infos from an epub file
 	 *
-	 * @param string Epub full file name
+	 * @param string Epub base directory
+	 * @param string Epub file name (from base directory)
 	 * @throws Exception if error
 	 *
 	 * @return void
 	 */
-	public function LoadFromEpub($inFileName)
+	public function LoadFromEpub($inBasePath, $inFileName)
 	{
+		$fullFileName = sprintf('%s%s%s', $inBasePath, DIRECTORY_SEPARATOR, $inFileName);
 		// Check file access
-		if (!is_readable($inFileName)) {
+		if (!is_readable($fullFileName)) {
 			throw new Exception('Cannot read file');
 		}
 
 		// Load the epub file
-		$ePub = new EPub($inFileName, 'ZipFile');
+		$ePub = new EPub($fullFileName, 'ZipFile');
 
 		// Get the epub infos
 		$this->mFormat = 'epub';
+		$this->mBasePath = $inBasePath;
 		$this->mPath = pathinfo($inFileName, PATHINFO_DIRNAME);
 		$this->mName = pathinfo($inFileName, PATHINFO_FILENAME);
 		$this->mUuid = $ePub->Uuid();
@@ -74,7 +78,11 @@ class BookInfos
 		$this->mIsbn = $ePub->ISBN();
 		$this->mRights = $ePub->Copyright();
 		$this->mPublisher = $ePub->Publisher();
+		// Tag sample in opf file:
+		//   <meta content="Histoire de la Monarchie de Juillet" name="calibre:series"/>
 		$this->mSerie = $ePub->Serie();
+		// Tag sample in opf file:
+    //   <meta content="7" name="calibre:series_index"/>
 		$this->mSerieIndex = $ePub->SerieIndex();
 		$this->mCreationDate = $ePub->CreationDate();
 		$this->mModificationDate = $ePub->ModificationDate();

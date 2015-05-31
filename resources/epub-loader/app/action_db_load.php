@@ -9,16 +9,19 @@
 defined('DEF_AppName') or die('Restricted access');
 
 // Init database file
-$fileName = $dbConfig['db_path'] . DIRECTORY_SEPARATOR . 'metadata.db';
+$dbPath = $dbConfig['db_path'];
+$fileName = $dbPath . DIRECTORY_SEPARATOR . 'metadata.db';
 try {
 	// Open or create the database
 	$db = new CalibreDbLoader($fileName, $gConfig['create_db']);
 	// Add the epub files into the database
 	$nbOk = 0;
-	if (!empty($dbConfig['epub_path'])) {
-		$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
+	$epubPath = $dbConfig['epub_path'];
+	if (!empty($epubPath)) {
+		$fileList = RecursiveGlob($dbPath . DIRECTORY_SEPARATOR . $epubPath, '*.epub');
 		foreach ($fileList as $file) {
-			$error = $db->AddEpub($file);
+			$filePath = substr($file, strlen($dbPath) + 1);
+			$error = $db->AddEpub($dbPath, $filePath);
 			if (!empty($error)) {
 				$gErrorArray[$file] = $error;
 				continue;

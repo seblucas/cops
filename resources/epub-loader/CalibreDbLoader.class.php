@@ -120,19 +120,20 @@ class CalibreDbLoader
 	/**
 	 * Add an epub to the db
 	 *
-	 * @param string Epub file name
+	 * @param string Epub base directory
+	 * @param string Epub file name (from base directory)
 	 * @throws Exception if error
 	 *
 	 * @return string Empty string or error if any
 	 */
-	public function AddEpub($inFileName)
+	public function AddEpub($inBasePath, $inFileName)
 	{
 		$error = '';
 
 		try {
 			// Load the book infos
 			$bookInfos = new BookInfos();
-			$bookInfos->LoadFromEpub($inFileName);
+			$bookInfos->LoadFromEpub($inBasePath, $inFileName);
 			// Add the book
 			$this->AddBook($bookInfos);
 		}
@@ -197,7 +198,7 @@ class CalibreDbLoader
 		// Add the book data (formats)
 		$formats = array($inBookInfo->mFormat, 'pdf');
 		foreach ($formats as $format) {
-			$fileName = sprintf('%s%s%s.%s', $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
+			$fileName = sprintf('%s%s%s%s%s.%s', $inBookInfo->mBasePath, DIRECTORY_SEPARATOR, $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
 			if (!is_readable($fileName)) {
 				if ($format == $inBookInfo->mFormat) {
 					$error = sprintf('Cannot read file: %s', $fileName);
