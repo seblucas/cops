@@ -332,19 +332,14 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
 function useNormAndUp () {
     global $config;
     return $config ['cops_normalized_search'] == "1";
-//    return extension_loaded('mbstring') &&
-//           extension_loaded('intl') &&
-//           class_exists("Normalizer", $autoload = false) &&
-//           $config ['cops_normalized_search'] == "1";
 }
 
-function normalizeUtf8String( $s)
-{
+function normalizeUtf8String( $s) {
     include_once 'transliteration.php';
     return _transliteration_process($s);
 }
 
-function normAndUp ($s) {    
+function normAndUp ($s) {
     return mb_strtoupper (normalizeUtf8String($s), 'UTF-8');
 }
 
