@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "63e47a36155e89c1fe792281a7fdfde4",
+    "hash": "7c3f38465d821b944060b0907acfeed1",
     "packages": [
         {
             "name": "components/jquery",
@@ -223,6 +223,16 @@
             "time": "2014-12-12 05:04:05"
         },
         {
+            "name": "olado/dot",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/olado/doT",
+                "reference": "1.0.1"
+            },
+            "type": "library"
+        },
+        {
             "name": "phpmailer/phpmailer",
             "version": "v5.2.10",
             "source": {
@@ -324,6 +334,39 @@
             ],
             "description": "Allows installation of Components via Composer.",
             "time": "2015-06-08 13:01:20"
+        },
+        {
+            "name": "rsms/js-lru",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rsms/js-lru",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2014-01-23 18:19:29"
+        },
+        {
+            "name": "seblucas/dot-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/seblucas/doT-php",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2014-08-26 19:50:16"
+        },
+        {
+            "name": "simonpioli/sortelements",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/simonpioli/sortElements",
+                "reference": "master"
+            },
+            "type": "library",
+            "time": "2012-04-25 11:04:51"
         },
         {
             "name": "symfony/process",
@@ -1781,7 +1824,11 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "seblucas/dot-php": 20,
+        "simonpioli/sortelements": 20,
+        "rsms/js-lru": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
