@@ -8,9 +8,63 @@
         "components/jquery": "~1.11",
         "components/jquery-cookie": "~1.4",
         "components/normalize.css": "~3.0",
-        "twitter/typeahead.js": "~0.10.5"
+        "twitter/typeahead.js": "~0.10.5",
+        "olado/dot": "1.0.1",
+        "seblucas/dot-php": "dev-master",
+        "simonpioli/sortelements": "dev-master",
+        "rsms/js-lru": "dev-master"
     },
     "require-dev": {
         "sauce/sausage": ">=0.12.0"
-    }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "olado/dot",
+                "version": "1.0.1",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/olado/doT",
+                    "reference": "1.0.1"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "seblucas/dot-php",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/seblucas/doT-php",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "simonpioli/sortelements",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/simonpioli/sortElements",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "rsms/js-lru",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/rsms/js-lru",
+                    "reference": "master"
+                }
+            }
+        }
+    ]
 }
