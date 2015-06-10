@@ -1,7 +1,7 @@
 <?php
 
 require_once ("config.php");
-require_once "resources/PHPMailer/class.phpmailer.php";
+require_once "vendor/phpmailer/phpmailer/class.phpmailer.php";
 require_once "book.php";
 
 function checkConfiguration () {

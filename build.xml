@@ -19,6 +19,7 @@
         <zip destfile="cops.zip">
             <fileset dir=".">
                 <include name="**" />
+                <exclude name="components/**" />
                 <exclude name="test/**" />
                 <exclude name=".hg*/**" />
                 <exclude name=".git/**" />
@@ -26,6 +27,7 @@
                 <exclude name="coverage/**" />
                 <exclude name="saucetest/**" />
                 <exclude name="resources/epub-loader/**" />
+                <exclude name="vendor/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.zip" />

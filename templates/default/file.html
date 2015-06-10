@@ -14,20 +14,20 @@
 
     <title>{{=it.title}}</title>
 
-    <script type="text/javascript" src="resources/jQuery/jquery-1.11.1.min.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/jquery-cookie/jquery.cookies.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="components/jquery/jquery.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="components/jquery-cookie/jquery.cookie.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="resources/jquery-sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
 {{? it.server_side_rendering == 0}}
-    <script type="text/javascript" src="resources/Magnific-Popup/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
-    <link rel="stylesheet" type="text/css" href="resources/Magnific-Popup/magnific-popup.css?v={{=it.version}}" media="screen" />
+    <script type="text/javascript" src="vendor/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/dimsemenov/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
     <script type="text/javascript" src="resources/doT/doT.min.js?v={{=it.version}}"></script>
     <script type="text/javascript" src="resources/lru/lru.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/typeahead/typeahead.bundle.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/twitter/typeahead.js/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
 {{?}}
     <script type="text/javascript" src="util.js"></script>
     <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
-    <link rel="stylesheet" type="text/css" href="resources/normalize/normalize.css?v={{=it.version}}" />
+    <link rel="stylesheet" type="text/css" href="components/normalize-css/normalize.css?v={{=it.version}}" />
     <link rel="stylesheet" type="text/css" href="templates/default/styles/font-awesome.css?v={{=it.version}}" media="screen" />
     <link rel="stylesheet" type="text/css" href="{{=it.current_css}}?v={{=it.version}}" media="screen" />
 
