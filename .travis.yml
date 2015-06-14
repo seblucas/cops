@@ -6,7 +6,7 @@ php:
   - 5.3
   - hhvm
 before_script:
-  - composer install
+  - composer install --no-dev
   - npm install jshint -g
   - jshint --version
 script:
