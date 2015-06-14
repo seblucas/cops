@@ -8,6 +8,7 @@
                 <directory suffix=".php">./resources</directory>
                 <directory suffix=".php">./test</directory>
                 <directory suffix=".php">./saucetest</directory>
+                <directory suffix=".php">./vendor</directory>
                 <file>config.php</file>
                 <file>config_default.php</file>
             </exclude>
