@@ -154,20 +154,29 @@ class CalibreDbLoader
 	 */
 	private function AddBook($inBookInfo)
 	{
+		$errors = array();
+
 		// Check if the book uuid does not already exist
 		$sql = 'select b.id, b.title, b.path, d.name, d.format from books as b, data as d where d.book = b.id and uuid=:uuid';
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->execute();
 		while ($post = $stmt->fetchObject()) {
-			$error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $inBookInfo->mFormat, $post->title);
-			throw new Exception($error);
+			$error = sprintf('Warning: Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $inBookInfo->mFormat, $post->title);
+			$errors[] = $error;
+			// Set a new uuid
+			$inBookInfo->CreateUuid();
+			break;
 		}
 		// Add the book
 		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
 		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
 		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
 		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
+		if (empty($inBookInfo->mCover)) {
+			$error = 'Warning: Cover not found';
+			$errors[] = $error;
+		}
 		$cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
@@ -420,8 +429,8 @@ class CalibreDbLoader
 			$stmt->execute();
 		}
 		// Send warnings
-		if (empty($cover)) {
-			$error = 'Warning: Cover not found';
+		if (count($errors)) {
+			$error = implode(' - ', $errors);
 			throw new Exception($error);
 		}
 	}

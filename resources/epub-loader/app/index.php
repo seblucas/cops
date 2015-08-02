@@ -86,6 +86,8 @@ function RecursiveGlob($inPath = '', $inPattern = '*')
 		$res = array_merge($res, RecursiveGlob($path, $inPattern));
 	}
 
+	sort($res);
+
 	return $res;
 }
 
