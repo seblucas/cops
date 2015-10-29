@@ -15,9 +15,16 @@ DirectoryIndex index.php
 
 ###########################################
 # On WAMP one user had to add this line in his httpd.conf
-# None of the abose was working
+# None of the above was working
 ###########################################
 #XSendFilePath <YourCalibrePath>
+
+###########################################
+# If you want to use user based configuration with
+# apache 2.4 + php-fpm enable this
+# https://github.com/seblucas/cops/issues/213
+###########################################
+#SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
 
 <IfModule mod_rewrite.c>
 RewriteEngine on
