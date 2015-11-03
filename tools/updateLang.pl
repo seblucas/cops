@@ -67,7 +67,7 @@ sub handleLanguageFile {
     
     my $content = loadFile ($file);
     
-    while ($content =~ /"(.*?)"\:"(.*?)",/igs) {
+    while ($content =~ /"(.*?)"\:\s*"(.*?)",/igs) {
         my $key = $1;
         my $value = $2;
         next if ($key =~ /^##TODO##/);
