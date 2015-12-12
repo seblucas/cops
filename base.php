@@ -375,13 +375,16 @@ class Link
 class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
+        error_log("BENTEST: " . $_SERVER["SCRIPT_NAME"]);
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
         if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
             $this->href = "index.php" . $this->href;
+            error_log("BENTEST2: " . $this->href);
         } else {
-            $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+            $this->href = trim($_SERVER["SCRIPT_NAME"],'/') . $this->href;
+            error_log("BENTEST3: " . $this->href);
         }
     }
 }
@@ -389,6 +392,7 @@ class LinkNavigation extends Link
 class LinkFacet extends Link
 {
     public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
+        error_log("BENTEST: " . $_SERVER["SCRIPT_NAME"]);
         parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
