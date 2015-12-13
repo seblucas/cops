@@ -1160,6 +1160,8 @@ abstract class Base
     const PAGE_RATING_DETAIL = "23";
 
     const COMPATIBILITY_XML_ALDIKO = "aldiko";
+    
+    const SQL_SETTING = 'SELECT val FROM preferences WHERE key = "{0}"';
 
     private static $db = NULL;
 
@@ -1332,4 +1334,15 @@ abstract class Base
         return array ($totalResult, $result);
     }
 
+    /**
+     * Gets a calibre setting from the database.
+     * 
+     * @param string $name Name of the property
+     * @param int $database Database to query from
+     * @return string Value of the property
+     */
+    public static function getCalibreSetting($name, $database = NULL) {
+    	$query = str_format(self::SQL_SETTING, $name);
+    	return self::executeQuerySingle($query, $database);
+    }
 }
