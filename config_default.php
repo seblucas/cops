@@ -17,6 +17,13 @@
      * $config['calibre_directory'] = array ("My database name" => "/home/directory/calibre1/", "My other database name" => "/home/directory/calibre2/");
      */
     $config['calibre_directory'] = './';
+    
+    /*
+     * Virtual libraries allow to handle subsets of a catalog as independent database. 
+     * If enabled, each virtual library is handled as an independent database.
+     * Allowed values are: 0, 1
+    */
+    $config['enable_virtual_libraries'] = 0;
 
     /*
      * SPECIFIC TO NGINX
