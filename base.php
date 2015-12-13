@@ -586,7 +586,7 @@ class Page
             		// Virtual Libraries are enabled show each virtual library as one database
             		$nBooks = Book::getBookCount ($i);
             		foreach (VirtualLib::getVLNameList($i) as $vlName)
-            			array_push ($this->entryArray, new Entry (str_format('{0} - {1}', $key, $vlName),
+            			array_push ($this->entryArray, new Entry (trim(str_format('{0} - {1}', $key, $vlName), ' -'),
             								"cops:{$i}:catalog",
             								str_format (localize ("bookword", $nBooks), $nBooks), "text",
             								array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
