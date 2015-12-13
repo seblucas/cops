@@ -10,6 +10,8 @@ define ("VERSION", "1.0.0RC4");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
+require_once('virtuallib.php');
+
 
 function useServerSideRendering () {
     global $config;
@@ -580,10 +582,21 @@ class Page
         if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (Base::getDbNameList () as $key) {
-                $nBooks = Book::getBookCount ($i);
-                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
-                                        str_format (localize ("bookword", $nBooks), $nBooks), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
+            	if (VirtualLib::isVLEnabled()) {
+            		// Virtual Libraries are enabled show each virtual library as one database
+            		$nBooks = Book::getBookCount ($i);
+            		foreach (VirtualLib::getVLNameList($i) as $vlName)
+            			array_push ($this->entryArray, new Entry (str_format('{0} - {1}', $key, $vlName),
+            								"cops:{$i}:catalog",
+            								str_format (localize ("bookword", $nBooks), $nBooks), "text",
+            								array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
+            	} else {
+            		// Virtual Libraries are enabled show each virtual library as one database
+            		$nBooks = Book::getBookCount ($i);
+	                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
+	                                        str_format (localize ("bookword", $nBooks), $nBooks), "text",
+	                                        array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
+            	}
                 $i++;
                 Base::clearDb ();
             }
@@ -1178,7 +1191,8 @@ abstract class Base
     }
 
     public static function noDatabaseSelected () {
-        return self::isMultipleDatabaseEnabled () && is_null (GetUrlParam (DB));
+        return (self::isMultipleDatabaseEnabled () || VirtualLib::isVLEnabled())
+        	&& is_null (GetUrlParam (DB));
     }
 
     public static function getDbList () {
