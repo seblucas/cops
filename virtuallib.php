@@ -31,8 +31,11 @@ class VirtualLib {
 	 * @return array An array of virtual libraries with the names as keys and the filter strings as values.  
 	 */
 	public static function getVLList($database = NULL) {
-		$vl_json = Base::getCalibreSetting(self::SQL_VL_KEY, $database);
-		return json_decode($vl_json, true);
+		// Load list from Database
+		$vLibs = json_decode(Base::getCalibreSetting(self::SQL_VL_KEY, $database), true);
+		// Add "All Books" at the beginning
+		$vLibs = array_merge(array(localize ("allbooks.title") => ""), $vLibs);
+		return $vLibs;
 	}
 	
 	/**
