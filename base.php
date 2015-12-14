@@ -370,6 +370,11 @@ class Link
     public function hrefXhtml () {
         return $this->href;
     }
+
+    public function getScriptName() {
+        $parts = explode('/', $_SERVER["SCRIPT_NAME"]);
+        return $parts[count($parts) - 1];
+    }
 }
 
 class LinkNavigation extends Link
@@ -378,10 +383,10 @@ class LinkNavigation extends Link
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
-        if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
+        if (preg_match ("/(bookdetail|getJSON).php/", parent::getScriptName())) {
             $this->href = "index.php" . $this->href;
         } else {
-            $this->href = trim($_SERVER["SCRIPT_NAME"],'/') . $this->href;
+            $this->href = parent::getScriptName() . $this->href;
         }
     }
 }
@@ -389,10 +394,9 @@ class LinkNavigation extends Link
 class LinkFacet extends Link
 {
     public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
-        error_log("BENTEST: " . $_SERVER["SCRIPT_NAME"]);
         parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
-        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        $this->href = parent::getScriptName() . $this->href;
     }
 }
 
