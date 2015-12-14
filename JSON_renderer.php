@@ -66,6 +66,7 @@ class JSONRenderer
         global $config;
         $out = self::getBookContentArray ($book);
         $database = GetUrlParam (DB);
+        $virtualLib = GetUrlParam (VL, 0);
 
         $out ["coverurl"] = Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", NULL)->hrefXhtml ();
         $out ["thumbnailurl"] = Data::getLink ($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", NULL, NULL, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml ();
@@ -78,7 +79,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}";
+                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}&vl={$virtualLib}";
             }
             array_push ($out ["datas"], $tab);
         }
@@ -148,7 +149,7 @@ class JSONRenderer
                            "sortorderDesc" => localize("search.sortorder.desc"),
                            "customizeEmail" => localize("customize.email")),
                        "url" => array (
-                           "detailUrl" => "index.php?page=13&id={0}&db={1}",
+                           "detailUrl" => "index.php?page=13&id={0}&db={1}&vl={2}",
                            "coverUrl" => "fetch.php?id={0}&db={1}",
                            "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
                        "config" => array (
@@ -176,6 +177,7 @@ class JSONRenderer
         $qid = getURLParam ("id");
         $n = getURLParam ("n", "1");
         $database = GetUrlParam (DB);
+        $virtualLib = getURLParam(VL, 0);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -197,6 +199,8 @@ class JSONRenderer
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
+        $out ["virtualLibId"] = GetUrlParam (VL, "");
+        
         $out ["fullTitle"] = $out ["title"];
         if ($out ["databaseId"] != "" && $out ["databaseName"] != $out ["fullTitle"]) {
             $out ["fullTitle"] = $out ["databaseName"] . " > " . $out ["fullTitle"];
@@ -229,7 +233,7 @@ class JSONRenderer
             $out ["containsBook"] = 1;
         }
 
-        $out["abouturl"] = "index.php" . addURLParameter ("?page=" . Base::PAGE_ABOUT, DB, $database);
+        $out["abouturl"] = "index.php" . addURLParameter ("?page=" . Base::PAGE_ABOUT, DB, $database) . "&" . addURLParameter ("", VL, $virtualLib);
 
         if ($page == Base::PAGE_ABOUT) {
             $temp = preg_replace ("/\<h1\>About COPS\<\/h1\>/", "<h1>About COPS " . VERSION . "</h1>", file_get_contents('about.html'));
@@ -237,7 +241,10 @@ class JSONRenderer
         }
 
         $out ["homeurl"] = "index.php";
-        if ($page != Base::PAGE_INDEX && !is_null ($database)) $out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
+        if ($page != Base::PAGE_INDEX && !is_null ($database)) {
+        	$out ["homeurl"] = $out ["homeurl"] .  "?" . addURLParameter ("", DB, $database);
+        	$out ["homeurl"] = $out ["homeurl"] .  "&" . addURLParameter ("", VL, $virtualLib);
+        }
 
         return $out;
     }

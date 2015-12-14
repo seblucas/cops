@@ -186,7 +186,10 @@ class Data extends Base {
                 $urlParam = self::handleThumbnailLink($urlParam, $height);
             }
             $urlParam = addURLParameter($urlParam, "id", $book->id);
-            if (!is_null (GetUrlParam (DB))) $urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
+            if (!is_null (GetUrlParam (DB))) {
+            	$urlParam = addURLParameter ($urlParam, DB, GetUrlParam (DB));
+            	$urlParam = addURLParameter ($urlParam, VL, GetUrlParam (VL, 0));
+            }
             if ($config['cops_thumbnail_handling'] != "1" &&
                 !empty ($config['cops_thumbnail_handling']) &&
                 $rel == Link::OPDS_THUMBNAIL_TYPE) {

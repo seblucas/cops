@@ -58,7 +58,10 @@ class OPDSRenderer
                 $xml->startElement ("Url");
                     $xml->writeAttribute ("type", 'application/atom+xml');
                     $urlparam = "?query={searchTerms}";
-                    if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
+                    if (!is_null (GetUrlParam (DB))) {
+                    	$urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
+                    	$urlparam = addURLParameter ($urlparam, VL, GetUrlParam (VL, 0));
+                    }
                     $urlparam = str_replace ("%7B", "{", $urlparam);
                     $urlparam = str_replace ("%7D", "}", $urlparam);
                     $xml->writeAttribute ("template", $config['cops_full_url'] . 'feed.php' . $urlparam);
@@ -124,7 +127,10 @@ class OPDSRenderer
             $link = new LinkNavigation ("?" . getQueryString (), "self");
             self::renderLink ($link);
             $urlparam = "?";
-            if (!is_null (GetUrlParam (DB))) $urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
+            if (!is_null (GetUrlParam (DB))) {
+            	$urlparam = addURLParameter ($urlparam, DB, GetUrlParam (DB));
+            	$urlparam = addURLParameter ($urlparam, VL, GetUrlParam (VL, 0));
+            }
             if ($config['cops_generate_invalid_opds_stream'] == 0 || preg_match("/(MantanoReader|FBReader)/", $_SERVER['HTTP_USER_AGENT'])) {
                 // Good and compliant way of handling search
                 $urlparam = addURLParameter ($urlparam, "page", Base::PAGE_OPENSEARCH);

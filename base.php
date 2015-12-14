@@ -7,7 +7,8 @@
  */
 
 define ("VERSION", "1.0.0RC4");
-define ("DB", "db");
+define ("DB", "db");     // url parameter for the selected database
+define ("VL", "vl");     // url parameter for the selected virtual library
 date_default_timezone_set($config['default_timezone']);
 
 require_once('virtuallib.php');
@@ -378,7 +379,10 @@ class LinkNavigation extends Link
 {
     public function __construct($phref, $prel = NULL, $ptitle = NULL) {
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
-        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        if (!is_null (GetUrlParam (DB))) {
+        	$this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        	$this->href = addURLParameter ($this->href, VL, GetUrlParam (VL, 0));
+        }
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
         if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
             $this->href = "index.php" . $this->href;
@@ -392,7 +396,10 @@ class LinkFacet extends Link
 {
     public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
         parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
-        if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        if (!is_null (GetUrlParam (DB))) {
+        	$this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
+        	$this->href = addURLParameter ($this->href, VL, GetUrlParam (VL, 0));
+        }
         $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
     }
 }
@@ -461,7 +468,7 @@ class Entry
             }
         }
 
-        if (!is_null (GetUrlParam (DB))) $this->id = str_replace ("cops:", "cops:" . GetUrlParam (DB) . ":", $this->id);
+        if (!is_null (GetUrlParam (DB))) $this->id = str_replace ("cops:", "cops:" . GetUrlParam (DB) . ":" . GetUrlParam (VL,0) . ":", $this->id);
     }
 }
 
@@ -585,11 +592,14 @@ class Page
             	if (VirtualLib::isVLEnabled()) {
             		// Virtual Libraries are enabled show each virtual library as one database
             		$nBooks = Book::getBookCount ($i);
-            		foreach (VirtualLib::getVLNameList($i) as $vlName)
+            		$j = 0;
+            		foreach (VirtualLib::getVLNameList($i) as $vlName) {
             			array_push ($this->entryArray, new Entry (trim(str_format('{0} - {1}', $key, $vlName), ' -'),
             								"cops:{$i}:catalog",
             								str_format (localize ("bookword", $nBooks), $nBooks), "text",
-            								array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
+            								array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
+            			$j++;
+            		}
             	} else {
             		// Virtual Libraries are enabled show each virtual library as one database
             		$nBooks = Book::getBookCount ($i);
