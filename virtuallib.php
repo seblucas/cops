@@ -47,4 +47,20 @@ class VirtualLib {
 	public static function getVLNameList($database = NULL) {
 		return array_keys(self::getVLList($database));
 	}
+	
+	/**
+	 * Combines the database and virtual lib names into a merged name.
+	 * 
+	 * The resulting name has the form "{$dbName} - {$vlName}". If one of these parameters is empty, the dash will also be removed.
+	 * If the support for virtual libraries is not enabled, this function simply returns the database name.
+	 * 
+	 * @param string $dbName The Database Name
+	 * @param string $vlName The Name of the virtual library
+	 */
+	public static function getDisplayName($dbName, $vlName) {
+		if (self::isVLEnabled())
+			return trim(str_format('{0} - {1}', $dbName, $vlName), ' -');
+		else
+			return $dbName;
+	}
 }

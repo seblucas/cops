@@ -594,7 +594,7 @@ class Page
             		$nBooks = Book::getBookCount ($i);
             		$j = 0;
             		foreach (VirtualLib::getVLNameList($i) as $vlName) {
-            			array_push ($this->entryArray, new Entry (trim(str_format('{0} - {1}', $key, $vlName), ' -'),
+            			array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
             								"cops:{$i}:catalog",
             								str_format (localize ("bookword", $nBooks), $nBooks), "text",
             								array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
@@ -642,7 +642,7 @@ class Page
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
-            if (Base::isMultipleDatabaseEnabled ()) $this->title =  Base::getDbName ();
+            if (Base::isDatabaseArray ()) $this->title =  Base::getDbName ();
         }
     }
 
@@ -1188,9 +1188,13 @@ abstract class Base
 
     private static $db = NULL;
 
-    public static function isMultipleDatabaseEnabled () {
+    public static function isDatabaseArray () {
         global $config;
         return is_array ($config['calibre_directory']);
+    }
+    
+    public static function isMultipleDatabaseEnabled () {
+    	return (self::isDatabaseArray () || VirtualLib::isVLEnabled());
     }
 
     public static function useAbsolutePath () {
@@ -1201,13 +1205,12 @@ abstract class Base
     }
 
     public static function noDatabaseSelected () {
-        return (self::isMultipleDatabaseEnabled () || VirtualLib::isVLEnabled())
-        	&& is_null (GetUrlParam (DB));
+        return self::isMultipleDatabaseEnabled() && is_null (GetUrlParam (DB));
     }
 
     public static function getDbList () {
         global $config;
-        if (self::isMultipleDatabaseEnabled ()) {
+        if (self::isDatabaseArray ()) {
             return $config['calibre_directory'];
         } else {
             return array ("" => $config['calibre_directory']);
@@ -1216,7 +1219,7 @@ abstract class Base
 
     public static function getDbNameList () {
         global $config;
-        if (self::isMultipleDatabaseEnabled ()) {
+        if (self::isDatabaseArray ()) {
             return array_keys ($config['calibre_directory']);
         } else {
             return array ("");
@@ -1225,7 +1228,7 @@ abstract class Base
 
     public static function getDbName ($database = NULL) {
         global $config;
-        if (self::isMultipleDatabaseEnabled ()) {
+        if (self::isDatabaseArray ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 return self::error ($database);
@@ -1238,7 +1241,7 @@ abstract class Base
 
     public static function getDbDirectory ($database = NULL) {
         global $config;
-        if (self::isMultipleDatabaseEnabled ()) {
+        if (self::isDatabaseArray ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
                 return self::error ($database);
