@@ -938,6 +938,7 @@ class PageQueryResult extends Page
 
     public function doSearchByCategory () {
         $database = GetUrlParam (DB);
+        $virtualLib = getURLParam(VL, 0);
         $out = array ();
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
         $dbArray = array ("");
@@ -948,50 +949,65 @@ class PageQueryResult extends Page
             $dbArray = Base::getDbNameList ();
             $d = 0;
         }
-        foreach ($dbArray as $key) {
-            if (Base::noDatabaseSelected ()) {
-                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$d}",
-                                        " ", "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$d}")), "tt-header"));
-                Base::getDb ($d);
-            }
-            foreach (array (PageQueryResult::SCOPE_BOOK,
-                            PageQueryResult::SCOPE_AUTHOR,
-                            PageQueryResult::SCOPE_SERIES,
-                            PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
-                if (in_array($key, getCurrentOption ('ignored_categories'))) {
-                    continue;
-                }
-                $array = $this->searchByScope ($key, TRUE);
-
-                $i = 0;
-                if (count ($array) == 2 && is_array ($array [0])) {
-                    $total = $array [1];
-                    $array = $array [0];
-                } else {
-                    $total = count($array);
-                }
-                if ($total > 0) {
-                    // Comment to help the perl i18n script
-                    // str_format (localize("bookword", count($array))
-                    // str_format (localize("authorword", count($array))
-                    // str_format (localize("seriesword", count($array))
-                    // str_format (localize("tagword", count($array))
-                    // str_format (localize("publisherword", count($array))
-                    array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}",
-                                        str_format (localize("{$key}word", $total), $total), "text",
-                                        array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
-                                        Base::noDatabaseSelected () ? "" : "tt-header", $total));
-                }
-                if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
-                    foreach ($array as $entry) {
-                        array_push ($this->entryArray, $entry);
-                        $i++;
-                        if ($i > 4) { break; };
-                    }
-                }
-            }
+        $vl = $virtualLib;
+        $vlArray = VirtualLib::getVLNameList($d);
+        $vlArray = array($vlArray[$vl]);
+        
+        foreach ($dbArray as $dbKey) {
+        	if (Base::noDatabaseSelected () && VirtualLib::isVLEnabled()) {
+        		// If virtual libraries are enabled, but no Database is selected, 
+        		// then iterate over all virtual libraries
+        		$vlArray = VirtualLib::getVLNameList($d);
+        		$vl = 0;
+        	}
+        	foreach ($vlArray as $vlKey) {	
+	            if (Base::noDatabaseSelected ()) {
+	                array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($dbKey, $vlKey), 
+	                						DB . ":query:{$d}:{$vl}",
+	                                        " ", "text",
+	                                        array ( new LinkNavigation ("?" . DB . "={$d}&" . VL . "={$vl}")), "tt-header"));
+	                Base::getDb ($d);
+	                // TODO: set current virtual library in Base Or VirtualLib
+	            }
+	            foreach (array (PageQueryResult::SCOPE_BOOK,
+	                            PageQueryResult::SCOPE_AUTHOR,
+	                            PageQueryResult::SCOPE_SERIES,
+	                            PageQueryResult::SCOPE_TAG,
+	                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+	                if (in_array($key, getCurrentOption ('ignored_categories'))) {
+	                    continue;
+	                }
+	                $array = $this->searchByScope ($key, TRUE);
+	
+	                $i = 0;
+	                if (count ($array) == 2 && is_array ($array [0])) {
+	                    $total = $array [1];
+	                    $array = $array [0];
+	                } else {
+	                    $total = count($array);
+	                }
+	                if ($total > 0) {
+	                    // Comment to help the perl i18n script
+	                    // str_format (localize("bookword", count($array))
+	                    // str_format (localize("authorword", count($array))
+	                    // str_format (localize("seriesword", count($array))
+	                    // str_format (localize("tagword", count($array))
+	                    // str_format (localize("publisherword", count($array))
+	                    array_push ($this->entryArray, new Entry (str_format (localize ("search.result.{$key}"), $this->query), DB . ":query:{$d}:{$key}:{$vl}",
+	                                        str_format (localize("{$key}word", $total), $total), "text",
+	                                        array ( new LinkNavigation ("?page={$pagequery}&query={$query}&db={$d}&vl={$vl}&scope={$key}")),
+	                                        Base::noDatabaseSelected () ? "" : "tt-header", $total));
+	                }
+	                if (!Base::noDatabaseSelected () && $this->useTypeahead ()) {
+	                    foreach ($array as $entry) {
+	                        array_push ($this->entryArray, $entry);
+	                        $i++;
+	                        if ($i > 4) { break; };
+	                    }
+	                }
+	            }
+	            $vl++;
+        	}
             $d++;
             if (Base::noDatabaseSelected ()) {
                 Base::clearDb ();
