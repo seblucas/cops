@@ -29,7 +29,7 @@
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 books">
         <div class="panel panel-default" style="height: 320px;">
           <div class="panel-heading">
-            <h2 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h2>
+            <h2 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId, it.virtualLibId)}}">{{=htmlspecialchars (entry.title)}}</a></h2>
           </div>
           <div class="panel-body">
             <div class="cover-image">

@@ -18,7 +18,7 @@
         <br />
         {{~}}
     </h2>
-    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
+    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId, it.virtualLibId)}}" {{=it.c.config.kindleHack}}><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.c.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:i}}

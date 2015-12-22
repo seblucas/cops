@@ -16,6 +16,9 @@
                     {{? it.databaseId != ""}}
                         <input type="hidden" name="db" value="{{=it.databaseId}}" />
                     {{?}}
+                    {{? it.virtualLibId != ""}}
+                        <input type="hidden" name="vl" value="{{=it.virtualLibId}}" />
+                    {{?}}
                     <input type="text" data-type="search" required="required" name="query" />
                 </div>
                 <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">

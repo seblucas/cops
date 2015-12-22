@@ -30,7 +30,7 @@
                  <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.name}}</a><br />
                 {{~}}
             </h2>
-            <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}>
+            <a class="fancydetail" href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId,it.virtualLibId)}}" {{=it.c.config.kindleHack}}>
             <div class="fullclickpopup">
                 <h2><span class="st">{{=htmlspecialchars (entry.title)}}</span>
                 {{? entry.book.pubDate != ""}}<span class="sp">({{=entry.book.pubDate}})</span>{{?}}
