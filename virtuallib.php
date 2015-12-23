@@ -34,8 +34,10 @@ class VirtualLib {
 		// Load list from Database
 		$vLibs = json_decode(Base::getCalibreSetting(self::SQL_VL_KEY, $database), true);
 		// Add "All Books" at the beginning
-		$vLibs = array_merge(array(localize ("allbooks.title") => ""), $vLibs);
-		return $vLibs;
+		if (is_null($vLibs))
+			return array(localize ("allbooks.title") => "");
+		else
+			return array_merge(array(localize ("allbooks.title") => ""), $vLibs);
 	}
 	
 	/**
