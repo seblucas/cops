@@ -14,6 +14,96 @@ require_once('base.php');
 class VirtualLib {
 	const SQL_VL_KEY = "virtual_libraries";  // Key for the virtual library entries.
 	
+	const FILTER_TYPE_TEXT = 0;   // Filter by search text
+	const FILTER_TYPE_NUM  = 1;   // Filter by number
+	const FILTER_TYPE_BOOL = 2;   // Filter by existence
+	
+	private $db_id = null;   // Database Index for the virtual lib
+	private $vl_id = null;   // Library Index
+	private $filter = null;  // structured representation of the current filter 
+	
+	private static $currentVL = null;  // Singleton: current virtual lib
+	
+	/**
+	 * The constructor parses the calibre search string and creates a array-based representation out of it.
+	 * 
+	 * @param int $database The database id of the new object.
+	 * @param int $virtualLib The virtual library id of the new object.
+	 */
+	private function __construct($database = null, $virtualLib = null) {
+		$this->db_id  = $database;
+		$this->vl_id  = $virtualLib;
+		
+		// Get the current search string
+		$vlList = self::getVLList($database);
+		$vlList = array_values($vlList);
+		$searchStr = $vlList[$virtualLib];
+		
+		$this->filter = self::parseFilter($searchStr);
+	}
+	
+	/**
+	 * Get the current VirtualLib object. 
+	 *  
+	 * @param int $database The current database id.
+	 * @param int $virtualLib The current virtual library id.
+	 * @return VirtualLib The corresponding VirtualLib object.
+	 */
+	public static function getVL($database = null, $virtualLib = null) {
+		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || self::$currentVL->vl_id != $virtualLib ) {
+			self::$currentVL = new VirtualLib($database, $virtualLib);
+		}
+		return self::$currentVL;
+	}
+	
+	/**
+	 * Converts the calibre search string into an internal format
+	 * 
+	 * @param string $searchStr The calibre string
+	 * @return string The internal, array-based representation
+	 */
+	private static function parseFilter($searchStr) {
+		// deal with empty strings
+		if (strlen($searchStr) == 0)
+			return null;
+		
+		// Simple search string pattern. It recognizes search string of the form
+		//     [name]:[value]
+		// and their negation
+		//     not [name]:[value]
+		// where value is either a number, a boolean or a string in double quote.
+		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
+		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
+		$pattern = '#(?P<neg>not)?\s*(?P<name>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
+		preg_match($pattern, $searchStr, $match);
+		
+		// Extract the actual value, operator and type
+		$value    = $match["value"];
+		$operator = "=";
+		if (substr($value, 0, 1) == '"') {
+			$value = $match["text"];
+			$operator = $match["op"];
+			$type = self::FILTER_TYPE_TEXT;
+		} elseif (preg_match("#\d+", $value)) {
+			$value = intval($value);
+			$type = self::FILTER_TYPE_NUM;
+		} else {
+			$value = (strcasecmp($value, "true") == 0);
+			$type = self::FILTER_TYPE_BOOL;
+		}
+		
+		// Put together filter data
+		$filter = array(
+				"name"  => $match["name"],
+				"neg"   => (strlen($match["neg"]) > 0)?true:false,
+				"op"    => $operator,
+				"value" => $value,
+				"type"  => $type
+		);
+		
+		return $filter;
+	}
+	
 	/**
 	 * Checks if the support for virtual libraries is enabled in the settings.
 	 * 
