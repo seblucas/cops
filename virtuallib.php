@@ -14,10 +14,6 @@ require_once('base.php');
 class VirtualLib {
 	const SQL_VL_KEY = "virtual_libraries";  // Key for the virtual library entries.
 	
-	const FILTER_TYPE_TEXT = 0;   // Filter by search text
-	const FILTER_TYPE_NUM  = 1;   // Filter by number
-	const FILTER_TYPE_BOOL = 2;   // Filter by existence
-	
 	private $db_id = null;   // Database Index for the virtual lib
 	private $vl_id = null;   // Library Index
 	private $filter = null;  // structured representation of the current filter 
@@ -39,7 +35,7 @@ class VirtualLib {
 		$vlList = array_values($vlList);
 		$searchStr = $vlList[$virtualLib];
 		
-		$this->filter = self::parseFilter($searchStr);
+		$this->filter = Filter::parseFilter($searchStr);
 	}
 	
 	/**
@@ -54,54 +50,6 @@ class VirtualLib {
 			self::$currentVL = new VirtualLib($database, $virtualLib);
 		}
 		return self::$currentVL;
-	}
-	
-	/**
-	 * Converts the calibre search string into an internal format
-	 * 
-	 * @param string $searchStr The calibre string
-	 * @return string The internal, array-based representation
-	 */
-	private static function parseFilter($searchStr) {
-		// deal with empty strings
-		if (strlen($searchStr) == 0)
-			return null;
-		
-		// Simple search string pattern. It recognizes search string of the form
-		//     [name]:[value]
-		// and their negation
-		//     not [name]:[value]
-		// where value is either a number, a boolean or a string in double quote.
-		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
-		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
-		$pattern = '#(?P<neg>not)?\s*(?P<name>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
-		preg_match($pattern, $searchStr, $match);
-		
-		// Extract the actual value, operator and type
-		$value    = $match["value"];
-		$operator = "=";
-		if (substr($value, 0, 1) == '"') {
-			$value = $match["text"];
-			$operator = $match["op"];
-			$type = self::FILTER_TYPE_TEXT;
-		} elseif (preg_match("#\d+", $value)) {
-			$value = intval($value);
-			$type = self::FILTER_TYPE_NUM;
-		} else {
-			$value = (strcasecmp($value, "true") == 0);
-			$type = self::FILTER_TYPE_BOOL;
-		}
-		
-		// Put together filter data
-		$filter = array(
-				"name"  => $match["name"],
-				"neg"   => (strlen($match["neg"]) > 0)?true:false,
-				"op"    => $operator,
-				"value" => $value,
-				"type"  => $type
-		);
-		
-		return $filter;
 	}
 	
 	/**
@@ -154,5 +102,119 @@ class VirtualLib {
 			return trim(str_format('{0} - {1}', $dbName, $vlName), ' -');
 		else
 			return $dbName;
+	}
+}
+
+/**
+ * Abstract classe to store filters internally. It's derived classes represent the different filter types.
+ *
+ */
+abstract class Filter {
+	private $isNegated = false;
+	
+	/**
+	 * Converts the calibre search string into afilter object
+	 *
+	 * @param string $searchStr The calibre string
+	 * @return Filter The internal, array-based representation
+	 */
+	public static function parseFilter($searchStr) {
+		// deal with empty input strings
+		if (strlen($searchStr) == 0)
+			return new EmptyFilter($type);
+	
+		// Simple search string pattern. It recognizes search string of the form
+		//     [attr]:[value]
+		// and their negation
+		//     not [attr]:[value]
+		// where value is either a number, a boolean or a string in double quote.
+		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
+		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
+		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
+		preg_match($pattern, $searchStr, $match);
+	
+		// Create the actual filter object
+		$value = $match["value"];
+		$filter   = null;
+		if (substr($value, 0, 1) == '"') {
+			$filter = new ComparingFilter($match["attr"], $match["text"], $match["op"]);
+		} elseif (preg_match("#\d+", $value)) {
+			$filter = new ComparingFilter($match["attr"], $value, $match["op"]);
+		} else {
+			$value = (strcasecmp($value, "true") == 0);
+			$filter = new ExistenceFilter($match["attr"], $value);
+		}
+	
+		// Negate if a leading "not" is given
+		if (strlen($match["neg"]) > 0)
+			$filter->negate();
+	
+		return $filter;
+	}
+	
+	/**
+	 * Negates the current filter. A second call will undo it.
+	 */
+	public function negate() {
+		$this->isNegated = !$this->isNegated;
+	}
+	
+	public function isNegated() {
+		return $this->isNegated;
+	}
+}
+
+/**
+ * Class that represents an empty filter
+ *
+ */
+class EmptyFilter extends Filter {
+	public function __construct() {
+		// Do Nothing
+	}
+}
+
+/**
+ * Class that represents a filter, that compares an attribute with a given value, e.g. tags with "Fiction" 
+ *
+ * This class allows for other comparation operators beside "="
+ */
+class ComparingFilter extends Filter {
+	private $attr = null;   // The attribute that is filtered
+	private $value = null;  // The value with which to compare
+	private $op = null;     // The operator that is used for comparing
+	
+	/**
+	 * Creates a comparing filter
+	 * 
+	 * @param string $attr The attribute that is filtered.
+	 * @param mixed $value The value with which to compare.
+	 * @param string $op The operator that is used for comparing, optional.
+	 */
+	public function __construct($attr, $value, $op = "=") {
+		$this->attr = $attr;
+		$this->value = $value;
+		$this->op = $op;
+	}
+}
+
+/**
+ * Class that represents a filter, that checks if a given attribute exists for a book.
+ */
+class ExistenceFilter extends Filter {
+	private $attr = null;   // The attribute that is filtered
+
+	/**
+	 * Creates an existence filter
+	 *
+	 * @param string $attr The attribute that is filtered.
+	 * @param boolean $value True, if objects with that attribute are accepted by the filter, false if not.
+	 */
+	public function __construct($attr, $value = true) {
+		$this->attr = $attr;
+		
+		// $value == false is the negation of $value == true 
+		if (!$value)
+			$this->negate();
 	}
 }
