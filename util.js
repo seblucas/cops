@@ -23,7 +23,7 @@ var copsTypeahead = new Bloodhound({
                 url: 'getJSON.php?page=9&search=1&db=%DB&vl=%VL&query=%QUERY',
                 replace: function (url, query) {
                     if (currentData.multipleDatabase === 1 && currentData.databaseId === "") {
-                        return url.replace('%QUERY', query).replace('&db=%DB', "");
+                        return url.replace('%QUERY', query).replace('&db=%DB', "").replace('&vl=%VL', "");
                     }
                     return url.replace('%QUERY', query).replace('%DB', currentData.databaseId).replace('%VL', currentData.virtualLibId);
                 }
