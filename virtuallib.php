@@ -131,7 +131,10 @@ abstract class Filter {
 		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
 		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
 		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
-		preg_match($pattern, $searchStr, $match);
+		if (!preg_match($pattern, $searchStr, $match)) {
+			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
+			return new EmptyFilter($type);
+		}
 	
 		// Create the actual filter object
 		$value = $match["value"];
