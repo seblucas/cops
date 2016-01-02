@@ -116,11 +116,15 @@ class VirtualLib {
 	
 	/**
 	 * Gets a list of all virtual libraries in a database.
+	 * If virtual libraries are disabled, only an empty entry is returned.
 	 * 
 	 * @param int $database id of the database
 	 * @return array An array of virtual libraries with the names as keys and the filter strings as values.  
 	 */
 	public static function getVLList($database = NULL) {
+		// Standard return if virtual libraries are not enabled
+		if (!self::isVLEnabled())
+			return array("" => "");
 		// Load list from Database
 		$vLibs = json_decode(Base::getCalibreSetting(self::SQL_VL_KEY, $database), true);
 		// Add "All Books" at the beginning
