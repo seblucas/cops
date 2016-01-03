@@ -191,6 +191,32 @@ function str_format($format) {
 }
 
 /**
+ * Format strings using named parameters.
+ *
+ * This method replaces {name} in the format string with the value of $array["name"].
+ * @param string $format a format string with named parameters.
+ * @param array $array an array with named values to use as parameters.
+ */
+function str_format_n($format, $array) {
+
+	preg_match_all('/(?=\{)\{([\w\d]+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
+	$offset = 0;
+	foreach ($matches[1] as $data) {
+		$name = $data[0];
+		if (array_key_exists($name, $array)) {
+			$format = substr_replace($format, $array[$name], $offset + $data[1] - 1, 2 + strlen($name));
+			$offset += strlen($array[$name]) - 2 - strlen($name);
+		} else {
+			// Replace not existent keys by ""
+			$format = substr_replace($format, "", $offset + $data[1] - 1, 2 + strlen($name));
+			$offset += 0 - 2 - strlen($name);
+		}
+	}
+
+	return $format;
+}
+
+/**
  * Get all accepted languages from the browser and put them in a sorted array
  * languages id are normalized : fr-fr -> fr_FR
  * @return array of languages
