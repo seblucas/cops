@@ -39,6 +39,20 @@ class VirtualLib {
 	}
 	
 	/**
+	 * Returns a SQL query that finds the IDs of all books accepted by the filter.
+	 *
+	 * The sql statement return only one column with the name 'id'.
+	 * This statement can be included into other sql statements in order to apply the filter, e.g. by using inner joins
+	 * like "select books.* from books inner join ({0}) as filter on books.id = filter.id"
+	 * @see Filter
+	 * 
+	 * @return string an sql query
+	 */
+	public function getFilterQuery() {
+		return $this->filter->toSQLQuery();
+	}
+	
+	/**
 	 * Get the current VirtualLib object. 
 	 *  
 	 * @param int $database The current database id.
@@ -114,6 +128,17 @@ class VirtualLib {
  *
  */
 abstract class Filter {
+	protected static $KNOWN_ATTRIBUTES = array(
+		"tags" => array(
+			"table"        => "tags",
+			"filterColumn" => "name",
+			"link_table"   => "books_tags_link",
+			"link_join_on" => "tag",
+			"bookID"       => "book"
+		)
+	);
+	
+	
 	private $isNegated = false;
 	
 	/**
@@ -160,6 +185,11 @@ abstract class Filter {
 	}
 	
 	/**
+	 * Returns a SQL query that finds the IDs of all books accepted by the filter. The single columns name is id.
+	 */
+	public abstract function toSQLQuery();
+	
+	/**
 	 * Negates the current filter. A second call will undo it.
 	 */
 	public function negate() {
@@ -178,6 +208,13 @@ abstract class Filter {
 class EmptyFilter extends Filter {
 	public function __construct() {
 		// Do Nothing
+	}
+	
+	// Return all books (or no book if the filter is negated)
+	public function toSQLQuery() {
+		if ($this->isNegated())
+			return "select id from books where 1 = 0";
+		return "select id from books";
 	}
 }
 
@@ -199,9 +236,26 @@ class ComparingFilter extends Filter {
 	 * @param string $op The operator that is used for comparing, optional.
 	 */
 	public function __construct($attr, $value, $op = "=") {
-		$this->attr = $attr;
+		$this->attr = strtolower($attr);
 		$this->value = $value;
 		$this->op = $op;
+	}
+	
+	public function toSQLQuery() {
+		// Do not filter if attribute is not valid
+		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+			return "select id from books";
+		
+		// Include parameters into the sql query
+		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		$queryParams["value"] = $this->value;
+		$sql = str_format_n(
+				"select distinct {link_table}.{bookID} as id ".
+				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
+				"where {table}.{filterColumn} = '{value}'",
+				$queryParams);
+		// TODO: support different operators
+		return $sql;
 	}
 }
 
@@ -223,5 +277,19 @@ class ExistenceFilter extends Filter {
 		// $value == false is the negation of $value == true 
 		if (!$value)
 			$this->negate();
+	}
+	
+	public function toSQLQuery() {
+		// Do not filter if attribute is not valid
+		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+			return "select id from books";
+	
+		// Include parameters into the sql query
+		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		$sql = str_format_n(
+				"select distinct {link_table}.{bookID} as id".
+				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ",
+				$queryParams);
+		return $sql;
 	}
 }
