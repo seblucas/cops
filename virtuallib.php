@@ -128,7 +128,7 @@ class VirtualLib {
  *
  */
 abstract class Filter {
-	protected static $KNOWN_ATTRIBUTES = array(
+	public static $KNOWN_ATTRIBUTES = array(
 		"tags" => array(
 			"table"        => "tags",
 			"filterColumn" => "name",
@@ -150,7 +150,7 @@ abstract class Filter {
 	public static function parseFilter($searchStr) {
 		// deal with empty input strings
 		if (strlen($searchStr) == 0)
-			return new EmptyFilter($type);
+			return new EmptyFilter();
 	
 		// Simple search string pattern. It recognizes search string of the form
 		//     [attr]:[value]
@@ -162,7 +162,7 @@ abstract class Filter {
 		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
 		if (!preg_match($pattern, $searchStr, $match)) {
 			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
-			return new EmptyFilter($type);
+			return new EmptyFilter();
 		}
 	
 		// Create the actual filter object
@@ -243,7 +243,7 @@ class ComparingFilter extends Filter {
 	
 	public function toSQLQuery() {
 		// Do not filter if attribute is not valid
-		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+		if (!array_key_exists($this->attr, self::$KNOWN_ATTRIBUTES))
 			return "select id from books";
 		
 		// Include parameters into the sql query
