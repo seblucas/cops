@@ -1340,6 +1340,19 @@ abstract class Base
     public static function executeQuerySingle ($query, $database = NULL) {
         return self::getDb ($database)->query($query)->fetchColumn();
     }
+    
+    /**
+     * Executes a sql query filtered for a virtual library. The query returns a single value;
+     * 
+     * @param string $query The sql query. A {0} indicates the space to include the filter query. 
+     * @param int $database The database id.
+     * @param int $virtualLib The id of the virtual library.
+     * @return mixed The single-value result of the query.
+     */
+    public static function executeFilteredQuerySingle ($query, $database = NULL, $virtualLib = null) {
+    	$query = str_format($query, VirtualLib::getVL($database, $virtualLib)->getFilterQuery());
+    	return self::getDb ($database)->query($query)->fetchColumn();
+    }
 
     public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL) {
         if (!$numberOfString) {
