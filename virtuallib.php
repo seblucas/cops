@@ -14,10 +14,6 @@ require_once('base.php');
 class VirtualLib {
 	const SQL_VL_KEY = "virtual_libraries";  // Key for the virtual library entries.
 	
-	const FILTER_TYPE_TEXT = 0;   // Filter by search text
-	const FILTER_TYPE_NUM  = 1;   // Filter by number
-	const FILTER_TYPE_BOOL = 2;   // Filter by existence
-	
 	private $db_id = null;   // Database Index for the virtual lib
 	private $vl_id = null;   // Library Index
 	private $filter = null;  // structured representation of the current filter 
@@ -39,7 +35,21 @@ class VirtualLib {
 		$vlList = array_values($vlList);
 		$searchStr = $vlList[$virtualLib];
 		
-		$this->filter = self::parseFilter($searchStr);
+		$this->filter = Filter::parseFilter($searchStr);
+	}
+	
+	/**
+	 * Returns a SQL query that finds the IDs of all books accepted by the filter.
+	 *
+	 * The sql statement return only one column with the name 'id'.
+	 * This statement can be included into other sql statements in order to apply the filter, e.g. by using inner joins
+	 * like "select books.* from books inner join ({0}) as filter on books.id = filter.id"
+	 * @see Filter
+	 * 
+	 * @return string an sql query
+	 */
+	public function getFilterQuery() {
+		return $this->filter->toSQLQuery();
 	}
 	
 	/**
@@ -50,58 +60,12 @@ class VirtualLib {
 	 * @return VirtualLib The corresponding VirtualLib object.
 	 */
 	public static function getVL($database = null, $virtualLib = null) {
-		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || self::$currentVL->vl_id != $virtualLib ) {
+		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || (self::$currentVL->vl_id != $virtualLib && !is_null($virtualLib))) {
+			if (is_null($virtualLib))
+				$virtualLib = GetUrlParam (VL, 0);
 			self::$currentVL = new VirtualLib($database, $virtualLib);
 		}
 		return self::$currentVL;
-	}
-	
-	/**
-	 * Converts the calibre search string into an internal format
-	 * 
-	 * @param string $searchStr The calibre string
-	 * @return string The internal, array-based representation
-	 */
-	private static function parseFilter($searchStr) {
-		// deal with empty strings
-		if (strlen($searchStr) == 0)
-			return null;
-		
-		// Simple search string pattern. It recognizes search string of the form
-		//     [name]:[value]
-		// and their negation
-		//     not [name]:[value]
-		// where value is either a number, a boolean or a string in double quote.
-		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
-		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
-		$pattern = '#(?P<neg>not)?\s*(?P<name>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
-		preg_match($pattern, $searchStr, $match);
-		
-		// Extract the actual value, operator and type
-		$value    = $match["value"];
-		$operator = "=";
-		if (substr($value, 0, 1) == '"') {
-			$value = $match["text"];
-			$operator = $match["op"];
-			$type = self::FILTER_TYPE_TEXT;
-		} elseif (preg_match("#\d+", $value)) {
-			$value = intval($value);
-			$type = self::FILTER_TYPE_NUM;
-		} else {
-			$value = (strcasecmp($value, "true") == 0);
-			$type = self::FILTER_TYPE_BOOL;
-		}
-		
-		// Put together filter data
-		$filter = array(
-				"name"  => $match["name"],
-				"neg"   => (strlen($match["neg"]) > 0)?true:false,
-				"op"    => $operator,
-				"value" => $value,
-				"type"  => $type
-		);
-		
-		return $filter;
 	}
 	
 	/**
@@ -158,5 +122,176 @@ class VirtualLib {
 			return trim(str_format('{0} - {1}', $dbName, $vlName), ' -');
 		else
 			return $dbName;
+	}
+}
+
+/**
+ * Abstract classe to store filters internally. It's derived classes represent the different filter types.
+ *
+ */
+abstract class Filter {
+	public static $KNOWN_ATTRIBUTES = array(
+		"tags" => array(
+			"table"        => "tags",
+			"filterColumn" => "name",
+			"link_table"   => "books_tags_link",
+			"link_join_on" => "tag",
+			"bookID"       => "book"
+		)
+	);
+	
+	
+	private $isNegated = false;
+	
+	/**
+	 * Converts the calibre search string into afilter object
+	 *
+	 * @param string $searchStr The calibre string
+	 * @return Filter The internal, array-based representation
+	 */
+	public static function parseFilter($searchStr) {
+		// deal with empty input strings
+		if (strlen($searchStr) == 0)
+			return new EmptyFilter();
+	
+		// Simple search string pattern. It recognizes search string of the form
+		//     [attr]:[value]
+		// and their negation
+		//     not [attr]:[value]
+		// where value is either a number, a boolean or a string in double quote.
+		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
+		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
+		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
+		if (!preg_match($pattern, $searchStr, $match)) {
+			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
+			return new EmptyFilter();
+		}
+	
+		// Create the actual filter object
+		$value = $match["value"];
+		$filter   = null;
+		if (substr($value, 0, 1) == '"') {
+			$filter = new ComparingFilter($match["attr"], $match["text"], $match["op"]);
+		} elseif (preg_match("#\d+", $value)) {
+			$filter = new ComparingFilter($match["attr"], $value, $match["op"]);
+		} else {
+			$value = (strcasecmp($value, "true") == 0);
+			$filter = new ExistenceFilter($match["attr"], $value);
+		}
+	
+		// Negate if a leading "not" is given
+		if (strlen($match["neg"]) > 0)
+			$filter->negate();
+	
+		return $filter;
+	}
+	
+	/**
+	 * Returns a SQL query that finds the IDs of all books accepted by the filter. The single columns name is id.
+	 */
+	public abstract function toSQLQuery();
+	
+	/**
+	 * Negates the current filter. A second call will undo it.
+	 */
+	public function negate() {
+		$this->isNegated = !$this->isNegated;
+	}
+	
+	public function isNegated() {
+		return $this->isNegated;
+	}
+}
+
+/**
+ * Class that represents an empty filter
+ *
+ */
+class EmptyFilter extends Filter {
+	public function __construct() {
+		// Do Nothing
+	}
+	
+	// Return all books (or no book if the filter is negated)
+	public function toSQLQuery() {
+		if ($this->isNegated())
+			return "select id from books where 1 = 0";
+		return "select id from books";
+	}
+}
+
+/**
+ * Class that represents a filter, that compares an attribute with a given value, e.g. tags with "Fiction" 
+ *
+ * This class allows for other comparation operators beside "="
+ */
+class ComparingFilter extends Filter {
+	private $attr = null;   // The attribute that is filtered
+	private $value = null;  // The value with which to compare
+	private $op = null;     // The operator that is used for comparing
+	
+	/**
+	 * Creates a comparing filter
+	 * 
+	 * @param string $attr The attribute that is filtered.
+	 * @param mixed $value The value with which to compare.
+	 * @param string $op The operator that is used for comparing, optional.
+	 */
+	public function __construct($attr, $value, $op = "=") {
+		$this->attr = strtolower($attr);
+		$this->value = $value;
+		$this->op = $op;
+	}
+	
+	public function toSQLQuery() {
+		// Do not filter if attribute is not valid
+		if (!array_key_exists($this->attr, self::$KNOWN_ATTRIBUTES))
+			return "select id from books";
+		
+		// Include parameters into the sql query
+		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		$queryParams["value"] = $this->value;
+		$sql = str_format_n(
+				"select distinct {link_table}.{bookID} as id ".
+				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
+				"where {table}.{filterColumn} = '{value}'",
+				$queryParams);
+		// TODO: support different operators
+		return $sql;
+	}
+}
+
+/**
+ * Class that represents a filter, that checks if a given attribute exists for a book.
+ */
+class ExistenceFilter extends Filter {
+	private $attr = null;   // The attribute that is filtered
+
+	/**
+	 * Creates an existence filter
+	 *
+	 * @param string $attr The attribute that is filtered.
+	 * @param boolean $value True, if objects with that attribute are accepted by the filter, false if not.
+	 */
+	public function __construct($attr, $value = true) {
+		$this->attr = $attr;
+		
+		// $value == false is the negation of $value == true 
+		if (!$value)
+			$this->negate();
+	}
+	
+	public function toSQLQuery() {
+		// Do not filter if attribute is not valid
+		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+			return "select id from books";
+	
+		// Include parameters into the sql query
+		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		$sql = str_format_n(
+				"select distinct {link_table}.{bookID} as id".
+				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ",
+				$queryParams);
+		return $sql;
 	}
 }

@@ -191,6 +191,32 @@ function str_format($format) {
 }
 
 /**
+ * Format strings using named parameters.
+ *
+ * This method replaces {name} in the format string with the value of $array["name"].
+ * @param string $format a format string with named parameters.
+ * @param array $array an array with named values to use as parameters.
+ */
+function str_format_n($format, $array) {
+
+	preg_match_all('/(?=\{)\{([\w\d]+)\}(?!\})/', $format, $matches, PREG_OFFSET_CAPTURE);
+	$offset = 0;
+	foreach ($matches[1] as $data) {
+		$name = $data[0];
+		if (array_key_exists($name, $array)) {
+			$format = substr_replace($format, $array[$name], $offset + $data[1] - 1, 2 + strlen($name));
+			$offset += strlen($array[$name]) - 2 - strlen($name);
+		} else {
+			// Replace not existent keys by ""
+			$format = substr_replace($format, "", $offset + $data[1] - 1, 2 + strlen($name));
+			$offset += 0 - 2 - strlen($name);
+		}
+	}
+
+	return $format;
+}
+
+/**
  * Get all accepted languages from the browser and put them in a sorted array
  * languages id are normalized : fr-fr -> fr_FR
  * @return array of languages
@@ -589,10 +615,10 @@ class Page
         if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (Base::getDbNameList () as $key) {
-            	$nBooks = Book::getBookCount ($i);
             	$j = 0;
             	// if virtual libraries are nor enabled, getVLNameList() contains just one empty entry
             	foreach (VirtualLib::getVLNameList($i) as $vlName) {
+            		$nBooks = Book::getBookCount ($i, $j);
             		array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
             							"cops:{$i}:{$j}:catalog",
             							str_format (localize ("bookword", $nBooks), $nBooks), "text",
@@ -906,7 +932,7 @@ class PageQueryResult extends Page
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter ('%' . $queryNormedAndUp, $n, NULL, $numberPerPage);
+                $array = Book::getBooksByStartingLetter ('%' . $queryNormedAndUp, $n, NULL, NULL, $numberPerPage);
                 break;
             case self::SCOPE_AUTHOR :
                 $array = Author::getAuthorsForSearch ('%' . $queryNormedAndUp);
@@ -1032,7 +1058,7 @@ class PageQueryResult extends Page
                 Base::clearDb ();
                 $j = 0;
                 foreach (VirtualLib::getVLNameList($i) as $vlKey) {
-	                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
+	                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, $j, 1);
 	                array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($dbKey, $vlKey), 
 	                						DB . ":query:{$i}:{$j}",
 	                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
@@ -1314,6 +1340,19 @@ abstract class Base
     public static function executeQuerySingle ($query, $database = NULL) {
         return self::getDb ($database)->query($query)->fetchColumn();
     }
+    
+    /**
+     * Executes a sql query filtered for a virtual library. The query returns a single value;
+     * 
+     * @param string $query The sql query. A {0} indicates the space to include the filter query. 
+     * @param int $database The database id.
+     * @param int $virtualLib The id of the virtual library.
+     * @return mixed The single-value result of the query.
+     */
+    public static function executeFilteredQuerySingle ($query, $database = NULL, $virtualLib = null) {
+    	$query = str_format($query, VirtualLib::getVL($database, $virtualLib)->getFilterQuery());
+    	return self::getDb ($database)->query($query)->fetchColumn();
+    }
 
     public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL) {
         if (!$numberOfString) {
@@ -1343,6 +1382,47 @@ abstract class Base
                 array ( new LinkNavigation ($instance->getUri ())), "", $post->count));
         }
         return $entryArray;
+    }
+    
+    /**
+     * Executes a sql query filtered for a virtual library.
+     * 
+     * @param string $query The sql query. A {0} indicates the space to include the filter query. 
+     * @param array $params SQL parameter
+     * @param int $n Page number
+     * @param int $database Database ID
+     * @param int $virtualLib ID of the virtual library
+     * @param int $numberPerPage Number of shown entries per page
+     * @return multitype:number PDOStatement
+     */
+    public static function executeFilteredQuery($query, $params, $n, $database = NULL, $virtualLib = NULL,$numberPerPage = NULL) {
+    	$totalResult = -1;
+    
+    	$query = str_format($query, VirtualLib::getVL($database, $virtualLib)->getFilterQuery());
+    	
+    	if (useNormAndUp ()) {
+    		$query = preg_replace("/upper/", "normAndUp", $query);
+    	}
+    
+    	if (is_null ($numberPerPage)) {
+    		$numberPerPage = getCurrentOption ("max_item_per_page");
+    	}
+    
+    	if ($numberPerPage != -1 && $n != -1)
+    	{
+    		// First check total number of results
+    		$result = self::getDb ($database)->prepare (str_format ("select count(*) from ({0})", $query));
+    		$result->execute ($params);
+    		$totalResult = $result->fetchColumn ();
+    
+    		// Next modify the query and params
+    		$query .= " limit ?, ?";
+    		array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
+    	}
+    
+    	$result = self::getDb ($database)->prepare($query);
+    	$result->execute ($params);
+    	return array ($totalResult, $result);
     }
 
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
