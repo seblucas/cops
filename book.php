@@ -18,42 +18,44 @@ require_once('data.php');
 require_once('resources/php-epub-meta/epub.php');
 
 // Silly thing because PHP forbid string concatenation in class const
+define ('BOOK_COLUMNS', "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating as rating");
 define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = books.id
                                 left outer join books_ratings_link on books_ratings_link.book = books.id
                                 left outer join ratings on books_ratings_link.rating = ratings.id ");
-define ('SQL_BOOKS_ALL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " order by books.sort ");
-define ('SQL_BOOKS_BY_PUBLISHER', "select {0} from books_publishers_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher");
-define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+define ('SQL_BOOKS_FILTER_JOIN', "inner join ({0}) as filter on filter.id = books.id " . SQL_BOOKS_LEFT_JOIN);
+define ('SQL_BOOKS_ALL', "select ". BOOK_COLUMNS ." from books " . SQL_BOOKS_FILTER_JOIN . " order by books.sort ");
+define ('SQL_BOOKS_BY_PUBLISHER', "select ". BOOK_COLUMNS ." from books_publishers_link, books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where books_publishers_link.book = books.id and publisher = ? order by publisher");
+define ('SQL_BOOKS_BY_FIRST_LETTER', "select ". BOOK_COLUMNS ." from books " . SQL_BOOKS_FILTER_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
-define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
+define ('SQL_BOOKS_BY_AUTHOR', "select ". BOOK_COLUMNS ." from books_authors_link, books " . SQL_BOOKS_FILTER_JOIN . "
                                                     left outer join books_series_link on books_series_link.book = books.id
-                                                    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc");
-define ('SQL_BOOKS_BY_SERIE', "select {0} from books_series_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_series_link.book = books.id and series = ? {1} order by series_index");
-define ('SQL_BOOKS_BY_TAG', "select {0} from books_tags_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_tags_link.book = books.id and tag = ? {1} order by sort");
-define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_languages_link.book = books.id and lang_code = ? {1} order by sort");
-define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
-define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books_authors_link.book = books.id and author = ? order by series desc, series_index asc, pubdate asc");
+define ('SQL_BOOKS_BY_SERIE', "select ". BOOK_COLUMNS ." from books_series_link, books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where books_series_link.book = books.id and series = ? order by series_index");
+define ('SQL_BOOKS_BY_TAG', "select ". BOOK_COLUMNS ." from books_tags_link, books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where books_tags_link.book = books.id and tag = ? order by sort");
+define ('SQL_BOOKS_BY_LANGUAGE', "select ". BOOK_COLUMNS ." from books_languages_link, books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where books_languages_link.book = books.id and lang_code = ? order by sort");
+define ('SQL_BOOKS_BY_CUSTOM', "select ". BOOK_COLUMNS ." from {1}, books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where {1}.book = books.id and {1}.{2} = ? order by sort");
+define ('SQL_BOOKS_QUERY', "select ". BOOK_COLUMNS ." from books " . SQL_BOOKS_FILTER_JOIN . "
                                                     where (
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
                                                     exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
                                                     exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
                                                     exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
-                                                    title like ?) {1} order by books.sort");
-define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where 1=1 {1} order by timestamp desc limit ");
-define ('SQL_BOOKS_BY_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");
+                                                    title like ?) order by books.sort");
+define ('SQL_BOOKS_RECENT', "select " . BOOK_COLUMNS . " from books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    order by timestamp desc limit ");
+define ('SQL_BOOKS_BY_RATING', "select ". BOOK_COLUMNS ." from books " . SQL_BOOKS_FILTER_JOIN . "
+                                                    where books_ratings_link.book = books.id and ratings.id = ? order by sort");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";
-    const BOOK_COLUMNS = "books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating";
+    const BOOK_COLUMNS = BOOK_COLUMNS;
 
     const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
     const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
@@ -479,7 +481,7 @@ class Book extends Base {
     }
 
     public static function getBooksByCustom($customId, $id, $n) {
-        $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
+        $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
         return self::getEntryArray ($query, array ($id), $n);
     }
 
@@ -512,7 +514,7 @@ where data.book = books.id and data.id = ?');
         return NULL;
     }
 
-    public static function getBooksByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
+    public static function getBooksByQuery($query, $n, $database = NULL, $virtualLib = NULL, $numberPerPage = NULL) {
         $i = 0;
         $critArray = array ();
         foreach (array (PageQueryResult::SCOPE_AUTHOR,
@@ -533,7 +535,7 @@ where data.book = books.id and data.id = ?');
             }
             $i++;
         }
-        return self::getEntryArray (self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);
+        return self::getEntryArray (self::SQL_BOOKS_QUERY, $critArray, $n, $database, $virtualLib, $numberPerPage);
     }
 
     public static function getBooks($n) {
@@ -556,12 +558,13 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
-    public static function getBooksByStartingLetter($letter, $n, $database = NULL, $numberPerPage = NULL) {
-        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n, $database, $numberPerPage);
+    public static function getBooksByStartingLetter($letter, $n, $database = NULL, $virtualLib = NULL, $numberPerPage = NULL) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n, $database, $virtualLib, $numberPerPage);
     }
 
-    public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+    public static function getEntryArray ($query, $params, $n, $database = NULL, $virtualLib = NULL, $numberPerPage = NULL) {
+    	// TODO: include getFilterString() again.
+        list ($totalNumber, $result) = parent::executeFilteredQuery ($query, $params, $n, $database, $virtualLib, $numberPerPage);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

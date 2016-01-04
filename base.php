@@ -932,7 +932,7 @@ class PageQueryResult extends Page
         }
         switch ($scope) {
             case self::SCOPE_BOOK :
-                $array = Book::getBooksByStartingLetter ('%' . $queryNormedAndUp, $n, NULL, $numberPerPage);
+                $array = Book::getBooksByStartingLetter ('%' . $queryNormedAndUp, $n, NULL, NULL, $numberPerPage);
                 break;
             case self::SCOPE_AUTHOR :
                 $array = Author::getAuthorsForSearch ('%' . $queryNormedAndUp);
@@ -1058,7 +1058,7 @@ class PageQueryResult extends Page
                 Base::clearDb ();
                 $j = 0;
                 foreach (VirtualLib::getVLNameList($i) as $vlKey) {
-	                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
+	                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, $j, 1);
 	                array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($dbKey, $vlKey), 
 	                						DB . ":query:{$i}:{$j}",
 	                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
@@ -1382,6 +1382,47 @@ abstract class Base
                 array ( new LinkNavigation ($instance->getUri ())), "", $post->count));
         }
         return $entryArray;
+    }
+    
+    /**
+     * Executes a sql query filtered for a virtual library.
+     * 
+     * @param string $query The sql query. A {0} indicates the space to include the filter query. 
+     * @param array $params SQL parameter
+     * @param int $n Page number
+     * @param int $database Database ID
+     * @param int $virtualLib ID of the virtual library
+     * @param int $numberPerPage Number of shown entries per page
+     * @return multitype:number PDOStatement
+     */
+    public static function executeFilteredQuery($query, $params, $n, $database = NULL, $virtualLib = NULL,$numberPerPage = NULL) {
+    	$totalResult = -1;
+    
+    	$query = str_format($query, VirtualLib::getVL($database, $virtualLib)->getFilterQuery());
+    	
+    	if (useNormAndUp ()) {
+    		$query = preg_replace("/upper/", "normAndUp", $query);
+    	}
+    
+    	if (is_null ($numberPerPage)) {
+    		$numberPerPage = getCurrentOption ("max_item_per_page");
+    	}
+    
+    	if ($numberPerPage != -1 && $n != -1)
+    	{
+    		// First check total number of results
+    		$result = self::getDb ($database)->prepare (str_format ("select count(*) from ({0})", $query));
+    		$result->execute ($params);
+    		$totalResult = $result->fetchColumn ();
+    
+    		// Next modify the query and params
+    		$query .= " limit ?, ?";
+    		array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
+    	}
+    
+    	$result = self::getDb ($database)->prepare($query);
+    	$result->execute ($params);
+    	return array ($totalResult, $result);
     }
 
     public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
