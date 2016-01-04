@@ -60,7 +60,9 @@ class VirtualLib {
 	 * @return VirtualLib The corresponding VirtualLib object.
 	 */
 	public static function getVL($database = null, $virtualLib = null) {
-		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || self::$currentVL->vl_id != $virtualLib ) {
+		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || (self::$currentVL->vl_id != $virtualLib && !is_null($virtualLib))) {
+			if (is_null($virtualLib))
+				$virtualLib = GetUrlParam (VL, 0);
 			self::$currentVL = new VirtualLib($database, $virtualLib);
 		}
 		return self::$currentVL;
