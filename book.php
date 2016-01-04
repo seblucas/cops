@@ -431,13 +431,13 @@ class Book extends Base {
             $this->getLinkArray (), $this);
     }
 
-    public static function getBookCount($database = NULL) {
-        return parent::executeQuerySingle ('select count(*) from books', $database);
+    public static function getBookCount($database = NULL, $virtualLib = NULL) {
+        return parent::executeFilteredQuerySingle('select count(*) from ({0}) as filter', $database, $virtualLib);
     }
 
     public static function getCount() {
         global $config;
-        $nBooks = parent::executeQuerySingle ('select count(*) from books');
+        $nBooks = self::getBookCount();
         $result = array();
         $entry = new Entry (localize ("allbooks.title"),
                           self::ALL_BOOKS_ID,

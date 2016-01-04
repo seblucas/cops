@@ -615,10 +615,10 @@ class Page
         if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (Base::getDbNameList () as $key) {
-            	$nBooks = Book::getBookCount ($i);
             	$j = 0;
             	// if virtual libraries are nor enabled, getVLNameList() contains just one empty entry
             	foreach (VirtualLib::getVLNameList($i) as $vlName) {
+            		$nBooks = Book::getBookCount ($i, $j);
             		array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
             							"cops:{$i}:{$j}:catalog",
             							str_format (localize ("bookword", $nBooks), $nBooks), "text",
