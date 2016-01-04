@@ -589,23 +589,15 @@ class Page
         if (Base::noDatabaseSelected ()) {
             $i = 0;
             foreach (Base::getDbNameList () as $key) {
-            	if (VirtualLib::isVLEnabled()) {
-            		// Virtual Libraries are enabled show each virtual library as one database
-            		$nBooks = Book::getBookCount ($i);
-            		$j = 0;
-            		foreach (VirtualLib::getVLNameList($i) as $vlName) {
-            			array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
-            								"cops:{$i}:catalog",
-            								str_format (localize ("bookword", $nBooks), $nBooks), "text",
-            								array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
-            			$j++;
-            		}
-            	} else {
-            		// Virtual Libraries are enabled show each virtual library as one database
-            		$nBooks = Book::getBookCount ($i);
-	                array_push ($this->entryArray, new Entry ($key, "cops:{$i}:catalog",
-	                                        str_format (localize ("bookword", $nBooks), $nBooks), "text",
-	                                        array ( new LinkNavigation ("?" . DB . "={$i}")), "", $nBooks));
+            	$nBooks = Book::getBookCount ($i);
+            	$j = 0;
+            	// if virtual libraries are nor enabled, getVLNameList() contains just one empty entry
+            	foreach (VirtualLib::getVLNameList($i) as $vlName) {
+            		array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
+            							"cops:{$i}:{$j}:catalog",
+            							str_format (localize ("bookword", $nBooks), $nBooks), "text",
+            							array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
+            		$j++;
             	}
                 $i++;
                 Base::clearDb ();
@@ -1016,7 +1008,7 @@ class PageQueryResult extends Page
         return $out;
     }
 
-    public function InitializeContent ()
+	public function InitializeContent ()
     {
         $scope = getURLParam ("scope");
         if (empty ($scope)) {
@@ -1036,12 +1028,17 @@ class PageQueryResult extends Page
         // Special case when we are doing a search and no database is selected
         if (Base::noDatabaseSelected () && !$this->useTypeahead ()) {
             $i = 0;
-            foreach (Base::getDbNameList () as $key) {
+            foreach (Base::getDbNameList () as $dbKey) {
                 Base::clearDb ();
-                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
-                array_push ($this->entryArray, new Entry ($key, DB . ":query:{$i}",
-                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
-                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query)), "", $totalNumber));
+                $j = 0;
+                foreach (VirtualLib::getVLNameList($i) as $vlKey) {
+	                list ($array, $totalNumber) = Book::getBooksByQuery (array ("all" => $crit), 1, $i, 1);
+	                array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($dbKey, $vlKey), 
+	                						DB . ":query:{$i}:{$j}",
+	                                        str_format (localize ("bookword", $totalNumber), $totalNumber), "text",
+	                                        array ( new LinkNavigation ("?" . DB . "={$i}&page=9&query=" . $this->query)), "", $totalNumber));
+	                $j++;
+                }
                 $i++;
             }
             return;
