@@ -130,18 +130,34 @@ class VirtualLib {
  *
  */
 abstract class Filter {
-	public static $KNOWN_ATTRIBUTES = array(
-		"tags" => array(
-			"table"        => "tags",
-			"filterColumn" => "name",
-			"link_table"   => "books_tags_link",
-			"link_join_on" => "tag",
-			"bookID"       => "book"
-		)
+	// Special settings for known attributes
+	private static $KNOWN_ATTRIBUTES = array(
+		"authors"    => array(),
+		"series"     => array("link_join_on" => "series"),
+		"publishers" => array(),
+		"tags"       => array(),
+		"ratings"    => array("filterColumn" => "rating"),
+		"languages"  => array("filterColumn" => "lang_code", "link_join_on" => "lang_code")
 	);
 	
-	
 	private $isNegated = false;
+	
+	/**
+	 * Creates the attribute settings
+	 * @param string $attr the name of the attribute, e.g. "tags"
+	 * @return array an assotiative array with the keys "table", "filterColumn", "link_table", "link_join_on", "bookID".
+	 */
+	public static function getAttributeSettings($attr) {
+		if (!array_key_exists($attr, self::$KNOWN_ATTRIBUTES))
+			return null;
+		return self::$KNOWN_ATTRIBUTES[$attr] + array(
+			"table"        => $attr,
+			"filterColumn" => "name",
+			"link_table"   => "books_" . $attr . "_link",
+			"link_join_on" => substr($attr, 0, strlen($attr) - 1),
+			"bookID"       => "book"
+		);
+	}
 	
 	/**
 	 * Gets the from - part of a table, its link-table and a placeholder for the filter
@@ -150,12 +166,12 @@ abstract class Filter {
 	 * @return string a from string with a placeholder for the filter query
 	 */
 	public static function getLinkedTable($table) {
-		foreach (self::$KNOWN_ATTRIBUTES as $tabInfo) {
+		foreach (array_keys(self::$KNOWN_ATTRIBUTES) as $attr) {
+			$tabInfo = self::getAttributeSettings($attr);
 			if ($tabInfo["table"] == $table) {
-				$tabInfo["placeholder"] = "{0}";
 				return str_format_n(
 						"{table} inner join {link_table} as link on {table}.id = link.{link_join_on} 
-							inner join ({placeholder}) as filter on filter.id = link.{bookID}", $tabInfo);
+							inner join ({placeholder}) as filter on filter.id = link.{bookID}", $tabInfo + array("placeholder" => "{0}"));
 			}
 		}
 		return $table;
@@ -261,12 +277,12 @@ class ComparingFilter extends Filter {
 	}
 	
 	public function toSQLQuery() {
+		$queryParams = self::getAttributeSettings($this->attr);
 		// Do not filter if attribute is not valid
-		if (!array_key_exists($this->attr, self::$KNOWN_ATTRIBUTES))
+		if (is_null($queryParams))
 			return "select id from books";
 		
-		// Include parameters into the sql query
-		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		// Include parameters into the sql query 
 		$queryParams["value"] = $this->value;
 		$sql = str_format_n(
 				"select distinct {link_table}.{bookID} as id ".
@@ -299,12 +315,12 @@ class ExistenceFilter extends Filter {
 	}
 	
 	public function toSQLQuery() {
+		$queryParams = self::getAttributeSettings($this->attr);
 		// Do not filter if attribute is not valid
-		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+		if (is_null($queryParams))
 			return "select id from books";
 	
 		// Include parameters into the sql query
-		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
 		$sql = str_format_n(
 				"select distinct {link_table}.{bookID} as id".
 				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ",
