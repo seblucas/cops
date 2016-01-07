@@ -148,6 +148,7 @@ abstract class Filter {
 	 * @return array an assotiative array with the keys "table", "filterColumn", "link_table", "link_join_on", "bookID".
 	 */
 	public static function getAttributeSettings($attr) {
+		$attr = self::normalizeAttribute($attr);
 		if (!array_key_exists($attr, self::$KNOWN_ATTRIBUTES))
 			return null;
 		return self::$KNOWN_ATTRIBUTES[$attr] + array(
@@ -157,6 +158,20 @@ abstract class Filter {
 			"link_join_on" => substr($attr, 0, strlen($attr) - 1),
 			"bookID"       => "book"
 		);
+	}
+	
+	/**
+	 * Normalizes the attribute. 
+	 * 
+	 * Some attributes can be used in plural (e.g. languages) and singular (e.g. language). This function appends a missing s and puts everything to lower case
+	 * @param string $attr the attribute, like it was used in calibre
+	 * @return the normalized attribute name
+	 */
+	public static function normalizeAttribute($attr) {
+		$attr = strtolower($attr);
+		if (substr($attr, -1) != 's')
+			$attr .= 's';
+		return $attr;
 	}
 	
 	/**
@@ -271,7 +286,7 @@ class ComparingFilter extends Filter {
 	 * @param string $op The operator that is used for comparing, optional.
 	 */
 	public function __construct($attr, $value, $op = "=") {
-		$this->attr = strtolower($attr);
+		$this->attr = self::normalizeAttribute($attr);
 		$this->value = $value;
 		if ($op == "~")
 			$op = "like";
