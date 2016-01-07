@@ -144,6 +144,23 @@ abstract class Filter {
 	private $isNegated = false;
 	
 	/**
+	 * Gets the from - part of a table, its link-table and a placeholder for the filter
+	 * 
+	 * @param string $table a table, e.g. "authors"
+	 * @return string a from string with a placeholder for the filter query
+	 */
+	public static function getLinkedTable($table) {
+		foreach (self::$KNOWN_ATTRIBUTES as $tabInfo) {
+			if ($tabInfo["table"] == $table) {
+				$tabInfo["placeholder"] = "{0}";
+				return str_format_n(
+						"{table} inner join {link_table} as link on {table}.id = link.{link_join_on} 
+							inner join ({placeholder}) as filter on filter.id = link.{bookID}", $tabInfo);
+			}
+		}
+		return $table;
+	}
+	/**
 	 * Converts the calibre search string into afilter object
 	 *
 	 * @param string $searchStr The calibre string

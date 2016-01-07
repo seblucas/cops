@@ -1358,7 +1358,7 @@ abstract class Base
         if (!$numberOfString) {
             $numberOfString = $table . ".alphabetical";
         }
-        $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        $count = self::executeFilteredQuerySingle ('select count(distinct ' . $table .'.id) from ' . Filter::getLinkedTable($table));
         if ($count == 0) return NULL;
         $entry = new Entry (localize($table . ".title"), $id,
             str_format (localize($numberOfString, $count), $count), "text",
