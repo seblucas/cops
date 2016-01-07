@@ -311,10 +311,11 @@ class ComparingFilter extends Filter {
 		// Include parameters into the sql query 
 		$queryParams["value"] = $this->value;
 		$queryParams["op"] = $this->op;
+		$queryParams["neg"] = $this->isNegated() ? "not" : "";
 		$sql = str_format_n(
 				"select distinct {link_table}.{bookID} as id ".
 				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
-				"where {table}.{filterColumn} {op} '{value}'",
+				"where {neg} ({table}.{filterColumn} {op} '{value}')",
 				$queryParams);
 		return $sql;
 	}
@@ -347,9 +348,9 @@ class ExistenceFilter extends Filter {
 			return "select id from books";
 	
 		// Include parameters into the sql query
+		$queryParams["op"] = $this->isNegated() ? "==" : ">";
 		$sql = str_format_n(
-				"select distinct {link_table}.{bookID} as id".
-				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ",
+				"select books.id as id from books left join {link_table} as link on link.{bookID} = books.id group by books.id having count(link.{link_join_on}) {op} 0",
 				$queryParams);
 		return $sql;
 	}
