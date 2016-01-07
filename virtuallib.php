@@ -137,7 +137,8 @@ abstract class Filter {
 		"publishers" => array(),
 		"tags"       => array(),
 		"ratings"    => array("filterColumn" => "rating"),
-		"languages"  => array("filterColumn" => "lang_code", "link_join_on" => "lang_code")
+		"languages"  => array("filterColumn" => "lang_code", "link_join_on" => "lang_code"),
+		"formats"    => array("table" => "data", "filterColumn" => "format", "link_table" => "data", "link_join_on" => "id"),
 	);
 	
 	private $isNegated = false;
@@ -312,11 +313,18 @@ class ComparingFilter extends Filter {
 		$queryParams["value"] = $this->value;
 		$queryParams["op"] = $this->op;
 		$queryParams["neg"] = $this->isNegated() ? "not" : "";
-		$sql = str_format_n(
-				"select distinct {link_table}.{bookID} as id ".
-				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
-				"where {neg} ({table}.{filterColumn} {op} '{value}')",
-				$queryParams);
+		if ($this->attr == "formats")
+			$sql = str_format_n(
+					"select distinct {table}.{bookID} as id ".
+					"from {table} ".
+					"where {neg} ({table}.{filterColumn} {op} '{value}')",
+					$queryParams);
+		else
+			$sql = str_format_n(
+					"select distinct {link_table}.{bookID} as id ".
+					"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
+					"where {neg} ({table}.{filterColumn} {op} '{value}')",
+					$queryParams);
 		return $sql;
 	}
 }
