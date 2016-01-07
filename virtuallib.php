@@ -205,8 +205,8 @@ abstract class Filter {
 		$filter   = null;
 		if (substr($value, 0, 1) == '"') {
 			$filter = new ComparingFilter($match["attr"], $match["text"], $match["op"]);
-		} elseif (preg_match("#\d+", $value)) {
-			$filter = new ComparingFilter($match["attr"], $value, $match["op"]);
+		} elseif (preg_match("#\d+#", $value)) {
+			$filter = new ComparingFilter($match["attr"], $value);
 		} else {
 			$value = (strcasecmp($value, "true") == 0);
 			$filter = new ExistenceFilter($match["attr"], $value);
