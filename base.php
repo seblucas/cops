@@ -660,7 +660,7 @@ class Page
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
 
-            if (Base::isDatabaseArray ()) $this->title =  Base::getDbName ();
+            if (Base::isDatabaseArray ()) $this->title =  VirtualLib::getDisplayName();
         }
     }
 

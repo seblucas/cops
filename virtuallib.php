@@ -26,7 +26,7 @@ class VirtualLib {
 	 * @param int $database The database id of the new object.
 	 * @param int $virtualLib The virtual library id of the new object.
 	 */
-	private function __construct($database = null, $virtualLib = null) {
+	private function __construct($database, $virtualLib) {
 		$this->db_id  = $database;
 		$this->vl_id  = $virtualLib;
 		
@@ -53,6 +53,16 @@ class VirtualLib {
 	}
 	
 	/**
+	 * Get the name of the virtual library.
+	 * 
+	 * @return string Name of the virtual library.
+	 */
+	public function getName() {
+		$names = self::getVLNameList($this->db_id);
+		return $names[$this->vl_id];
+	}
+	
+	/**
 	 * Get the current VirtualLib object. 
 	 *  
 	 * @param int $database The current database id.
@@ -60,6 +70,8 @@ class VirtualLib {
 	 * @return VirtualLib The corresponding VirtualLib object.
 	 */
 	public static function getVL($database = null, $virtualLib = null) {
+		if (is_null($database))
+			$database = getURLParam(DB, 0);
 		if ( is_null(self::$currentVL) || self::$currentVL->db_id != $database || (self::$currentVL->vl_id != $virtualLib && !is_null($virtualLib))) {
 			if (is_null($virtualLib))
 				$virtualLib = GetUrlParam (VL, 0);
@@ -114,10 +126,14 @@ class VirtualLib {
 	 * The resulting name has the form "{$dbName} - {$vlName}". If one of these parameters is empty, the dash will also be removed.
 	 * If the support for virtual libraries is not enabled, this function simply returns the database name.
 	 * 
-	 * @param string $dbName The Database Name
-	 * @param string $vlName The Name of the virtual library
+	 * @param string $dbName The database name. If NULL, the name of the current db is taken.
+	 * @param string $vlName The name of the virtual library. If NULL, the name of the current vl is taken.
 	 */
-	public static function getDisplayName($dbName, $vlName) {
+	public static function getDisplayName($dbName = NULL, $vlName = NULL) {
+		if (is_null($dbName))
+			$dbName = Base::getDbName();
+		if (is_null($vlName))
+			$vlName = self::getVL()->getName();
 		if (self::isVLEnabled())
 			return trim(str_format('{0} - {1}', $dbName, $vlName), ' -');
 		else

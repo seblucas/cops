@@ -195,7 +195,7 @@ class JSONRenderer
             $out ["book"] = self::getFullBookContentArray ($currentPage->book);
         }
         $out ["databaseId"] = GetUrlParam (DB, "");
-        $out ["databaseName"] = Base::getDbName ();
+        $out ["databaseName"] = VirtualLib::getDisplayName();
         if ($out ["databaseId"] == "") {
             $out ["databaseName"] = "";
         }
