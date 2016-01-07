@@ -194,7 +194,7 @@ abstract class Filter {
 		// where value is either a number, a boolean or a string in double quote.
 		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
 		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
-		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
+		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~|\>|<|>=|<=)(?P<text>.*)"|true|false|\d+)#i';
 		if (!preg_match($pattern, $searchStr, $match)) {
 			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
 			return new EmptyFilter();
@@ -273,6 +273,8 @@ class ComparingFilter extends Filter {
 	public function __construct($attr, $value, $op = "=") {
 		$this->attr = strtolower($attr);
 		$this->value = $value;
+		if ($op == "~")
+			$op = "like";
 		$this->op = $op;
 	}
 	
@@ -284,12 +286,12 @@ class ComparingFilter extends Filter {
 		
 		// Include parameters into the sql query 
 		$queryParams["value"] = $this->value;
+		$queryParams["op"] = $this->op;
 		$sql = str_format_n(
 				"select distinct {link_table}.{bookID} as id ".
 				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
-				"where {table}.{filterColumn} = '{value}'",
+				"where {table}.{filterColumn} {op} '{value}'",
 				$queryParams);
-		// TODO: support different operators
 		return $sql;
 	}
 }
