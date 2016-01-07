@@ -10,9 +10,21 @@ require_once('base.php');
 
 class Publisher extends Base {
     const ALL_PUBLISHERS_ID = "cops:publishers";
-    const PUBLISHERS_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
-    const SQL_ALL_PUBLISHERS = "select {0} from publishers, books_publishers_link where publishers.id = publisher group by publishers.id, publishers.name order by publishers.name";
-    const SQL_PUBLISHERS_FOR_SEARCH = "select {0} from publishers, books_publishers_link where publishers.id = publisher and upper (publishers.name) like ? group by publishers.id, publishers.name order by publishers.name";
+    const SQL_ALL_PUBLISHERS = 
+    		"select publishers.id as id, publishers.name as name, count(*) as count 
+    		 from publishers 
+    			inner join books_publishers_link as link on publishers.id = link.publisher 
+    			inner join ({0}) as filter on filter.id = link.book
+    		 group by publishers.id, publishers.name 
+    		 order by publishers.name";
+    const SQL_PUBLISHERS_FOR_SEARCH = 
+    		"select publishers.id as id, publishers.name as name, count(*) as count 
+    		 from publishers 
+    			inner join books_publishers_link as link on publishers.id = link.publisher 
+    			inner join ({0}) as filter on filter.id = link.book 
+    		 where upper (publishers.name) like ? 
+    		 group by publishers.id, publishers.name 
+    		 order by publishers.name";
 
 
     public $id;
@@ -58,10 +70,10 @@ from publishers where id = ?');
     }
 
     public static function getAllPublishers() {
-        return Base::getEntryArrayWithBookNumber (self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, array (), "Publisher");
+        return Base::getEntryArrayWithBookNumber (self::SQL_ALL_PUBLISHERS, array (), "Publisher");
     }
 
     public static function getAllPublishersByQuery($query) {
-        return Base::getEntryArrayWithBookNumber (self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, array ('%' . $query . '%'), "Publisher");
+        return Base::getEntryArrayWithBookNumber (self::SQL_PUBLISHERS_FOR_SEARCH, array ('%' . $query . '%'), "Publisher");
     }
 }

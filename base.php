@@ -1366,8 +1366,8 @@ abstract class Base
         return $entry;
     }
 
-    public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
-        list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
+    public static function getEntryArrayWithBookNumber ($query, $params, $category) {
+        list (, $result) = self::executeFilteredQuery($query, $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
