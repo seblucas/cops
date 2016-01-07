@@ -291,6 +291,15 @@ class ComparingFilter extends Filter {
 		if ($op == "~")
 			$op = "like";
 		$this->op = $op;
+		
+		// Specialty of ratings
+		if ($this->attr == "ratings") 
+			$this->value *= 2;
+		
+		// Specialty of languages
+		// This only works if calibre and cops use the same language!!!
+		if ($this->attr == "languages")
+			$this->value = Language::getLanguageCode($this->value);
 	}
 	
 	public function toSQLQuery() {

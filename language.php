@@ -71,4 +71,23 @@ class language extends Base {
         }
         return $entryArray;
     }
+    
+    /**
+     * Takes a language name and tries to find the language code
+     * @param string $language A language name
+     * @return string the code for this name
+     */
+    public static function getLanguageCode($language) {
+    	// Filtering this call will lead to endless recursion
+    	list (, $result) = self::executeQuery("select {0} from languages", "id, lang_code", "", array(), -1);
+    	$entryArray = array();
+    	while ($post = $result->fetchObject ())
+    	{
+    		$code = $post->lang_code;
+    		$lang = Language::getLanguageString ($code);
+    		if (strcasecmp($lang, $language) == 0)
+    			return $code;
+    	}
+    	return $language;
+    }
 }
