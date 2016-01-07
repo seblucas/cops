@@ -10,6 +10,14 @@ require_once('base.php');
 
 class language extends Base {
     const ALL_LANGUAGES_ID = "cops:languages";
+    
+    const SQL_ALL_LANGUAGES =
+    "select languages.id as id, languages.lang_code as lang_code, count(*) as count
+	 from languages 
+     	inner join books_languages_link as link on languages.id = link.lang_code
+    	inner join ({0}) as filter on link.book = filter.id
+	 group by languages.id, link.lang_code
+	 order by languages.lang_code";
 
     public $id;
     public $lang_code;
@@ -52,11 +60,7 @@ class language extends Base {
 
 
     public static function getAllLanguages() {
-        $result = parent::getDb ()->query('select languages.id as id, languages.lang_code as lang_code, count(*) as count
-from languages, books_languages_link
-where languages.id = books_languages_link.lang_code
-group by languages.id, books_languages_link.lang_code
-order by languages.lang_code');
+        list (, $result) = self::executeFilteredQuery(self::SQL_ALL_LANGUAGES, array(), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
@@ -66,5 +70,24 @@ order by languages.lang_code');
                 array ( new LinkNavigation ($language->getUri ())), "", $post->count));
         }
         return $entryArray;
+    }
+    
+    /**
+     * Takes a language name and tries to find the language code
+     * @param string $language A language name
+     * @return string the code for this name
+     */
+    public static function getLanguageCode($language) {
+    	// Filtering this call will lead to endless recursion
+    	list (, $result) = self::executeQuery("select {0} from languages", "id, lang_code", "", array(), -1);
+    	$entryArray = array();
+    	while ($post = $result->fetchObject ())
+    	{
+    		$code = $post->lang_code;
+    		$lang = Language::getLanguageString ($code);
+    		if (strcasecmp($lang, $language) == 0)
+    			return $code;
+    	}
+    	return $language;
     }
 }

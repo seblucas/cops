@@ -11,8 +11,13 @@ require_once('base.php');
 class Rating extends Base {
     const ALL_RATING_ID = "cops:rating";
 
-    const RATING_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
-    const SQL_ALL_RATINGS ="select {0} from ratings, books_ratings_link where books_ratings_link.rating = ratings.id group by ratings.id order by ratings.rating";
+    const SQL_ALL_RATINGS = 
+    	"select ratings.id as id, ratings.rating as rating, count(*) as count 
+    	 from ratings 
+    		inner join books_ratings_link as link on link.rating = ratings.id
+    		inner join ({0}) as filter on filter.id = link.book 
+    	 group by ratings.id 
+    	 order by ratings.rating";
     public $id;
     public $name;
 
@@ -39,7 +44,7 @@ class Rating extends Base {
     }
 
     public static function getEntryArray ($query, $params) {
-        list (, $result) = parent::executeQuery ($query, self::RATING_COLUMNS, "", $params, -1);
+        list (, $result) = parent::executeFilteredQuery($query, $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

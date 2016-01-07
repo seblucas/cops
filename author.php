@@ -11,10 +11,29 @@ require_once('base.php');
 class Author extends Base {
     const ALL_AUTHORS_ID = "cops:authors";
 
-    const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
-    const SQL_AUTHORS_BY_FIRST_LETTER = "select {0} from authors, books_authors_link where author = authors.id and upper (authors.sort) like ? group by authors.id, authors.name, authors.sort order by sort";
-    const SQL_AUTHORS_FOR_SEARCH = "select {0} from authors, books_authors_link where author = authors.id and (upper (authors.sort) like ? or upper (authors.name) like ?) group by authors.id, authors.name, authors.sort order by sort";
-    const SQL_ALL_AUTHORS = "select {0} from authors, books_authors_link where author = authors.id group by authors.id, authors.name, authors.sort order by sort";
+    const SQL_AUTHORS_BY_FIRST_LETTER = 
+    	"select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count 
+    	 from authors
+    		inner join books_authors_link as link on link.author = authors.id
+    		inner join ({0}) as filter on filter.id = link.book
+    	 where upper (authors.sort) like ? 
+    	 group by authors.id, authors.name, authors.sort 
+    	 order by sort";
+    const SQL_AUTHORS_FOR_SEARCH = 
+    	"select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count 
+    	 from authors
+    		inner join books_authors_link as link on link.author = authors.id
+    		inner join ({0}) as filter on filter.id = link.book 
+    	 where (upper (authors.sort) like ? or upper (authors.name) like ?) 
+    	 group by authors.id, authors.name, authors.sort 
+    	 order by sort";
+    const SQL_ALL_AUTHORS = 
+    	"select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count 
+    	 from authors 
+    		inner join books_authors_link as link on author = authors.id
+    		inner join ({0}) as filter on filter.id = link.book 
+    	 group by authors.id, authors.name, authors.sort 
+    	 order by sort";
 
     public $id;
     public $name;
@@ -71,7 +90,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getEntryArray ($query, $params) {
-        return Base::getEntryArrayWithBookNumber ($query, self::AUTHOR_COLUMNS, $params, "Author");
+        return Base::getEntryArrayWithBookNumber ($query, $params, "Author");
     }
 
     public static function getAuthorById ($authorId) {

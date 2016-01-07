@@ -10,9 +10,21 @@ require_once('base.php');
 
 class Serie extends Base {
     const ALL_SERIES_ID = "cops:series";
-    const SERIES_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
-    const SQL_ALL_SERIES = "select {0} from series, books_series_link where series.id = series group by series.id, series.name, series.sort order by series.sort";
-    const SQL_SERIES_FOR_SEARCH = "select {0} from series, books_series_link where series.id = series and upper (series.name) like ? group by series.id, series.name, series.sort order by series.sort";
+    const SQL_ALL_SERIES = 
+    	"select series.id as id, series.name as name, series.sort as sort, count(*) as count 
+    	 from series 
+    	 	inner join books_series_link as link on series.id = link.series
+    		inner join ({0}) as filter on filter.id = link.book
+    	 group by series.id, series.name, series.sort 
+    	 order by series.sort";
+    const SQL_SERIES_FOR_SEARCH = 
+    	"select series.id as id, series.name as name, series.sort as sort, count(*) as count 
+    	 from series
+    		inner join books_series_link as link on series.id = series
+    		inner join ({0}) as filter on filter.id = link.book 
+    	 where upper (series.name) like ? 
+    	 group by series.id, series.name, series.sort 
+    	 order by series.sort";
 
     public $id;
     public $name;
@@ -56,10 +68,10 @@ where series.id = series and book = ?');
     }
 
     public static function getAllSeries() {
-        return Base::getEntryArrayWithBookNumber (self::SQL_ALL_SERIES, self::SERIES_COLUMNS, array (), "Serie");
+        return Base::getEntryArrayWithBookNumber (self::SQL_ALL_SERIES, array (), "Serie");
     }
 
     public static function getAllSeriesByQuery($query) {
-        return Base::getEntryArrayWithBookNumber (self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, array ('%' . $query . '%'), "Serie");
+        return Base::getEntryArrayWithBookNumber (self::SQL_SERIES_FOR_SEARCH, array ('%' . $query . '%'), "Serie");
     }
 }

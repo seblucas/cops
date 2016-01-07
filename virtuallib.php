@@ -146,19 +146,68 @@ class VirtualLib {
  *
  */
 abstract class Filter {
-	public static $KNOWN_ATTRIBUTES = array(
-		"tags" => array(
-			"table"        => "tags",
-			"filterColumn" => "name",
-			"link_table"   => "books_tags_link",
-			"link_join_on" => "tag",
-			"bookID"       => "book"
-		)
+	// Special settings for known attributes
+	private static $KNOWN_ATTRIBUTES = array(
+		"authors"    => array(),
+		"series"     => array("link_join_on" => "series"),
+		"publishers" => array(),
+		"tags"       => array(),
+		"ratings"    => array("filterColumn" => "rating"),
+		"languages"  => array("filterColumn" => "lang_code", "link_join_on" => "lang_code"),
+		"formats"    => array("table" => "data", "filterColumn" => "format", "link_table" => "data", "link_join_on" => "id"),
 	);
-	
 	
 	private $isNegated = false;
 	
+	/**
+	 * Creates the attribute settings
+	 * @param string $attr the name of the attribute, e.g. "tags"
+	 * @return array an assotiative array with the keys "table", "filterColumn", "link_table", "link_join_on", "bookID".
+	 */
+	public static function getAttributeSettings($attr) {
+		$attr = self::normalizeAttribute($attr);
+		if (!array_key_exists($attr, self::$KNOWN_ATTRIBUTES))
+			return null;
+		return self::$KNOWN_ATTRIBUTES[$attr] + array(
+			"table"        => $attr,
+			"filterColumn" => "name",
+			"link_table"   => "books_" . $attr . "_link",
+			"link_join_on" => substr($attr, 0, strlen($attr) - 1),
+			"bookID"       => "book"
+		);
+	}
+	
+	/**
+	 * Normalizes the attribute. 
+	 * 
+	 * Some attributes can be used in plural (e.g. languages) and singular (e.g. language). This function appends a missing s and puts everything to lower case
+	 * @param string $attr the attribute, like it was used in calibre
+	 * @return the normalized attribute name
+	 */
+	public static function normalizeAttribute($attr) {
+		$attr = strtolower($attr);
+		if (substr($attr, -1) != 's')
+			$attr .= 's';
+		return $attr;
+	}
+	
+	/**
+	 * Gets the from - part of a table, its link-table and a placeholder for the filter
+	 * 
+	 * @param string $table a table, e.g. "authors"
+	 * @return string a from string with a placeholder for the filter query
+	 */
+	public static function getLinkedTable($table) {
+		foreach (array_keys(self::$KNOWN_ATTRIBUTES) as $attr) {
+			$tabInfo = self::getAttributeSettings($attr);
+			if ($tabInfo["table"] == $table) {
+				return str_format_n(
+						"{table} inner join {link_table} as link on {table}.id = link.{link_join_on} 
+							inner join ({placeholder}) as filter on filter.id = link.{bookID}", $tabInfo + array("placeholder" => "{0}"));
+			}
+		}
+		return $table;
+	}
 	/**
 	 * Converts the calibre search string into afilter object
 	 *
@@ -177,7 +226,7 @@ abstract class Filter {
 		// where value is either a number, a boolean or a string in double quote.
 		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
 		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
-		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~)(?P<text>.*)"|true|false|\d+)#i';
+		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~|\>|<|>=|<=)(?P<text>.*)"|true|false|\d+)#i';
 		if (!preg_match($pattern, $searchStr, $match)) {
 			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
 			return new EmptyFilter();
@@ -188,8 +237,8 @@ abstract class Filter {
 		$filter   = null;
 		if (substr($value, 0, 1) == '"') {
 			$filter = new ComparingFilter($match["attr"], $match["text"], $match["op"]);
-		} elseif (preg_match("#\d+", $value)) {
-			$filter = new ComparingFilter($match["attr"], $value, $match["op"]);
+		} elseif (preg_match("#\d+#", $value)) {
+			$filter = new ComparingFilter($match["attr"], $value);
 		} else {
 			$value = (strcasecmp($value, "true") == 0);
 			$filter = new ExistenceFilter($match["attr"], $value);
@@ -254,25 +303,44 @@ class ComparingFilter extends Filter {
 	 * @param string $op The operator that is used for comparing, optional.
 	 */
 	public function __construct($attr, $value, $op = "=") {
-		$this->attr = strtolower($attr);
+		$this->attr = self::normalizeAttribute($attr);
 		$this->value = $value;
+		if ($op == "~")
+			$op = "like";
 		$this->op = $op;
+		
+		// Specialty of ratings
+		if ($this->attr == "ratings") 
+			$this->value *= 2;
+		
+		// Specialty of languages
+		// This only works if calibre and cops use the same language!!!
+		if ($this->attr == "languages")
+			$this->value = Language::getLanguageCode($this->value);
 	}
 	
 	public function toSQLQuery() {
+		$queryParams = self::getAttributeSettings($this->attr);
 		// Do not filter if attribute is not valid
-		if (!array_key_exists($this->attr, self::$KNOWN_ATTRIBUTES))
+		if (is_null($queryParams))
 			return "select id from books";
 		
-		// Include parameters into the sql query
-		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		// Include parameters into the sql query 
 		$queryParams["value"] = $this->value;
-		$sql = str_format_n(
-				"select distinct {link_table}.{bookID} as id ".
-				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
-				"where {table}.{filterColumn} = '{value}'",
-				$queryParams);
-		// TODO: support different operators
+		$queryParams["op"] = $this->op;
+		$queryParams["neg"] = $this->isNegated() ? "not" : "";
+		if ($this->attr == "formats")
+			$sql = str_format_n(
+					"select distinct {table}.{bookID} as id ".
+					"from {table} ".
+					"where {neg} ({table}.{filterColumn} {op} '{value}')",
+					$queryParams);
+		else
+			$sql = str_format_n(
+					"select distinct {link_table}.{bookID} as id ".
+					"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ".
+					"where {neg} ({table}.{filterColumn} {op} '{value}')",
+					$queryParams);
 		return $sql;
 	}
 }
@@ -298,15 +366,15 @@ class ExistenceFilter extends Filter {
 	}
 	
 	public function toSQLQuery() {
+		$queryParams = self::getAttributeSettings($this->attr);
 		// Do not filter if attribute is not valid
-		if (!array_key_exists($this->attr, self::KNOWN_ATTRIBUTES))
+		if (is_null($queryParams))
 			return "select id from books";
 	
 		// Include parameters into the sql query
-		$queryParams = self::$KNOWN_ATTRIBUTES[$this->attr];
+		$queryParams["op"] = $this->isNegated() ? "==" : ">";
 		$sql = str_format_n(
-				"select distinct {link_table}.{bookID} as id".
-				"from {table} inner join {link_table} on {table}.id = {link_table}.{link_join_on} ",
+				"select books.id as id from books left join {link_table} as link on link.{bookID} = books.id group by books.id having count(link.{link_join_on}) {op} 0",
 				$queryParams);
 		return $sql;
 	}

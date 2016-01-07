@@ -1358,7 +1358,7 @@ abstract class Base
         if (!$numberOfString) {
             $numberOfString = $table . ".alphabetical";
         }
-        $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        $count = self::executeFilteredQuerySingle ('select count(distinct ' . $table .'.id) from ' . Filter::getLinkedTable($table));
         if ($count == 0) return NULL;
         $entry = new Entry (localize($table . ".title"), $id,
             str_format (localize($numberOfString, $count), $count), "text",
@@ -1366,8 +1366,8 @@ abstract class Base
         return $entry;
     }
 
-    public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
-        list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
+    public static function getEntryArrayWithBookNumber ($query, $params, $category) {
+        list (, $result) = self::executeFilteredQuery($query, $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
