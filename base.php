@@ -619,10 +619,12 @@ class Page
             	// if virtual libraries are nor enabled, getVLNameList() contains just one empty entry
             	foreach (VirtualLib::getVLNameList($i) as $vlName) {
             		$nBooks = Book::getBookCount ($i, $j);
-            		array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
-            							"cops:{$i}:{$j}:catalog",
-            							str_format (localize ("bookword", $nBooks), $nBooks), "text",
-            							array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
+            		// Only show not-empty virtual libraries
+            		if ($nBooks > 0)
+	            		array_push ($this->entryArray, new Entry (VirtualLib::getDisplayName($key, $vlName),
+	            							"cops:{$i}:{$j}:catalog",
+	            							str_format (localize ("bookword", $nBooks), $nBooks), "text",
+	            							array ( new LinkNavigation ("?" . DB . "={$i}&" . VL . "={$j}")), "", $nBooks));
             		$j++;
             	}
                 $i++;
