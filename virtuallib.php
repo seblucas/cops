@@ -380,7 +380,6 @@ class CombinationFilter extends Filter {
 	public function __construct($parts, $op = "and") {
 		$this->parts = $parts;
 		$this->op = strtolower($op);
-		$this->flatten();
 	}
 	
 	/**
@@ -392,21 +391,33 @@ class CombinationFilter extends Filter {
 	}
 	
 	/**
-	 * Flattens the Filter, by merging parts that are CombinationFilter objects into this filter, if they have the same operator.
-	 * This means "(x and y) and z" becomes "x and y and z" 
+	 * Simplifys the filter, by merging parts that are CombinationFilter objects into this filter, if they have the same operator.
+	 * This means "(x and y) and z" becomes "x and y and z". 
+	 * Furthermore, empty filters are removed and if only one part exists, this part is returned. 
+	 * 
+	 * @return the simplified filter. The result might not be a CombinationFilter 
 	 */
-	public function flatten() {
+	public function simplify() {
 		$newParts = array();
 		foreach ($this->parts as $part) {
+			// Simplify inner combination filters
+			if ($part instanceof CombinationFilter)
+				$part = $part->simplify();
+				
 			if ($part instanceof CombinationFilter && $part->isConjunction() == $this->isConjunction()) {
-				// Part is a CombinationFilter with the same operator --> merge it's parts into this filter
-				$part->flatten();
+				// Part is a CombinationFilter with the same operator --> merge it's parts into this filter 
 				foreach ($part->parts as $innerPart)
 					array_push($newParts, $innerPart);
-			} else
+			} elseif ($part instanceof EmptyFilter) {
+				// A positiv empty filter can be ignored in a conjunction and makes a disjunction always positiv.
+				// A negative empty filter can be ignored in a disjunction and makes a conjunction always negative.
+				if ($part->isNegated() == $this->isConjunction())
+					return $part;
+			} else 
 				array_push($newParts, $part);
 		}
 		$this->parts = $newParts;
+		return $this;
 	}
 	
 	public function negate() {
