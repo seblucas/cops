@@ -35,7 +35,31 @@ class VirtualLib {
 		$vlList = array_values($vlList);
 		$searchStr = $vlList[$virtualLib];
 		
-		$this->filter = Filter::parseFilter($searchStr);
+		$this->filter = self::includeBookFilter(
+						Filter::parseFilter($searchStr)
+					);
+	}
+	
+	/**
+	 * Includes the booke filter (see $config['cops_books_filter'])
+	 * @param Filter $filter
+	 * @return string
+	 */
+	private static function includeBookFilter($filter) {
+		$bookFilter = getURLParam ("tag", NULL);
+		if (empty ($bookFilter)) return $filter;
+		
+		$negated = false;
+		if (preg_match ("/^!(.*)$/", $bookFilter, $matches)) {
+			$negated = true;
+			$bookFilter = $matches[1];
+		}
+		$bookFilter = new ComparingFilter("tags", $bookFilter, "=");
+		if ($negated)
+			$bookFilter->negate();
+		
+		$result = new CombinationFilter(array($filter, $bookFilter));
+		return $result->simplify();
 	}
 	
 	/**
