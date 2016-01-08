@@ -94,7 +94,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getAuthorById ($authorId) {
-        $result = parent::getDb ()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors where id = ?');
+        $result = parent::getDb ()->prepare('select authors.id as id, authors.name as name, authors.sort as sort, count(*) as count from authors where id = ?');
         $result->execute (array ($authorId));
         $post = $result->fetchObject ();
         return new Author ($post);
