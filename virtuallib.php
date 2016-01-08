@@ -363,3 +363,79 @@ class ExistenceFilter extends Filter {
 		return $sql;
 	}
 }
+
+/**
+ * Filter class that represents the combination of two or more filter using and / or
+ *
+ */
+class CombinationFilter extends Filter {
+	private $op = null;
+	private $parts = array();
+
+	/**
+	 * Constructor that combines multiple filters to one filter
+	 * @param array $parts An array of Filter objects
+	 * @param string $op The operator for combining. Either "and" or "or" (case insensitive).
+	 */
+	public function __construct($parts, $op = "and") {
+		$this->parts = $parts;
+		$this->op = strtolower($op);
+		$this->flatten();
+	}
+	
+	/**
+	 * Checks if the combination is a conjunction (=and)
+	 * @return boolean true, iff the filter is a conjunction
+	 */
+	public function isConjunction() {
+		return ($this->op == "and");
+	}
+	
+	/**
+	 * Flattens the Filter, by merging parts that are CombinationFilter objects into this filter, if they have the same operator.
+	 * This means "(x and y) and z" becomes "x and y and z" 
+	 */
+	public function flatten() {
+		$newParts = array();
+		foreach ($this->parts as $part) {
+			if ($part instanceof CombinationFilter && $part->isConjunction() == $this->isConjunction()) {
+				// Part is a CombinationFilter with the same operator --> merge it's parts into this filter
+				$part->flatten();
+				foreach ($part->parts as $innerPart)
+					array_push($newParts, $innerPart);
+			} else
+				array_push($newParts, $part);
+		}
+		$this->parts = $newParts;
+	}
+	
+	public function negate() {
+		// Use De Morgan's laws to avoid direct negation
+		
+		// 1. Negate the operator
+		if ($this->isConjunction())
+			$this->op = "or";
+		else
+			$this->op = "and";
+		
+		// 2. negate all parts
+		foreach ($this->parts as $filter)
+			$filer->negate();
+	}
+	
+	public function toSQLQuery() {
+		$sql = "";
+		if ($this->isConjunction()) {
+			// combining all parts by inner joins implements the "and" logic
+			$sql = str_format("({0}) as f0", $this->parts[0]->toSQLQuery());
+			for ($i = 1; $i < count($this->parts); $i++)
+				$sql .= str_format(" inner join ({0}) as f{1} on f0.id = f{1}.id", $this->parts[$i]->toSQLQuery(), $i);
+		} else {
+			// combining all parts by union implements the "or" logic
+			$sql = str_format("{0}", $this->parts[0]->toSQLQuery());
+			for ($i = 1; $i < count($this->parts); $i++)
+				$sql .= str_format(" union {0}", $this->parts[$i]->toSQLQuery());
+		}
+		return $sql;
+	}
+}
