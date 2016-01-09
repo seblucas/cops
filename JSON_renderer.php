@@ -79,7 +79,7 @@ class JSONRenderer
                 $tab ["mail"] = 1;
             }
             if ($data->format == "EPUB") {
-                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}&vl={$virtualLib}";
+                $tab ["readerUrl"] = "epubreader.php?data={$data->id}&db={$database}";
             }
             array_push ($out ["datas"], $tab);
         }
