@@ -370,6 +370,11 @@ class Link
     public function hrefXhtml () {
         return $this->href;
     }
+
+    public function getScriptName() {
+        $parts = explode('/', $_SERVER["SCRIPT_NAME"]);
+        return $parts[count($parts) - 1];
+    }
 }
 
 class LinkNavigation extends Link
@@ -378,10 +383,10 @@ class LinkNavigation extends Link
         parent::__construct ($phref, Link::OPDS_NAVIGATION_TYPE, $prel, $ptitle);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
         if (!preg_match ("#^\?(.*)#", $this->href) && !empty ($this->href)) $this->href = "?" . $this->href;
-        if (preg_match ("/(bookdetail|getJSON).php/", $_SERVER["SCRIPT_NAME"])) {
+        if (preg_match ("/(bookdetail|getJSON).php/", parent::getScriptName())) {
             $this->href = "index.php" . $this->href;
         } else {
-            $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+            $this->href = parent::getScriptName() . $this->href;
         }
     }
 }
@@ -391,7 +396,7 @@ class LinkFacet extends Link
     public function __construct($phref, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
         parent::__construct ($phref, Link::OPDS_PAGING_TYPE, "http://opds-spec.org/facet", $ptitle, $pfacetGroup, $pactiveFacet);
         if (!is_null (GetUrlParam (DB))) $this->href = addURLParameter ($this->href, DB, GetUrlParam (DB));
-        $this->href = $_SERVER["SCRIPT_NAME"] . $this->href;
+        $this->href = parent::getScriptName() . $this->href;
     }
 }
 
@@ -413,7 +418,8 @@ class Entry
         Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
+        CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
+        Rating::ALL_RATING_ID        => 'images/rating.png',
         "cops:books$"             => 'images/allbook.png',
         "cops:books:letter"       => 'images/allbook.png',
         Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
@@ -567,7 +573,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('S�bastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }
