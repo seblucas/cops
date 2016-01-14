@@ -5,9 +5,10 @@ php:
   - 5.4
   - 5.3
   - hhvm
+  - 7.0
 before_script:
   - composer install --no-dev
-  - npm install jshint -g
+  - npm install jshint
   - jshint --version
 script:
   - phpunit
@@ -23,7 +24,8 @@ env:
 addons:
   hosts:
     - cops-travis
+sudo: false
 matrix:
   allow_failures:
     - php: hhvm
-    - php: 5.6
+    - php: 7.0
