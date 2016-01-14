@@ -419,7 +419,7 @@ class Entry
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
         CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
-        "cops:rating$"               => 'images/rating.png',
+        Rating::ALL_RATING_ID        => 'images/rating.png',
         "cops:books$"             => 'images/allbook.png',
         "cops:books:letter"       => 'images/allbook.png',
         Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
