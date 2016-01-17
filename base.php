@@ -453,7 +453,8 @@ class Entry
         Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
         Tag::ALL_TAGS_ID             => 'images/tag.png',
         Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/tag.png',
+        CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
+        Rating::ALL_RATING_ID        => 'images/rating.png',
         "cops:books$"             => 'images/allbook.png',
         "cops:books:letter"       => 'images/allbook.png',
         Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
@@ -607,7 +608,7 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('S�bastien Lucas') : $config['cops_author_name'];
+        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
         $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
         $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
     }

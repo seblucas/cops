@@ -20,7 +20,7 @@
     require_once ("resources/doT-php/doT.php");
 
     // If we detect that an OPDS reader try to connect try to redirect to feed.php
-    if (preg_match("/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon+ Reader|Chunky)/", $_SERVER['HTTP_USER_AGENT'])) {
+    if (preg_match("/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon+ Reader|Chunky|AlReader|org\.ebookdroid)/", $_SERVER['HTTP_USER_AGENT'])) {
         header("location: feed.php");
         exit ();
     }
