@@ -39,12 +39,12 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         ),
         // run Mobile Safari on iOS
         array(
-            'browserName' => '',
+            'browserName' => 'iphone',
             'desiredCapabilities' => array(
                 'app' => 'safari',
-                'device' => 'iPhone Simulator',
-                'version' => '6.1',
-                'platform' => 'Mac 10.8',
+                'device' => 'iPhone 6',
+                'version' => '9.2',
+                'platform' => 'OS X 10.10',
             )
         ),
         // run Mobile Browser on Android
