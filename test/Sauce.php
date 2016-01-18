@@ -78,6 +78,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $caps = $this->getDesiredCapabilities();
             $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
+            $caps['tunnel-identifier'] = getenv ("TRAVIS_JOB_NUMBER");
             $caps['idle-timeout'] = "180";
             $this->setDesiredCapabilities($caps);
         }
