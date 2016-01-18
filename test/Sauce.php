@@ -201,9 +201,15 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         // Click on the cog to show the search
         $cog = $this->byId ("searchImage");
         $cog->click ();
-        sleep (1);
+        //sleep (1);
 
         // Focus the input and type
+        $this->waitUntil(function () {
+            if ($this->byName ("query")) {
+                return true;
+            }
+            return null;
+        }, 1000);
         $queryInput = $this->byName ("query");
         $queryInput->click ();
         $queryInput->value ($src);
