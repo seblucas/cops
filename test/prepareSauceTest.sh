@@ -4,7 +4,7 @@ PHP_VERSION=`php -v|grep --only-matching --perl-regexp "PHP 5\.\\d+"`
 echo $PHP_VERSION
 
 
-if [[ $PHP_VERSION != "PHP 5.4" ]]
+if [[ $PHP_VERSION != "PHP 5.6" ]]
   then
     echo "Bad PHP version"
     exit
