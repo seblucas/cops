@@ -51,7 +51,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         array(
             'browserName' => 'Android',
             'desiredCapabilities' => array(
-                'version' => '4.3',
+                'version' => '5.1',
                 'platform' => 'Linux',
             )
         ),
