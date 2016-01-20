@@ -50,6 +50,8 @@ define ('SQL_BOOKS_RECENT', "select " . BOOK_COLUMNS . " from books " . SQL_BOOK
                                                     order by timestamp desc limit ");
 define ('SQL_BOOKS_BY_RATING', "select ". BOOK_COLUMNS ." from books " . SQL_BOOKS_FILTER_JOIN . "
                                                     where books_ratings_link.book = books.id and ratings.id = ? order by sort");
+define ('SQL_BOOKS_FIRST_LETTERS', "select substr (upper (sort), 1, 1) as title, count(*) as count from books " . SQL_BOOKS_FILTER_JOIN . 
+									"group by substr (upper (sort), 1, 1) order by substr (upper (sort), 1, 1)");
 
 class Book extends Base {
     const ALL_BOOKS_UUID = "urn:uuid";
@@ -69,6 +71,7 @@ class Book extends Base {
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
+    const SQL_BOOKS_FIRST_LETTERS = SQL_BOOKS_FIRST_LETTERS;
 
     const BAD_SEARCH = "QQQQQ";
 
@@ -544,10 +547,7 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getAllBooks() {
-        list (, $result) = parent::executeQuery ("select {0}
-from books
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", self::getFilterString (), array (), -1);
+        list (, $result) = parent::executeFilteredQuery(self::SQL_BOOKS_FIRST_LETTERS, array (), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

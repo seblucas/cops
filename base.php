@@ -716,7 +716,7 @@ class PageAllAuthors extends Page
     {
         $this->title = localize("authors.title");
         if (getCurrentOption ("author_split_first_letter") == 1) {
-            $this->entryArray = Author::getAllAuthorsByFirstLetter();
+            $this->entryArray = Author::getAllAuthorsFirstLetters();
         }
         else {
             $this->entryArray = Author::getAllAuthors();
@@ -949,7 +949,7 @@ class PageQueryResult extends Page
                 $array = Serie::getAllSeriesByQuery ($queryNormedAndUp);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery ($queryNormedAndUp, $n, NULL, $numberPerPage);
+                $array = Tag::getAllTagsByQuery ($queryNormedAndUp, $n, NULL, NULL, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
                 $array = Publisher::getAllPublishersByQuery ($queryNormedAndUp);

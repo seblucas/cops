@@ -34,6 +34,13 @@ class Author extends Base {
     		inner join ({0}) as filter on filter.id = link.book 
     	 group by authors.id, authors.name, authors.sort 
     	 order by sort";
+    const SQL_ALL_AUTHORS_FIRST_LETTERS = 
+    	"select substr (upper (sort), 1, 1) as title, count(*) as count
+		 from authors
+    		inner join books_authors_link as link on link.author = authors.id
+    		inner join ({0}) as filter on filter.id = link.book
+		 group by substr (upper (sort), 1, 1)
+		 order by substr (upper (sort), 1, 1)";
 
     public $id;
     public $name;
@@ -62,11 +69,8 @@ class Author extends Base {
         return parent::getCountGeneric ("authors", self::ALL_AUTHORS_ID, parent::PAGE_ALL_AUTHORS);
     }
 
-    public static function getAllAuthorsByFirstLetter() {
-        list (, $result) = parent::executeQuery ("select {0}
-from authors
-group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", array (), -1);
+    public static function getAllAuthorsFirstLetters() {
+        list (, $result) = parent::executeFilteredQuery(self::SQL_ALL_AUTHORS_FIRST_LETTERS, array(), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {

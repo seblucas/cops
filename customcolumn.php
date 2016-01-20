@@ -10,6 +10,19 @@ require_once('base.php');
 
 class CustomColumn extends Base {
     const ALL_CUSTOMS_ID = "cops:custom";
+    
+    const SQL_COUNT_CUSTOM_VALUES = 
+    	"select count(distinct {0}.id) as count
+    	 from {0}
+    		inner join {1} as link on {0}.id = link.{2}
+    		inner join ({3}) as filter on filter.id = link.book";
+    const SQL_ALL_CUSTOMS = 
+    	"select {0}.id as id, {0}.value as name, count(*) as count
+    	 from {0}
+    		inner join {1} as link on {0}.id = link.{2}
+    		inner join ({3}) as filter on filter.id = link.book
+    	 group by {0}.id, {0}.value
+		 order by {0}.value";
 
     public $id;
     public $name;
@@ -66,7 +79,12 @@ class CustomColumn extends Base {
     }
 
     public static function getCount($customId) {
-        $nCustoms = parent::executeQuerySingle ('select count(*) from ' . self::getTableName ($customId));
+    	$sql = str_format(self::SQL_COUNT_CUSTOM_VALUES, 
+    			self::getTableName ($customId), 
+    			self::getTableLinkName($customId),
+    			self::getTableLinkColumn($customId),
+    			'{0}');
+        $nCustoms = parent::executeFilteredQuerySingle ($sql);
         $entry = new Entry (self::getAllTitle ($customId), self::getAllCustomsId ($customId),
             str_format (localize("tags.alphabetical", $nCustoms), $nCustoms), "text",
             array ( new LinkNavigation (self::getUriAllCustoms ($customId))), "", $nCustoms);
@@ -83,11 +101,12 @@ class CustomColumn extends Base {
     }
 
     public static function getAllCustoms($customId) {
-        $result = parent::getDb ()->query(str_format ('select {0}.id as id, {0}.value as name, count(*) as count
-from {0}, {1}
-where {0}.id = {1}.{2}
-group by {0}.id, {0}.value
-order by {0}.value', self::getTableName ($customId), self::getTableLinkName ($customId), self::getTableLinkColumn ($customId)));
+    	$sql = str_format(self::SQL_ALL_CUSTOMS,
+    			self::getTableName ($customId),
+    			self::getTableLinkName($customId),
+    			self::getTableLinkColumn($customId),
+    			'{0}');
+    	list (, $result) = parent::executeFilteredQuery($sql, array(), -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
