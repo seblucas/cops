@@ -190,8 +190,26 @@ abstract class Filter {
 	 */
 	public static function getAttributeSettings($attr) {
 		$attr = self::normalizeAttribute($attr);
-		if (!array_key_exists($attr, self::$KNOWN_ATTRIBUTES))
-			return null;
+		if (!array_key_exists($attr, self::$KNOWN_ATTRIBUTES)) {
+			if (substr($attr, 0, 1) == "#") {
+				// search for a custom column
+				$lookup = substr($attr, 1);
+				$id = CustomColumn::getCustomId($lookup);
+				if (is_null($id))
+					// custom column unknown
+					return NULL;
+				// Read and add custom column information
+				self::$KNOWN_ATTRIBUTES[$attr] = array(
+					"table"        => CustomColumn::getTableName($id),
+					"filterColumn" => "value",
+					"link_table"   => CustomColumn::getTableLinkName($id),
+					"link_join_on" => CustomColumn::getTableLinkColumn($id),
+					"bookID"       => "book"
+				);
+			} else
+				// invalid attribute name
+				return NULL;
+		}
 		return self::$KNOWN_ATTRIBUTES[$attr] + array(
 			"table"        => $attr,
 			"filterColumn" => "name",
@@ -210,7 +228,7 @@ abstract class Filter {
 	 */
 	public static function normalizeAttribute($attr) {
 		$attr = strtolower($attr);
-		if (substr($attr, -1) != 's')
+		if (substr($attr, -1) != 's' && substr($attr, 0, 1) != '#')
 			$attr .= 's';
 		return $attr;
 	}
@@ -250,7 +268,7 @@ abstract class Filter {
 		// where value is either a number, a boolean or a string in double quote.
 		// In the latter case, the string starts with an operator (= or ~), followed by the search text.
 		// TODO: deal with more complex search terms that can contain "and", "or" and brackets
-		$pattern = '#(?P<neg>not)?\s*(?P<attr>\w+):(?P<value>"(?P<op>=|~|\>|<|>=|<=)(?P<text>([^"]|\\\\")*)(?<!\\\\)"|true|false|\d+)#i';
+		$pattern = '%(?P<neg>not)?\s*(?P<attr>#?\w+):(?P<value>"(?P<op>=|~|\>|<|>=|<=)(?P<text>([^"]|\\\\")*)(?<!\\\\)"|true|false|\d+)%i';
 		if (!preg_match($pattern, $searchStr, $match)) {
 			trigger_error("Virtual Library Filter is not supported.", E_USER_WARNING);
 			return new EmptyFilter();
