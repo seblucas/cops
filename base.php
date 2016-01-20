@@ -941,7 +941,7 @@ class PageQueryResult extends Page
                 $array = Serie::getAllSeriesByQuery ($queryNormedAndUp);
                 break;
             case self::SCOPE_TAG :
-                $array = Tag::getAllTagsByQuery ($queryNormedAndUp, $n, NULL, $numberPerPage);
+                $array = Tag::getAllTagsByQuery ($queryNormedAndUp, $n, NULL, NULL, $numberPerPage);
                 break;
             case self::SCOPE_PUBLISHER :
                 $array = Publisher::getAllPublishersByQuery ($queryNormedAndUp);
