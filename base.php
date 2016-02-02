@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "1.0.0RC4");
@@ -1229,6 +1229,16 @@ abstract class Base
         return $config['calibre_directory'];
     }
 
+    // -DC- Add image directory
+    public static function getImgDirectory ($database = NULL) {
+    	global $config;
+    	if (self::isMultipleDatabaseEnabled ()) {
+    		if (is_null ($database)) $database = GetUrlParam (DB, 0);
+    		$array = array_values ($config['image_directory']);
+    		return  $array[$database];
+    	}
+    	return $config['image_directory'];
+    }
 
     public static function getDbFileName ($database = NULL) {
         return self::getDbDirectory ($database) .'metadata.db';

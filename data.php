@@ -124,18 +124,18 @@ class Data extends Base {
     public function getHtmlLinkWithRewriting ($title = NULL) {
         global $config;
 
-        $database = "";
-        if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
+            $database = "";
+            if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
 
         $href = "download/" . $this->id . "/" . $database;
 
-        if ($config['cops_provide_kepub'] == "1" &&
-            $this->isEpubValidOnKobo () &&
-            preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
+            if ($config['cops_provide_kepub'] == "1" &&
+                $this->isEpubValidOnKobo () &&
+                preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
             $href .= urlencode ($this->getUpdatedFilenameKepub ());
-        } else {
+            } else {
             $href .= urlencode ($this->getFilename ());
-        }
+            }
         return new Link ($href, $this->getMimeType (), Link::OPDS_ACQUISITION_TYPE, $title);
     }
 
@@ -155,18 +155,18 @@ class Data extends Base {
     public static function handleThumbnailLink ($urlParam, $height) {
         global $config;
 
-        if (is_null ($height)) {
-            if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
-                $height = $config['cops_opds_thumbnail_height'];
-            }
-            else
-            {
-                $height = $config['cops_html_thumbnail_height'];
-            }
-        }
-        if ($config['cops_thumbnail_handling'] != "1") {
-            $urlParam = addURLParameter($urlParam, "height", $height);
-        }
+                if (is_null ($height)) {
+                    if (preg_match ('/feed.php/', $_SERVER["SCRIPT_NAME"])) {
+                        $height = $config['cops_opds_thumbnail_height'];
+                    }
+                    else
+                    {
+                        $height = $config['cops_html_thumbnail_height'];
+                    }
+                }
+                if ($config['cops_thumbnail_handling'] != "1") {
+                    $urlParam = addURLParameter($urlParam, "height", $height);
+                }
 
         return $urlParam;
     }

@@ -3,8 +3,14 @@
  * Epub loader application
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
+
+// Application name
+define('DEF_AppName', 'Epub loader');
+
+// Application version
+define('DEF_AppVersion', '1.0');
 
 //------------------------------------------------------------------------------
 // Include files
@@ -80,6 +86,8 @@ function RecursiveGlob($inPath = '', $inPattern = '*')
 		$res = array_merge($res, RecursiveGlob($path, $inPattern));
 	}
 
+	sort($res);
+
 	return $res;
 }
 
@@ -129,16 +137,18 @@ else {
 		$str .= '</tr>' . "\n";
 		$actionTitle = $gConfig['actions'][$action];
 		foreach ($gConfig['databases'] as $dbNum => $dbConfig) {
-			$fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
+			$dbConfig = $gConfig['databases'][$dbNum];
+			$dbPath = $dbConfig['db_path'];
+			$epubPath = $dbConfig['epub_path'];
+			$fileList = RecursiveGlob($dbPath . DIRECTORY_SEPARATOR . $epubPath, '*.epub');
 			$str .= '<tr>' . "\n";
 			$str .= '<td>' . $dbNum . '</td>' . "\n";
 			$str .= '<td>' . $dbConfig['name'] . '</td>' . "\n";
 			$str .= '<td>' . '<a href="./index.php?action=' . $action . '&dbnum=' . $dbNum . '">' . $actionTitle . '</a>' . '</td>' . "\n";
 			$str .= '<td>' . $dbConfig['db_path'] . '</td>' . "\n";
-			$str .= '<td>' . $dbConfig['epub_path'] . '</td>' . "\n";
+			$str .= '<td>' . $epubPath . '</td>' . "\n";
 			$str .= '<td>' . count($fileList) . '</td>' . "\n";
 			$str .= '</tr>' . "\n";
-			$numWork++;
 		}
 		$str .= '</table>' . "\n";
 		echo $str;

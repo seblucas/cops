@@ -3,7 +3,7 @@
  * PHP EPub Meta library
  *
  * @author Andreas Gohr <andi@splitbrain.org>
- * @author Sébastien Lucas <sebastien@slucas.fr>
+ * @author Sï¿½bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
@@ -64,7 +64,8 @@ class EPub {
         }
         $this->xml =  new DOMDocument();
         $this->xml->registerNodeClass('DOMElement','EPubDOMElement');
-        $this->xml->loadXML($data);
+        // -DC- Remove PHP Notice:  DOMDocument::loadXML(): Unsupported version '1.1' in Entity, line: 1
+        @$this->xml->loadXML($data);
         $this->xml->formatOutput = true;
         $this->xpath = new EPubDOMXPath($this->xml);
     }
@@ -94,6 +95,13 @@ class EPub {
      */
     public function file(){
         return $this->file;
+    }
+
+    /**
+     * meta file getter
+     */
+    public function meta() {
+    	return $this->meta;
     }
 
     /**
@@ -576,6 +584,7 @@ class EPub {
             throw new Exception('Failed to read epub file');
         }
         $data = $zip->getFromName($path);
+        $zip->close();
 
         return array(
             'mime'  => $mime,

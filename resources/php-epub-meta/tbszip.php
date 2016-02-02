@@ -48,9 +48,9 @@ class clsTbsZip {
 			$this->ArchFile = 'from_stream.zip';
 			$this->ArchHnd = $ArchFile;
 		} else {
-			// open the file
+		// open the file
 			$this->ArchFile = $ArchFile;
-			$this->ArchHnd = fopen($ArchFile, 'rb', $UseIncludePath);
+		$this->ArchHnd = fopen($ArchFile, 'rb', $UseIncludePath);
 		}
 		$ok = !($this->ArchHnd===false);
 		if ($ok) $ok = $this->CentralDirRead();
@@ -97,7 +97,7 @@ class clsTbsZip {
 		$this->_MoveTo($cd_pos, SEEK_END);
 		$b = $this->_ReadData(4);
 		if ($b===$cd_info) {
-			$this->CdEndPos = ftell($this->ArchHnd) - 4;
+		$this->CdEndPos = ftell($this->ArchHnd) - 4;
 		} else {
 			$p = $this->_FindCDEnd($cd_info);
 			//echo 'p='.var_export($p,true); exit;
@@ -203,10 +203,10 @@ class clsTbsZip {
 				$idx++;
 			}
 		}
-
+		
 		$nl = "\r\n";
 		echo "<pre>";
-
+		
 		echo "-------------------------------".$nl;
 		echo "End of Central Directory record".$nl;
 		echo "-------------------------------".$nl;
@@ -227,7 +227,7 @@ class clsTbsZip {
 		}
 
 		echo "</pre>";
-
+		
 	}
 
 	function DebugArray($arr) {
@@ -240,7 +240,7 @@ class clsTbsZip {
 		}
 		return $arr;
 	}
-
+	
 	function FileExists($NameOrIdx) {
 		return ($this->FileGetIdx($NameOrIdx)!==false);
 	}
@@ -314,7 +314,7 @@ class clsTbsZip {
 	// read the file header (and maybe the data ) in the archive, assuming the cursor in at a new file position
 
 		$b = $this->_ReadData(30);
-
+		
 		$x = $this->_GetHex($b,0,4);
 		if ($x!=='h:04034b50') return $this->RaiseError("Signature of Local File Header #".$idx." (data section) expected but not found at position ".$this->_TxtPos(ftell($this->ArchHnd)-30).".");
 
@@ -356,7 +356,7 @@ class clsTbsZip {
 		} else {
 			$this->_MoveTo($len, SEEK_CUR);
 		}
-
+		
 		// Description information
 		$desc_ok = ($x['purp'][2+3]=='1');
 		if ($desc_ok) {
@@ -796,7 +796,7 @@ class clsTbsZip {
 		// Return the human readable position in both decimal and hexa
 		return $pos." (h:".dechex($pos).")";
 	}
-
+	
 	/**
 	 * Search the record of end of the Central Directory.
 	 * Return the position of the record in the file.
