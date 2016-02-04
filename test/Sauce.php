@@ -39,19 +39,19 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         ),
         // run Mobile Safari on iOS
         array(
-            'browserName' => '',
+            'browserName' => 'iphone',
             'desiredCapabilities' => array(
                 'app' => 'safari',
-                'device' => 'iPhone Simulator',
-                'version' => '6.1',
-                'platform' => 'Mac 10.8',
+                'device' => 'iPhone 6',
+                'version' => '9.2',
+                'platform' => 'OS X 10.10',
             )
         ),
         // run Mobile Browser on Android
         array(
             'browserName' => 'Android',
             'desiredCapabilities' => array(
-                'version' => '4.3',
+                'version' => '5.1',
                 'platform' => 'Linux',
             )
         ),
@@ -78,6 +78,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
             $caps = $this->getDesiredCapabilities();
             $caps['build'] = getenv ("TRAVIS_JOB_NUMBER");
+            $caps['tunnel-identifier'] = getenv ("TRAVIS_JOB_NUMBER");
             $caps['idle-timeout'] = "180";
             $this->setDesiredCapabilities($caps);
         }
@@ -200,9 +201,15 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
         // Click on the cog to show the search
         $cog = $this->byId ("searchImage");
         $cog->click ();
-        sleep (1);
+        //sleep (1);
 
         // Focus the input and type
+        $this->waitUntil(function () {
+            if ($this->byName ("query")) {
+                return true;
+            }
+            return null;
+        }, 1000);
         $queryInput = $this->byName ("query");
         $queryInput->click ();
         $queryInput->value ($src);
