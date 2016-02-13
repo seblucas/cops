@@ -132,9 +132,9 @@ class Data extends Base {
         if ($config['cops_provide_kepub'] == "1" &&
             $this->isEpubValidOnKobo () &&
             preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
-            $href .= urlencode ($this->getUpdatedFilenameKepub ());
+            $href .= rawurlencode ($this->getUpdatedFilenameKepub ());
         } else {
-            $href .= urlencode ($this->getFilename ());
+            $href .= rawurlencode ($this->getFilename ());
         }
         return new Link ($href, $this->getMimeType (), Link::OPDS_ACQUISITION_TYPE, $title);
     }

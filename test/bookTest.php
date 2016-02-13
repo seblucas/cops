@@ -261,7 +261,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $linkArray = $book->getLinkArray ();
         foreach ($linkArray as $link) {
             if ($link->rel == Link::OPDS_ACQUISITION_TYPE && $link->title == "EPUB" ) {
-                $this->assertEquals ("download/1/The+Return+of+Sherlock+Holmes+-+Arthur+Conan+Doyle.epub", $link->href);
+                $this->assertEquals ("download/1/The%20Return%20of%20Sherlock%20Holmes%20-%20Arthur%20Conan%20Doyle.epub", $link->href);
                 return;
             }
         }
@@ -368,10 +368,10 @@ class BookTest extends PHPUnit_Framework_TestCase
         $config['cops_use_url_rewriting'] = "1";
         $config['cops_provide_kepub'] = "1";
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
-        $this->assertEquals ("download/20/Carroll%2C+Lewis+-+Alice%27s+Adventures+in+Wonderland.kepub.epub", $epub->getHtmlLink ());
-        $this->assertEquals ("download/17/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.mobi", $mobi->getHtmlLink ());
+        $this->assertEquals ("download/20/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub", $epub->getHtmlLink ());
+        $this->assertEquals ("download/17/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi", $mobi->getHtmlLink ());
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $this->assertEquals ("download/20/Alice%27s+Adventures+in+Wonderland+-+Lewis+Carroll.epub", $epub->getHtmlLink ());
+        $this->assertEquals ("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink ());
         $config['cops_use_url_rewriting'] = "0";
         $this->assertEquals ("fetch.php?data=20&type=epub&id=17", $epub->getHtmlLink ());
     }
