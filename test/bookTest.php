@@ -173,6 +173,27 @@ class BookTest extends PHPUnit_Framework_TestCase
         $this->assertCount (15, $entryArray);
     }
 
+    /**
+     * @dataProvider providerPublicationDate
+     */
+    public function testGetPubDate ($pubdate, $expectedYear)
+    {
+        $book = Book::getBookById(2);
+        $book->pubdate = $pubdate;
+        $this->assertEquals($expectedYear, $book->getPubDate());
+    }
+
+    public function providerPublicationDate() {
+        return array(
+            array('2010-10-05 22:00:00+00:00', '2010'),
+            array('1982-11-15 13:05:29.908657+00:00', '1982'),
+            array('1562-10-05 00:00:00+00:00', '1562'),
+            array('0100-12-31 23:00:00+00:00', ''),
+            array('', ''),
+            array(NULL, '')
+            );
+    }
+
     public function testGetBookById ()
     {
         // also check most of book's class methods
