@@ -93,7 +93,7 @@ External libraries used :
 
 # Copyright & License
 
-COPS - 2012-2016 (c) Sébastien Lucas <sebastien@slucas.fr>
+COPS - 2012-2016 (c) Sébastien Lucas
 
 See COPYING and file headers for license info
 
