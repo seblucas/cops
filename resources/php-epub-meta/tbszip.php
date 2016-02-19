@@ -645,7 +645,11 @@ class clsTbsZip {
 			} else {
 				header ('Pragma: no-cache');
 				if ($ContentType!='') header ('Content-Type: '.$ContentType);
-				header('Content-Disposition: attachment; filename="'.$File.'"');
+				if (strlen($File) != strlen(utf8_decode($File))) {
+					header('Content-Disposition: attachment; filename="book.epub"; filename*=utf-8\'\'' . rawurlencode($File));
+				} else {
+					header('Content-Disposition: attachment; filename="'.$File.'"');
+				}
 				header('Expires: 0');
 				header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 				header('Cache-Control: public');
