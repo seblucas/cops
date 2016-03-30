@@ -173,6 +173,16 @@ class OPDSRenderer
         self::getXmlStream ()->endElement ();
     }
 
+    private function getPublicationDate($book) {
+        $dateYmd = substr($book->pubdate, 0, 10);
+        $pubdate = \DateTime::createFromFormat('Y-m-d', $dateYmd);
+        if ($pubdate === false ||
+            $pubdate->format ("Y") == "0101" ||
+            $pubdate->format ("Y") == "0100") {
+            return "";
+        }
+        return $pubdate->format("Y-m-d");
+    }
 
     private function renderEntry ($entry) {
         self::getXmlStream ()->startElement ("title");
@@ -218,10 +228,10 @@ class OPDSRenderer
         }
         if ($entry->book->getPubDate () != "") {
             self::getXmlStream ()->startElement ("dcterms:issued");
-                self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate));
+                self::getXmlStream ()->text (self::getPublicationDate($entry->book));
             self::getXmlStream ()->endElement ();
             self::getXmlStream ()->startElement ("published");
-                self::getXmlStream ()->text (date ("Y-m-d", $entry->book->pubdate) . "T08:08:08Z");
+                self::getXmlStream ()->text (self::getPublicationDate($entry->book) . "T08:08:08Z");
             self::getXmlStream ()->endElement ();
         }
 

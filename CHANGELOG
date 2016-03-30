@@ -1,3 +1,24 @@
+1.0.0 - 201602XX
+ * Updated the OPDS icons to better looking ones. Thanks to Horus68.
+ * Updated the README.md.
+ * Updated Brazillian, French, Hungarian, Portuguese, Russian translations.
+ * Added support of language and country code. This allow to have proper Brazil Portuguese and Portugal Portuguese.
+ * Added Korean translation. Thanks to Jin, Heonkyu.
+ * Added Romanian translation. Thanks to mtzro2003.
+ * Added Greek translation. Thanks to George Litos.
+ * Added Turkish Translation. Thanks to Yunus Emre Deligöz.
+ * Added the transliteration of search text. You can enable it with $config ['cops_normalized_search']. Thanks to George Litos.
+ * Added Ebookdroid, Chunky and AlReader in the know OPDS clients. Thanks to Mike Ferenduros and Horus68.
+ * Added some mime types for audio books.
+ * Added the rewrite rule for IIS.
+ * Fixed COPS so that it's completely embedded (no external resources to download needed anymore).
+ * Fixed a Reflected XSS vulnerability.
+ * Fixed the tag filters with Bootstrap. Thanks to Klaus Broelemann.
+ * Fixed some COPS path errors with reverse proxy. Thanks to Benjamin Kitt.
+ * Fixed the publication date (wasn't working for date before 1901).
+ * Fixed the download file name (replace + by %20 to be RFC compliant).
+
+
 1.0.0RC3 - 20141229
  * Fixed server side render with Bootstrap template (a proper unit test was also added).
  * Upgraded to latest doT-php, Typeahead 0.10.5, jquery-cookie 1.4.1, JQuery 1.11.1

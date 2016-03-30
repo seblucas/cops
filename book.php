@@ -94,7 +94,7 @@ class Book extends Base {
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime ($line->timestamp);
-        $this->pubdate = strtotime ($line->pubdate);
+        $this->pubdate = $line->pubdate;
         $this->path = Base::getDbDirectory () . $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
@@ -265,12 +265,14 @@ class Book extends Base {
     }
 
     public function getPubDate () {
-        if (is_null ($this->pubdate) || ($this->pubdate <= -58979923200)) {
+        if (empty ($this->pubdate)) {
             return "";
         }
-        else {
-            return date ("Y", $this->pubdate);
+        $dateY = (int) substr($this->pubdate, 0, 4);
+        if ($dateY > 102) {
+            return str_pad($dateY, 4, "0", STR_PAD_LEFT);
         }
+        return "";
     }
 
     public function getComment ($withSerie = true) {
