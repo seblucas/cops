@@ -17,6 +17,7 @@ class Data extends Base {
     public $book;
 
     public static $mimetypes = array(
+        'aac'   => 'audio/aac',
         'azw'   => 'application/x-mobipocket-ebook',
         'azw1'  => 'application/x-topaz-ebook',
         'azw2'  => 'application/x-kindle-application',
@@ -31,7 +32,9 @@ class Data extends Base {
         'ibooks'=> 'application/x-ibooks+zip',
         'kepub' => 'application/epub+zip',
         'kobo'  => 'application/x-koboreader-ebook',
+        'm4a'   => 'audio/mp4',
         'mobi'  => 'application/x-mobipocket-ebook',
+        'mp3'   => 'audio/mpeg',
         'lit'   => 'application/x-ms-reader',
         'lrs'   => 'text/x-sony-bbeb+xml',
         'lrf'   => 'application/x-sony-bbeb',
@@ -46,6 +49,7 @@ class Data extends Base {
         'svg'   => 'image/svg+xml',
         'ttf'   => 'application/x-font-truetype',
         'tpz'   => 'application/x-topaz-ebook',
+        'wav'   => 'audio/wav',
         'wmf'   => 'image/wmf',
         'xhtml' => 'application/xhtml+xml',
         'xpgt'  => 'application/adobe-page-template+xml',
@@ -132,9 +136,9 @@ class Data extends Base {
         if ($config['cops_provide_kepub'] == "1" &&
             $this->isEpubValidOnKobo () &&
             preg_match("/Kobo/", $_SERVER['HTTP_USER_AGENT'])) {
-            $href .= urlencode ($this->getUpdatedFilenameKepub ());
+            $href .= rawurlencode ($this->getUpdatedFilenameKepub ());
         } else {
-            $href .= urlencode ($this->getFilename ());
+            $href .= rawurlencode ($this->getFilename ());
         }
         return new Link ($href, $this->getMimeType (), Link::OPDS_ACQUISITION_TYPE, $title);
     }
