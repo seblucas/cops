@@ -22,9 +22,9 @@ class CustomColumn extends Base {
     const CUSTOM_TYPE_BOOL     = "bool";        // type 10
 
     const BOOLEAN_NAMES = array(
-        -1 => "boolean.unknown", // localize("boolean.unknown")
-        00 => "boolean.no",      // localize("boolean.no")
-        +1 => "boolean.yes",     // localize("boolean.yes")
+        -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
+        00 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
+        +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
     );
 
     public $id;
@@ -63,7 +63,13 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_INT:
                 return NULL;
             case self::CUSTOM_TYPE_RATING:
-                return NULL;
+                if ($id == 0) {
+                    $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", CustomColumn::getTableLinkName($this->customId), CustomColumn::getTableName($this->customId), CustomColumn::getTableLinkColumn());
+                    return array($query, array());
+                } else {
+                    $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", CustomColumn::getTableLinkName($this->customId), CustomColumn::getTableName($this->customId), CustomColumn::getTableLinkColumn());
+                    return array($query, array($id));
+                }
             case self::CUSTOM_TYPE_BOOL:
                 if ($id == -1) {
                     $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", CustomColumn::getTableName($this->customId));
@@ -149,7 +155,7 @@ class CustomColumn extends Base {
         $pclass = "";
         $pcount = parent::executeQuerySingle ($query);
 
-        return new Entry ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass, $pcount);      //
+        return new Entry ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass, $pcount);
     }
 
     /**
@@ -174,7 +180,7 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_INT:
                 return NULL;
             case self::CUSTOM_TYPE_RATING:
-                return NULL;
+                return self::getCustomById_Rating($customId, $id, $datatype);
             case self::CUSTOM_TYPE_BOOL:
                 return self::getCustomById_Boolean($customId, $id, $datatype);
             default:
@@ -182,6 +188,12 @@ class CustomColumn extends Base {
         }
     }
 
+    /**
+     * @param $customId integer
+     * @param $id integer
+     * @param $datatype integer
+     * @return CustomColumn
+     */
     public static function getCustomById_Simple($customId, $id, $datatype) {
         // works for text, series, enum
 
@@ -193,8 +205,24 @@ class CustomColumn extends Base {
         return NULL;
     }
 
+    /**
+     * @param $customId integer
+     * @param $id integer
+     * @param $datatype integer
+     * @return CustomColumn
+     */
     public static function getCustomById_Boolean($customId, $id, $datatype) {
         return new CustomColumn ($id, localize(self::BOOLEAN_NAMES[$id]), $customId, $datatype);
+    }
+
+    /**
+     * @param $customId integer
+     * @param $id integer
+     * @param $datatype integer
+     * @return CustomColumn
+     */
+    public static function getCustomById_Rating($customId, $id, $datatype) {
+        return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id/2), $id/2), $customId, $datatype);
     }
 
     public static function getAllCustoms($customId) {
@@ -216,7 +244,7 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_INT:
                 return NULL;
             case self::CUSTOM_TYPE_RATING:
-                return NULL;
+                return self::getAllCustoms_Rating($customId, $datatype);
             case self::CUSTOM_TYPE_BOOL:
                 return self::getAllCustoms_Boolean($customId, $datatype);
             default:
@@ -298,13 +326,36 @@ class CustomColumn extends Base {
         {
             $customColumn = new CustomColumn($post->id, localize(self::BOOLEAN_NAMES[$post->id]), $customId, $customdatatype);
 
-            $entryPContent = str_format (localize("bookword", $post->count), $post->count);
+            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($customColumn->getUri()));
 
             $entry = new Entry($customColumn->name, $customColumn->getEntryId(), $entryPContent, $customdatatype, $entryPLinkArray, "", $post->count);
 
             array_push($entryArray, $entry);
         }
+        return $entryArray;
+    }
+
+    private static function getAllCustoms_Rating($customId, $customdatatype)
+    {
+        $queryFormat = "select coalesce({0}.value, 0) as value, count(*) as count from books  left join {1} on  books.id = {1}.book left join {0} on {0}.id = {1}.value group by coalesce({0}.value, -1)";
+        $query = str_format ($queryFormat, self::getTableName($customId), self::getTableLinkName($customId));
+        $result = parent::getDb()->query($query);
+
+        $countArray = array(0=>0, 2=>0, 4=>0, 6=>0, 8=>0, 10=>0);
+        while ($row = $result->fetchObject()) {
+            $countArray[$row->value] = $row->count;
+        }
+
+        $entryArray = array();
+
+        for ($i = 0; $i <= 5; $i++) {
+            $col = new CustomColumn($i*2, str_format(localize("customcolumn.stars", $i), $i), $customId, $customdatatype);
+            $count = $countArray[$col->id];
+            $entry = new Entry($col->name, $col->getEntryId(), str_format(localize("bookword", $count), $count), $customdatatype, array(new LinkNavigation ($col->getUri())), "", $count);
+            array_push($entryArray, $entry);
+        }
+
         return $entryArray;
     }
 }
