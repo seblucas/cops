@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
 define ("VERSION", "1.0.0RC4");
@@ -752,7 +752,7 @@ class PageCustomDetail extends Page
         $custom = CustomColumn::getCustomById ($customId, $this->idGet);
         $this->idPage = $custom->getEntryId ();
         $this->title = $custom->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($customId, $this->idGet, $this->n);
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
     }
 }
 
