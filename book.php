@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -37,6 +37,12 @@ define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " 
                                                     where books_languages_link.book = books.id and lang_code = ? {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.{3} = 1 {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.{3} = 0 {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_NULL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books.id not in (select book from {2}) {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where (
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -64,6 +70,9 @@ class Book extends Base {
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
     const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_NULL = SQL_BOOKS_BY_CUSTOM_BOOL_NULL;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
@@ -198,6 +207,9 @@ class Book extends Base {
         return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
 
+    /**
+     * @return array|null
+     */
     public function getDatas ()
     {
         if (is_null ($this->datas)) {
@@ -412,6 +424,7 @@ class Book extends Base {
         }
 
         foreach ($this->getAuthors () as $author) {
+            /* @var $author Author */
             array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
 
@@ -477,9 +490,16 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_LANGUAGE, array ($languageId), $n);
     }
 
-    public static function getBooksByCustom($customId, $id, $n) {
-        $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
-        return self::getEntryArray ($query, array ($id), $n);
+    /**
+     * @param $customColumn CustomColumn
+     * @param $id integer
+     * @param $n integer
+     * @return array
+     */
+    public static function getBooksByCustom($customColumn, $id, $n) {
+        list($query, $params) = $customColumn->getQuery($id);
+
+        return self::getEntryArray ($query, $params, $n);
     }
 
     public static function getBookById($bookId) {
@@ -541,10 +561,13 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getAllBooks() {
+        /* @var $result PDOStatement */
+
         list (, $result) = parent::executeQuery ("select {0}
 from books
 group by substr (upper (sort), 1, 1)
 order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", self::getFilterString (), array (), -1);
+
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
@@ -560,16 +583,18 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+        /* @var $totalNumber integer */
+        /* @var $result PDOStatement */
+        list($totalNumber, $result) = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+
         $entryArray = array();
-        while ($post = $result->fetchObject ())
+        while ($post = $result->fetchObject())
         {
             $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
+            array_push ($entryArray, $book->getEntry());
         }
         return array ($entryArray, $totalNumber);
     }
-
 
     public static function getAllRecentBooks() {
         global $config;
