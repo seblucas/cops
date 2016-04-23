@@ -176,7 +176,7 @@
      *
      * For example : array ("genre", "mycolumn");
      *
-     * Note that for now only the first, second and forth type of custom columns are supported
+     * Note that the custom olumn type "comment" is not supported
      */
     $config['cops_calibre_custom_column'] = array ();
 
