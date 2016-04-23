@@ -450,7 +450,8 @@ class CustomColumnTypeRating extends CustomColumnType
 
 class CustomColumnTypeBool extends CustomColumnType
 {
-    const BOOLEAN_NAMES = array(
+    // PHP pre 5.6 does not support const arrays
+    private $BOOLEAN_NAMES = array(
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
         00 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
@@ -488,7 +489,7 @@ class CustomColumnTypeBool extends CustomColumnType
     }
 
     public function getCustom($id) {
-        return new CustomColumn ($id, localize(self::BOOLEAN_NAMES[$id]), $this);
+        return new CustomColumn ($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
     public function getAllCustomValues()
@@ -503,7 +504,7 @@ class CustomColumnTypeBool extends CustomColumnType
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
-            $entry = new Entry(localize(self::BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
             array_push($entryArray, $entry);
         }
