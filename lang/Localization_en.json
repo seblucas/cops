@@ -23,6 +23,7 @@
 "customcolumn.boolean.no":"No",
 "customcolumn.boolean.unknown":"Not Set",
 "customcolumn.boolean.yes":"Yes",
+"customcolumn.date.format":"Y-m-d",
 "customcolumn.description":"Custom column {0}",
 "customcolumn.stars.many":"{0} Stars",
 "customcolumn.stars.none":"{0} Stars",

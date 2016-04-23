@@ -51,6 +51,8 @@ define ('SQL_BOOKS_BY_CUSTOM_RATING_NULL', "select {0} from books " . SQL_BOOKS_
 								                    left join {2} on {2}.book = books.id
 								                    left join {3} on {3}.id = {2}.id
                                                     where ((books.id not in (select {3}.value from {3})) or ({3}.{4} = 0)) {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_DATE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and date({2}.{3}) = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where (
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -83,6 +85,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_CUSTOM_BOOL_NULL = SQL_BOOKS_BY_CUSTOM_BOOL_NULL;
     const SQL_BOOKS_BY_CUSTOM_RATING = SQL_BOOKS_BY_CUSTOM_RATING;
     const SQL_BOOKS_BY_CUSTOM_RATING_NULL = SQL_BOOKS_BY_CUSTOM_RATING_NULL;
+    const SQL_BOOKS_BY_CUSTOM_DATE = SQL_BOOKS_BY_CUSTOM_DATE;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
