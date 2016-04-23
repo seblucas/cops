@@ -57,7 +57,10 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_COMMENTS:
                 return NULL;
             case self::CUSTOM_TYPE_DATE:
-                return NULL;
+                $date = new DateTime();
+                $date->setTimestamp($id);
+                $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", CustomColumn::getTableName($this->customId), CustomColumn::getTableLinkColumn());
+                return array($query, array($date->format("Y-m-d")));
             case self::CUSTOM_TYPE_FLOAT:
                 return NULL;
             case self::CUSTOM_TYPE_INT:
@@ -158,11 +161,6 @@ class CustomColumn extends Base {
         return new Entry ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pclass, $pcount);
     }
 
-    /**
-     * @param $customId integer
-     * @param $id integer
-     * @return CustomColumn
-     */
     public static function getCustomById($customId, $id) {
         $datatype = self::getCustomDatatypeByID($customId);
 
@@ -174,7 +172,7 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_COMMENTS:
                 return NULL;
             case self::CUSTOM_TYPE_DATE:
-                return NULL;
+                return self::getCustomById_Date($customId, $id, $datatype);
             case self::CUSTOM_TYPE_FLOAT:
                 return NULL;
             case self::CUSTOM_TYPE_INT:
@@ -188,12 +186,6 @@ class CustomColumn extends Base {
         }
     }
 
-    /**
-     * @param $customId integer
-     * @param $id integer
-     * @param $datatype integer
-     * @return CustomColumn
-     */
     public static function getCustomById_Simple($customId, $id, $datatype) {
         // works for text, series, enum
 
@@ -205,24 +197,19 @@ class CustomColumn extends Base {
         return NULL;
     }
 
-    /**
-     * @param $customId integer
-     * @param $id integer
-     * @param $datatype integer
-     * @return CustomColumn
-     */
     public static function getCustomById_Boolean($customId, $id, $datatype) {
         return new CustomColumn ($id, localize(self::BOOLEAN_NAMES[$id]), $customId, $datatype);
     }
 
-    /**
-     * @param $customId integer
-     * @param $id integer
-     * @param $datatype integer
-     * @return CustomColumn
-     */
     public static function getCustomById_Rating($customId, $id, $datatype) {
         return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id/2), $id/2), $customId, $datatype);
+    }
+
+    public static function getCustomById_Date($customId, $id, $datatype) {
+        $date = new DateTime();
+        $date->setTimestamp($id);
+
+        return new CustomColumn ($id, $date->format(localize("customcolumn.date.format")), $customId, $datatype);
     }
 
     public static function getAllCustoms($customId) {
@@ -238,7 +225,7 @@ class CustomColumn extends Base {
             case self::CUSTOM_TYPE_ENUM:
                 return self::getAllCustoms_Enumeration($customId, $datatype);
             case self::CUSTOM_TYPE_DATE:
-                return NULL;
+                return self::getAllCustoms_Date($customId, $datatype);
             case self::CUSTOM_TYPE_FLOAT:
                 return NULL;
             case self::CUSTOM_TYPE_INT:
@@ -353,6 +340,30 @@ class CustomColumn extends Base {
             $col = new CustomColumn($i*2, str_format(localize("customcolumn.stars", $i), $i), $customId, $customdatatype);
             $count = $countArray[$col->id];
             $entry = new Entry($col->name, $col->getEntryId(), str_format(localize("bookword", $count), $count), $customdatatype, array(new LinkNavigation ($col->getUri())), "", $count);
+            array_push($entryArray, $entry);
+        }
+
+        return $entryArray;
+    }
+
+    private static function getAllCustoms_Date($customId, $customdatatype)
+    {
+        $queryFormat = "select date(value) as datevalue, count(*) as count from custom_column_6 group by datevalue";
+        $query = str_format ($queryFormat, self::getTableName($customId));
+        $result = parent::getDb()->query($query);
+
+        $entryArray = array();
+        while ($post = $result->fetchObject())
+        {
+            $date = new DateTimeImmutable($post->datevalue);
+
+            $customColumn = new CustomColumn($date->getTimestamp(), $date->format(localize("customcolumn.date.format")), $customId, $customdatatype);
+
+            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
+            $entryPLinkArray = array(new LinkNavigation ($customColumn->getUri()));
+
+            $entry = new Entry($customColumn->name, $customColumn->getEntryId(), $entryPContent, $customdatatype, $entryPLinkArray, "", $post->count);
+
             array_push($entryArray, $entry);
         }
 
