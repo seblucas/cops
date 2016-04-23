@@ -38,21 +38,21 @@ define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " 
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where {2}.book = books.id and {2}.{3} = 1 {1} order by sort");
+                                                    where {2}.book = books.id and {2}.value = 1 {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where {2}.book = books.id and {2}.{3} = 0 {1} order by sort");
+                                                    where {2}.book = books.id and {2}.value = 0 {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_BOOL_NULL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books.id not in (select book from {2}) {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     left join {2} on {2}.book = books.id
-                                                    left join {3} on {3}.id = {2}.id
-                                                    where {3}.{4} = ?  order by sort");
+                                                    left join {3} on {3}.id = {2}.{4}
+                                                    where {3}.value = ?  order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_RATING_NULL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
 								                    left join {2} on {2}.book = books.id
-								                    left join {3} on {3}.id = {2}.id
-                                                    where ((books.id not in (select {3}.value from {3})) or ({3}.{4} = 0)) {1} order by sort");
+								                    left join {3} on {3}.id = {2}.{4}
+                                                    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM_DATE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where {2}.book = books.id and date({2}.{3}) = ? {1} order by sort");
+                                                    where {2}.book = books.id and date({2}.value) = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where (
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or

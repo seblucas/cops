@@ -415,16 +415,16 @@ class Entry
     private static $updated = NULL;
 
     public static $icons = array(
-        Author::ALL_AUTHORS_ID       => 'images/author.png',
-        Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
-        Tag::ALL_TAGS_ID             => 'images/tag.png',
-        Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
-        Rating::ALL_RATING_ID        => 'images/rating.png',
-        "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
+        Author::ALL_AUTHORS_ID           => 'images/author.png',
+        Serie::ALL_SERIES_ID             => 'images/serie.png',
+        Book::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        Tag::ALL_TAGS_ID                 => 'images/tag.png',
+        Language::ALL_LANGUAGES_ID       => 'images/language.png',
+        CustomColumnType::ALL_CUSTOMS_ID => 'images/custom.png',
+        Rating::ALL_RATING_ID            => 'images/rating.png',
+        "cops:books$"                    => 'images/allbook.png',
+        "cops:books:letter"              => 'images/allbook.png',
+        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -635,9 +635,9 @@ class Page
                 if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
-                $customId = CustomColumn::getCustomId ($lookup);
-                if (!is_null ($customId)) {
-                    array_push ($this->entryArray, CustomColumn::getCount($customId));
+                $customColumn = CustomColumnType::getCustomByLookup($lookup);
+                if (!is_null ($customColumn)) {
+                    array_push ($this->entryArray, $customColumn->getCount());
                 }
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
@@ -778,9 +778,11 @@ class PageAllCustoms extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $this->title = CustomColumn::getAllTitle ($customId);
-        $this->entryArray = CustomColumn::getAllCustoms($customId);
-        $this->idPage = CustomColumn::getAllCustomsId ($customId);
+        $columnType = CustomColumnType::getCustomColumnById($customId);
+        
+        $this->title = $columnType->getAllTitle();
+        $this->entryArray = $columnType->getAllCustomValues();
+        $this->idPage = $columnType->getAllCustomsId();
     }
 }
 
