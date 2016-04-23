@@ -130,11 +130,11 @@ abstract class CustomColumnType extends Base {
             case self::CUSTOM_TYPE_ENUM:
                 return new CustomColumnTypeEnumeration($customId);
             case self::CUSTOM_TYPE_COMMENTS:
-                return NULL;
+                return NULL; // Not supported - Doesn't really make sense
             case self::CUSTOM_TYPE_DATE:
                 return new CustomColumnTypeDate($customId);
             case self::CUSTOM_TYPE_FLOAT:
-                return NULL;
+                return new CustomColumnTypeFloat($customId);
             case self::CUSTOM_TYPE_INT:
                 return new CustomColumnTypeInteger($customId);
             case self::CUSTOM_TYPE_RATING:
@@ -354,15 +354,13 @@ class CustomColumnTypeDate extends CustomColumnType
     }
 
     public function getQuery($id) {
-        $date = new DateTime();
-        $date->setTimestamp($id);
+        $date = new DateTime($id);
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
         return array($query, array($date->format("Y-m-d")));
     }
 
     public function getCustom($id) {
-        $date = new DateTime();
-        $date->setTimestamp($id);
+        $date = new DateTime($id);
 
         return new CustomColumn ($id, $date->format(localize("customcolumn.date.format")), $this);
     }
@@ -377,7 +375,7 @@ class CustomColumnTypeDate extends CustomColumnType
         while ($post = $result->fetchObject())
         {
             $date = new DateTimeImmutable($post->datevalue);
-            $id = $date->getTimestamp();
+            $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($id)));
@@ -517,6 +515,53 @@ class CustomColumnTypeInteger extends CustomColumnType
 {
     public function __construct($pcustomId) {
         parent::__construct($pcustomId, self::getTitle($pcustomId), self::CUSTOM_TYPE_INT);
+    }
+
+    public function getTableName() {
+        return "custom_column_{$this->customId}";
+    }
+
+    public function getTableLinkName() {
+        return NULL;
+    }
+
+    public function getTableLinkColumn() {
+        return NULL;
+    }
+
+    public function getQuery($id) {
+        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        return array($query, array($id));
+    }
+
+    public function getCustom($id) {
+        return new CustomColumn($id, $id, $this);
+    }
+
+    public function getAllCustomValues()
+    {
+        $queryFormat = "select value as id, count(*) as count from {0} group by value";
+        $query = str_format ($queryFormat, $this->getTableName());
+
+        $result = parent::getDb()->query($query);
+        $entryArray = array();
+        while ($post = $result->fetchObject())
+        {
+            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+
+            $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+
+            array_push($entryArray, $entry);
+        }
+        return $entryArray;
+    }
+}
+
+class CustomColumnTypeFloat extends CustomColumnType
+{
+    public function __construct($pcustomId) {
+        parent::__construct($pcustomId, self::getTitle($pcustomId), self::CUSTOM_TYPE_FLOAT);
     }
 
     public function getTableName() {
