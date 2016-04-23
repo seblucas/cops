@@ -136,7 +136,7 @@ abstract class CustomColumnType extends Base {
             case self::CUSTOM_TYPE_FLOAT:
                 return NULL;
             case self::CUSTOM_TYPE_INT:
-                return NULL;
+                return new CustomColumnTypeInteger($customId);
             case self::CUSTOM_TYPE_RATING:
                 return new CustomColumnTypeRating($customId);
             case self::CUSTOM_TYPE_BOOL:
@@ -506,6 +506,53 @@ class CustomColumnTypeBool extends CustomColumnType
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
             $entry = new Entry(localize(self::BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+
+            array_push($entryArray, $entry);
+        }
+        return $entryArray;
+    }
+}
+
+class CustomColumnTypeInteger extends CustomColumnType
+{
+    public function __construct($pcustomId) {
+        parent::__construct($pcustomId, self::getTitle($pcustomId), self::CUSTOM_TYPE_INT);
+    }
+
+    public function getTableName() {
+        return "custom_column_{$this->customId}";
+    }
+
+    public function getTableLinkName() {
+        return NULL;
+    }
+
+    public function getTableLinkColumn() {
+        return NULL;
+    }
+
+    public function getQuery($id) {
+        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        return array($query, array($id));
+    }
+
+    public function getCustom($id) {
+        return new CustomColumn($id, $id, $this);
+    }
+
+    public function getAllCustomValues()
+    {
+        $queryFormat = "select value as id, count(*) as count from {0} group by value";
+        $query = str_format ($queryFormat, $this->getTableName());
+
+        $result = parent::getDb()->query($query);
+        $entryArray = array();
+        while ($post = $result->fetchObject())
+        {
+            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+
+            $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
             array_push($entryArray, $entry);
         }
