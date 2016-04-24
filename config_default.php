@@ -191,6 +191,16 @@
     $config['cops_calibre_custom_column_list'] = array ();
 
     /*
+     * Custom Columns for the book preview panel
+     * to add as an array containing the lookup names configured in Calibre
+     *
+     * For example : array ("genre", "mycolumn");
+     *
+     * Note that the custom olumn type "comment" is not supported
+     */
+    $config['cops_calibre_custom_column_preview'] = array ();
+
+    /*
      * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
      * The ebook will then be recognized a Kepub so with chaptered paging, statistics, ...
      * You have to enable URL rewriting if you want to enable kepup.epub download

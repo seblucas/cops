@@ -68,6 +68,10 @@ class JSONRenderer
                       "customcolumns_list" => $cc);
     }
 
+    /**
+     * @param Book $book
+     * @return array
+     */
     public static function getFullBookContentArray ($book) {
         global $config;
         $out = self::getBookContentArray ($book);
@@ -98,7 +102,8 @@ class JSONRenderer
             $link = new LinkNavigation ($tag->getUri ());
             array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
         }
-        ;
+        $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview']);
+
         return $out;
     }
 

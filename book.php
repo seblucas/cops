@@ -157,6 +157,9 @@ class Book extends Base {
 
     /* Other class (author, series, tag, ...) initialization and accessors */
 
+    /**
+     * @return Author[]
+     */
     public function getAuthors () {
         if (is_null ($this->authors)) {
             $this->authors = Author::getAuthorByBookId ($this->id);
@@ -179,6 +182,9 @@ class Book extends Base {
         return $this->publisher;
     }
 
+    /**
+     * @return Serie
+     */
     public function getSerie () {
         if (is_null ($this->serie)) {
             $this->serie = Serie::getSerieByBookId ($this->id);
@@ -186,6 +192,9 @@ class Book extends Base {
         return $this->serie;
     }
 
+    /**
+     * @return Language[]
+     */
     public function getLanguages () {
         $lang = array ();
         $result = parent::getDb ()->prepare('select languages.lang_code
@@ -201,6 +210,9 @@ class Book extends Base {
         return implode (", ", $lang);
     }
 
+    /**
+     * @return Tag[]
+     */
     public function getTags () {
         if (is_null ($this->tags)) {
             $this->tags = array ();
@@ -224,7 +236,7 @@ class Book extends Base {
     }
 
     /**
-     * @return array|null
+     * @return Data[]
      */
     public function getDatas ()
     {

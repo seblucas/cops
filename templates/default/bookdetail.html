@@ -53,6 +53,11 @@
         <h3>{{=it.c.i18n.languagesTitle}}: </h3>{{=it.book.languagesName}}
     </p>
     {{?}}
+    {{~it.book.customcolumns_preview :column:column_index}}
+    <p class="popupless">
+    <h3>{{=column.customColumnType.columnTitle}}: </h3>{{=column.htmlvalue}}
+    </p>
+    {{~}}
     {{? it.book.content != ""}}
     <br />
     <h4>{{=it.c.i18n.contentTitle}}</h4>

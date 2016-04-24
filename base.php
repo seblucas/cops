@@ -768,7 +768,7 @@ class PageCustomDetail extends Page
         $customId = getURLParam ("custom", NULL);
         $custom = CustomColumn::createCustom ($customId, $this->idGet);
         $this->idPage = $custom->getEntryId ();
-        $this->title = $custom->name;
+        $this->title = $custom->value;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
     }
 }
