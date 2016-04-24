@@ -635,7 +635,7 @@ class Page
                 if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
-                $customColumn = CustomColumnType::getCustomByLookup($lookup);
+                $customColumn = CustomColumnType::createByLookup($lookup);
                 if (!is_null ($customColumn)) {
                     array_push ($this->entryArray, $customColumn->getCount());
                 }
@@ -766,7 +766,7 @@ class PageCustomDetail extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $custom = CustomColumn::getCustomById ($customId, $this->idGet);
+        $custom = CustomColumn::createCustom ($customId, $this->idGet);
         $this->idPage = $custom->getEntryId ();
         $this->title = $custom->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
@@ -778,9 +778,9 @@ class PageAllCustoms extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $columnType = CustomColumnType::getCustomColumnById($customId);
+        $columnType = CustomColumnType::createByCustomID($customId);
         
-        $this->title = $columnType->getAllTitle();
+        $this->title = $columnType->getTitle();
         $this->entryArray = $columnType->getAllCustomValues();
         $this->idPage = $columnType->getAllCustomsId();
     }
