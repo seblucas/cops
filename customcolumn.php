@@ -15,21 +15,24 @@ class CustomColumn extends Base {
     /* @var string|integer the ID of the value */
     public $valueID;
     /* @var string the (string) representation of the value */
-    public $name;
+    public $value;
     /* @var CustomColumnType the custom column that contains the value */
     public $customColumnType;
+    /* @var string the value encoded for HTML displaying */
+    public $htmlvalue;
 
     /**
      * CustomColumn constructor.
      *
      * @param integer $pid id of the chosen value
-     * @param string $pname string representation of the value
+     * @param string $pvalue string representation of the value
      * @param CustomColumnType $pcustomColumnType the CustomColumn this value lives in
      */
-    public function __construct($pid, $pname, $pcustomColumnType) {
+    public function __construct($pid, $pvalue, $pcustomColumnType) {
         $this->valueID = $pid;
-        $this->name = $pname;
+        $this->value = $pvalue;
         $this->customColumnType = $pcustomColumnType;
+        $this->htmlvalue = $this->customColumnType->encodeHTMLValue($this->value);
     }
 
     /**
@@ -59,6 +62,15 @@ class CustomColumn extends Base {
         return $this->customColumnType->getQuery($this->valueID);
     }
 
+    /**
+     * Return the value of this column as an HTML snippet
+     *
+     * @return string
+     */
+    public function getHTMLEncodedValue()
+    {
+        return $this->htmlvalue;
+    }
 
     /**
      * Craete an CustomColumn by CustomColumnID and ValueID
@@ -197,6 +209,16 @@ abstract class CustomColumnType extends Base {
         return count($this->customValues);
     }
 
+    /**
+     * Encode a value of this column ready to be displayed in an HTML document
+     *
+     * @param integer|string $value
+     * @return string
+     */
+    public function encodeHTMLValue($value) {
+        return htmlspecialchars($value);
+    }
+    
     /**
      * Get the datatype of a CustomColumn by its customID
      *
