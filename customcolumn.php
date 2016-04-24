@@ -93,7 +93,7 @@ abstract class CustomColumnType extends Base {
     const ALL_CUSTOMS_ID       = "cops:custom";
 
     const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2
-    const CUSTOM_TYPE_COMMENTS  = "comments";    // type 3
+    const CUSTOM_TYPE_COMMENT   = "comments";    // type 3
     const CUSTOM_TYPE_SERIES    = "series";      // type 4
     const CUSTOM_TYPE_ENUM      = "enumeration"; // type 5
     const CUSTOM_TYPE_DATE      = "datetime";    // type 6
@@ -251,8 +251,8 @@ abstract class CustomColumnType extends Base {
                 return new CustomColumnTypeSeries($customId);
             case self::CUSTOM_TYPE_ENUM:
                 return new CustomColumnTypeEnumeration($customId);
-            case self::CUSTOM_TYPE_COMMENTS:
-                return NULL; // Not supported - Doesn't really make sense
+            case self::CUSTOM_TYPE_COMMENT:
+                return new CustomColumnTypeComment($customId);
             case self::CUSTOM_TYPE_DATE:
                 return new CustomColumnTypeDate($customId);
             case self::CUSTOM_TYPE_FLOAT:
@@ -372,6 +372,14 @@ abstract class CustomColumnType extends Base {
      * @return CustomColumn
      */
     public abstract function getCustomByBook($book);
+
+    /**
+     * Is this column searchable by value
+     * only searchable columns can be displayed on the index page
+     *
+     * @return bool
+     */
+    public abstract function isSearchable();
 }
 
 class CustomColumnTypeText extends CustomColumnType
@@ -443,6 +451,10 @@ class CustomColumnTypeText extends CustomColumnType
         }
         return new CustomColumn(NULL, "", $this);
     }
+
+    public function isSearchable() {
+        return true;
+    }
 }
 
 class CustomColumnTypeSeries extends CustomColumnType
@@ -512,6 +524,10 @@ class CustomColumnTypeSeries extends CustomColumnType
         }
         return new CustomColumn(NULL, "", $this);
     }
+
+    public function isSearchable() {
+        return true;
+    }
 }
 
 class CustomColumnTypeEnumeration extends CustomColumnType
@@ -580,6 +596,10 @@ class CustomColumnTypeEnumeration extends CustomColumnType
             return new CustomColumn($post->id, $post->name, $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.enum.unknown"), $this);
+    }
+
+    public function isSearchable() {
+        return true;
     }
 }
 
@@ -656,6 +676,10 @@ class CustomColumnTypeDate extends CustomColumnType
         }
         return new CustomColumn(NULL, localize("customcolumn.date.unknown"), $this);
     }
+
+    public function isSearchable() {
+        return true;
+    }
 }
 
 class CustomColumnTypeRating extends CustomColumnType
@@ -731,6 +755,10 @@ class CustomColumnTypeRating extends CustomColumnType
             return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value/2), $post->value/2), $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.rating.unknown"), $this);
+    }
+
+    public function isSearchable() {
+        return true;
     }
 }
 
@@ -814,6 +842,10 @@ class CustomColumnTypeBool extends CustomColumnType
             return new CustomColumn(-1, localize($this->BOOLEAN_NAMES[-1]), $this);
         }
     }
+
+    public function isSearchable() {
+        return true;
+    }
 }
 
 class CustomColumnTypeInteger extends CustomColumnType
@@ -880,6 +912,10 @@ class CustomColumnTypeInteger extends CustomColumnType
         }
         return new CustomColumn(NULL, localize("customcolumn.int.unknown"), $this);
     }
+
+    public function isSearchable() {
+        return true;
+    }
 }
 
 class CustomColumnTypeFloat extends CustomColumnType
@@ -945,5 +981,65 @@ class CustomColumnTypeFloat extends CustomColumnType
             return new CustomColumn($post->value, $post->value, $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
+    }
+
+    public function isSearchable() {
+        return true;
+    }
+}
+
+class CustomColumnTypeComment extends CustomColumnType
+{
+    protected function __construct($pcustomId) {
+        parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT);
+    }
+
+    public function getTableName() {
+        return "custom_column_{$this->customId}";
+    }
+
+    public function getTableLinkName() {
+        return NULL;
+    }
+
+    public function getTableLinkColumn() {
+        return NULL;
+    }
+
+    public function getQuery($id) {
+        return NULL;
+    }
+
+    public function getCustom($id) {
+        return new CustomColumn($id, $id, $this);
+    }
+
+    public function encodeHTMLValue($value) {
+        return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
+    }
+
+    protected function getAllCustomValuesFromDatabase() {
+        return NULL;
+    }
+
+    public function getDescription() {
+        $desc = $this->getDatabaseDescription();
+        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        return $desc;
+    }
+
+    public function getCustomByBook($book) {
+        $queryFormat = "select {0}.value as value from {0} where {0}.book = {1}";
+        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+
+        $result = parent::getDb()->query($query);
+        if ($post = $result->fetchObject()) {
+            return new CustomColumn($post->value, $post->value, $this);
+        }
+        return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
+    }
+
+    public function isSearchable() {
+        return false;
     }
 }
