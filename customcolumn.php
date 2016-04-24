@@ -99,7 +99,7 @@ abstract class CustomColumnType extends Base {
         $result->execute(array($this->customId));
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
-            return $json->description;
+            return (isset($json->description) && !empty($json->description)) ? $json->description : NULL;
         }
         return NULL;
     }
