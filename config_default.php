@@ -171,14 +171,24 @@
     $config['cops_books_filter'] = array ();
 
     /*
-     * Custom Columns to add  as an array containing the lookup names
-     * configured in Calibre
+     * Custom Columns for the index page
+     * to add as an array containing the lookup names configured in Calibre
      *
      * For example : array ("genre", "mycolumn");
      *
      * Note that the custom olumn type "comment" is not supported
      */
     $config['cops_calibre_custom_column'] = array ();
+
+    /*
+     * Custom Columns for the list representation
+     * to add as an array containing the lookup names configured in Calibre
+     *
+     * For example : array ("genre", "mycolumn");
+     *
+     * Note that the custom olumn type "comment" is not supported
+     */
+    $config['cops_calibre_custom_column_list'] = array ();
 
     /*
      * Rename .epub to .kepub.epub if downloaded from a Kobo eReader

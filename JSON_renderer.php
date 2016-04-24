@@ -11,6 +11,10 @@ require_once ("book.php");
 
 class JSONRenderer
 {
+    /**
+     * @param Book $book
+     * @return array
+     */
     public static function getBookContentArray ($book) {
         global $config;
         $i = 0;
@@ -45,6 +49,7 @@ class JSONRenderer
             $link = new LinkNavigation ($serie->getUri ());
             $su = $link->hrefXhtml ();
         }
+        $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list']);
 
         return array ("id" => $book->id,
                       "hasCover" => $book->hasCover,
@@ -59,7 +64,8 @@ class JSONRenderer
                       "seriesName" => $sn,
                       "seriesIndex" => $book->seriesIndex,
                       "seriesCompleteName" => $scn,
-                      "seriesurl" => $su);
+                      "seriesurl" => $su,
+                      "customcolumns_list" => $cc);
     }
 
     public static function getFullBookContentArray ($book) {
