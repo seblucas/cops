@@ -21,7 +21,7 @@
 "content.series.data":"Livro {0} da série {1}",
 "content.summary":"Sumário",
 "customize.email":"Forneça o seu email (para ativar envio de ebooks)",
-"customize.fancybox":"Usar o Lightbox (os livros são carregados numa janela flutuante)",
+"customize.fancybox":"Usar o Lightbox (detalhes do livro numa janela flutuante)",
 "customize.filter":"Ativar filtro por etiqueta",
 "customize.ignored":"Categorias ignoradas",
 "customize.paging":"Número máximo de livros por página (-1 para desabilitar)",
