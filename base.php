@@ -74,10 +74,6 @@ function getCurrentOption ($option) {
             return $_COOKIE[$option];
         }
     }
-    if ($option == "style") {
-        return "default";
-    }
-
     if (isset($config ["cops_" . $option])) {
         return $config ["cops_" . $option];
     }
