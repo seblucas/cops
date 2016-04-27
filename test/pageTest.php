@@ -73,8 +73,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("50 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
-
-
+    
     public function testPageIndexWithCustomColumn_Type1 ()
     {
         global $config;
@@ -90,7 +89,7 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type1", $currentPage->entryArray [6]->title);
-        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals ("Custom column 'Type1'", $currentPage->entryArray [6]->content);
         $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ();
@@ -111,7 +110,7 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type2", $currentPage->entryArray [6]->title);
-        $this->assertEquals ("Alphabetical index of the 3 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals ("Custom column 'Type2'", $currentPage->entryArray [6]->content);
         $this->assertEquals (3, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ();
@@ -132,7 +131,7 @@ class PageTest extends PHPUnit_Framework_TestCase
 
         $this->assertCount (9, $currentPage->entryArray);
         $this->assertEquals ("Type4", $currentPage->entryArray [6]->title);
-        $this->assertEquals ("Alphabetical index of the 2 tags", $currentPage->entryArray [6]->content);
+        $this->assertEquals ("Alphabetical index of the 2 series", $currentPage->entryArray [6]->content);
         $this->assertEquals (2, $currentPage->entryArray [6]->numberOfElement);
 
         $config['cops_calibre_custom_column'] = array ();
@@ -527,8 +526,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("The Return of Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
     }
-
-
+    
     public function testPageAllTags ()
     {
         $page = Base::PAGE_ALL_TAGS;
@@ -756,8 +754,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("1 author", $currentPage->entryArray [1]->content);
         $this->assertFalse ($currentPage->ContainsBook ());
     }
-
-
+    
     /**
      * @dataProvider providerAccentuatedCharacters
      */

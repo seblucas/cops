@@ -315,7 +315,7 @@ abstract class CustomColumnType extends Base {
      *
      * @return string|null
      */
-    abstract public function getTableName ();
+    abstract protected function getTableName();
 
     /**
      * Get the name of the linking sqlite table for this column
@@ -323,14 +323,14 @@ abstract class CustomColumnType extends Base {
      *
      * @return string|null
      */
-    abstract public function getTableLinkName ();
+    abstract protected function getTableLinkName();
 
     /**
      * Get the name of the linking column in the linktable
      *
      * @return string|null
      */
-    abstract public function getTableLinkColumn();
+    abstract protected function getTableLinkColumn();
 
     /**
      * Get the query to find all books with a specific value of this column
@@ -388,15 +388,15 @@ class CustomColumnTypeText extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return "value";
     }
 
@@ -436,7 +436,7 @@ class CustomColumnTypeText extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -463,15 +463,15 @@ class CustomColumnTypeSeries extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return "value";
     }
 
@@ -536,15 +536,15 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return "value";
     }
 
@@ -609,15 +609,15 @@ class CustomColumnTypeDate extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return NULL;
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return NULL;
     }
 
@@ -659,7 +659,7 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -688,15 +688,15 @@ class CustomColumnTypeRating extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return "value";
     }
 
@@ -775,15 +775,15 @@ class CustomColumnTypeBool extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return NULL;
     }
 
@@ -854,15 +854,15 @@ class CustomColumnTypeInteger extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_INT);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return NULL;
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return NULL;
     }
 
@@ -897,7 +897,7 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -924,15 +924,15 @@ class CustomColumnTypeFloat extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return NULL;
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return NULL;
     }
 
@@ -967,7 +967,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -994,15 +994,15 @@ class CustomColumnTypeComment extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT);
     }
 
-    public function getTableName() {
+    protected function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    public function getTableLinkName() {
+    protected function getTableLinkName() {
         return NULL;
     }
 
-    public function getTableLinkColumn() {
+    protected function getTableLinkColumn() {
         return NULL;
     }
 
@@ -1024,7 +1024,7 @@ class CustomColumnTypeComment extends CustomColumnType
 
     public function getDescription() {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($pcontent)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
