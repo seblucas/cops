@@ -311,28 +311,6 @@ abstract class CustomColumnType extends Base {
     }
 
     /**
-     * Get the name of the sqlite table for this column
-     *
-     * @return string|null
-     */
-    abstract protected function getTableName();
-
-    /**
-     * Get the name of the linking sqlite table for this column
-     * (or NULL if there is no linktable)
-     *
-     * @return string|null
-     */
-    abstract protected function getTableLinkName();
-
-    /**
-     * Get the name of the linking column in the linktable
-     *
-     * @return string|null
-     */
-    abstract protected function getTableLinkColumn();
-
-    /**
      * Get the query to find all books with a specific value of this column
      * the returning array has two values:
      *  - first the query (string)
@@ -388,15 +366,31 @@ class CustomColumnTypeText extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    protected function getTableLinkName() {
+    /**
+     * Get the name of the linking sqlite table for this column
+     * (or NULL if there is no linktable)
+     *
+     * @return string|null
+     */
+    private function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    protected function getTableLinkColumn() {
+    /**
+     * Get the name of the linking column in the linktable
+     *
+     * @return string|null
+     */
+    private function getTableLinkColumn() {
         return "value";
     }
 
@@ -463,15 +457,31 @@ class CustomColumnTypeSeries extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    protected function getTableLinkName() {
+    /**
+     * Get the name of the linking sqlite table for this column
+     * (or NULL if there is no linktable)
+     *
+     * @return string|null
+     */
+    private function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    protected function getTableLinkColumn() {
+    /**
+     * Get the name of the linking column in the linktable
+     *
+     * @return string|null
+     */
+    private function getTableLinkColumn() {
         return "value";
     }
 
@@ -536,15 +546,31 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    protected function getTableLinkName() {
+    /**
+     * Get the name of the linking sqlite table for this column
+     * (or NULL if there is no linktable)
+     *
+     * @return string|null
+     */
+    private function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    protected function getTableLinkColumn() {
+    /**
+     * Get the name of the linking column in the linktable
+     *
+     * @return string|null
+     */
+    private function getTableLinkColumn() {
         return "value";
     }
 
@@ -609,16 +635,13 @@ class CustomColumnTypeDate extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
-    }
-
-    protected function getTableLinkName() {
-        return NULL;
-    }
-
-    protected function getTableLinkColumn() {
-        return NULL;
     }
 
     public function getQuery($id) {
@@ -688,15 +711,31 @@ class CustomColumnTypeRating extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    protected function getTableLinkName() {
+    /**
+     * Get the name of the linking sqlite table for this column
+     * (or NULL if there is no linktable)
+     *
+     * @return string|null
+     */
+    private function getTableLinkName() {
         return "books_custom_column_{$this->customId}_link";
     }
 
-    protected function getTableLinkColumn() {
+    /**
+     * Get the name of the linking column in the linktable
+     *
+     * @return string|null
+     */
+    private function getTableLinkColumn() {
         return "value";
     }
 
@@ -775,16 +814,13 @@ class CustomColumnTypeBool extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
-    }
-
-    protected function getTableLinkName() {
-        return "books_custom_column_{$this->customId}_link";
-    }
-
-    protected function getTableLinkColumn() {
-        return NULL;
     }
 
     public function getQuery($id) {
@@ -854,16 +890,13 @@ class CustomColumnTypeInteger extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_INT);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
-    }
-
-    protected function getTableLinkName() {
-        return NULL;
-    }
-
-    protected function getTableLinkColumn() {
-        return NULL;
     }
 
     public function getQuery($id) {
@@ -924,16 +957,13 @@ class CustomColumnTypeFloat extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
-    }
-
-    protected function getTableLinkName() {
-        return NULL;
-    }
-
-    protected function getTableLinkColumn() {
-        return NULL;
     }
 
     public function getQuery($id) {
@@ -994,20 +1024,17 @@ class CustomColumnTypeComment extends CustomColumnType
         parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT);
     }
 
-    protected function getTableName() {
+    /**
+     * Get the name of the sqlite table for this column
+     *
+     * @return string|null
+     */
+    private function getTableName() {
         return "custom_column_{$this->customId}";
     }
 
-    protected function getTableLinkName() {
-        return NULL;
-    }
-
-    protected function getTableLinkColumn() {
-        return NULL;
-    }
-
     public function getQuery($id) {
-        return NULL;
+        return NULL; // querying by comment doen't really make sense
     }
 
     public function getCustom($id) {
