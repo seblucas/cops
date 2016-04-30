@@ -125,7 +125,7 @@ abstract class CustomColumnType extends Base
     public $columnTitle;
     /** @var string the datatype of this column (one of the CUSTOM_TYPE_* constant values) */
     public $datatype;
-    /** @var Entry[] */
+    /** @var null|Entry[] */
     private $customValues = NULL;
 
     protected function __construct($pcustomId, $pdatatype)
@@ -195,7 +195,7 @@ abstract class CustomColumnType extends Base
      */
     public function getDatabaseDescription()
     {
-        $result = parent::getDb()->prepare('SELECT display FROM custom_columns WHERE id = ?');
+        $result = $this->getDb()->prepare('SELECT display FROM custom_columns WHERE id = ?');
         $result->execute(array($this->customId));
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
@@ -340,7 +340,7 @@ abstract class CustomColumnType extends Base
      * Get the title of a CustomColumn by its customID
      *
      * @param integer $customId
-     * @return string|null
+     * @return string
      */
     protected static function getTitleByCustomID($customId)
     {
@@ -349,7 +349,7 @@ abstract class CustomColumnType extends Base
         if ($post = $result->fetchObject()) {
             return $post->name;
         }
-        return NULL;
+        return "";
     }
 
     /**
@@ -448,7 +448,7 @@ class CustomColumnTypeText extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute(array($id));
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
@@ -461,9 +461,10 @@ class CustomColumnTypeText extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject()) {
+        while ($post = $result->fetchObject())
+        {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
@@ -477,7 +478,7 @@ class CustomColumnTypeText extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -486,7 +487,7 @@ class CustomColumnTypeText extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
@@ -545,7 +546,7 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute(array($id));
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
@@ -558,7 +559,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -581,7 +582,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name . " [" . $post->extra . "]", $this);
         }
@@ -640,7 +641,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
     public function getCustom($id)
     {
-        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute(array($id));
         if ($post = $result->fetchObject()) {
             return new CustomColumn ($id, $post->name, $this);
@@ -653,7 +654,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -676,7 +677,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
@@ -724,7 +725,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
 
         $entryArray = array();
         while ($post = $result->fetchObject()) {
@@ -745,7 +746,7 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -754,7 +755,7 @@ class CustomColumnTypeDate extends CustomColumnType
         $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
 
@@ -827,7 +828,7 @@ class CustomColumnTypeRating extends CustomColumnType
     {
         $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, -1)";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
 
         $countArray = array(0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0);
         while ($row = $result->fetchObject()) {
@@ -859,7 +860,7 @@ class CustomColumnTypeRating extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value / 2), $post->value / 2), $this);
         }
@@ -921,7 +922,7 @@ class CustomColumnTypeBool extends CustomColumnType
     {
         $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
         $query = str_format($queryFormat, $this->getTableName());
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
 
         $entryArray = array();
         while ($post = $result->fetchObject()) {
@@ -945,7 +946,7 @@ class CustomColumnTypeBool extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->boolvalue, localize($this->BOOLEAN_NAMES[$post->boolvalue]), $this);
         } else {
@@ -992,7 +993,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -1008,7 +1009,7 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -1017,7 +1018,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
@@ -1063,7 +1064,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
         $query = str_format($queryFormat, $this->getTableName());
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -1079,7 +1080,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -1088,7 +1089,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
@@ -1142,7 +1143,7 @@ class CustomColumnTypeComment extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
@@ -1151,7 +1152,7 @@ class CustomColumnTypeComment extends CustomColumnType
         $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
-        $result = parent::getDb()->query($query);
+        $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }

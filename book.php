@@ -196,7 +196,7 @@ class Book extends Base {
     }
 
     /**
-     * @return Language[]
+     * @return string
      */
     public function getLanguages () {
         $lang = array ();
