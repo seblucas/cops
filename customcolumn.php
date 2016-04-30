@@ -11,7 +11,8 @@ require_once('base.php');
 /**
  * A CustomColumn with an value
  */
-class CustomColumn extends Base {
+class CustomColumn extends Base
+{
     /* @var string|integer the ID of the value */
     public $valueID;
     /* @var string the (string) representation of the value */
@@ -28,7 +29,8 @@ class CustomColumn extends Base {
      * @param string $pvalue string representation of the value
      * @param CustomColumnType $pcustomColumnType the CustomColumn this value lives in
      */
-    public function __construct($pid, $pvalue, $pcustomColumnType) {
+    public function __construct($pid, $pvalue, $pcustomColumnType)
+    {
         $this->valueID = $pid;
         $this->value = $pvalue;
         $this->customColumnType = $pcustomColumnType;
@@ -40,7 +42,8 @@ class CustomColumn extends Base {
      *
      * @return string
      */
-    public function getUri() {
+    public function getUri()
+    {
         return $this->customColumnType->getUri($this->valueID);
     }
 
@@ -49,7 +52,8 @@ class CustomColumn extends Base {
      *
      * @return string
      */
-    public function getEntryId() {
+    public function getEntryId()
+    {
         return $this->customColumnType->getEntryId($this->valueID);
     }
 
@@ -58,7 +62,8 @@ class CustomColumn extends Base {
      *
      * @return string
      */
-    public function getQuery() {
+    public function getQuery()
+    {
         return $this->customColumnType->getQuery($this->valueID);
     }
 
@@ -79,7 +84,8 @@ class CustomColumn extends Base {
      * @param integer $id the id of the chosen value
      * @return CustomColumn|null
      */
-    public static function createCustom($customId, $id) {
+    public static function createCustom($customId, $id)
+    {
         $columnType = CustomColumnType::createByCustomID($customId);
 
         return $columnType->getCustom($id);
@@ -89,7 +95,8 @@ class CustomColumn extends Base {
 /**
  * A single calibre custom column
  */
-abstract class CustomColumnType extends Base {
+abstract class CustomColumnType extends Base
+{
     const ALL_CUSTOMS_ID       = "cops:custom";
 
     const CUSTOM_TYPE_TEXT      = "text";        // type 1 + 2
@@ -112,7 +119,8 @@ abstract class CustomColumnType extends Base {
     /** @var Entry[] */
     private $customValues = NULL;
 
-    protected function __construct($pcustomId, $pdatatype) {
+    protected function __construct($pcustomId, $pdatatype)
+    {
         $this->columnTitle = self::getTitleByCustomID($pcustomId);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
@@ -125,8 +133,9 @@ abstract class CustomColumnType extends Base {
      * @param string|integer $id the id of the value to show
      * @return string
      */
-    public function getUri($id) {
-        return "?page=".parent::PAGE_CUSTOM_DETAIL."&custom={$this->customId}&id={$id}";
+    public function getUri($id)
+    {
+        return "?page=" . parent::PAGE_CUSTOM_DETAIL . "&custom={$this->customId}&id={$id}";
     }
 
     /**
@@ -134,7 +143,8 @@ abstract class CustomColumnType extends Base {
      *
      * @return string
      */
-    public function getUriAllCustoms() {
+    public function getUriAllCustoms()
+    {
         return "?page=" . parent::PAGE_ALL_CUSTOMS . "&custom={$this->customId}";
     }
 
@@ -144,8 +154,9 @@ abstract class CustomColumnType extends Base {
      * @param string|integer $id the id of the value to show
      * @return string
      */
-    public function getEntryId($id) {
-        return self::ALL_CUSTOMS_ID.":".$this->customId.":".$id;
+    public function getEntryId($id)
+    {
+        return self::ALL_CUSTOMS_ID . ":" . $this->customId . ":" . $id;
     }
 
     /**
@@ -153,7 +164,8 @@ abstract class CustomColumnType extends Base {
      *
      * @return string
      */
-    public function getAllCustomsId() {
+    public function getAllCustomsId()
+    {
         return self::ALL_CUSTOMS_ID . ":" . $this->customId;
     }
 
@@ -162,7 +174,8 @@ abstract class CustomColumnType extends Base {
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->columnTitle;
     }
 
@@ -171,8 +184,9 @@ abstract class CustomColumnType extends Base {
      *
      * @return string|null
      */
-    public function getDatabaseDescription() {
-        $result = parent::getDb()->prepare('select display from custom_columns where id = ?');
+    public function getDatabaseDescription()
+    {
+        $result = parent::getDb()->prepare('SELECT display FROM custom_columns WHERE id = ?');
         $result->execute(array($this->customId));
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
@@ -187,7 +201,8 @@ abstract class CustomColumnType extends Base {
      *
      * @return Entry
      */
-    public function getCount() {
+    public function getCount()
+    {
         $ptitle = $this->getTitle();
         $pid = $this->getAllCustomsId();
         $pcontent = $this->getDescription();
@@ -215,7 +230,8 @@ abstract class CustomColumnType extends Base {
      * @param integer|string $value
      * @return string
      */
-    public function encodeHTMLValue($value) {
+    public function encodeHTMLValue($value)
+    {
         return htmlspecialchars($value);
     }
 
@@ -225,8 +241,9 @@ abstract class CustomColumnType extends Base {
      * @param integer $customId
      * @return string|null
      */
-    private static function getDatatypeByCustomID($customId) {
-        $result = parent::getDb()->prepare('select datatype from custom_columns where id = ?');
+    private static function getDatatypeByCustomID($customId)
+    {
+        $result = parent::getDb()->prepare('SELECT datatype FROM custom_columns WHERE id = ?');
         $result->execute(array($customId));
         if ($post = $result->fetchObject()) {
             return $post->datatype;
@@ -241,10 +258,11 @@ abstract class CustomColumnType extends Base {
      * @return CustomColumnType|null
      * @throws Exception If the $customId is not found or the datatype is unknown
      */
-    public static function createByCustomID($customId) {
+    public static function createByCustomID($customId)
+    {
         $datatype = self::getDatatypeByCustomID($customId);
 
-        switch ($datatype){
+        switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
                 return new CustomColumnTypeText($customId);
             case self::CUSTOM_TYPE_SERIES:
@@ -276,10 +294,11 @@ abstract class CustomColumnType extends Base {
      * @param string $lookup the lookup-name of the custom column
      * @return CustomColumnType|null
      */
-    public static function createByLookup($lookup) {
-        $result = parent::getDb ()->prepare('select id from custom_columns where label = ?');
-        $result->execute (array ($lookup));
-        if ($post = $result->fetchObject ()) {
+    public static function createByLookup($lookup)
+    {
+        $result = parent::getDb()->prepare('SELECT id FROM custom_columns WHERE label = ?');
+        $result->execute(array($lookup));
+        if ($post = $result->fetchObject()) {
             return self::createByCustomID($post->id);
         }
         return NULL;
@@ -291,7 +310,8 @@ abstract class CustomColumnType extends Base {
      *
      * @return Entry[]
      */
-    public function getAllCustomValues() {
+    public function getAllCustomValues()
+    {
         return $this->customValues;
     }
 
@@ -301,10 +321,11 @@ abstract class CustomColumnType extends Base {
      * @param integer $customId
      * @return string|null
      */
-    protected static function getTitleByCustomID($customId) {
-        $result = parent::getDb ()->prepare('select name from custom_columns where id = ?');
-        $result->execute (array ($customId));
-        if ($post = $result->fetchObject ()) {
+    protected static function getTitleByCustomID($customId)
+    {
+        $result = parent::getDb()->prepare('SELECT name FROM custom_columns WHERE id = ?');
+        $result->execute(array($customId));
+        if ($post = $result->fetchObject()) {
             return $post->name;
         }
         return NULL;
@@ -362,7 +383,8 @@ abstract class CustomColumnType extends Base {
 
 class CustomColumnTypeText extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
 
@@ -371,7 +393,8 @@ class CustomColumnTypeText extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
@@ -381,7 +404,8 @@ class CustomColumnTypeText extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkName() {
+    private function getTableLinkName()
+    {
         return "books_custom_column_{$this->customId}_link";
     }
 
@@ -390,17 +414,20 @@ class CustomColumnTypeText extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkColumn() {
+    private function getTableLinkColumn()
+    {
         return "value";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
-        $result = parent::getDb()->prepare(str_format("select id, value as name from {0} where id = ?", $this->getTableName()));
+    public function getCustom($id)
+    {
+        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute(array($id));
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
@@ -410,13 +437,12 @@ class CustomColumnTypeText extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select {0}.id as id, {0}.value as name, count(*) as count from {0}, {1} where {0}.id = {1}.{2} group by {0}.id, {0}.value order by {0}.value";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = parent::getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
@@ -436,8 +462,8 @@ class CustomColumnTypeText extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.id as id, {1}.{2} as name from {0}, {1} where {0}.id = {1}.{2} and {1}.book = {3} order by {0}.value";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -446,14 +472,16 @@ class CustomColumnTypeText extends CustomColumnType
         return new CustomColumn(NULL, "", $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeSeries extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
     }
 
@@ -462,7 +490,8 @@ class CustomColumnTypeSeries extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
@@ -472,7 +501,8 @@ class CustomColumnTypeSeries extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkName() {
+    private function getTableLinkName()
+    {
         return "books_custom_column_{$this->customId}_link";
     }
 
@@ -481,19 +511,22 @@ class CustomColumnTypeSeries extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkColumn() {
+    private function getTableLinkColumn()
+    {
         return "value";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
-        $result = parent::getDb()->prepare(str_format("select id, value as name from {0} where id = ?", $this->getTableName()));
-        $result->execute (array ($id));
-        if ($post = $result->fetchObject ()) {
+    public function getCustom($id)
+    {
+        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result->execute(array($id));
+        if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
         return NULL;
@@ -501,13 +534,12 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select {0}.id as id, {0}.value as name, count(*) as count from {0}, {1} where {0}.id = {1}.{2} group by {0}.id, {0}.value order by {0}.value";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = parent::getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
@@ -525,8 +557,8 @@ class CustomColumnTypeSeries extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.id as id, {1}.{2} as name, {1}.extra as extra from {0}, {1} where {0}.id = {1}.{2} and {1}.book = {3}";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -535,14 +567,16 @@ class CustomColumnTypeSeries extends CustomColumnType
         return new CustomColumn(NULL, "", $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeEnumeration extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
     }
 
@@ -551,7 +585,8 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
@@ -561,7 +596,8 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkName() {
+    private function getTableLinkName()
+    {
         return "books_custom_column_{$this->customId}_link";
     }
 
@@ -570,19 +606,22 @@ class CustomColumnTypeEnumeration extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkColumn() {
+    private function getTableLinkColumn()
+    {
         return "value";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
-        $result = parent::getDb ()->prepare(str_format("select id, value as name from {0} where id = ?", $this->getTableName()));
-        $result->execute (array ($id));
-        if ($post = $result->fetchObject ()) {
+    public function getCustom($id)
+    {
+        $result = parent::getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
+        $result->execute(array($id));
+        if ($post = $result->fetchObject()) {
             return new CustomColumn ($id, $post->name, $this);
         }
         return NULL;
@@ -590,19 +629,18 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select {0}.id as id, {0}.value as name, count(*) as count from {0}, {1} where {0}.id = {1}.{2} group by {0}.id, {0}.value order by {0}.value";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS name, count(*) AS count FROM {0}, {1} WHERE {0}.id = {1}.{2} GROUP BY {0}.id, {0}.value ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = parent::getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
-            $entryPContent = str_format (localize("bookword", $post->count), $post->count);
+        while ($post = $result->fetchObject()) {
+            $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
             $entry = new Entry ($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
-            array_push ($entryArray, $entry);
+            array_push($entryArray, $entry);
         }
         return $entryArray;
     }
@@ -614,8 +652,8 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.id as id, {1}.{2} as name from {0}, {1} where {0}.id = {1}.{2} and {1}.book = {3}";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -624,7 +662,8 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         return new CustomColumn(NULL, localize("customcolumn.enum.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
@@ -662,13 +701,12 @@ class CustomColumnTypeDate extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select date(value) as datevalue, count(*) as count from {0} group by datevalue";
-        $query = str_format ($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT date(value) AS datevalue, count(*) AS count FROM {0} GROUP BY datevalue";
+        $query = str_format($queryFormat, $this->getTableName());
         $result = parent::getDb()->query($query);
 
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $date = new DateTimeImmutable($post->datevalue);
             $id = $date->format("Y-m-d");
 
@@ -692,8 +730,8 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select date({0}.value) as datevalue from {0} where {0}.book = {1}";
-        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT date({0}.value) AS datevalue FROM {0} WHERE {0}.book = {1}";
+        $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -704,14 +742,16 @@ class CustomColumnTypeDate extends CustomColumnType
         return new CustomColumn(NULL, localize("customcolumn.date.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeRating extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_RATING);
     }
 
@@ -720,7 +760,8 @@ class CustomColumnTypeRating extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
@@ -730,7 +771,8 @@ class CustomColumnTypeRating extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkName() {
+    private function getTableLinkName()
+    {
         return "books_custom_column_{$this->customId}_link";
     }
 
@@ -739,11 +781,13 @@ class CustomColumnTypeRating extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableLinkColumn() {
+    private function getTableLinkColumn()
+    {
         return "value";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         if ($id == 0) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return array($query, array());
@@ -753,17 +797,18 @@ class CustomColumnTypeRating extends CustomColumnType
         }
     }
 
-    public function getCustom($id) {
-        return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id/2), $id/2), $this);
+    public function getCustom($id)
+    {
+        return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select coalesce({0}.value, 0) as value, count(*) as count from books  left join {1} on  books.id = {1}.book left join {0} on {0}.id = {1}.value group by coalesce({0}.value, -1)";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName());
+        $queryFormat = "SELECT coalesce({0}.value, 0) AS value, count(*) AS count FROM books  LEFT JOIN {1} ON  books.id = {1}.book LEFT JOIN {0} ON {0}.id = {1}.value GROUP BY coalesce({0}.value, -1)";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
         $result = parent::getDb()->query($query);
 
-        $countArray = array(0=>0, 2=>0, 4=>0, 6=>0, 8=>0, 10=>0);
+        $countArray = array(0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0);
         while ($row = $result->fetchObject()) {
             $countArray[$row->value] = $row->count;
         }
@@ -771,11 +816,11 @@ class CustomColumnTypeRating extends CustomColumnType
         $entryArray = array();
 
         for ($i = 0; $i <= 5; $i++) {
-            $count = $countArray[$i*2];
+            $count = $countArray[$i * 2];
             $name = str_format(localize("customcolumn.stars", $i), $i);
-            $entryid = $this->getEntryId($i*2);
+            $entryid = $this->getEntryId($i * 2);
             $content = str_format(localize("bookword", $count), $count);
-            $linkarray = array(new LinkNavigation($this->getUri($i*2)));
+            $linkarray = array(new LinkNavigation($this->getUri($i * 2)));
             $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, "", $count);
             array_push($entryArray, $entry);
         }
@@ -790,17 +835,18 @@ class CustomColumnTypeRating extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.value as value from {0}, {1} where {0}.id = {1}.{2} and {1}.book = {3}";
-        $query = str_format ($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
+        $queryFormat = "SELECT {0}.value AS value FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+        $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value/2), $post->value/2), $this);
+            return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value / 2), $post->value / 2), $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.rating.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
@@ -814,7 +860,8 @@ class CustomColumnTypeBool extends CustomColumnType
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
     );
 
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_BOOL);
     }
 
@@ -823,11 +870,13 @@ class CustomColumnTypeBool extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         if ($id == -1) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
             return array($query, array());
@@ -842,19 +891,19 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
-    public function getCustom($id) {
+    public function getCustom($id)
+    {
         return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select coalesce({0}.value, -1) as id, count(*) as count from books left join {0} on  books.id = {0}.book group by {0}.value order by {0}.value";
-        $query = str_format ($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT coalesce({0}.value, -1) AS id, count(*) AS count FROM books LEFT JOIN {0} ON  books.id = {0}.book GROUP BY {0}.value ORDER BY {0}.value";
+        $query = str_format($queryFormat, $this->getTableName());
         $result = parent::getDb()->query($query);
 
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
 
@@ -872,8 +921,8 @@ class CustomColumnTypeBool extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.value as boolvalue from {0} where {0}.book = {1}";
-        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS boolvalue FROM {0} WHERE {0}.book = {1}";
+        $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -883,14 +932,16 @@ class CustomColumnTypeBool extends CustomColumnType
         }
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeInteger extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_INT);
     }
 
@@ -899,28 +950,30 @@ class CustomColumnTypeInteger extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
+    public function getCustom($id)
+    {
         return new CustomColumn($id, $id, $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select value as id, count(*) as count from {0} group by value";
-        $query = str_format ($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
+        $query = str_format($queryFormat, $this->getTableName());
 
         $result = parent::getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
@@ -940,8 +993,8 @@ class CustomColumnTypeInteger extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.value as value from {0} where {0}.book = {1}";
-        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
+        $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -950,14 +1003,16 @@ class CustomColumnTypeInteger extends CustomColumnType
         return new CustomColumn(NULL, localize("customcolumn.int.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeFloat extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
     }
 
@@ -966,28 +1021,30 @@ class CustomColumnTypeFloat extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
+    public function getCustom($id)
+    {
         return new CustomColumn($id, $id, $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
     {
-        $queryFormat = "select value as id, count(*) as count from {0} group by value";
-        $query = str_format ($queryFormat, $this->getTableName());
+        $queryFormat = "SELECT value AS id, count(*) AS count FROM {0} GROUP BY value";
+        $query = str_format($queryFormat, $this->getTableName());
 
         $result = parent::getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
             $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
@@ -1007,8 +1064,8 @@ class CustomColumnTypeFloat extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "select {0}.value as value from {0} where {0}.book = {1}";
-        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "SELECT {0}.value AS value FROM {0} WHERE {0}.book = {1}";
+        $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
@@ -1017,14 +1074,16 @@ class CustomColumnTypeFloat extends CustomColumnType
         return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return true;
     }
 }
 
 class CustomColumnTypeComment extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_COMMENT);
     }
 
@@ -1033,35 +1092,42 @@ class CustomColumnTypeComment extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
         return array($query, array($id));
     }
 
-    public function getCustom($id) {
+    public function getCustom($id)
+    {
         return new CustomColumn($id, $id, $this);
     }
 
-    public function encodeHTMLValue($value) {
+    public function encodeHTMLValue($value)
+    {
         return "<div>" . $value . "</div>"; // no htmlspecialchars, this is already HTML
     }
 
-    protected function getAllCustomValuesFromDatabase() {
+    protected function getAllCustomValuesFromDatabase()
+    {
         return NULL;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         $desc = $this->getDatabaseDescription();
         if ($desc == NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
         return $desc;
     }
 
-    public function getCustomByBook($book) {
-        $queryFormat = "select {0}.id as id, {0}.value as value from {0} where {0}.book = {1}";
+    public function getCustomByBook($book)
+    {
+        $queryFormat = "SELECT {0}.id AS id, {0}.value AS value FROM {0} WHERE {0}.book = {1}";
         $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
@@ -1071,7 +1137,8 @@ class CustomColumnTypeComment extends CustomColumnType
         return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
     }
 
-    public function isSearchable() {
+    public function isSearchable()
+    {
         return false;
     }
 }
