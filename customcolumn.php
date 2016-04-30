@@ -159,7 +159,7 @@ abstract class CustomColumnType extends Base {
 
     /**
      * The title of this column
-     * 
+     *
      * @return string
      */
     public function getTitle() {
@@ -218,7 +218,7 @@ abstract class CustomColumnType extends Base {
     public function encodeHTMLValue($value) {
         return htmlspecialchars($value);
     }
-    
+
     /**
      * Get the datatype of a CustomColumn by its customID
      *
@@ -631,7 +631,8 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
 class CustomColumnTypeDate extends CustomColumnType
 {
-    protected function __construct($pcustomId) {
+    protected function __construct($pcustomId)
+    {
         parent::__construct($pcustomId, self::CUSTOM_TYPE_DATE);
     }
 
@@ -640,20 +641,23 @@ class CustomColumnTypeDate extends CustomColumnType
      *
      * @return string|null
      */
-    private function getTableName() {
+    private function getTableName()
+    {
         return "custom_column_{$this->customId}";
     }
 
-    public function getQuery($id) {
+    public function getQuery($id)
+    {
         $date = new DateTime($id);
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
         return array($query, array($date->format("Y-m-d")));
     }
 
-    public function getCustom($id) {
+    public function getCustom($id)
+    {
         $date = new DateTime($id);
 
-        return new CustomColumn ($id, $date->format(localize("customcolumn.date.format")), $this);
+        return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -839,7 +843,7 @@ class CustomColumnTypeBool extends CustomColumnType
     }
 
     public function getCustom($id) {
-        return new CustomColumn ($id, localize($this->BOOLEAN_NAMES[$id]), $this);
+        return new CustomColumn($id, localize($this->BOOLEAN_NAMES[$id]), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -1034,7 +1038,8 @@ class CustomColumnTypeComment extends CustomColumnType
     }
 
     public function getQuery($id) {
-        return NULL; // querying by comment doen't really make sense
+        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
+        return array($query, array($id));
     }
 
     public function getCustom($id) {
@@ -1056,12 +1061,12 @@ class CustomColumnTypeComment extends CustomColumnType
     }
 
     public function getCustomByBook($book) {
-        $queryFormat = "select {0}.value as value from {0} where {0}.book = {1}";
-        $query = str_format ($queryFormat, $this->getTableName(), $book->id);
+        $queryFormat = "select {0}.id as id, {0}.value as value from {0} where {0}.book = {1}";
+        $query = str_format($queryFormat, $this->getTableName(), $book->id);
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
-            return new CustomColumn($post->value, $post->value, $this);
+            return new CustomColumn($post->id, $post->value, $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
     }

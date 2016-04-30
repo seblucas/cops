@@ -897,4 +897,42 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
+
+    public function testDetailTypeAllEntryIDs()
+    {
+        global $config;
+
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
+        $_GET["custom"] = "11";
+        $config['cops_calibre_custom_column'] = array("custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11");
+        Base::clearDb();
+
+        $currentPage = Page::getPage(Base::PAGE_CUSTOM_DETAIL, "0", NULL, "1");
+        $currentPage->InitializeContent();
+
+        /* @var EntryBook[] $entries */
+        $entries = $currentPage->entryArray;
+
+        $this->assertCount(6, $entries);
+
+        $customcolumnValues = $entries[0]->book->getCustomColumnValues($config['cops_calibre_custom_column']);
+
+        $this->assertCount(10, $customcolumnValues);
+
+        $this->assertEquals("cops:custom:8:1", $customcolumnValues[0]->getEntryId());
+        $this->assertEquals("cops:custom:6:3", $customcolumnValues[1]->getEntryId());
+        $this->assertEquals("cops:custom:7:3", $customcolumnValues[2]->getEntryId());
+        $this->assertEquals("cops:custom:4:4", $customcolumnValues[3]->getEntryId());
+        $this->assertEquals("cops:custom:5:6", $customcolumnValues[4]->getEntryId());
+        $this->assertEquals("cops:custom:12:1461448800", $customcolumnValues[5]->getEntryId());
+        $this->assertEquals("cops:custom:14:11.0", $customcolumnValues[6]->getEntryId());
+        $this->assertEquals("cops:custom:10:-2", $customcolumnValues[7]->getEntryId());
+        $this->assertEquals("cops:custom:9:2", $customcolumnValues[8]->getEntryId());
+        $this->assertEquals("cops:custom:11:0", $customcolumnValues[9]->getEntryId());
+
+        $_GET["custom"] = NULL;
+        $config['cops_calibre_custom_column'] = array();
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
+    }
 }
