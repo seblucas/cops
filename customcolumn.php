@@ -59,8 +59,11 @@ class CustomColumn extends Base
 
     /**
      * Get the query to find all books with this value
+     * the returning array has two values:
+     *  - first the query (string)
+     *  - second an array of all PreparedStatement parameters
      *
-     * @return string
+     * @return array
      */
     public function getQuery()
     {
@@ -737,7 +740,7 @@ class CustomColumnTypeDate extends CustomColumnType
         if ($post = $result->fetchObject()) {
             $date = new DateTimeImmutable($post->datevalue);
 
-            return new CustomColumn($date->getTimestamp(), $date->format(localize("customcolumn.date.format")), $this);
+            return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
         }
         return new CustomColumn(NULL, localize("customcolumn.date.unknown"), $this);
     }
