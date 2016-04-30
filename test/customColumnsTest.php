@@ -6,8 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../book.php");
+require_once(dirname(__FILE__) . "/config_test.php");
+require_once(dirname(__FILE__) . "/../book.php");
 
 class CustomColumnTest extends PHPUnit_Framework_TestCase
 {
@@ -387,12 +387,9 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         Base::clearDb();
 
         $catch = false;
-        try
-        {
+        try {
             CustomColumnType::createByCustomID(999);
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $catch = true;
         }
 
