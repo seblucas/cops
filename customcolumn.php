@@ -113,6 +113,12 @@ abstract class CustomColumnType extends Base
     const CUSTOM_TYPE_BOOL      = "bool";        // type 10
     const CUSTOM_TYPE_COMPOSITE = "composite";   // type 11 + 12
 
+    /** @var array[integer]CustomColumnType  */
+    private static $customColumnCacheID = array();
+
+    /** @var array[string]CustomColumnType  */
+    private static $customColumnCacheLookup = array();
+
     /** @var integer the id of this column */
     public $customId;
     /** @var string name/title of this column */
@@ -127,7 +133,7 @@ abstract class CustomColumnType extends Base
         $this->columnTitle = self::getTitleByCustomID($pcustomId);
         $this->customId = $pcustomId;
         $this->datatype = $pdatatype;
-        $this->customValues = $this->getAllCustomValuesFromDatabase();
+        $this->customValues = NULL;
     }
 
     /**
@@ -224,7 +230,7 @@ abstract class CustomColumnType extends Base
      */
     protected function getDistinctValueCount()
     {
-        return count($this->customValues);
+        return count($this->getAllCustomValues());
     }
 
     /**
@@ -263,27 +269,31 @@ abstract class CustomColumnType extends Base
      */
     public static function createByCustomID($customId)
     {
+        // Reuse already created CustomColumns for performance
+        if (array_key_exists($customId, self::$customColumnCacheID))
+            return self::$customColumnCacheID[$customId];
+
         $datatype = self::getDatatypeByCustomID($customId);
 
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
-                return new CustomColumnTypeText($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId);
             case self::CUSTOM_TYPE_SERIES:
-                return new CustomColumnTypeSeries($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId);
             case self::CUSTOM_TYPE_ENUM:
-                return new CustomColumnTypeEnumeration($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId);
             case self::CUSTOM_TYPE_COMMENT:
-                return new CustomColumnTypeComment($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId);
             case self::CUSTOM_TYPE_DATE:
-                return new CustomColumnTypeDate($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId);
             case self::CUSTOM_TYPE_FLOAT:
-                return new CustomColumnTypeFloat($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId);
             case self::CUSTOM_TYPE_INT:
-                return new CustomColumnTypeInteger($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId);
             case self::CUSTOM_TYPE_RATING:
-                return new CustomColumnTypeRating($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId);
             case self::CUSTOM_TYPE_BOOL:
-                return new CustomColumnTypeBool($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeBool($customId);
             case self::CUSTOM_TYPE_COMPOSITE:
                 return NULL; //TODO Currently not supported
             default:
@@ -299,12 +309,16 @@ abstract class CustomColumnType extends Base
      */
     public static function createByLookup($lookup)
     {
+        // Reuse already created CustomColumns for performance
+        if (array_key_exists($lookup, self::$customColumnCacheLookup))
+            return self::$customColumnCacheLookup[$lookup];
+
         $result = parent::getDb()->prepare('SELECT id FROM custom_columns WHERE label = ?');
         $result->execute(array($lookup));
         if ($post = $result->fetchObject()) {
-            return self::createByCustomID($post->id);
+            return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id);
         }
-        return NULL;
+        return self::$customColumnCacheLookup[$lookup] = NULL;
     }
 
     /**
@@ -315,6 +329,10 @@ abstract class CustomColumnType extends Base
      */
     public function getAllCustomValues()
     {
+        // lazy loading
+        if ($this->customValues == NULL)
+            $this->customValues = $this->getAllCustomValuesFromDatabase();
+
         return $this->customValues;
     }
 
