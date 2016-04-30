@@ -728,7 +728,7 @@ class CustomColumnTypeDate extends CustomColumnType
 
         $entryArray = array();
         while ($post = $result->fetchObject()) {
-            $date = new DateTimeImmutable($post->datevalue);
+            $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -756,7 +756,7 @@ class CustomColumnTypeDate extends CustomColumnType
 
         $result = parent::getDb()->query($query);
         if ($post = $result->fetchObject()) {
-            $date = new DateTimeImmutable($post->datevalue);
+            $date = new DateTime($post->datevalue);
 
             return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
         }
