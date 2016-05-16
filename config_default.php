@@ -229,6 +229,15 @@
     $config['cops_thumbnail_handling'] = "";
 
     /*
+     * Directory to keep resized thumbnails: allow to resize thumbnails only on first access, then use this cache.
+     * $config['cops_thumbnail_handling'] must be ""
+     * "" : don't cache thumbnail
+     * "/tmp/cache/" (example) : will generate thumbnails in /tmp/cache/
+     * BEWARE : it has to end with a /
+     */
+    $config['cops_thumbnail_cache_directory'] = "";
+
+    /*
      * Contains a list of user agent for browsers not compatible with client side rendering
      * For now : Kindle, Sony PRS-T1, Sony PRS-T2, All Cybook devices (maybe a little extreme).
      * This item is used as regular expression so "." will force server side rendering for all devices
