@@ -292,6 +292,16 @@
     $config['cops_template'] = 'default';
 
     /*
+     * Which style is used by default :
+     * 'base'
+     * 'default'
+     * 'eink' (only available for the 'default' template)
+     * 'iphone' (only available for the 'default' template)
+     * 'iphone7' (only available for the 'default' template)
+     */
+    $config['cops_style'] = 'default';
+
+    /*
      * Set language code to force a language (see lang/ directory for available languages).
      * When empty it will auto detect the language.
      */
