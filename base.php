@@ -8,17 +8,19 @@
 
 require_once 'config.php';
 
-define ("VERSION", "1.0.0RC4");
-define ("DB", "db");
+define ('VERSION', '1.0.0RC4');
+define ('DB', 'db');
 date_default_timezone_set($config['default_timezone']);
 
 
-function useServerSideRendering () {
+function useServerSideRendering()
+{
     global $config;
-    return preg_match("/" . $config['cops_server_side_render'] . "/", $_SERVER['HTTP_USER_AGENT']);
+    return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
 }
 
-function serverSideRender ($data) {
+function serverSideRender($data)
+{
     // Get the templates
     $theme = getCurrentTemplate ();
     $header = file_get_contents('templates/' . $theme . '/header.html');
@@ -29,10 +31,10 @@ function serverSideRender ($data) {
 
     // Generate the function for the template
     $template = new doT ();
-    $dot = $template->template ($page, array ("bookdetail" => $bookdetail,
-                                              "header" => $header,
-                                              "footer" => $footer,
-                                              "main" => $main));
+    $dot = $template->template ($page, array ('bookdetail' => $bookdetail,
+                                              'header' => $header,
+                                              'footer' => $footer,
+                                              'main' => $main));
     // If there is a syntax error in the function created
     // $dot will be equal to FALSE
     if (!$dot) {
@@ -46,91 +48,103 @@ function serverSideRender ($data) {
     return NULL;
 }
 
-function getQueryString () {
-    if ( isset($_SERVER['QUERY_STRING']) ) {
+function getQueryString()
+{
+    if (isset($_SERVER['QUERY_STRING'])) {
         return $_SERVER['QUERY_STRING'];
     }
     return "";
 }
 
-function notFound () {
-    header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found");
-    header("Status: 404 Not Found");
+function notFound()
+{
+    header($_SERVER['SERVER_PROTOCOL'].' 404 Not Found');
+    header('Status: 404 Not Found');
 
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
-function getURLParam ($name, $default = NULL) {
-    if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != "") {
+function getURLParam($name, $default = NULL)
+{
+    if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != '') {
         return $_GET[$name];
     }
     return $default;
 }
 
-function getCurrentOption ($option) {
+function getCurrentOption($option)
+{
     global $config;
     if (isset($_COOKIE[$option])) {
-        if (isset($config ["cops_" . $option]) && is_array ($config ["cops_" . $option])) {
-            return explode (",", $_COOKIE[$option]);
+        if (isset($config ['cops_' . $option]) && is_array ($config ['cops_' . $option])) {
+            return explode (',', $_COOKIE[$option]);
         } else {
             return $_COOKIE[$option];
         }
     }
-    if (isset($config ["cops_" . $option])) {
-        return $config ["cops_" . $option];
+    if (isset($config ['cops_' . $option])) {
+        return $config ['cops_' . $option];
     }
 
-    return "";
+    return '';
 }
 
-function getCurrentCss () {
-    return "templates/" . getCurrentTemplate () . "/styles/style-" . getCurrentOption ("style") . ".css";
+function getCurrentCss()
+{
+    return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
 }
 
-function getCurrentTemplate () {
-    return getCurrentOption ("template");
+function getCurrentTemplate()
+{
+    return getCurrentOption ('template');
 }
 
-function getUrlWithVersion ($url) {
-    return $url . "?v=" . VERSION;
+function getUrlWithVersion($url)
+{
+    return $url . '?v=' . VERSION;
 }
 
-function xml2xhtml($xml) {
-    return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', create_function('$m', '
-        $xhtml_tags = array("br", "hr", "input", "frame", "img", "area", "link", "col", "base", "basefont", "param");
-        return in_array($m[1], $xhtml_tags) ? "<$m[1]$m[2] />" : "<$m[1]$m[2]></$m[1]>";
-    '), $xml);
+function xml2xhtml($xml)
+{
+    return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', function($m) {
+        $xhtml_tags = array('br', 'hr', 'input', 'frame', 'img', 'area', 'link', 'col', 'base', 'basefont', 'param');
+        if (in_array($m[1], $xhtml_tags)) {
+            return '<' . $m[1] . $m[2] . ' />';
+        } else {
+            return '<' . $m[1] . $m[2] . '></' . $m[1] . '>';
+        }
+    }, $xml);
 }
 
 function display_xml_error($error)
 {
-    $return = "";
+    $return = '';
     $return .= str_repeat('-', $error->column) . "^\n";
 
     switch ($error->level) {
         case LIBXML_ERR_WARNING:
-            $return .= "Warning $error->code: ";
+            $return .= 'Warning ' . $error->code . ': ';
             break;
          case LIBXML_ERR_ERROR:
-            $return .= "Error $error->code: ";
+            $return .= 'Error ' . $error->code . ': ';
             break;
         case LIBXML_ERR_FATAL:
-            $return .= "Fatal Error $error->code: ";
+            $return .= 'Fatal Error ' . $error->code . ': ';
             break;
     }
 
     $return .= trim($error->message) .
-               "\n  Line: $error->line" .
-               "\n  Column: $error->column";
+               "\n  Line: " . $error->line .
+               "\n  Column: " . $error->column;
 
     if ($error->file) {
-        $return .= "\n  File: $error->file";
+        $return .= "\n  File: " . $error->file;
     }
 
     return "$return\n\n--------------------------------------------\n\n";
 }
 
-function are_libxml_errors_ok ()
+function are_libxml_errors_ok()
 {
     $errors = libxml_get_errors();
 
@@ -140,7 +154,8 @@ function are_libxml_errors_ok ()
     return true;
 }
 
-function html2xhtml ($html) {
+function html2xhtml($html)
+{
     $doc = new DOMDocument();
     libxml_use_internal_errors(true);
 
@@ -160,7 +175,7 @@ function html2xhtml ($html) {
     }
     */
 
-    if (!are_libxml_errors_ok ()) $output = "HTML code not valid.";
+    if (!are_libxml_errors_ok ()) $output = 'HTML code not valid.';
 
     libxml_use_internal_errors(false);
     return $output;
@@ -170,7 +185,8 @@ function html2xhtml ($html) {
  * This method is a direct copy-paste from
  * http://tmont.com/blargh/2010/1/string-format-in-php
  */
-function str_format($format) {
+function str_format($format)
+{
     $args = func_get_args();
     $format = array_shift($args);
 
@@ -190,7 +206,8 @@ function str_format($format) {
  * languages id are normalized : fr-fr -> fr_FR
  * @return array of languages
  */
-function getAcceptLanguages() {
+function getAcceptLanguages()
+{
     $langs = array();
 
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
@@ -198,7 +215,7 @@ function getAcceptLanguages() {
         $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
         if (preg_match('/^(\w{2})-\w{2}$/', $accept, $matches)) {
             // Special fix for IE11 which send fr-FR and nothing else
-            $accept = $accept . "," . $matches[1] . ";q=0.8";
+            $accept = $accept . ',' . $matches[1] . ';q=0.8';
         }
         preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
 
@@ -207,9 +224,9 @@ function getAcceptLanguages() {
             foreach ($lang_parse[1] as $lang) {
                 // Format the language code (not standard among browsers)
                 if (strlen($lang) == 5) {
-                    $lang = str_replace("-", "_", $lang);
-                    $splitted = preg_split("/_/", $lang);
-                    $lang = $splitted[0] . "_" . strtoupper($splitted[1]);
+                    $lang = str_replace('-', '_', $lang);
+                    $splitted = preg_split('/_/', $lang);
+                    $lang = $splitted[0] . '_' . strtoupper($splitted[1]);
                 }
                 array_push($langs, $lang);
             }
@@ -233,10 +250,11 @@ function getAcceptLanguages() {
  * Find the best translation file possible based on the accepted languages
  * @return array of language and language file
  */
-function getLangAndTranslationFile() {
+function getLangAndTranslationFile()
+{
     global $config;
     $langs = array();
-    $lang = "en";
+    $lang = 'en';
     if (!empty($config['cops_language'])) {
         $lang = $config['cops_language'];
     }
@@ -263,14 +281,15 @@ function getLangAndTranslationFile() {
  * This method is based on this page
  * http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
  */
-function localize($phrase, $count=-1, $reset=false) {
+function localize($phrase, $count=-1, $reset=false)
+{
     global $config;
     if ($count == 0)
-        $phrase .= ".none";
+        $phrase .= '.none';
     if ($count == 1)
-        $phrase .= ".one";
+        $phrase .= '.one';
     if ($count > 1)
-        $phrase .= ".many";
+        $phrase .= '.many';
 
     /* Static keyword is used to ensure the file is loaded only once */
     static $translations = NULL;
@@ -281,7 +300,7 @@ function localize($phrase, $count=-1, $reset=false) {
     if (is_null($translations)) {
         $lang_file_en = NULL;
         list ($lang, $lang_file) = getLangAndTranslationFile();
-        if ($lang != "en") {
+        if ($lang != 'en') {
             $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
         }
 
@@ -291,7 +310,7 @@ function localize($phrase, $count=-1, $reset=false) {
 
         /* Clean the array of all unfinished translations */
         foreach (array_keys ($translations) as $key) {
-            if (preg_match ("/^##TODO##/", $key)) {
+            if (preg_match ('/^##TODO##/', $key)) {
                 unset ($translations [$key]);
             }
         }
@@ -308,13 +327,14 @@ function localize($phrase, $count=-1, $reset=false) {
     return $phrase;
 }
 
-function addURLParameter($urlParams, $paramName, $paramValue) {
+function addURLParameter($urlParams, $paramName, $paramValue)
+{
     if (empty ($urlParams)) {
-        $urlParams = "";
+        $urlParams = '';
     }
-    $start = "";
-    if (preg_match ("#^\?(.*)#", $urlParams, $matches)) {
-        $start = "?";
+    $start = '';
+    if (preg_match ('#^\?(.*)#', $urlParams, $matches)) {
+        $start = '?';
         $urlParams = $matches[1];
     }
     $params = array();
@@ -327,16 +347,19 @@ function addURLParameter($urlParams, $paramName, $paramValue) {
     return $start . http_build_query($params);
 }
 
-function useNormAndUp () {
+function useNormAndUp()
+{
     global $config;
-    return $config ['cops_normalized_search'] == "1";
+    return $config ['cops_normalized_search'] == '1';
 }
 
-function normalizeUtf8String( $s) {
+function normalizeUtf8String($s)
+{
     include_once 'transliteration.php';
     return _transliteration_process($s);
 }
 
-function normAndUp ($s) {
-    return mb_strtoupper (normalizeUtf8String($s), 'UTF-8');
+function normAndUp($s)
+{
+    return mb_strtoupper(normalizeUtf8String($s), 'UTF-8');
 }
