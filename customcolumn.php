@@ -6,8 +6,6 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once('base.php');
-
 class CustomColumn extends Base {
     const ALL_CUSTOMS_ID = "cops:custom";
 

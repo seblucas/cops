@@ -6,8 +6,6 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once('base.php');
-
 class Data extends Base {
     public $id;
     public $name;

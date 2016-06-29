@@ -6,8 +6,6 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once('base.php');
-
 class Serie extends Base {
     const ALL_SERIES_ID = "cops:series";
     const SERIES_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";

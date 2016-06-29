@@ -8,16 +8,7 @@
  */
 
     require_once ("config.php");
-    require_once ("base.php");
-    require_once ("author.php");
-    require_once ("rating.php");
-    require_once ("publisher.php");
-    require_once ("serie.php");
-    require_once ("tag.php");
-    require_once ("language.php");
-    require_once ("customcolumn.php");
-    require_once ("book.php");
-    require_once ("vendor/seblucas/dot-php/doT.php");
+    require_once "base.php";
 
     // If we detect that an OPDS reader try to connect try to redirect to feed.php
     if (preg_match("/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon+ Reader|Chunky|AlReader|org\.ebookdroid)/", $_SERVER['HTTP_USER_AGENT'])) {

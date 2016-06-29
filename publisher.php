@@ -6,8 +6,6 @@
  * @author     At Libitum <eljarec@yahoo.com>
  */
 
-require_once('base.php');
-
 class Publisher extends Base {
     const ALL_PUBLISHERS_ID = "cops:publishers";
     const PUBLISHERS_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
