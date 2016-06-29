@@ -314,8 +314,7 @@ function localize($phrase, $count=-1, $reset=false)
                 unset ($translations [$key]);
             }
         }
-        if ($lang_file_en)
-        {
+        if (!is_null($lang_file_en)) {
             $lang_file_content = file_get_contents($lang_file_en);
             $translations_en = json_decode($lang_file_content, true);
             $translations = array_merge ($translations_en, $translations);

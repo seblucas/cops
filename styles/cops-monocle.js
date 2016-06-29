@@ -1,3 +1,5 @@
+/** global: Monocle */
+
 Monocle.DEBUG = true;
 
 (function () {
