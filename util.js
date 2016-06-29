@@ -36,8 +36,7 @@ copsTypeahead.initialize();
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
   // pushState isn't reliable on iOS until 5.
-  /** global: navigator */
-  !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/);
+  !window.navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/);
 
 function debug_log(text) {
     if ( DEBUG ) {
@@ -355,13 +354,11 @@ navigateTo = function (url) {
     var jsonurl = url.replace ("index", "getJSON");
     var cachedData = cache.get (jsonurl);
     if (cachedData) {
-        /** global: history */
-        history.pushState(jsonurl, "", url);
+        window.history.pushState(jsonurl, "", url);
         updatePage (cachedData);
     } else {
         $.getJSON(jsonurl, function(data) {
-            /** global: history */
-            history.pushState(jsonurl, "", url);
+            window.history.pushState(jsonurl, "", url);
             cache.put (jsonurl, data);
             updatePage (data);
         });
@@ -508,7 +505,7 @@ function initiateAjax (url, theme) {
         updatePage (data [0]);
         cache.put (url, data [0]);
         if (isPushStateEnabled) {
-            history.replaceState(url, "", window.location);
+            window.history.replaceState(url, "", window.location);
         }
         handleLinks ();
     });
