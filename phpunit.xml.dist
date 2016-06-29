@@ -5,7 +5,7 @@
     bootstrap="./vendor/autoload.php"
     verbose="true">
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
+        <whitelist processUncoveredFilesFromWhitelist="false">
             <!-- this is the path of the files included in your clover report -->
             <directory suffix=".php">./</directory>
             <exclude>
@@ -24,7 +24,7 @@
     </logging>
     <testsuites>
         <testsuite name="COPS">
-            <directory>test</directory>
+            <directory>./test/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

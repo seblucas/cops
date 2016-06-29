@@ -7,8 +7,6 @@
  */
 
 require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../book.php");
-require_once (dirname(__FILE__) . "/../JSON_renderer.php");
 
 /*
 Publishers:
