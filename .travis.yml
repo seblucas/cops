@@ -2,21 +2,18 @@ language: php
 
 matrix:
   include:
-    - php: "7.0"
-
+    - php: "5.5"
     - php: "5.6"
+    - php: "7.0"
       addons:
         sauce_connect: true
         hosts:
           - cops-travis
 
-    - php: "5.5"
-    - php: "5.4"
-    - php: "5.3"
     - php: "hhvm"
   allow_failures:
     - php: "hhvm"
-    - php: "7.0"
+    - php: "5.5"
 
 before_script:
   - composer selfupdate
