@@ -5,7 +5,8 @@
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
 /*global LRUCache, doT, Bloodhound, postRefresh */
 
-/** global: navigator, history */
+/** global: navigator */
+/** global: history */
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
@@ -163,6 +164,9 @@ function getTagList () {
 
         var tagarray = taglist.split (",");
         for (var i in tagarray) {
+            if (!tagarray.hasOwnProperty(i)) {
+                continue;
+            }
             var tag = tagarray [i].replace(/^\s+/g,'').replace(/\s+$/g,'');
             tagList [tag] = 1;
         }
@@ -185,6 +189,9 @@ function updateFilters () {
 
     // Update the filter -1 to remove, 1 to add, 0 already there
     for (var tag in tagList) {
+        if (!tagList.hasOwnProperty(tag)) {
+            continue;
+        }
         var tagValue = tagList [tag];
         if (tagValue === -1) {
             $("#filter ul li").filter (function () { return $.text([this]) === tag; }).remove();
@@ -232,7 +239,10 @@ function doFilter () {
     // Handle the books with no tags
     var atLeastOneTagSelected = false;
     for (var filter in filterList) {
-        if (filterList [filter] === true) {
+        if (!filterList.hasOwnProperty(filter)) {
+            continue;
+        }
+        if (filterList[filter] === true) {
             atLeastOneTagSelected = true;
         }
     }
