@@ -5,6 +5,8 @@
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
 /*global LRUCache, doT, Bloodhound, postRefresh */
 
+/** global: navigator, history */
+
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
 if (typeof LRUCache != 'undefined') {
