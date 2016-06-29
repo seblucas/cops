@@ -3,7 +3,7 @@
  * PHP EPub Meta library
  *
  * @author Andreas Gohr <andi@splitbrain.org>
- * @author Sébastien Lucas <sebastien@slucas.fr>
+ * @author SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once(realpath( dirname( __FILE__ ) ) . '/tbszip.php');
