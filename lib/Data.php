@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-class Data extends Base {
+class Data extends Base
+{
     public $id;
     public $name;
     public $format;

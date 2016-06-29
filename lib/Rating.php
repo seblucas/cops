@@ -6,7 +6,8 @@
  * @author     Michael Pfitzner
  */
 
-class Rating extends Base {
+class Rating extends Base
+{
     const ALL_RATING_ID = "cops:rating";
 
     const RATING_COLUMNS = "ratings.id as id, ratings.rating as rating, count(*) as count";
