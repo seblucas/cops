@@ -126,8 +126,7 @@ function str_format () {
 }
 
 function isDefined(x) {
-    var undefinedVar;
-    return x !== undefinedVar;
+    return (typeof x !== 'undefined');
 }
 
 function getCurrentOption (option) {
