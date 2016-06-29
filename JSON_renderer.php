@@ -7,7 +7,6 @@
  */
 
 require_once ("base.php");
-require_once ("book.php");
 
 class JSONRenderer
 {

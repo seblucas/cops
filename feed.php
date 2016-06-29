@@ -9,11 +9,6 @@
 
     require_once ("config.php");
     require_once ("base.php");
-    require_once ("author.php");
-    require_once ("serie.php");
-    require_once ("tag.php");
-    require_once ("book.php");
-    require_once ("OPDS_renderer.php");
 
     header ("Content-Type:application/xml");
     $page = getURLParam ("page", Base::PAGE_INDEX);

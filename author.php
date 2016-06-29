@@ -6,8 +6,6 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once('base.php');
-
 class Author extends Base {
     const ALL_AUTHORS_ID = "cops:authors";
 

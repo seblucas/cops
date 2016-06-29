@@ -6,6 +6,8 @@
  * @author     S�bastien Lucas <sebastien@slucas.fr>
  */
 
+require_once 'config.php';
+
 define ("VERSION", "1.0.0RC4");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);

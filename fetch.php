@@ -7,8 +7,6 @@
  */
 
     require_once ("config.php");
-    require_once ("book.php");
-    require_once ("data.php");
 
     global $config;
 

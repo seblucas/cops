@@ -6,6 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+require_once dirname(__FILE__) . '/vendor/autoload.php';
 require_once 'config_default.php';
 if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !== 'cli')) {
     require_once 'config_local.php';

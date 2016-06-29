@@ -6,9 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once('base.php');
-
-class language extends Base {
+class Language extends Base {
     const ALL_LANGUAGES_ID = "cops:languages";
 
     public $id;

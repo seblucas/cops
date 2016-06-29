@@ -8,8 +8,6 @@
 
 require_once ("config.php");
 require_once ("base.php");
-require_once ("book.php");
-require_once ("resources/php-epub-meta/epub.php");
 
 function getComponentContent ($book, $component, $add) {
     $data = $book->component ($component);
