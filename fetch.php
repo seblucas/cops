@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-    require_once ("config.php");
+    require_once dirname(__FILE__) . '/config.php';
+    require_once dirname(__FILE__) . '/base.php';
 
     global $config;
 
