@@ -6,7 +6,8 @@
  * @author     At Libitum <eljarec@yahoo.com>
  */
 
-class Publisher extends Base {
+class Publisher extends Base
+{
     const ALL_PUBLISHERS_ID = "cops:publishers";
     const PUBLISHERS_COLUMNS = "publishers.id as id, publishers.name as name, count(*) as count";
     const SQL_ALL_PUBLISHERS = "select {0} from publishers, books_publishers_link where publishers.id = publisher group by publishers.id, publishers.name order by publishers.name";

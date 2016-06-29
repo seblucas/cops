@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-class CustomColumn extends Base {
+class CustomColumn extends Base
+{
     const ALL_CUSTOMS_ID = "cops:custom";
 
     public $id;

@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once ("base.php");
+require_once dirname(__FILE__) . '/../base.php';
 
 class JSONRenderer
 {

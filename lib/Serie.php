@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-class Serie extends Base {
+class Serie extends Base
+{
     const ALL_SERIES_ID = "cops:series";
     const SERIES_COLUMNS = "series.id as id, series.name as name, series.sort as sort, count(*) as count";
     const SQL_ALL_SERIES = "select {0} from series, books_series_link where series.id = series group by series.id, series.name, series.sort order by series.sort";

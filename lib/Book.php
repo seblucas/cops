@@ -38,7 +38,8 @@ define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
 define ('SQL_BOOKS_BY_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");
 
-class Book extends Base {
+class Book extends Base
+{
     const ALL_BOOKS_UUID = "urn:uuid";
     const ALL_BOOKS_ID = "cops:books";
     const ALL_RECENT_BOOKS_ID = "cops:recentbooks";

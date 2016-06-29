@@ -19,8 +19,7 @@
         "sauce/sausage": ">=0.12.0"
     },
     "autoload": {
-        "classmap": ["resources/", "JSON_renderer.php", "OPDS_renderer.php", "author.php", "base.php", "book.php",
-                     "customcolumn.php", "data.php", "language.php", "publisher.php", "rating.php", "serie.php", "tag.php"]
+        "classmap": ["lib/", "resources/"]
     },
     "repositories": [
         {

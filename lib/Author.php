@@ -6,7 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-class Author extends Base {
+class Author extends Base
+{
     const ALL_AUTHORS_ID = "cops:authors";
 
     const AUTHOR_COLUMNS = "authors.id as id, authors.name as name, authors.sort as sort, count(*) as count";
