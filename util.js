@@ -5,14 +5,12 @@
 /*jshint curly: true, latedef: true, trailing: true, noarg: true, undef: true, browser: true, jquery: true, unused: true, devel: true, loopfunc: true */
 /*global LRUCache, doT, Bloodhound, postRefresh */
 
-/** global: navigator */
-/** global: history */
-
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
 if (typeof LRUCache != 'undefined') {
-    var cache = new LRUCache(30);
+    console.log('ERROR: LRUCache module not loaded!');
 }
+var cache = new LRUCache(30);
 
 $.ajaxSetup({
     cache: false
@@ -38,6 +36,7 @@ copsTypeahead.initialize();
 var DEBUG = false;
 var isPushStateEnabled = window.history && window.history.pushState && window.history.replaceState &&
   // pushState isn't reliable on iOS until 5.
+  /** global: navigator */
   !navigator.userAgent.match(/((iPod|iPhone|iPad).+\bOS\s+[1-4]|WebApps\/.+CFNetwork)/);
 
 function debug_log(text) {
@@ -220,6 +219,9 @@ function doFilter () {
         var taglist = ", " + $(this).text() + ", ";
         var toBeFiltered = false;
         for (var filter in filterList) {
+            if (!filterList.hasOwnProperty(filter)) {
+                continue;
+            }
             var onlyThisTag = filterList [filter];
             filter = ', ' + filter + ', ';
             var myreg = new RegExp (filter);
@@ -353,10 +355,12 @@ navigateTo = function (url) {
     var jsonurl = url.replace ("index", "getJSON");
     var cachedData = cache.get (jsonurl);
     if (cachedData) {
+        /** global: history */
         history.pushState(jsonurl, "", url);
         updatePage (cachedData);
     } else {
         $.getJSON(jsonurl, function(data) {
+            /** global: history */
             history.pushState(jsonurl, "", url);
             cache.put (jsonurl, data);
             updatePage (data);
