@@ -7,7 +7,7 @@
  */
 
 require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../resources/doT-php/doT.php");
+require_once (dirname(__FILE__) . "/../vendor/seblucas/dot-php/doT.php");
 require_once (dirname(__FILE__) . "/../base.php");
 
 class BaseTest extends PHPUnit_Framework_TestCase

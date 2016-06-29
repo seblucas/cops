@@ -19,19 +19,25 @@ matrix:
     - php: "7.0"
 
 before_script:
+  - composer selfupdate
+  - composer global require "fxp/composer-asset-plugin:~1.1"
+  - composer install
   - npm install jshint
   - jshint --version
 script:
-  - phpunit
+  - vendor/bin/phpunit
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
 after_success:
   - chmod +x test/prepareSauceTest.sh
   - test/prepareSauceTest.sh
+notifications:
+    slack:
+        rooms:
+            - mbirth:35odTGxPB8RhaQYauM0m0k12#cops
 env:
   global:
   - SAUCE_USERNAME=seblucas 
   - secure: VVxocvmz6WYr3tZSTA42M/LUhaHoBWw5onh85hnquoMaxspd3tDCyfQIowTTmEXikRh2T0CkTH7X3dhVwRTd/Ha9isja1qDo9Lc2flGCoWICF7WFZuom084+d+O+EWx4WZMAw4Lz4w6a5xflpPKnzNs9B0+de0BdTlQ5qSXVrcA=
 
 sudo: false
-

@@ -14,15 +14,15 @@
 
     <title>{{=it.title}}</title>
 
-    <script type="text/javascript" src="resources/jQuery/jquery-1.11.1.min.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/jquery-cookie/jquery.cookies.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/jquery-sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="components/jquery/jquery.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="components/jquery-cookie/jquery.cookie.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
 {{? it.server_side_rendering == 0}}
-    <script type="text/javascript" src="resources/Magnific-Popup/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
-    <link rel="stylesheet" type="text/css" href="resources/Magnific-Popup/magnific-popup.css?v={{=it.version}}" media="screen" />
-    <script type="text/javascript" src="resources/doT/doT.min.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/lru/lru.js?v={{=it.version}}"></script>
-    <script type="text/javascript" src="resources/typeahead/typeahead.bundle.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/dimsemenov/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
+    <script type="text/javascript" src="vendor/olado/dot/doT.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/rsms/js-lru/lru.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/twitter/typeahead.js/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
 {{?}}
     <script type="text/javascript" src="templates/bootstrap/scripts/cops.js"></script>
     <script type="text/javascript" src="util.js"></script>
@@ -30,13 +30,13 @@
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="resources/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="resources/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css">
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="resources/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <style media="screen" type="text/css">
     .demo{
