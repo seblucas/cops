@@ -1,4 +1,4 @@
-1.0.0 - 201602XX
+1.0.0 - 201607XX
  * Updated the OPDS icons to better looking ones. Thanks to Horus68.
  * Updated the README.md.
  * Updated Brazillian, French, Hungarian, Portuguese, Russian translations.
@@ -11,6 +11,8 @@
  * Added Ebookdroid, Chunky and AlReader in the know OPDS clients. Thanks to Mike Ferenduros and Horus68.
  * Added some mime types for audio books.
  * Added the rewrite rule for IIS.
+ * Added a now parameter to set the style ($config['cops_style']). Thanks to Pablo Santiago Blum de Aguiar.
+ * Added a directory cache ($config['cops_thumbnail_cache_directory']) to store the resized thumbnails (should help on slow NAS). Thanks to O2 Graphics.
  * Fixed COPS so that it's completely embedded (no external resources to download needed anymore).
  * Fixed a Reflected XSS vulnerability.
  * Fixed the tag filters with Bootstrap. Thanks to Klaus Broelemann.
