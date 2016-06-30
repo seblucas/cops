@@ -11,9 +11,9 @@ class PageCustomDetail extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $custom = CustomColumn::getCustomById ($customId, $this->idGet);
+        $custom = CustomColumn::createCustom ($customId, $this->idGet);
         $this->idPage = $custom->getEntryId ();
-        $this->title = $custom->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($customId, $this->idGet, $this->n);
+        $this->title = $custom->value;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
     }
 }

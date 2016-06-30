@@ -76,7 +76,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
-                return self::error ($database);
+                self::error ($database);
             }
             $array = array_keys ($config['calibre_directory']);
             return  $array[$database];
@@ -89,7 +89,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
-                return self::error ($database);
+                self::error ($database);
             }
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
@@ -160,10 +160,14 @@ abstract class Base
     }
 
     public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
+        /* @var $result PDOStatement */
+
         list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
+            /* @var $instance Author|Tag|Serie|Publisher */
+
             $instance = new $category ($post);
             if (property_exists($post, "sort")) {
                 $title = $post->sort;

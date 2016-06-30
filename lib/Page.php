@@ -20,6 +20,8 @@ class Page
     public $n;
     public $book;
     public $totalNumber = -1;
+
+    /* @var Entry[] */
     public $entryArray = array();
 
     public static function getPage ($pageId, $id, $query, $n)
@@ -128,9 +130,9 @@ class Page
                 if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
-                $customId = CustomColumn::getCustomId ($lookup);
-                if (!is_null ($customId)) {
-                    array_push ($this->entryArray, CustomColumn::getCount($customId));
+                $customColumn = CustomColumnType::createByLookup($lookup);
+                if (!is_null ($customColumn) && $customColumn->isSearchable()) {
+                    array_push ($this->entryArray, $customColumn->getCount());
                 }
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
