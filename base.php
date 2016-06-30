@@ -904,7 +904,7 @@ class PageQueryResult extends Page
     private function searchByScope ($scope, $limit = FALSE) {
         $n = $this->n;
         $numberPerPage = NULL;
-        $queryNormedAndUp = $this->query;
+        $queryNormedAndUp = trim($this->query);
         if (useNormAndUp ()) {
             $queryNormedAndUp = normAndUp ($this->query);
         }
