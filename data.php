@@ -104,7 +104,9 @@ class Data extends Base {
     }
 
     public function getUpdatedFilenameKepub () {
-        return $this->getUpdatedFilename () . ".kepub.epub";
+        $str = $this->getUpdatedFilename () . ".kepub.epub";
+        return str_replace(array(':', '#', '&'),
+                           array('-', '-', ' '), $str );
     }
 
     public function getDataLink ($rel, $title = NULL) {
