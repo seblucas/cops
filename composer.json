@@ -10,6 +10,8 @@
         "bower-asset/normalize.css": "~3.0",
         "twitter/typeahead.js": "~0.10.5",
         "seblucas/dot-php": "dev-master",
+        "seblucas/php-epub-meta": "dev-master",
+        "Skrol29/tbszip": "dev-master",
         "simonpioli/sortelements": "dev-master",
         "bower-asset/doT": "~1.0.1",
         "rsms/js-lru": "dev-master"
@@ -22,6 +24,10 @@
         "classmap": ["lib/", "resources/"]
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mbirth/php-epub-meta"
+        },
         {
             "type": "package",
             "package": {
@@ -46,6 +52,21 @@
                     "type": "git",
                     "url": "https://github.com/simonpioli/sortElements",
                     "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "Skrol29/tbszip",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/Skrol29/tbszip",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["./"]
                 }
             }
         },
