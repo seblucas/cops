@@ -19,16 +19,16 @@ class Entry
     private static $updated = NULL;
 
     public static $icons = array(
-        Author::ALL_AUTHORS_ID       => 'images/author.png',
-        Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
-        Tag::ALL_TAGS_ID             => 'images/tag.png',
-        Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
-        Rating::ALL_RATING_ID        => 'images/rating.png',
-        "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
+        Author::ALL_AUTHORS_ID           => 'images/author.png',
+        Serie::ALL_SERIES_ID             => 'images/serie.png',
+        Book::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        Tag::ALL_TAGS_ID                 => 'images/tag.png',
+        Language::ALL_LANGUAGES_ID       => 'images/language.png',
+        CustomColumnType::ALL_CUSTOMS_ID => 'images/custom.png',
+        Rating::ALL_RATING_ID            => 'images/rating.png',
+        "cops:books$"                    => 'images/allbook.png',
+        "cops:books:letter"              => 'images/allbook.png',
+        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -43,6 +43,8 @@ class Entry
 
     public function getNavLink () {
         foreach ($this->linkArray as $link) {
+            /* @var $link LinkNavigation */
+
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
 
             return $link->hrefXhtml ();

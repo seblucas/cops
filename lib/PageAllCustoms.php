@@ -11,8 +11,10 @@ class PageAllCustoms extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $this->title = CustomColumn::getAllTitle ($customId);
-        $this->entryArray = CustomColumn::getAllCustoms($customId);
-        $this->idPage = CustomColumn::getAllCustomsId ($customId);
+        $columnType = CustomColumnType::createByCustomID($customId);
+        
+        $this->title = $columnType->getTitle();
+        $this->entryArray = $columnType->getAllCustomValues();
+        $this->idPage = $columnType->getAllCustomsId();
     }
 }
