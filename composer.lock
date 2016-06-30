@@ -4,9 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f0942ac84ce07b2b5ef81ddf4dc1cd53",
-    "content-hash": "bbfd59a44db557ffc45381564feeeee6",
+    "hash": "c588d468da925930a1a9f812c0efa9ee",
+    "content-hash": "428a556cb1791f41b00be839ebac2cc9",
     "packages": [
+        {
+            "name": "Skrol29/tbszip",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Skrol29/tbszip",
+                "reference": "master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./"
+                ]
+            },
+            "time": "2014-04-10 23:17:34"
+        },
         {
             "name": "bower-asset/doT",
             "version": "1.0.1",
@@ -218,6 +234,58 @@
                 ]
             },
             "time": "2014-08-26 19:50:16"
+        },
+        {
+            "name": "seblucas/php-epub-meta",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mbirth/php-epub-meta.git",
+                "reference": "ec1edb98381915de73399b0e5ec642829bfe79c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mbirth/php-epub-meta/zipball/ec1edb98381915de73399b0e5ec642829bfe79c2",
+                "reference": "ec1edb98381915de73399b0e5ec642829bfe79c2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-xml": "*",
+                "ext-zip": "*",
+                "php": ">=5.3.0",
+                "skrol29/tbszip": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "./"
+                ]
+            },
+            "authors": [
+                {
+                    "name": "Andreas Gohr",
+                    "email": "andi@splitbrain.org",
+                    "homepage": "https://www.splitbrain.org/",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Sébastien Lucas",
+                    "email": "sebastien@slucas.fr",
+                    "homepage": "http://www.slucas.fr/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Reading and writing metadata included in the EPub ebook format",
+            "homepage": "https://github.com/seblucas/php-epub-meta",
+            "keywords": [
+                "ebook",
+                "epub",
+                "metadata"
+            ],
+            "support": {
+                "source": "https://github.com/mbirth/php-epub-meta/tree/master"
+            },
+            "time": "2016-06-30 13:32:35"
         },
         {
             "name": "simonpioli/sortelements",
@@ -2158,6 +2226,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "seblucas/dot-php": 20,
+        "seblucas/php-epub-meta": 20,
+        "skrol29/tbszip": 20,
         "simonpioli/sortelements": 20,
         "rsms/js-lru": 20
     },
