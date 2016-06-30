@@ -3,8 +3,10 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     S�bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
+
+/** @var array $config */
 
 define ("VERSION", "1.0.0RC4");
 define ("DB", "db");
@@ -409,16 +411,16 @@ class Entry
     private static $updated = NULL;
 
     public static $icons = array(
-        Author::ALL_AUTHORS_ID       => 'images/author.png',
-        Serie::ALL_SERIES_ID         => 'images/serie.png',
-        Book::ALL_RECENT_BOOKS_ID    => 'images/recent.png',
-        Tag::ALL_TAGS_ID             => 'images/tag.png',
-        Language::ALL_LANGUAGES_ID   => 'images/language.png',
-        CustomColumn::ALL_CUSTOMS_ID => 'images/custom.png',
-        Rating::ALL_RATING_ID        => 'images/rating.png',
-        "cops:books$"             => 'images/allbook.png',
-        "cops:books:letter"       => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID => 'images/publisher.png'
+        Author::ALL_AUTHORS_ID           => 'images/author.png',
+        Serie::ALL_SERIES_ID             => 'images/serie.png',
+        Book::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
+        Tag::ALL_TAGS_ID                 => 'images/tag.png',
+        Language::ALL_LANGUAGES_ID       => 'images/language.png',
+        CustomColumnType::ALL_CUSTOMS_ID => 'images/custom.png',
+        Rating::ALL_RATING_ID            => 'images/rating.png',
+        "cops:books$"                    => 'images/allbook.png',
+        "cops:books:letter"              => 'images/allbook.png',
+        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
     );
 
     public function getUpdatedTime () {
@@ -433,6 +435,8 @@ class Entry
 
     public function getNavLink () {
         foreach ($this->linkArray as $link) {
+            /* @var $link LinkNavigation */
+
             if ($link->type != Link::OPDS_NAVIGATION_TYPE) { continue; }
 
             return $link->hrefXhtml ();
@@ -469,6 +473,15 @@ class EntryBook extends Entry
 {
     public $book;
 
+    /**
+     * EntryBook constructor.
+     * @param string $ptitle
+     * @param integer $pid
+     * @param string $pcontent
+     * @param string $pcontentType
+     * @param array $plinkArray
+     * @param Book $pbook
+     */
     public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook) {
         parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
@@ -477,6 +490,8 @@ class EntryBook extends Entry
 
     public function getCoverThumbnail () {
         foreach ($this->linkArray as $link) {
+            /* @var $link LinkNavigation */
+
             if ($link->rel == Link::OPDS_THUMBNAIL_TYPE)
                 return $link->hrefXhtml ();
         }
@@ -485,6 +500,8 @@ class EntryBook extends Entry
 
     public function getCover () {
         foreach ($this->linkArray as $link) {
+            /* @var $link LinkNavigation */
+
             if ($link->rel == Link::OPDS_IMAGE_TYPE)
                 return $link->hrefXhtml ();
         }
@@ -506,6 +523,8 @@ class Page
     public $n;
     public $book;
     public $totalNumber = -1;
+
+    /* @var Entry[] */
     public $entryArray = array();
 
     public static function getPage ($pageId, $id, $query, $n)
@@ -614,9 +633,9 @@ class Page
                 if (!is_null ($languages)) array_push ($this->entryArray, $languages);
             }
             foreach ($config['cops_calibre_custom_column'] as $lookup) {
-                $customId = CustomColumn::getCustomId ($lookup);
-                if (!is_null ($customId)) {
-                    array_push ($this->entryArray, CustomColumn::getCount($customId));
+                $customColumn = CustomColumnType::createByLookup($lookup);
+                if (!is_null ($customColumn) && $customColumn->isSearchable()) {
+                    array_push ($this->entryArray, $customColumn->getCount());
                 }
             }
             $this->entryArray = array_merge ($this->entryArray, Book::getCount());
@@ -745,10 +764,10 @@ class PageCustomDetail extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $custom = CustomColumn::getCustomById ($customId, $this->idGet);
+        $custom = CustomColumn::createCustom ($customId, $this->idGet);
         $this->idPage = $custom->getEntryId ();
-        $this->title = $custom->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($customId, $this->idGet, $this->n);
+        $this->title = $custom->value;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
     }
 }
 
@@ -757,9 +776,11 @@ class PageAllCustoms extends Page
     public function InitializeContent ()
     {
         $customId = getURLParam ("custom", NULL);
-        $this->title = CustomColumn::getAllTitle ($customId);
-        $this->entryArray = CustomColumn::getAllCustoms($customId);
-        $this->idPage = CustomColumn::getAllCustomsId ($customId);
+        $columnType = CustomColumnType::createByCustomID($customId);
+        
+        $this->title = $columnType->getTitle();
+        $this->entryArray = $columnType->getAllCustomValues();
+        $this->idPage = $columnType->getAllCustomsId();
     }
 }
 
@@ -1133,7 +1154,6 @@ class PageCustomize extends Page
     }
 }
 
-
 abstract class Base
 {
     const PAGE_INDEX = "index";
@@ -1204,7 +1224,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
-                return self::error ($database);
+                self::error ($database);
             }
             $array = array_keys ($config['calibre_directory']);
             return  $array[$database];
@@ -1217,7 +1237,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled ()) {
             if (is_null ($database)) $database = GetUrlParam (DB, 0);
             if (!is_null($database) && !preg_match('/^\d+$/', $database)) {
-                return self::error ($database);
+                self::error ($database);
             }
             $array = array_values ($config['calibre_directory']);
             return  $array[$database];
@@ -1288,10 +1308,14 @@ abstract class Base
     }
 
     public static function getEntryArrayWithBookNumber ($query, $columns, $params, $category) {
+        /* @var $result PDOStatement */
+
         list (, $result) = self::executeQuery ($query, $columns, "", $params, -1);
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
+            /* @var $instance Author|Tag|Serie|Publisher */
+
             $instance = new $category ($post);
             if (property_exists($post, "sort")) {
                 $title = $post->sort;

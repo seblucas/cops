@@ -214,6 +214,7 @@ max-width:800px;
 .books {
     clear: both;
     min-height: 90px;
+    position: relative;
 }
 
 .books .cover {
@@ -221,6 +222,11 @@ max-width:800px;
     margin: 4px 10px 4px 4px;
     width: 60px;
     height: 82px;
+    position: absolute;
+}
+
+.books .fancydetail .fullclickpopup {
+    margin: 4px 0px 4px 75px;
 }
 
 .bookpopup .cover {

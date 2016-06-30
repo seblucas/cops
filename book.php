@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server) class file
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once('base.php');
@@ -37,6 +37,26 @@ define ('SQL_BOOKS_BY_LANGUAGE', "select {0} from books_languages_link, books " 
                                                     where books_languages_link.book = books.id and lang_code = ? {1} order by sort");
 define ('SQL_BOOKS_BY_CUSTOM', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where {2}.book = books.id and {2}.{3} = ? {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.value = 1 {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.value = 0 {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_BOOL_NULL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where books.id not in (select book from {2}) {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    left join {2} on {2}.book = books.id
+                                                    left join {3} on {3}.id = {2}.{4}
+                                                    where {3}.value = ?  order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_RATING_NULL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+								                    left join {2} on {2}.book = books.id
+								                    left join {3} on {3}.id = {2}.{4}
+                                                    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_DATE', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and date({2}.value) = ? {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_DIRECT', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.value = ? {1} order by sort");
+define ('SQL_BOOKS_BY_CUSTOM_DIRECT_ID', "select {0} from {2}, books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where {2}.book = books.id and {2}.id = ? {1} order by sort");
 define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where (
                                                     exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
@@ -64,6 +84,14 @@ class Book extends Base {
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
     const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
+    const SQL_BOOKS_BY_CUSTOM_BOOL_NULL = SQL_BOOKS_BY_CUSTOM_BOOL_NULL;
+    const SQL_BOOKS_BY_CUSTOM_RATING = SQL_BOOKS_BY_CUSTOM_RATING;
+    const SQL_BOOKS_BY_CUSTOM_RATING_NULL = SQL_BOOKS_BY_CUSTOM_RATING_NULL;
+    const SQL_BOOKS_BY_CUSTOM_DATE = SQL_BOOKS_BY_CUSTOM_DATE;
+    const SQL_BOOKS_BY_CUSTOM_DIRECT = SQL_BOOKS_BY_CUSTOM_DIRECT;
+    const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = SQL_BOOKS_BY_CUSTOM_DIRECT_ID;
     const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
     const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
     const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
@@ -132,6 +160,9 @@ class Book extends Base {
 
     /* Other class (author, series, tag, ...) initialization and accessors */
 
+    /**
+     * @return Author[]
+     */
     public function getAuthors () {
         if (is_null ($this->authors)) {
             $this->authors = Author::getAuthorByBookId ($this->id);
@@ -154,6 +185,9 @@ class Book extends Base {
         return $this->publisher;
     }
 
+    /**
+     * @return Serie
+     */
     public function getSerie () {
         if (is_null ($this->serie)) {
             $this->serie = Serie::getSerieByBookId ($this->id);
@@ -161,6 +195,9 @@ class Book extends Base {
         return $this->serie;
     }
 
+    /**
+     * @return string
+     */
     public function getLanguages () {
         $lang = array ();
         $result = parent::getDb ()->prepare('select languages.lang_code
@@ -176,6 +213,9 @@ class Book extends Base {
         return implode (", ", $lang);
     }
 
+    /**
+     * @return Tag[]
+     */
     public function getTags () {
         if (is_null ($this->tags)) {
             $this->tags = array ();
@@ -198,6 +238,9 @@ class Book extends Base {
         return implode (", ", array_map (function ($tag) { return $tag->name; }, $this->getTags ()));
     }
 
+    /**
+     * @return Data[]
+     */
     public function getDatas ()
     {
         if (is_null ($this->datas)) {
@@ -412,6 +455,7 @@ class Book extends Base {
         }
 
         foreach ($this->getAuthors () as $author) {
+            /* @var $author Author */
             array_push ($linkArray, new LinkNavigation ($author->getUri (), "related", str_format (localize ("bookentry.author"), localize ("splitByLetter.book.other"), $author->name)));
         }
 
@@ -477,9 +521,16 @@ class Book extends Base {
         return self::getEntryArray (self::SQL_BOOKS_BY_LANGUAGE, array ($languageId), $n);
     }
 
-    public static function getBooksByCustom($customId, $id, $n) {
-        $query = str_format (self::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", CustomColumn::getTableLinkName ($customId), CustomColumn::getTableLinkColumn ($customId));
-        return self::getEntryArray ($query, array ($id), $n);
+    /**
+     * @param $customColumn CustomColumn
+     * @param $id integer
+     * @param $n integer
+     * @return array
+     */
+    public static function getBooksByCustom($customColumn, $id, $n) {
+        list($query, $params) = $customColumn->getQuery($id);
+
+        return self::getEntryArray ($query, $params, $n);
     }
 
     public static function getBookById($bookId) {
@@ -541,10 +592,13 @@ where data.book = books.id and data.id = ?');
     }
 
     public static function getAllBooks() {
+        /* @var $result PDOStatement */
+
         list (, $result) = parent::executeQuery ("select {0}
 from books
 group by substr (upper (sort), 1, 1)
 order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", self::getFilterString (), array (), -1);
+
         $entryArray = array();
         while ($post = $result->fetchObject ())
         {
@@ -560,16 +614,18 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
-        list ($totalNumber, $result) = parent::executeQuery ($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+        /* @var $totalNumber integer */
+        /* @var $result PDOStatement */
+        list($totalNumber, $result) = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+
         $entryArray = array();
-        while ($post = $result->fetchObject ())
+        while ($post = $result->fetchObject())
         {
             $book = new Book ($post);
-            array_push ($entryArray, $book->getEntry ());
+            array_push ($entryArray, $book->getEntry());
         }
         return array ($entryArray, $totalNumber);
     }
-
 
     public static function getAllRecentBooks() {
         global $config;
@@ -577,4 +633,25 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return $entryArray;
     }
 
+    /**
+     * The values of all the specified columns
+     *
+     * @param string[] $columns
+     * @return CustomColumn[]
+     */
+    public function getCustomColumnValues($columns) {
+        $result = array();
+        
+        foreach ($columns as $lookup) {
+            $col = CustomColumnType::createByLookup($lookup);
+            if (! is_null($col)) {
+                $cust = $col->getCustomByBook($this);
+                if (! is_null($cust)) {
+                    array_push($result, $cust);
+                }
+            }
+        }
+
+        return $result;
+    }
 }
