@@ -39,6 +39,10 @@
                 <h4>{{=it.c.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span><br />
                 {{? entry.book.tagsName != ""}}<h4>{{=it.c.i18n.tagsTitle}} : </h4><span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span><br />{{?}}
                 {{? entry.book.seriesName != ""}}<h4>{{=it.c.i18n.seriesTitle}} : </h4><span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span><br />{{?}}
+                <h4>{{=it.c.i18n.authorsTitle}} : </h4><span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span><br />
+                {{~entry.book.customcolumns_list :column:column_index}}
+                <h4>{{=column.customColumnType.columnTitle}} : </h4><span class="se">{{=column.htmlvalue}}</span><br />
+                {{~}}
             </div></a>
         </article>
     {{?}}

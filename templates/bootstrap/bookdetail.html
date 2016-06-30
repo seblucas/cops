@@ -60,6 +60,11 @@
         <h4>{{=it.c.i18n.languagesTitle}}: </h4>{{=it.book.languagesName}}
     </p>
     {{?}}
+    {{~it.book.customcolumns_preview :column:column_index}}
+    <p>
+        <h4>{{=column.customColumnType.columnTitle}}: </h4>{{=column.htmlvalue}}
+    </p>
+    {{~}}
     {{? it.book.content != ""}}
     <br />
     <h4>{{=it.c.i18n.contentTitle}}</h4>

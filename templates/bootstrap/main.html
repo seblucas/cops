@@ -27,7 +27,7 @@
         </div>
     {{??}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 books">
-        <div class="panel panel-default" style="height: 320px;">
+        <div class="panel panel-default" style="min-height: 320px;">
           <div class="panel-heading">
             <h2 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h2>
           </div>
@@ -42,6 +42,9 @@
             <div class="ellipsis"><span class="glyphicon glyphicon-user"></span> <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span></div>
             {{? entry.book.tagsName != ""}}<div class="ellipsis"><span class="glyphicon glyphicon-tag"></span> <span class="se">{{=htmlspecialchars (entry.book.tagsName)}}</span></div>{{?}}
             {{? entry.book.seriesName != ""}}<div class="ellipsis"><span class="glyphicon glyphicon-list"></span> <span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span></div>{{?}}
+            {{~entry.book.customcolumns_list :column:column_index}}
+            <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
+            {{~}}
             <div class="text-center bottomright">
             {{~entry.book.preferedData:data:j}}
                 <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
