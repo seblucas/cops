@@ -67,7 +67,7 @@ sub handleLanguageFile {
 
     my $content = loadFile ($file);
 
-    while ($content =~ /"(.*?)"\:\s*"(.*?)",/igs) {
+    while ($content =~ /"\s*(.*?)"\:\s*"(.*?)",/igs) {
         my $key = $1;
         my $value = $2;
         next if ($key =~ /^##TODO##/);
@@ -84,15 +84,15 @@ sub handleLanguageFile {
     foreach my $name (@strings) {
         $total++ if ($name !~ /^languages\.\w{3}$/);
         if (not exists ($values{$lang}{$name})) {
-            print OUTPUT "\"##TODO##$name\":\"$values{en}{$name}\",\n";
+            print OUTPUT "    \"##TODO##$name\": \"$values{en}{$name}\",\n";
         } else {
             $translated++  if ($name !~ /^languages\.\w{3}$/);
-            print OUTPUT "\"$name\":\"$values{$lang}{$name}\",\n";
+            print OUTPUT "    \"$name\": \"$values{$lang}{$name}\",\n";
         }
     }
     my $percentage = ($translated * 100) / $total;
     debug ("  $translated / $total ($percentage %) \n");
-    print OUTPUT "\"DO_NOT_TRANSLATE\":\"end\"\n";
+    print OUTPUT "    \"DO_NOT_TRANSLATE\": \"end\"\n";
     print OUTPUT "}\n";
 
     close OUTPUT;
