@@ -27,7 +27,7 @@
 "##TODO##customcolumn.date.unknown":"Not Set",
 "##TODO##customcolumn.description":"Custom column '{0}'",
 "##TODO##customcolumn.description.bool":"Index of a boolean value",
-"##TODO##customcolumn.description.enum.many":"Alphabetical index of the {0} value",
+"##TODO##customcolumn.description.enum.many":"Alphabetical index of the {0} values",
 "##TODO##customcolumn.description.enum.none":"Alphabetical index of absolutely no values",
 "##TODO##customcolumn.description.enum.one":"Alphabetical index of one value",
 "##TODO##customcolumn.description.rating":"Index of ratings",
