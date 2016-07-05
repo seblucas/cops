@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Není nastaveno",
     "customcolumn.rating.unknown": "Není nastaveno",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Nastavit email (umožní zasílání knih)",
     "customize.fancybox": "Použít Lightbox",
