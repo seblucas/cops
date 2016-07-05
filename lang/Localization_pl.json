@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Domyślny dostęp",
     "customcolumn.rating.unknown": "Domyślny dostęp",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Ustaw swój adres e-mail (aby wysyłać książki)",
     "customize.fancybox": "Używaj Lightbox (wyświetla książki w okienku)",
