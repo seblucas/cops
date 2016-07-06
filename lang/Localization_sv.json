@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Ej Defijerat",
     "customcolumn.rating.unknown": "Ej Defijerat",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Ange din epostadress (för att aktivera epost)",
     "customize.fancybox": "Använd ljusbord",

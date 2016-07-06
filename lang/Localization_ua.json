@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Не встановлено",
     "customcolumn.rating.unknown": "Не встановлено",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Вкажіть Ваш email (для відправки книг електронною поштою)",
     "customize.fancybox": "Відкривати картку книги у спливаючому вікні",

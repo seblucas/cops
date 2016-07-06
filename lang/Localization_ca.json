@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "No Establert",
     "customcolumn.rating.unknown": "No Establert",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Introdueix el teu email (permitir enviament de llibres per e-mail)",
     "customize.fancybox": "Usar Lightbox (llibres en marc flotant)",

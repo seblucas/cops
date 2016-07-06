@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Ikke satt",
     "customcolumn.rating.unknown": "Ikke satt",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Sett e-postadresse (for å sende bøker i e-post)",
     "customize.fancybox": "Bruk en Lightbox",
