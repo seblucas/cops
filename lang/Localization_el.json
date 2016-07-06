@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Προεπιλογή",
     "customcolumn.rating.unknown": "Προεπιλογή",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Ρυθμίστε το email σας (για να επιτραπεί αποστολή email)",
     "customize.fancybox": "Χρήση Lightbox (τα βιβλία φορτώνουν σε πλαίσιο)",
