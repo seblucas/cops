@@ -975,7 +975,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("custom_05", $custom[4]->customColumnType->columnTitle);
         $this->assertEquals($custom[4]->customColumnType->getTitle(), $custom[4]->customColumnType->columnTitle);
-        $this->assertEquals("6", $custom[4]->htmlvalue);
+        $this->assertEquals("val05", $custom[4]->htmlvalue);
         $this->assertEquals($custom[4]->getHTMLEncodedValue(), $custom[4]->htmlvalue);
 
         $this->assertEquals("custom_06", $custom[5]->customColumnType->columnTitle);
