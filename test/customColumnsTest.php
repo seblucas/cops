@@ -955,12 +955,12 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("custom_01", $custom[0]->customColumnType->columnTitle);
         $this->assertEquals($custom[0]->customColumnType->getTitle(), $custom[0]->customColumnType->columnTitle);
-        $this->assertEquals("2", $custom[0]->htmlvalue);
+        $this->assertEquals("text_2", $custom[0]->htmlvalue);
         $this->assertEquals($custom[0]->getHTMLEncodedValue(), $custom[0]->htmlvalue);
 
         $this->assertEquals("custom_02", $custom[1]->customColumnType->columnTitle);
         $this->assertEquals($custom[1]->customColumnType->getTitle(), $custom[1]->customColumnType->columnTitle);
-        $this->assertEquals("1", $custom[1]->htmlvalue);
+        $this->assertEquals("a", $custom[1]->htmlvalue);
         $this->assertEquals($custom[1]->getHTMLEncodedValue(), $custom[1]->htmlvalue);
 
         $this->assertEquals("custom_03", $custom[2]->customColumnType->columnTitle);
@@ -975,7 +975,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals("custom_05", $custom[4]->customColumnType->columnTitle);
         $this->assertEquals($custom[4]->customColumnType->getTitle(), $custom[4]->customColumnType->columnTitle);
-        $this->assertEquals("6", $custom[4]->htmlvalue);
+        $this->assertEquals("val05", $custom[4]->htmlvalue);
         $this->assertEquals($custom[4]->getHTMLEncodedValue(), $custom[4]->htmlvalue);
 
         $this->assertEquals("custom_06", $custom[5]->customColumnType->columnTitle);
