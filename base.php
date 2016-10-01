@@ -420,7 +420,8 @@ class Entry
         Rating::ALL_RATING_ID            => 'images/rating.png',
         "cops:books$"                    => 'images/allbook.png',
         "cops:books:letter"              => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
+        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png',
+        Publishdate::ALL_PUBLISHDATES_ID => 'images/publishdate.png'
     );
 
     public function getUpdatedTime () {
@@ -570,6 +571,12 @@ class Page
                 return new PageAllPublishers ($id, $query, $n);
             case Base::PAGE_PUBLISHER_DETAIL :
                 return new PagePublisherDetail ($id, $query, $n);
+            case Base::PAGE_ALL_PUBLISHDATES:
+                return new PageAllPublishdates ($id, $query, $n);
+            case Base::PAGE_PUBLISHDATE_YEAR :
+                return new PagePublishdateYear($id, $query, $n);
+            case Base::PAGE_PUBLISHDATE_MONTH :
+                return new PagePublishdateMonth ($id, $query, $n);
             case Base::PAGE_ABOUT :
                 return new PageAbout ($id, $query, $n);
             case Base::PAGE_CUSTOMIZE :
@@ -619,6 +626,10 @@ class Page
             if (!in_array (PageQueryResult::SCOPE_PUBLISHER, getCurrentOption ('ignored_categories'))) {
                 $publisher = Publisher::getCount();
                 if (!is_null ($publisher)) array_push ($this->entryArray, $publisher);
+            }
+            if (!in_array (PageQueryResult::SCOPE_PUBLISHDATE, getCurrentOption ('ignored_categories'))) {
+                $publishdates = Publishdate::getCount();
+                if (!is_null ($publishdates)) array_push ($this->entryArray, $publishdates);
             }
             if (!in_array (PageQueryResult::SCOPE_TAG, getCurrentOption ('ignored_categories'))) {
                 $tags = Tag::getCount();
@@ -736,6 +747,38 @@ class PagePublisherDetail extends Page
         $this->title = $publisher->name;
         list ($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher ($this->idGet, $this->n);
         $this->idPage = $publisher->getEntryId ();
+    }
+}
+
+class PageAllPublishdates extends Page
+{
+    public function InitializeContent ()
+    {
+        $this->title = localize("pubdate.title");
+        $this->entryArray = Publishdate::getAllPublishdates();
+        $this->idPage = Publishdate::ALL_PUBLISHDATES_ID;
+    }
+}
+
+class PagePublishdateYear extends Page
+{
+    public function InitializeContent ()
+    {
+        $publishdateYear = $this->idGet;
+        $this->title = $this->idGet;
+        $this->entryArray = PublishdateYear::getAllPublishdateMonth ($this->idGet);
+        $this->idPage = PublishdateYear::PUBLISHDATE_YEAR_ID;
+    }
+}
+
+class PagePublishdateMonth extends Page
+{
+    public function InitializeContent ()
+    {
+        $publishdateMonth = PublishdateYear::getPublishdateMonth ($this->idGet);
+        $this->title = $this->idGet;
+        list ($this->entryArray, $this->totalNumber) = Book::getBooksByPublishdate ($this->idGet, $this->n);
+        $this->idPage = $publishdateMonth->getEntryId ();
     }
 }
 
@@ -883,8 +926,8 @@ class PageRecentBooks extends Page
     public function InitializeContent ()
     {
         $this->title = localize ("recent.title");
-        $this->entryArray = Book::getAllRecentBooks ();
         $this->idPage = Book::ALL_RECENT_BOOKS_ID;
+        list ($this->entryArray, $this->totalNumber) = Book::getAllRecentBooks ($this->n);
     }
 }
 
@@ -896,6 +939,7 @@ class PageQueryResult extends Page
     const SCOPE_AUTHOR = "author";
     const SCOPE_BOOK = "book";
     const SCOPE_PUBLISHER = "publisher";
+    const SCOPE_PUBLISHDATE = "publishdate";
 
     private function useTypeahead () {
         return !is_null (getURLParam ("search"));
@@ -928,6 +972,9 @@ class PageQueryResult extends Page
             case self::SCOPE_PUBLISHER :
                 $array = Publisher::getAllPublishersByQuery ($queryNormedAndUp);
                 break;
+            case self::SCOPE_PUBLISHDATE :
+                $array = Publishdate::getAllPublishdatesByQuery($queryNormedAndUp);
+                break;
             default:
                 $array = Book::getBooksByQuery (
                     array ("all" => "%" . $queryNormedAndUp . "%"), $n);
@@ -959,7 +1006,8 @@ class PageQueryResult extends Page
                             PageQueryResult::SCOPE_AUTHOR,
                             PageQueryResult::SCOPE_SERIES,
                             PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+                            PageQueryResult::SCOPE_PUBLISHER,
+                            PageQueryResult::SCOPE_PUBLISHDATE) as $key) {
                 if (in_array($key, getCurrentOption ('ignored_categories'))) {
                     continue;
                 }
@@ -1103,6 +1151,7 @@ class PageCustomize extends Page
                                    PageQueryResult::SCOPE_TAG,
                                    PageQueryResult::SCOPE_SERIES,
                                    PageQueryResult::SCOPE_PUBLISHER,
+                                   PageQueryResult::SCOPE_PUBLISHDATE,
                                    PageQueryResult::SCOPE_RATING,
                                    "language");
 
@@ -1177,6 +1226,9 @@ abstract class Base
     const PAGE_LANGUAGE_DETAIL = "18";
     const PAGE_CUSTOMIZE = "19";
     const PAGE_ALL_PUBLISHERS = "20";
+    const PAGE_ALL_PUBLISHDATES = "24";
+    const PAGE_PUBLISHDATE_YEAR = "25";
+    const PAGE_PUBLISHDATE_MONTH = "26";
     const PAGE_PUBLISHER_DETAIL = "21";
     const PAGE_ALL_RATINGS = "22";
     const PAGE_RATING_DETAIL = "23";
@@ -1295,11 +1347,15 @@ abstract class Base
         return self::getDb ($database)->query($query)->fetchColumn();
     }
 
-    public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL) {
+    public static function getCountGeneric($table, $id, $pageId, $numberOfString = NULL, $sql = NULL) {
         if (!$numberOfString) {
             $numberOfString = $table . ".alphabetical";
         }
-        $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        if (is_null($sql)) {
+            $count = self::executeQuerySingle ('select count(*) from ' . $table);
+        } else {
+            $count = self::executeQuerySingle ($sql);
+        }
         if ($count == 0) return NULL;
         $entry = new Entry (localize($table . ".title"), $id,
             str_format (localize($numberOfString, $count), $count), "text",
@@ -1329,7 +1385,7 @@ abstract class Base
         return $entryArray;
     }
 
-    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL) {
+    public static function executeQuery($query, $columns, $filter, $params, $n, $database = NULL, $numberPerPage = NULL, $max = NULL) {
         $totalResult = -1;
 
         if (useNormAndUp ()) {
@@ -1347,12 +1403,20 @@ abstract class Base
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));
             $result->execute ($params);
             $totalResult = $result->fetchColumn ();
-
+            $count = $numberPerPage;
+            if (!is_null($max) && $totalResult > $max) {
+                $totalResult = $max;
+                $left = $max - (($n - 1) * $numberPerPage);
+                if ($left < $count) {
+                    $count = $left;
+                }
+            }
+            
             // Next modify the query and params
             $query .= " limit ?, ?";
-            array_push ($params, ($n - 1) * $numberPerPage, $numberPerPage);
+            array_push ($params, ($n - 1) * $numberPerPage, $count);
         }
-
+        
         $result = self::getDb ($database)->prepare(str_format ($query, $columns, $filter));
         $result->execute ($params);
         return array ($totalResult, $result);

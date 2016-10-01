@@ -35,7 +35,7 @@ class Publisher extends Base {
         // str_format (localize("publishers.alphabetical", count(array))
         return parent::getCountGeneric ("publishers", self::ALL_PUBLISHERS_ID, parent::PAGE_ALL_PUBLISHERS);
     }
-
+    
     public static function getPublisherByBookId ($bookId) {
         $result = parent::getDb ()->prepare('select publishers.id as id, name
 from books_publishers_link, publishers

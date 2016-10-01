@@ -11,6 +11,8 @@ require_once('serie.php');
 require_once('author.php');
 require_once('rating.php');
 require_once('publisher.php');
+require_once('publishdate.php');
+require_once('publishdateyear.php');
 require_once('tag.php');
 require_once('language.php');
 require_once("customcolumn.php");
@@ -24,6 +26,8 @@ define ('SQL_BOOKS_LEFT_JOIN', "left outer join comments on comments.book = book
 define ('SQL_BOOKS_ALL', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . " order by books.sort ");
 define ('SQL_BOOKS_BY_PUBLISHER', "select {0} from books_publishers_link, books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_publishers_link.book = books.id and publisher = ? {1} order by publisher");
+define ('SQL_BOOKS_BY_PUBLISHDATE', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
+                                                    where strftime('%Y-%m', pubdate) LIKE ? {1} order by pubdate ASC");
 define ('SQL_BOOKS_BY_FIRST_LETTER', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where upper (books.sort) like ? order by books.sort");
 define ('SQL_BOOKS_BY_AUTHOR', "select {0} from books_authors_link, books " . SQL_BOOKS_LEFT_JOIN . "
@@ -65,7 +69,7 @@ define ('SQL_BOOKS_QUERY', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
                                                     title like ?) {1} order by books.sort");
 define ('SQL_BOOKS_RECENT', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
-                                                    where 1=1 {1} order by timestamp desc limit ");
+                                                    where 1=1 {1} order by timestamp desc");
 define ('SQL_BOOKS_BY_RATING', "select {0} from books " . SQL_BOOKS_LEFT_JOIN . "
                                                     where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort");
 
@@ -83,6 +87,7 @@ class Book extends Base {
     const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
     const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
     const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
+    const SQL_BOOKS_BY_PUBLISHDATE = SQL_BOOKS_BY_PUBLISHDATE;
     const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
     const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
     const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
@@ -520,6 +525,10 @@ class Book extends Base {
     public static function getBooksByLanguage($languageId, $n) {
         return self::getEntryArray (self::SQL_BOOKS_BY_LANGUAGE, array ($languageId), $n);
     }
+    
+    public static function getBooksByPublishdate($date, $n) {
+        return self::getEntryArray (self::SQL_BOOKS_BY_PUBLISHDATE, array ($date."%"), $n);
+    }
 
     /**
      * @param $customColumn CustomColumn
@@ -569,6 +578,7 @@ where data.book = books.id and data.id = ?');
                         PageQueryResult::SCOPE_TAG,
                         PageQueryResult::SCOPE_SERIES,
                         PageQueryResult::SCOPE_PUBLISHER,
+                        PageQueryResult::SCOPE_PUBLISHDATE,
                         PageQueryResult::SCOPE_BOOK) as $key) {
             if (in_array($key, getCurrentOption ('ignored_categories')) ||
                 (!array_key_exists ($key, $query) && !array_key_exists ("all", $query))) {
@@ -613,10 +623,10 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return self::getEntryArray (self::SQL_BOOKS_BY_FIRST_LETTER, array ($letter . "%"), $n, $database, $numberPerPage);
     }
 
-    public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
+    public static function getEntryArray ($query, $params, $n, $database = NULL, $numberPerPage = NULL, $max = NULL) {
         /* @var $totalNumber integer */
         /* @var $result PDOStatement */
-        list($totalNumber, $result) = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage);
+        list($totalNumber, $result) = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString (), $params, $n, $database, $numberPerPage, $max);
 
         $entryArray = array();
         while ($post = $result->fetchObject())
@@ -627,10 +637,9 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         return array ($entryArray, $totalNumber);
     }
 
-    public static function getAllRecentBooks() {
+    public static function getAllRecentBooks($n) {
         global $config;
-        list ($entryArray, ) = self::getEntryArray (self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array (), -1);
-        return $entryArray;
+        return self::getEntryArray (self::SQL_BOOKS_RECENT, array (), $n, null, null , $config['cops_recentbooks_limit']);
     }
 
     /**
