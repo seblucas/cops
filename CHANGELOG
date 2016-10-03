@@ -1,3 +1,11 @@
+1.0.1 - 201610XX
+ * Fixed some type of custom column showing id instead of text - Thanks to Mike Schwörer.
+ * Fixed the redirection to the OPDS catalog for Moon+ Reader.
+ * Fixed the mail character encoding, now in UTF-8.
+ * Fixed checkconfig.php to avoid sending content before headers. Thanks to Luke Stevenson.
+ * Fixed server side rendering with custom columns.
+ * Moved /icons to /images (Apache issues). Thanks to CgX.
+
 1.0.0 - 20160708
  * Updated the OPDS icons to better looking ones. Thanks to Horus68.
  * Updated the README.md.
