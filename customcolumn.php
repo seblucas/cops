@@ -93,6 +93,20 @@ class CustomColumn extends Base
 
         return $columnType->getCustom($id);
     }
+
+    /**
+     * Return this object as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'valueID' => $this->valueID,
+            'value' => $this->value,
+            'customColumnType' => (array) $this->customColumnType,
+            'htmlvalue' => $this->htmlvalue);
+    }
 }
 
 /**
