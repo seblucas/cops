@@ -647,7 +647,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
             if (! is_null($col)) {
                 $cust = $col->getCustomByBook($this);
                 if (! is_null($cust)) {
-                    array_push($result, $cust);
+                    array_push($result, $cust->toArray());
                 }
             }
         }
