@@ -429,16 +429,16 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(15, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_01", $currentPage->entryArray[ 4]->title);
-        $this->assertEquals("custom_02", $currentPage->entryArray[ 5]->title);
-        $this->assertEquals("custom_04", $currentPage->entryArray[ 6]->title);
-        $this->assertEquals("custom_05", $currentPage->entryArray[ 7]->title);
-        $this->assertEquals("custom_06", $currentPage->entryArray[ 8]->title);
-        $this->assertEquals("custom_07", $currentPage->entryArray[ 9]->title);
-        $this->assertEquals("custom_08", $currentPage->entryArray[10]->title);
-        $this->assertEquals("custom_09", $currentPage->entryArray[11]->title);
-        $this->assertEquals("custom_10", $currentPage->entryArray[12]->title);
+        $this->assertCount(16, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_01", $currentPage->entryArray[ 5]->title);
+        $this->assertEquals("custom_02", $currentPage->entryArray[ 6]->title);
+        $this->assertEquals("custom_04", $currentPage->entryArray[ 7]->title);
+        $this->assertEquals("custom_05", $currentPage->entryArray[ 8]->title);
+        $this->assertEquals("custom_06", $currentPage->entryArray[ 9]->title);
+        $this->assertEquals("custom_07", $currentPage->entryArray[10]->title);
+        $this->assertEquals("custom_08", $currentPage->entryArray[11]->title);
+        $this->assertEquals("custom_09", $currentPage->entryArray[12]->title);
+        $this->assertEquals("custom_10", $currentPage->entryArray[13]->title);
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -456,13 +456,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_01", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:8", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Custom column example 01 (text)", $currentPage->entryArray[4]->content);
-        $this->assertEquals(3, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("text", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(8)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_01", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:8", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Custom column example 01 (text)", $currentPage->entryArray[5]->content);
+        $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("text", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(8)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -480,13 +480,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_02", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:6", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Custom column example 02 (csv)", $currentPage->entryArray[4]->content);
-        $this->assertEquals(3, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("text", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(6)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_02", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:6", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Custom column example 02 (csv)", $currentPage->entryArray[5]->content);
+        $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("text", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(6)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -504,7 +504,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(6, $currentPage->entryArray); // Authors, Series, Publishers, Languages, All, Recent
+        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, All, Recent
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -522,13 +522,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_04", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:4", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Alphabetical index of the 3 series", $currentPage->entryArray[4]->content);
-        $this->assertEquals(3, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("series", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(4)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_04", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:4", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Alphabetical index of the 3 series", $currentPage->entryArray[5]->content);
+        $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("series", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(4)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -546,13 +546,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_05", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:5", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Alphabetical index of the 4 values", $currentPage->entryArray[4]->content);
-        $this->assertEquals(4, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("enumeration", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(5)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_05", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:5", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Alphabetical index of the 4 values", $currentPage->entryArray[5]->content);
+        $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("enumeration", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(5)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -570,13 +570,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_06", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:12", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Custom column example 06 (date)", $currentPage->entryArray[4]->content);
-        $this->assertEquals(5, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("datetime", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(12)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_06", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:12", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Custom column example 06 (date)", $currentPage->entryArray[5]->content);
+        $this->assertEquals(5, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("datetime", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(12)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -594,13 +594,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_07", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:14", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Custom column example 07 (float)", $currentPage->entryArray[4]->content);
-        $this->assertEquals(6, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("float", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(14)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_07", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:14", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Custom column example 07 (float)", $currentPage->entryArray[5]->content);
+        $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("float", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(14)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -618,13 +618,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_08", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:10", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Custom column example 08 (int)", $currentPage->entryArray[4]->content);
-        $this->assertEquals(4, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("int", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(10)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_08", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:10", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Custom column example 08 (int)", $currentPage->entryArray[5]->content);
+        $this->assertEquals(4, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("int", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(10)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -642,13 +642,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_09", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:9", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Index of ratings", $currentPage->entryArray[4]->content);
-        $this->assertEquals(6, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("rating", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(9)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_09", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:9", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Index of ratings", $currentPage->entryArray[5]->content);
+        $this->assertEquals(6, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("rating", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(9)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -666,13 +666,13 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
         $currentPage->InitializeContent();
 
-        $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
-        $this->assertEquals("custom_10", $currentPage->entryArray[4]->title);
-        $this->assertEquals("cops:custom:11", $currentPage->entryArray[4]->id);
-        $this->assertEquals("Index of a boolean value", $currentPage->entryArray[4]->content);
-        $this->assertEquals(3, $currentPage->entryArray[4]->numberOfElement);
-        $this->assertEquals("bool", $currentPage->entryArray[4]->contentType);
-        $this->assertEquals($currentPage->entryArray[4], CustomColumnType::createByCustomID(11)->getCount());
+        $this->assertCount(8, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
+        $this->assertEquals("custom_10", $currentPage->entryArray[5]->title);
+        $this->assertEquals("cops:custom:11", $currentPage->entryArray[5]->id);
+        $this->assertEquals("Index of a boolean value", $currentPage->entryArray[5]->content);
+        $this->assertEquals(3, $currentPage->entryArray[5]->numberOfElement);
+        $this->assertEquals("bool", $currentPage->entryArray[5]->contentType);
+        $this->assertEquals($currentPage->entryArray[5], CustomColumnType::createByCustomID(11)->getCount());
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();

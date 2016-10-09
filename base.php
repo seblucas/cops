@@ -972,9 +972,6 @@ class PageQueryResult extends Page
             case self::SCOPE_PUBLISHER :
                 $array = Publisher::getAllPublishersByQuery ($queryNormedAndUp);
                 break;
-            case self::SCOPE_PUBLISHDATE :
-                $array = Publishdate::getAllPublishdatesByQuery($queryNormedAndUp);
-                break;
             default:
                 $array = Book::getBooksByQuery (
                     array ("all" => "%" . $queryNormedAndUp . "%"), $n);
