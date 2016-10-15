@@ -5,6 +5,7 @@
         <delete>
            <fileset dir=".">
               <include name="cops.zip" />
+              <include name="cops-*.zip" />
            </fileset>
         </delete>
     </target>
@@ -15,8 +16,17 @@
     <!-- ============================================  -->
     <target name="dist" depends="clean">
         <echo msg="Creating archive..." />
+        <property environment="env" />
+        <property name="cops.release.filename" value="cops.zip"/>
+        <if>
+            <isset property="env.TRAVIS_TAG" />
+            <then>
+                <property name="cops.release.filename" value="cops-${env.TRAVIS_TAG}.zip" override="true" />
+            </then>
+        </if>
 
-        <zip destfile="cops.zip">
+
+        <zip destfile="${cops.release.filename}">
             <fileset dir=".">
                 <include name="**" />
                 <exclude name="test/**" />
@@ -27,7 +37,6 @@
                 <exclude name="saucetest/**" />
                 <exclude name="resources/epub-loader/**" />
                 <exclude name="*.phar" />
-                <exclude name="*.zip" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />
                 <exclude name=".travis.yml" />
