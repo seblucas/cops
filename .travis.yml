@@ -36,7 +36,6 @@ env:
 sudo: false
 
 before_deploy:
-  - composer install phing
   - phing
   - export RELEASE_FILE=$(ls ./cops-*.zip)
 

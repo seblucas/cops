@@ -1,5 +1,6 @@
 {
     "require": {
-        "sauce/sausage": ">=0.12.0"
+        "sauce/sausage": ">=0.12.0",
+        "phing/phing": "2.*"
     }
 }
