@@ -8,7 +8,7 @@
 
 /** @var array $config */
 
-define ("VERSION", "1.0.1");
+define ("VERSION", "1.0.2");
 define ("DB", "db");
 date_default_timezone_set($config['default_timezone']);
 
