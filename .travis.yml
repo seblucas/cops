@@ -35,3 +35,21 @@ env:
 
 sudo: false
 
+before_deploy:
+  - composer install phing
+  - phing
+  - export RELEASE_FILE=$(ls ./cops-*.zip)
+
+deploy:
+  provider: releases
+  api_key:
+    secure: kNFtDsBbAGRgAYD7KHFMORsItciahDz88AjhpQbtFAN1Nrz4EIQA+0jpS7+5NYHsnb4LMcuH/BubopNlpoumy+IrUZ3+64D+NcK50YmK0sPhM1aAtEIDlXnivIvqFemzW2lCv9vvJjbmJFI1zcH877aBODJB81N6hA5zbSbIszA=
+  skip_cleanup: true
+  file:
+    - "${RELEASE_FILE}"
+  on:
+    tags: true
+    repo: seblucas/cops
+    php: 5.6
+
+
