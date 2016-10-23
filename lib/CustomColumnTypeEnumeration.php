@@ -85,7 +85,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = $this->getDb()->query($query);

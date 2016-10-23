@@ -64,7 +64,7 @@ If you choose to put your Calibre directory inside your web directory then you
 will have to edit /etc/nginx/mime.types to add this line :
 application/epub+zip epub;
 
-If you like Docker, you can also [this project](https://github.com/TomNussbaumer/docker-cops)
+If you like Docker, you can also try [this project](https://github.com/linuxserver/docker-cops)
 
 # Known problems
 

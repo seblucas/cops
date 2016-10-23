@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "未设置",
     "customcolumn.rating.unknown": "未设置",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "设置您的电子邮件(以允许发送邮件)",
     "customize.fancybox": "使用灯箱",

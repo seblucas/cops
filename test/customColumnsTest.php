@@ -951,55 +951,35 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         /* @var CustomColumn[] $custom */
         $custom = $json["customcolumns_list"];
 
-        $this->assertEquals("custom_01", $custom[0]->customColumnType->columnTitle);
-        $this->assertEquals($custom[0]->customColumnType->getTitle(), $custom[0]->customColumnType->columnTitle);
-        $this->assertEquals("2", $custom[0]->htmlvalue);
-        $this->assertEquals($custom[0]->getHTMLEncodedValue(), $custom[0]->htmlvalue);
+        $this->assertEquals("custom_01", $custom[0]['customColumnType']['columnTitle']);
+        $this->assertEquals("text_2", $custom[0]['htmlvalue']);
 
-        $this->assertEquals("custom_02", $custom[1]->customColumnType->columnTitle);
-        $this->assertEquals($custom[1]->customColumnType->getTitle(), $custom[1]->customColumnType->columnTitle);
-        $this->assertEquals("1", $custom[1]->htmlvalue);
-        $this->assertEquals($custom[1]->getHTMLEncodedValue(), $custom[1]->htmlvalue);
+        $this->assertEquals("custom_02", $custom[1]['customColumnType']['columnTitle']);
+        $this->assertEquals("a", $custom[1]['htmlvalue']);
 
-        $this->assertEquals("custom_03", $custom[2]->customColumnType->columnTitle);
-        $this->assertEquals($custom[2]->customColumnType->getTitle(), $custom[2]->customColumnType->columnTitle);
-        $this->assertEquals("<div>Not Set</div>", $custom[2]->htmlvalue);
-        $this->assertEquals($custom[2]->getHTMLEncodedValue(), $custom[2]->htmlvalue);
+        $this->assertEquals("custom_03", $custom[2]['customColumnType']['columnTitle']);
+        $this->assertEquals("<div>Not Set</div>", $custom[2]['htmlvalue']);
 
-        $this->assertEquals("custom_04", $custom[3]->customColumnType->columnTitle);
-        $this->assertEquals($custom[3]->customColumnType->getTitle(), $custom[3]->customColumnType->columnTitle);
-        $this->assertEquals("", $custom[3]->htmlvalue);
-        $this->assertEquals($custom[3]->getHTMLEncodedValue(), $custom[3]->htmlvalue);
+        $this->assertEquals("custom_04", $custom[3]['customColumnType']['columnTitle']);
+        $this->assertEquals("", $custom[3]['htmlvalue']);
 
-        $this->assertEquals("custom_05", $custom[4]->customColumnType->columnTitle);
-        $this->assertEquals($custom[4]->customColumnType->getTitle(), $custom[4]->customColumnType->columnTitle);
-        $this->assertEquals("6", $custom[4]->htmlvalue);
-        $this->assertEquals($custom[4]->getHTMLEncodedValue(), $custom[4]->htmlvalue);
+        $this->assertEquals("custom_05", $custom[4]['customColumnType']['columnTitle']);
+        $this->assertEquals("val05", $custom[4]['htmlvalue']);
 
-        $this->assertEquals("custom_06", $custom[5]->customColumnType->columnTitle);
-        $this->assertEquals($custom[5]->customColumnType->getTitle(), $custom[5]->customColumnType->columnTitle);
-        $this->assertEquals("Not Set", $custom[5]->htmlvalue);
-        $this->assertEquals($custom[5]->getHTMLEncodedValue(), $custom[5]->htmlvalue);
+        $this->assertEquals("custom_06", $custom[5]['customColumnType']['columnTitle']);
+        $this->assertEquals("Not Set", $custom[5]['htmlvalue']);
 
-        $this->assertEquals("custom_07", $custom[6]->customColumnType->columnTitle);
-        $this->assertEquals($custom[6]->customColumnType->getTitle(), $custom[6]->customColumnType->columnTitle);
-        $this->assertEquals("100000.0", $custom[6]->htmlvalue);
-        $this->assertEquals($custom[6]->getHTMLEncodedValue(), $custom[6]->htmlvalue);
+        $this->assertEquals("custom_07", $custom[6]['customColumnType']['columnTitle']);
+        $this->assertEquals("100000.0", $custom[6]['htmlvalue']);
 
-        $this->assertEquals("custom_08", $custom[7]->customColumnType->columnTitle);
-        $this->assertEquals($custom[7]->customColumnType->getTitle(), $custom[7]->customColumnType->columnTitle);
-        $this->assertEquals("Not Set", $custom[7]->htmlvalue);
-        $this->assertEquals($custom[7]->getHTMLEncodedValue(), $custom[7]->htmlvalue);
+        $this->assertEquals("custom_08", $custom[7]['customColumnType']['columnTitle']);
+        $this->assertEquals("Not Set", $custom[7]['htmlvalue']);
 
-        $this->assertEquals("custom_09", $custom[8]->customColumnType->columnTitle);
-        $this->assertEquals($custom[8]->customColumnType->getTitle(), $custom[8]->customColumnType->columnTitle);
-        $this->assertEquals("Not Set", $custom[8]->htmlvalue);
-        $this->assertEquals($custom[8]->getHTMLEncodedValue(), $custom[8]->htmlvalue);
+        $this->assertEquals("custom_09", $custom[8]['customColumnType']['columnTitle']);
+        $this->assertEquals("Not Set", $custom[8]['htmlvalue']);
 
-        $this->assertEquals("custom_10", $custom[9]->customColumnType->columnTitle);
-        $this->assertEquals($custom[9]->customColumnType->getTitle(), $custom[9]->customColumnType->columnTitle);
-        $this->assertEquals("No", $custom[9]->htmlvalue);
-        $this->assertEquals($custom[9]->getHTMLEncodedValue(), $custom[9]->htmlvalue);
+        $this->assertEquals("custom_10", $custom[9]['customColumnType']['columnTitle']);
+        $this->assertEquals("No", $custom[9]['htmlvalue']);
 
         $_SERVER["HTTP_USER_AGENT"] = "";
         $_GET["custom"] = NULL;

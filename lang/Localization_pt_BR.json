@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Não definido",
     "customcolumn.rating.unknown": "Não definido",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Forneça o seu email (para ativar envio de ebooks)",
     "customize.fancybox": "Usar o Lightbox (detalhes do livro numa janela flutuante)",

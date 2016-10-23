@@ -48,7 +48,7 @@ class JSONRenderer
             $link = new LinkNavigation ($serie->getUri ());
             $su = $link->hrefXhtml ();
         }
-        $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list']);
+        $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
 
         return array ("id" => $book->id,
                       "hasCover" => $book->hasCover,
@@ -101,7 +101,7 @@ class JSONRenderer
             $link = new LinkNavigation ($tag->getUri ());
             array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
         }
-        $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview']);
+        $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview'], true);
 
         return $out;
     }

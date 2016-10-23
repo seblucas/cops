@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Не задано",
     "customcolumn.rating.unknown": "Не задано",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "Укажите Ваш e-mail (возможность отправлять книги по почте)",
     "customize.fancybox": "Эффектно всплывающее окно при увеличении обложки",

@@ -629,15 +629,19 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
      * @param string[] $columns
      * @return CustomColumn[]
      */
-    public function getCustomColumnValues($columns) {
+    public function getCustomColumnValues($columns, $asArray = false) {
         $result = array();
-        
+
         foreach ($columns as $lookup) {
             $col = CustomColumnType::createByLookup($lookup);
-            if (! is_null($col)) {
+            if (!is_null($col)) {
                 $cust = $col->getCustomByBook($this);
-                if (! is_null($cust)) {
-                    array_push($result, $cust);
+                if (!is_null($cust)) {
+                    if ($asArray) {
+                        array_push($result, $cust->toArray());
+                    } else {
+                        array_push($result, $cust);
+                    }
                 }
             }
         }

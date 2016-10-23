@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Ayarlı değil",
     "customcolumn.rating.unknown": "Ayarlı değil",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "E-Mail Adresi (kitap gönderilebilmesi için)",
     "customize.fancybox": "Lightbox kullan (Kitap bilgileri yeni sayfa açılmasına gerek kalmadan görüntülenir)",
