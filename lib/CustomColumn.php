@@ -79,7 +79,7 @@ class CustomColumn extends Base
     }
 
     /**
-     * Craete an CustomColumn by CustomColumnID and ValueID
+     * Create an CustomColumn by CustomColumnID and ValueID
      *
      * @param integer $customId the id of the customColumn
      * @param integer $id the id of the chosen value
@@ -90,5 +90,20 @@ class CustomColumn extends Base
         $columnType = CustomColumnType::createByCustomID($customId);
 
         return $columnType->getCustom($id);
+    }
+
+    /**
+     * Return this object as an array
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return array(
+            'valueID'          => $this->valueID,
+            'value'            => $this->value,
+            'customColumnType' => (array)$this->customColumnType,
+            'htmlvalue'        => $this->htmlvalue,
+        );
     }
 }

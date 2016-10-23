@@ -1,4 +1,12 @@
-1.0.0 - 201607XX
+1.0.1 - 201610XX
+ * Fixed some type of custom column showing id instead of text - Thanks to Mike Schw√∂rer.
+ * Fixed the redirection to the OPDS catalog for Moon+ Reader.
+ * Fixed the mail character encoding, now in UTF-8.
+ * Fixed checkconfig.php to avoid sending content before headers. Thanks to Luke Stevenson.
+ * Fixed server side rendering with custom columns.
+ * Moved /icons to /images (Apache issues). Thanks to CgX.
+
+1.0.0 - 20160708
  * Updated the OPDS icons to better looking ones. Thanks to Horus68.
  * Updated the README.md.
  * Updated Brazillian, French, Hungarian, Portuguese, Russian translations.
@@ -6,13 +14,15 @@
  * Added Korean translation. Thanks to Jin, Heonkyu.
  * Added Romanian translation. Thanks to mtzro2003.
  * Added Greek translation. Thanks to George Litos.
- * Added Turkish Translation. Thanks to Yunus Emre Deligˆz.
+ * Added Turkish Translation. Thanks to Yunus Emre Delig√∂z.
+ * Added Serbian Translation. Thanks to Dalibor Vinkiƒá.
  * Added the transliteration of search text. You can enable it with $config ['cops_normalized_search']. Thanks to George Litos.
  * Added Ebookdroid, Chunky and AlReader in the know OPDS clients. Thanks to Mike Ferenduros and Horus68.
  * Added some mime types for audio books.
  * Added the rewrite rule for IIS.
  * Added a now parameter to set the style ($config['cops_style']). Thanks to Pablo Santiago Blum de Aguiar.
  * Added a directory cache ($config['cops_thumbnail_cache_directory']) to store the resized thumbnails (should help on slow NAS). Thanks to O2 Graphics.
+ * Added support of all kind of custom columns (see configuration file). Thanks to Mike Schw√∂rer.
  * Fixed COPS so that it's completely embedded (no external resources to download needed anymore).
  * Fixed a Reflected XSS vulnerability.
  * Fixed the tag filters with Bootstrap. Thanks to Klaus Broelemann.
@@ -57,7 +67,7 @@
 
 1.0.0RC1 - 20140404
   * Updated English, Spanish, German, Italian, Portuguese, Dutch translation files. Huge thanks to all to the translators.
-  * Added Swedish translation. Thanks to Bo RosÈn.
+  * Added Swedish translation. Thanks to Bo Ros√©n.
   * Added Czech translation. Thanks to Zdenek Hadrava.
   * Added a lot of refactoring to simplify the code.
   * Added a lot of new unit tests.
@@ -129,7 +139,7 @@
 0.5.0 - 20130605
   * Upgrade COPS UI to HTML5 / CSS3 to hopefully make it prettier. Most of the code was contributed by Thomas Severinsen.
   * Add the number of books in each databases (when multiple database is enabled).
-  * Add Norwegian BokmÂl strings. Thanks to Rune Mathisen for the pull request.
+  * Add Norwegian Bokm√•l strings. Thanks to Rune Mathisen for the pull request.
   * Add a split by language of catalog. Thanks to Puiu Ionut for the pull request.
   * You can now change the theme and fancybox use on all your devices (You have to enable cookies).
   * Add an eink theme. Thanks to Gregory Bodin for the code.
@@ -138,7 +148,7 @@
   * Add multiple database support. Check the documentation of $config['calibre_directory'] in config-default.php to see how to enable it.
   * Include jquery library in COPS's repository to be sure that COPS will work on LAN (without Internet access).
   * Prepare the switch to HTML5. Thanks to Thomas Severinsen for most of the code.
-  * Update the locale strings to be more strict with plurals. Thanks to Tobias Ausl‰nder for the code.
+  * Update the locale strings to be more strict with plurals. Thanks to Tobias Ausl√§nder for the code.
   * If Fancybox is not enabled ($config['cops_use_fancyapps'] = "0") then it's not used at all (even in the about box).
   * Fix book comments if it contains UTF8 characters. Reported by Alain.
   * Link to the book permalink was not working correctly in some cases. Reported by celta.

@@ -39,7 +39,7 @@
     "customcolumn.int.unknown": "Not Set",
     "customcolumn.rating.unknown": "Not Set",
     "customcolumn.stars.many": "{0} Stars",
-    "customcolumn.stars.none": "{0} Stars",
+    "customcolumn.stars.none": "No Stars",
     "customcolumn.stars.one": "1 Star",
     "customize.email": "이메일주소 (도서 메일발송용)",
     "customize.fancybox": "Lightbox 사용 (도서정보를 프레임으로 표시)",
