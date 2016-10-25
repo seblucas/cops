@@ -7,9 +7,9 @@
  */
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
-require_once dirname(__FILE__) . '/config_default.php';
+require dirname(__FILE__) . '/config_default.php';
 if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !== 'cli')) {
-    require_once dirname(__FILE__) . '/config_local.php';
+    require dirname(__FILE__) . '/config_local.php';
 }
 
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
