@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once 'config.php';
+require 'config.php';
 
 define ('VERSION', '1.0.2');
 define ('DB', 'db');
