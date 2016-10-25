@@ -6,8 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once 'config.php';
-require_once 'base.php';
+require 'config.php';
+require 'base.php';
 
 function getComponentContent($book, $component, $add)
 {
