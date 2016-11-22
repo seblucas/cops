@@ -96,7 +96,8 @@ class Data extends Base {
     }
 
     public function getUpdatedFilename () {
-        return $this->book->getAuthorsSort () . " - " . $this->book->title;
+        $str = $this->book->getAuthorsSort () . " - " . $this->book->title;
+	return preg_replace( '/[^[:alnum:]\._\- ,]/', '-', $str );
     }
 
     public function getUpdatedFilenameEpub () {
