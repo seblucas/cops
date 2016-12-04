@@ -2,6 +2,12 @@
     "name": "Calibre OPDS (and HTML) PHP Server",
     "description": "web-based light alternative to Calibre content server / Calibre2OPDS to serve ebooks (epub, mobi, pdf, ...)",
     "require": {
+        "ext-gd": "*",
+        "ext-xml": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-mbstring": "*",
         "dimsemenov/magnific-popup": "~1.0",
         "phpmailer/phpmailer": "~5.2",
         "twbs/bootstrap": "~3.3",
@@ -18,8 +24,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "5.4.* || 4.8.*",
-        "phing/phing": "2.*",
-        "sauce/sausage": ">=0.12.0"
+        "sauce/sausage": ">=0.12.0",
+        "phing/phing": "2.*"
     },
     "autoload": {
         "classmap": ["lib/", "resources/"]
