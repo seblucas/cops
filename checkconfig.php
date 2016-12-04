@@ -170,7 +170,7 @@ foreach (Base::getDbList() as $name => $database) {
             if (!preg_match ('#^http#', $database)) {
                 echo $name . ' OK';
             } else {
-                echo $name . 'Calibre path has to be local (no URL allowed)';
+                echo $name . ' Calibre path has to be local (no URL allowed)';
             }
             ?>
             </h4>
