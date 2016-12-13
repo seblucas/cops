@@ -9,3 +9,6 @@ config_local.php
 config_local.*.php
 .idea/*
 phpinfo.php
+/login.php
+/php.ini
+/check.php

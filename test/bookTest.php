@@ -167,8 +167,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $entryArray = Book::getAllRecentBooks ();
         $this->assertCount (2, $entryArray);
         
-        $config['cops_recentbooks_limit'] = 15;
-        $config['cops_max_item_per_page'] = 15;
+        $config['cops_recentbooks_limit'] = '55';
 
         $entryArray = Book::getAllRecentBooks ();
         $this->assertCount (15, $entryArray);

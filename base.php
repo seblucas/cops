@@ -1003,8 +1003,7 @@ class PageQueryResult extends Page
                             PageQueryResult::SCOPE_AUTHOR,
                             PageQueryResult::SCOPE_SERIES,
                             PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER,
-                            PageQueryResult::SCOPE_PUBLISHDATE) as $key) {
+                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
                 if (in_array($key, getCurrentOption ('ignored_categories'))) {
                     continue;
                 }
@@ -1394,7 +1393,7 @@ abstract class Base
             $numberPerPage = getCurrentOption ("max_item_per_page");
         }
 
-        if ($numberPerPage != -1 && $n != -1)
+        if ($numberPerPage != -1 && $n > 0)
         {
             // First check total number of results
             $result = self::getDb ($database)->prepare (str_format ($query, "count(*)", $filter));

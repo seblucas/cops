@@ -639,7 +639,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getAllRecentBooks($n = null) {
         global $config;
-        if (is_null($n)) {
+        if (!$n>0) {
             $n = -1;
         }
         return self::getEntryArray (self::SQL_BOOKS_RECENT, array (), $n, null, null , $config['cops_recentbooks_limit']);

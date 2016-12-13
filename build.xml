@@ -14,7 +14,7 @@
     <!-- (DEFAULT)  Target: dist                       -->
     <!-- ============================================  -->
     <target name="dist" depends="clean">
-        <echo msg="Creating archive..." />
+        <!--echo msg="Creating archive..." /-->
 
         <zip destfile="cops.zip">
             <fileset dir=".">
