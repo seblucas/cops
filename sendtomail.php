@@ -1,6 +1,7 @@
 <?php
 
-require_once ("config.php");
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
 
 function checkConfiguration () {
     global $config;
