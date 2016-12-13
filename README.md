@@ -6,13 +6,13 @@ See : [COPS's home](http://blog.slucas.fr/en/oss/calibre-opds-php-server) for mo
 
 Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mbirth/cops/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mbirth/cops/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/seblucas/cops/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/?branch=master)
 
-[![Code Coverage](https://scrutinizer-ci.com/g/mbirth/cops/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/mbirth/cops/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/seblucas/cops/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/?branch=master)
 
-[![Build Status](https://scrutinizer-ci.com/g/mbirth/cops/badges/build.png?b=master)](https://scrutinizer-ci.com/g/mbirth/cops/build-status/master)
+[![Build Status](https://scrutinizer-ci.com/g/seblucas/cops/badges/build.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/build-status/master)
 
-[![Build Status](https://travis-ci.org/mbirth/cops.svg?branch=master)](https://travis-ci.org/mbirth/cops)
+[![Build Status](https://travis-ci.org/seblucas/cops.svg?branch=master)](https://travis-ci.org/mbirth/cops)
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/seblucas.svg)](https://saucelabs.com/u/seblucas)
 
