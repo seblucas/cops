@@ -7,11 +7,9 @@
  *
  */
 
-    require_once ("config.php");
-    require_once ("JSON_renderer.php");
+require_once('config.php');
 
-    header ("Content-Type:application/json;charset=utf-8");
+header('Content-Type:application/json;charset=utf-8');
 
-
-    echo json_encode (JSONRenderer::getJson ());
+echo json_encode(JSONRenderer::getJson());
 

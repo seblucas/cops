@@ -7,7 +7,6 @@
  */
 
 require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../JSON_renderer.php");
 
 class JsonTest extends PHPUnit_Framework_TestCase
 {

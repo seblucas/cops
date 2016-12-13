@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
+    bootstrap="./vendor/autoload.php"
+    verbose="true">
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="false">
+            <!-- this is the path of the files included in your clover report -->
+            <directory suffix=".php">./</directory>
+            <exclude>
+                <directory suffix=".php">./resources</directory>
+                <directory suffix=".php">./test</directory>
+                <directory suffix=".php">./saucetest</directory>
+                <directory suffix=".php">./vendor</directory>
+                <file>config.php</file>
+                <file>config_default.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="./clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+    </logging>
+    <testsuites>
+        <testsuite name="COPS">
+            <directory>./test/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

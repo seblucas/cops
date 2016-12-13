@@ -8,20 +8,20 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once ("config.php");
-require_once ("base.php");
-require_once ("book.php");
-require_once ("resources/php-epub-meta/epub.php");
+require_once 'config.php';
+require_once 'base.php';
 
-header ("Content-Type: text/html;charset=utf-8");
+header('Content-Type: text/html;charset=utf-8');
 
-$idData = getURLParam ("data", NULL);
-$add = "data=$idData&";
-if (!is_null (GetUrlParam (DB))) $add .= DB . "=" . GetUrlParam (DB) . "&";
+$idData = getURLParam('data', NULL);
+$add = 'data=' . $idData . '&';
+if (!is_null (GetUrlParam (DB))) {
+    $add .= DB . '=' . GetUrlParam (DB) . '&';
+}
 $myBook = Book::getBookByDataId($idData);
 
-$book = new EPub ($myBook->getFilePath ("EPUB", $idData));
-$book->initSpineComponent ();
+$book = new EPub($myBook->getFilePath('EPUB', $idData));
+$book->initSpineComponent();
 
 ?>
 <head>
@@ -36,11 +36,11 @@ $book->initSpineComponent ();
     <script type="text/javascript">
         Monocle.DEBUG = true;
         var bookData = {
-          getComponents: function () {
-            <?php echo "return [" . implode (", ", array_map (function ($comp) { return "'" . $comp . "'"; }, $book->components ())) . "];"; ?>
+          getComponents: function() {
+            <?php echo 'return [' . implode(', ', array_map(function($comp) { return "'" . $comp . "'"; }, $book->components ())) . '];'; ?>
           },
-          getContents: function () {
-            <?php echo "return [" . implode (", ", array_map (function ($content) { return "{title: '" . addslashes($content["title"]) . "', src: '". $content["src"] . "'}"; }, $book->contents ())) . "];"; ?>
+          getContents: function() {
+            <?php echo 'return [' . implode(', ', array_map(function($content) { return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}"; }, $book->contents())) . '];'; ?>
           },
           getComponent: function (componentId) {
             return { url: "epubfs.php?<?php echo $add ?>comp="  + componentId };

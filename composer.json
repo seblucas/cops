@@ -1,6 +1,74 @@
 {
+    "name": "Calibre OPDS (and HTML) PHP Server",
+    "description": "web-based light alternative to Calibre content server / Calibre2OPDS to serve ebooks (epub, mobi, pdf, ...)",
     "require": {
+        "ext-gd": "*",
+        "ext-xml": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-pdo_sqlite": "*",
+        "ext-mbstring": "*",
+        "dimsemenov/magnific-popup": "~1.0",
+        "phpmailer/phpmailer": "~5.2",
+        "twbs/bootstrap": "~3.3",
+        "bower-asset/jQuery": "~1.11",
+        "bower-asset/jquery-cookie": "~1.4",
+        "bower-asset/normalize.css": "~3.0",
+        "twitter/typeahead.js": "~0.10.5",
+        "seblucas/dot-php": "~1.0.0",
+        "seblucas/php-epub-meta": "~1.0.0",
+        "seblucas/tbszip": "~2.16",
+        "simonpioli/sortelements": "dev-master",
+        "bower-asset/doT": "~1.0.1",
+        "rsms/js-lru": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "5.4.* || 4.8.*",
         "sauce/sausage": ">=0.12.0",
         "phing/phing": "2.*"
-    }
+    },
+    "autoload": {
+        "classmap": ["lib/", "resources/"]
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "seblucas/dot-php",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/seblucas/doT-php",
+                    "reference": "master"
+                },
+                "autoload": {
+                    "classmap": ["./"]
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "simonpioli/sortelements",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/simonpioli/sortElements",
+                    "reference": "master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "rsms/js-lru",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/rsms/js-lru",
+                    "reference": "master"
+                }
+            }
+        }
+    ]
 }
