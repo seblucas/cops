@@ -28,10 +28,6 @@ script:
 after_success:
   - chmod +x test/prepareSauceTest.sh
   - test/prepareSauceTest.sh
-notifications:
-    slack:
-        rooms:
-            - mbirth:35odTGxPB8RhaQYauM0m0k12#cops
 env:
   global:
   - SAUCE_USERNAME=seblucas 
