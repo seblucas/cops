@@ -3,7 +3,7 @@
 # Program :  COPS localization string generator
 # Version :  0.0.1
 #
-# Author  :  Sébastien Lucas
+# Author  :  SÃ©bastien Lucas
 # License :  GPLv2
 #
 

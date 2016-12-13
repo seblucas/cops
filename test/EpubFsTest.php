@@ -6,9 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../book.php");
-require_once (dirname(__FILE__) . "/../epubfs.php");
+require (dirname(__FILE__) . "/../epubfs.php");
+require (dirname(__FILE__) . "/config_test.php");
 
 
 class EpubFsTest extends PHPUnit_Framework_TestCase

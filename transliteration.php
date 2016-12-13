@@ -135,22 +135,21 @@ function _transliteration_process($string, $unknown = '?', $source_langcode = NU
         }
         elseif ($n <= 0xfd) {
           $ord = ($n - 252) * 1073741824 + (ord($sequence[1]) - 128) * 16777216 + (ord($sequence[2]) - 128) * 262144 + (ord($sequence[3]) - 128) * 4096 + (ord($sequence[4]) - 128) * 64 + (ord($sequence[5]) - 128);
+        } else {
+          $ord = $n;
         }
         $result .= _transliteration_replace($ord, $unknown, $source_langcode);
         $head = '';
-      }
-      elseif ($c < "\x80") {
+      } elseif ($c < "\x80") {
         // ASCII byte.
         $result .= $c;
         $head = '';
-      }
-      elseif ($c < "\xc0") {
+      } elseif ($c < "\xc0") {
         // Illegal tail bytes.
         if ($head == '') {
           $result .= $unknown;
         }
-      }
-      else {
+      } else {
         // Miscellaneous freaks.
         $result .= $unknown;
         $head = '';
@@ -191,6 +190,8 @@ function _transliteration_replace($ord, $unknown = '?', $langcode = NULL) {
   if (!isset($map[$bank][$langcode])) {
     $file = './resources/transliteration-data/' . sprintf('x%02x', $bank) . '.php';  
     if (file_exists($file)) {
+      $base = array();
+      $variant = array();
       include $file;
       if ($langcode != 'en' && isset($variant[$langcode])) {
         // Merge in language specific mappings.

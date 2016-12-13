@@ -1,10 +1,13 @@
+/** global: Monocle */
 Monocle.DEBUG = true;
 
 (function () {
 
+  /** global: Monocle */
   Monocle.Styles.container.right = "24px";
 
   // Initialize the reader element.
+  /** global: Monocle */
   Monocle.Events.listen(
     window,
     'load',
@@ -30,18 +33,21 @@ Monocle.DEBUG = true;
           reader.addControl(placeSaver, 'invisible');
 
           /* SPINNER */
+          /** global: Monocle */
           var spinner = Monocle.Controls.Spinner(reader);
           reader.addControl(spinner, 'page', { hidden: true });
           spinner.listenForUsualDelays('reader');
 
           /* Because the 'reader' element changes size on window resize,
            * we should notify it of this event. */
+          /** global: Monocle */
           Monocle.Events.listen(
             window,
             'resize',
             function () { window.reader.resized() }
           );
           
+          /** global: Monocle */
           Monocle.Events.listen(window.top.document, 'keyup', function(evt) {
             var eventCharCode = evt.charCode || evt.keyCode;
             var dir = null;
@@ -58,11 +64,13 @@ Monocle.DEBUG = true;
           });
 
           /* MAGNIFIER CONTROL */
+          /** global: Monocle */
           var magnifier = new Monocle.Controls.Magnifier(reader);
           reader.addControl(magnifier, 'page');
 
           /* BOOK TITLE RUNNING HEAD */
           var bookTitle = {}
+          /** global: Monocle */
           bookTitle.contentsMenu = Monocle.Controls.Contents(reader);
           reader.addControl(bookTitle.contentsMenu, 'popover', { hidden: true });
           bookTitle.createControlElements = function () {
@@ -73,6 +81,7 @@ Monocle.DEBUG = true;
             runner.innerHTML = reader.getBook().getMetaData('title');
             cntr.appendChild(runner);
 
+            /** global: Monocle */
             Monocle.Events.listenForContact(
               cntr,
               {
@@ -148,6 +157,7 @@ Monocle.DEBUG = true;
           );
 
           /* Scrubber */
+          /** global: Monocle */
           var scrubber = new Monocle.Controls.Scrubber(reader);
           reader.addControl(scrubber, 'popover', { hidden: true });
           var showFn = function (evt) {
@@ -156,10 +166,12 @@ Monocle.DEBUG = true;
             scrubber.updateNeedles();
           }
           for (var i = 0; i < chapterTitle.runners.length; ++i) {
+            /** global: Monocle */
             Monocle.Events.listenForContact(
               chapterTitle.runners[i].parentNode,
               { start: showFn }
             );
+            /** global: Monocle */
             Monocle.Events.listenForContact(
               pageNumber.runners[i].parentNode,
               { start: showFn }

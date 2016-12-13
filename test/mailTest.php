@@ -7,7 +7,6 @@
  */
 
 require_once (dirname(__FILE__) . "/config_test.php");
-require_once (dirname(__FILE__) . "/../book.php");
 require_once (dirname(__FILE__) . "/../sendtomail.php");
 
 class MailTest extends PHPUnit_Framework_TestCase

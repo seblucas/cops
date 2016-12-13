@@ -6,8 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-    if (!isset($config))
+    if (!isset($config)) {
         $config = array();
+    }
 
     /*
      * The directory containing calibre's metadata.db file, with sub-directories
@@ -40,27 +41,27 @@
     /*
      * Catalog's author name
      */
-    $config['cops_author_name'] = "Sébastien Lucas";
+    $config['cops_author_name'] = 'Sébastien Lucas';
 
     /*
      * Catalog's author uri
      */
-    $config['cops_author_uri'] = "http://blog.slucas.fr";
+    $config['cops_author_uri'] = 'http://blog.slucas.fr';
 
     /*
      * Catalog's author email
      */
-    $config['cops_author_email'] = "sebastien@slucas.fr";
+    $config['cops_author_email'] = 'sebastien@slucas.fr';
 
     /*
      * Catalog's title
      */
-    $config['cops_title_default'] = "COPS";
+    $config['cops_title_default'] = 'COPS';
 
     /*
      * Catalog's subtitle
      */
-    $config['cops_subtitle_default'] = "";
+    $config['cops_subtitle_default'] = '';
 
     /*
      * Wich header to use when downloading books outside the web directory
@@ -69,44 +70,44 @@
      *   X-Sendfile         : For Lightttpd or Apache (with mod_xsendfile)
      *   No value (default) : Let PHP handle the download
      */
-    $config['cops_x_accel_redirect'] = "";
+    $config['cops_x_accel_redirect'] = '';
 
     /*
      * Height of thumbnail image for OPDS
      */
-    $config['cops_opds_thumbnail_height'] = "164";
+    $config['cops_opds_thumbnail_height'] = '164';
 
     /*
      * Height of thumbnail image for HTML
      */
-    $config['cops_html_thumbnail_height'] = "164";
+    $config['cops_html_thumbnail_height'] = '164';
 
     /*
      * Icon for both OPDS and HTML catalog
      * Note that this has to be a real icon (.ico)
      */
-    $config['cops_icon'] = "favicon.ico";
+    $config['cops_icon'] = 'favicon.ico';
 
     /*
      * Show icon for authors, series, tags and books on OPDS feed
      *  1 : enable
      *  0 : disable
      */
-    $config['cops_show_icons'] = "1";
+    $config['cops_show_icons'] = '1';
 
     /*
      * Default timezone
      * Check following link for other timezones :
      * http://www.php.net/manual/en/timezones.php
      */
-    $config['default_timezone'] = "Europe/Paris";
+    $config['default_timezone'] = 'Europe/Paris';
 
     /*
      * Prefered format for HTML catalog
      * The two first will be displayed in book entries
      * The other only appear in book detail
      */
-    $config['cops_prefered_format'] = array ("EPUB", "PDF", "AZW3", "AZW", "MOBI", "CBR", "CBZ");
+    $config['cops_prefered_format'] = array('EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ');
 
     /*
      * use URL rewriting for downloading of ebook in HTML catalog
@@ -114,7 +115,7 @@
      *  1 : enable
      *  0 : disable
      */
-    $config['cops_use_url_rewriting'] = "0";
+    $config['cops_use_url_rewriting'] = '0';
 
     /*
      * generate a invalid OPDS stream to allow bad OPDS client to use search
@@ -123,41 +124,41 @@
      *  1 : enable support for non compliant OPDS client
      *  0 : always generate valid OPDS code
      */
-    $config['cops_generate_invalid_opds_stream'] = "0";
+    $config['cops_generate_invalid_opds_stream'] = '0';
 
     /*
      * Max number of items per page
      * -1 unlimited
      */
-    $config['cops_max_item_per_page'] = "-1";
+    $config['cops_max_item_per_page'] = '-1';
 
     /*
      * split authors by first letter
      * 1 : Yes
      * 0 : No
      */
-    $config['cops_author_split_first_letter'] = "1";
+    $config['cops_author_split_first_letter'] = '1';
 
     /*
      * split titles by first letter
      * 1 : Yes
      * 0 : No
      */
-    $config['cops_titles_split_first_letter'] = "1";
+    $config['cops_titles_split_first_letter'] = '1';
 
     /*
      * Enable the Lightboxes (for popups)
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_use_fancyapps'] = "1";
+    $config['cops_use_fancyapps'] = '1';
 
     /*
      * Update Epub metadata before download
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_update_epub-metadata'] = "0";
+    $config['cops_update_epub-metadata'] = '0';
 
     /*
      * Filter on tags to book list
@@ -168,7 +169,7 @@
      *
      * Example : array ("All" => "", "Unread" => "!Read", "Read" => "Read")
      */
-    $config['cops_books_filter'] = array ();
+    $config['cops_books_filter'] = array();
 
     /*
      * Custom Columns for the index page
@@ -178,7 +179,7 @@
      *
      * Note that the composite custom columns are not supported
      */
-    $config['cops_calibre_custom_column'] = array ();
+    $config['cops_calibre_custom_column'] = array();
 
     /*
      * Custom Columns for the list representation
@@ -207,7 +208,7 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_provide_kepub'] = "0";
+    $config['cops_provide_kepub'] = '0';
 
     /*
      * Enable and configure Send To Kindle (or Email) feature.
@@ -237,7 +238,7 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config['cops_html_tag_filter'] = "0";
+    $config['cops_html_tag_filter'] = '0';
 
     /*
      * Thumbnails are generated on-the-fly so it can be problematic on servers with slow CPU (Raspberry Pi, Dockstar, Piratebox, ...).
@@ -246,7 +247,7 @@
      * "1" : always send the full size image (Network hungry)
      * any url : Send a constant image as the thumbnail (you can try "images/bookcover.png")
      */
-    $config['cops_thumbnail_handling'] = "";
+    $config['cops_thumbnail_handling'] = '';
 
     /*
      * Directory to keep resized thumbnails: allow to resize thumbnails only on first access, then use this cache.
@@ -255,14 +256,14 @@
      * "/tmp/cache/" (example) : will generate thumbnails in /tmp/cache/
      * BEWARE : it has to end with a /
      */
-    $config['cops_thumbnail_cache_directory'] = "";
+    $config['cops_thumbnail_cache_directory'] = '';
 
     /*
      * Contains a list of user agent for browsers not compatible with client side rendering
      * For now : Kindle, Sony PRS-T1, Sony PRS-T2, All Cybook devices (maybe a little extreme).
      * This item is used as regular expression so "." will force server side rendering for all devices
      */
-    $config['cops_server_side_render'] = "Kindle\/1\.0|Kindle\/2\.0|Kindle\/3\.0|EBRD1101|EBRD1201|cybook";
+    $config['cops_server_side_render'] = 'Kindle\/1\.0|Kindle\/2\.0|Kindle\/3\.0|EBRD1101|EBRD1201|cybook';
 
     /*
      * Specify the ignored categories for the home screen and with search
@@ -276,7 +277,7 @@
      * - rating
      * - language
      */
-    $config ['cops_ignored_categories'] = array ();
+    $config ['cops_ignored_categories'] = array();
 
     /*
      * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog
@@ -286,7 +287,7 @@
      * index.php or feed.php first.
      * BEWARE : Do not touch this if you're not using password, not using PRS-TX or not using Aldiko.
      */
-    $config ['cops_fetch_protect'] = "0";
+    $config ['cops_fetch_protect'] = '0';
 
     /*
      * WARNING NOT READY FOR PRODUCTION USE
@@ -294,7 +295,7 @@
      * 1 : Yes (enable)
      * 0 : No
      */
-    $config ['cops_normalized_search'] = "0";
+    $config ['cops_normalized_search'] = '0';
 
     /*
      * Enable PHP password protection (You can use if htpasswd is not possible for you)

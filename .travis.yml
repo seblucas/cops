@@ -2,32 +2,36 @@ language: php
 
 matrix:
   include:
-    - php: "7.0"
-
+    - php: "5.5"
     - php: "5.6"
+    - php: "7.0"
       addons:
         sauce_connect: true
         hosts:
           - cops-travis
 
-    - php: "5.5"
-    - php: "5.4"
-    - php: "5.3"
     - php: "hhvm"
   allow_failures:
     - php: "hhvm"
-    - php: "7.0"
+    - php: "5.5"
 
 before_script:
+  - composer selfupdate
+  - composer global require "fxp/composer-asset-plugin:~1.1"
+  - composer install
   - npm install jshint
   - jshint --version
 script:
-  - phpunit
+  - vendor/bin/phpunit
   - jshint --verbose --show-non-errors util.js
   - php test/coverage-checker.php clover.xml 45
 after_success:
   - chmod +x test/prepareSauceTest.sh
   - test/prepareSauceTest.sh
+notifications:
+    slack:
+        rooms:
+            - mbirth:35odTGxPB8RhaQYauM0m0k12#cops
 env:
   global:
   - SAUCE_USERNAME=seblucas 
@@ -36,6 +40,7 @@ env:
 sudo: false
 
 before_deploy:
+  - composer install phing
   - phing
   - export RELEASE_FILE=$(ls ./cops-*.zip)
 
@@ -50,5 +55,4 @@ deploy:
     tags: true
     repo: seblucas/cops
     php: 5.6
-
 
