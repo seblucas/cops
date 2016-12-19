@@ -10,9 +10,9 @@ Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 
 [![Code Coverage](https://scrutinizer-ci.com/g/seblucas/cops/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/?branch=master)
 
-[![Build Status](https://scrutinizer-ci.com/g/seblucas/cops/badges/build.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/build-status/master)
+[![Build Status / Scrutinizer](https://scrutinizer-ci.com/g/seblucas/cops/badges/build.png?b=master)](https://scrutinizer-ci.com/g/seblucas/cops/build-status/master)
 
-[![Build Status](https://travis-ci.org/seblucas/cops.svg?branch=master)](https://travis-ci.org/mbirth/cops)
+[![Build Status](https://travis-ci.org/seblucas/cops.svg?branch=master)](https://travis-ci.org/seblucas/cops)
 
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/seblucas.svg)](https://saucelabs.com/u/seblucas)
 
