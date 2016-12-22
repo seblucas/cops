@@ -5,8 +5,9 @@
 /vendor/
 /clover.xml
 /test/text.atom
-/composer.phar
+/*.phar
 /cops.zip
+/cops-*.zip
 /cops.sublime-*
 /config_local.php
 /config_local.*.php
