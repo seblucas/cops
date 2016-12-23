@@ -72,7 +72,7 @@ If you like Docker, you can also try [this project](https://github.com/linuxserv
 git pull https://github.com/seblucas/cops.git # or download lastest zip see below
 cd cops
 wget https://getcomposer.org/composer.phar
-php composer.phar --no-dev --optimize-autoloader
+php composer.phar install --no-dev --optimize-autoloader
 ```
 
 After that you can use the previous how-to starting at the second step.
