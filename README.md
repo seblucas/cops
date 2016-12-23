@@ -55,7 +55,7 @@ On Centos you may have to add :
 
 # Install
 
-1.  Extract the zip file to a folder in web space (visible to the web server).
+1.  Extract the zip file you got from [the release page](https://github.com/seblucas/cops/releases) to a folder in web space (visible to the web server).
 2.  If you're doing a first-time install, copy config_local.php.example to config_local.php
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
@@ -65,6 +65,19 @@ will have to edit /etc/nginx/mime.types to add this line :
 application/epub+zip epub;
 
 If you like Docker, you can also try [this project](https://github.com/linuxserver/docker-cops)
+
+# Install from sources
+
+```bash
+git pull https://github.com/seblucas/cops.git # or download lastest zip see below
+cd cops
+wget https://getcomposer.org/composer.phar
+php composer.phar --no-dev --optimize-autoloader
+```
+
+After that you can use the previous how-to starting at the second step.
+
+Note that instead of cloning you can also get [latest master as zip](https://github.com/seblucas/cops/archive/master.zip)
 
 # Known problems
 
@@ -88,8 +101,7 @@ Please read https://github.com/seblucas/cops/wiki and check the FAQ.
 External libraries used :
  * JQuery : http://jquery.com/
  * Magnific Popup : http://dimsemenov.com/plugins/magnific-popup/
- * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me
-                   https://github.com/seblucas/php-epub-meta
+ * Php-epub-meta : https://github.com/splitbrain/php-epub-meta with some modification by me (https://github.com/seblucas/php-epub-meta)
  * TbsZip : http://www.tinybutstrong.com/apps/tbszip/tbszip_help.html
  * DoT.js : http://olado.github.io/doT/index.html
  * PHPMailer : https://github.com/PHPMailer/PHPMailer
