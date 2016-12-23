@@ -37,7 +37,15 @@
                 <exclude name="coverage/**" />
                 <exclude name="saucetest/**" />
                 <exclude name="resources/epub-loader/**" />
-                <exclude name="vendor/**" />
+                <exclude name="vendor/twbs/bootstrap/docs/**" />
+                <exclude name="vendor/twbs/bootstrap/fonts/**" />
+                <exclude name="vendor/twbs/bootstrap/js/**" />
+                <exclude name="vendor/twbs/bootstrap/less/**" />
+                <exclude name="vendor/seblucas/tbszip/stuffs/**" />
+                <exclude name="vendor/seblucas/php-epub-meta/assets/**" />
+                <exclude name="vendor/seblucas/php-epub-meta/test/**" />
+                <exclude name="vendor/dimsemenov/magnific-popup/libs/**" />
+                <exclude name="vendor/dimsemenov/magnific-popup/website/**" />
                 <exclude name="*.phar" />
                 <exclude name="*.zip" />
                 <exclude name="*.xml" />
