@@ -41,35 +41,30 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 
 # Prerequisites
 
-1. 	PHP 5.3, 5.4, 5.5, 5.6 or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support.
+1. 	PHP 5.3, 5.4, 5.5, 5.6, 7 or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support.
 2. 	A web server with PHP support. I only tested with various version of Nginx.
-    Other people reported it working with Apache and Cherokee. You can also use PHP
-    embedded server (https://github.com/seblucas/cops/wiki/Howto---PhpEmbeddedServer)
+    Other people reported it working with Apache and Cherokee. You can also use PHP embedded server (https://github.com/seblucas/cops/wiki/Howto---PhpEmbeddedServer)
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
-On any Debian base Linux you can use :
+On any Debian based Linux you can use :
  aptitude install php5-gd php5-sqlite php5-json php5-intl
 
 On Centos you may have to add :
  yum install php-xml
 
-# Install
+# Install a release (Easiest way)
 
 1.  Extract the zip file you got from [the release page](https://github.com/seblucas/cops/releases) to a folder in web space (visible to the web server).
 2.  If you're doing a first-time install, copy config_local.php.example to config_local.php
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
 
-If you choose to put your Calibre directory inside your web directory then you
-will have to edit /etc/nginx/mime.types to add this line :
-application/epub+zip epub;
-
 If you like Docker, you can also try [this project](https://github.com/linuxserver/docker-cops)
 
 # Install from sources
 
 ```bash
-git pull https://github.com/seblucas/cops.git # or download lastest zip see below
+git clone https://github.com/seblucas/cops.git # or download lastest zip see below
 cd cops
 wget https://getcomposer.org/composer.phar
 php composer.phar install --no-dev --optimize-autoloader
@@ -78,6 +73,13 @@ php composer.phar install --no-dev --optimize-autoloader
 After that you can use the previous how-to starting at the second step.
 
 Note that instead of cloning you can also get [latest master as zip](https://github.com/seblucas/cops/archive/master.zip)
+
+# Where to put my Calibre directory ?
+
+Long story short : ALWAYS outside of COPS's directory especially if COPS is installed on a VPS / Server. If you follow my advice then your data will be safe.
+
+If you choose to put your Calibre directory inside your web directory and use Nginx then you will have to edit /etc/nginx/mime.types to add this line :
+`application/epub+zip epub;`
 
 # Known problems
 
