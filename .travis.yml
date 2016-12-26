@@ -17,6 +17,7 @@ matrix:
 before_script:
   - composer selfupdate
   - composer global require "fxp/composer-asset-plugin:~1.1"
+  - 'if [ "${TRAVIS_PHP_VERSION}" = "5.5" ]; then rm composer.lock ; fi'
   - composer install
   - npm install jshint
   - jshint --version
