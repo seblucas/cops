@@ -67,6 +67,7 @@ If you like Docker, you can also try [this project](https://github.com/linuxserv
 git clone https://github.com/seblucas/cops.git # or download lastest zip see below
 cd cops
 wget https://getcomposer.org/composer.phar
+php composer.phar global require "fxp/composer-asset-plugin:~1.1"
 php composer.phar install --no-dev --optimize-autoloader
 ```
 
