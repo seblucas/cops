@@ -41,8 +41,8 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 
 # Prerequisites
 
-1. 	PHP 5.3, 5.4, 5.5, 5.6, 7 or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support.
-2. 	A web server with PHP support. I only tested with various version of Nginx.
+1. 	PHP 5.3, 5.4, 5.5, 5.6, 7.X or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 5.6 or later recommended).
+2. 	A web server with PHP support. I tested with various version of Nginx and Apache.
     Other people reported it working with Apache and Cherokee. You can also use PHP embedded server (https://github.com/seblucas/cops/wiki/Howto---PhpEmbeddedServer)
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
@@ -74,6 +74,8 @@ php composer.phar install --no-dev --optimize-autoloader
 After that you can use the previous how-to starting at the second step.
 
 Note that instead of cloning you can also get [latest master as zip](https://github.com/seblucas/cops/archive/master.zip)
+
+Note that if your PHP version is lower that 5.6, then you may have to remove `composer.lock` before starting the last line.
 
 # Where to put my Calibre directory ?
 
