@@ -225,6 +225,10 @@ max-width:800px;
     position: absolute;
 }
 
+.fullclickpopup {
+  height: 86px;
+}
+
 .books .fancydetail .fullclickpopup {
     margin: 0px 0px 4px 75px;
 }
