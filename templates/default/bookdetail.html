@@ -10,7 +10,7 @@
         {{~it.book.datas:data:i}}
         <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.format}}</a>
         {{? data.mail == 1}}
-        <a id="mailButton" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="icon-envelope icon-large"></i></a>
+        <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="icon-envelope icon-large"></i></a>
         {{?}}
         {{? data.readerUrl != ""}}
         <a title="Reader" href="{{=data.readerUrl}}" target="blank" {{=it.c.config.kindleHack}}><i class="icon-eye-open icon-large"></i></a>
