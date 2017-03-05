@@ -220,7 +220,8 @@
      *                                           "smtp.username" => "",
      *                                           "smtp.password" => "",
      *                                           "smtp.secure"   => "",
-     *                                           "address.from"  => "cops@slucas.fr"
+     *                                           "address.from"  => "cops@slucas.fr",
+     *                                           "subject"       => "Sent by COPS : " // Not mandatory
      *                                           );
      *
      * For Gmail (ssl is mandatory) :

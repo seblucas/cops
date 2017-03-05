@@ -75,7 +75,11 @@ $mail->AddAttachment($data->getLocalPath ());
 
 $mail->IsHTML(true);
 $mail->CharSet = "UTF-8";
-$mail->Subject = 'Sent by COPS : ' . $data->getUpdatedFilename ();
+$mail->Subject = 'Sent by COPS : ';
+if (!empty ($config['cops_mail_configuration']["subject"])) {
+    $mail->Subject = $config['cops_mail_configuration']["subject"];
+}
+$mail->Subject .= $data->getUpdatedFilename ();
 $mail->Body    = "<h1>" . $book->title . "</h1><h2>" . $book->getAuthorsName () . "</h2>" . $book->getComment ();
 $mail->AltBody = "Sent by COPS";
 
