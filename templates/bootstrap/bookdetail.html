@@ -31,7 +31,7 @@
         {{~it.book.datas:data:i}}
             <a href="{{=data.url}}" class="btn btn-primary" role="button">{{=data.format}}</a>
             {{? data.mail == 1}}
-            <a id="mailButton" class="btn btn-primary" role="button" title="Mail" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
+            <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
             <span class="glyphicon glyphicon-envelope"></span></a>
             {{?}}
             {{? data.readerUrl != ""}}
