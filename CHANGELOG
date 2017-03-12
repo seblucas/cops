@@ -1,10 +1,11 @@
 1.1.0 - 201703XX
  * Upgraded to PHPMailer 5.2.21.
  * Merged a huge PR that clean most of COPS source code. Thanks to Markus Birth for his work and his patience.
- * Updated Polish tranlations.
- * Fixed a bad external dependency in login.html causing problem with HTPPS. Thanks to polytan02.
+ * Updated German, Greek, Italian, Polish, Romanian, Russian, Turkish translations. Check Transifex for the authors.
+ * Fixed a bad external dependency in login.html causing problem with HTTPS. Thanks to polytan02.
  * Fixed minor gui nitpick.
  * Added automatic redirection to the OPDS feed for many new Android apps (see #309). Thanks to horus68.
+ * Added a configuration item to set the mail subject.
 
 1.0.1 - 20161015
  * Fixed some type of custom column showing id instead of text - Thanks to Mike Schwörer.
