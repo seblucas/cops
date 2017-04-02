@@ -51,8 +51,9 @@
                 <exclude name="*.xml" />
                 <exclude name=".travis.yml" />
                 <exclude name=".coveralls.yml" />
+                <exclude name=".scrutinizer.yml" />
                 <exclude name="config_local.php" />
-                <exclude name="composer.json" />
+                <exclude name="composer*" />
                 <exclude name="cops.sublime*" />
             </fileset>
         </zip>
