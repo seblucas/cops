@@ -1,4 +1,4 @@
-1.1.0 - 201703XX
+1.1.0 - 20170402
  * Upgraded to PHPMailer 5.2.21.
  * Merged a huge PR that clean most of COPS source code. Thanks to Markus Birth for his work and his patience.
  * Updated German, Greek, Italian, Polish, Romanian, Russian, Turkish translations. Check Transifex for the authors.
