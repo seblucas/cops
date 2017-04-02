@@ -37,7 +37,8 @@ sudo: false
 
 before_deploy:
   - composer install --no-dev --optimize-autoloader
-  - phing
+  - wget http://www.phing.info/get/phing-latest.phar
+  - php phing-latest.phar
   - export RELEASE_FILE=$(ls ./cops-*.zip)
 
 deploy:
