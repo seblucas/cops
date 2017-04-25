@@ -62,6 +62,7 @@ $mail->SMTPAuth = !empty ($config['cops_mail_configuration']["smtp.username"]);
 if (!empty ($config['cops_mail_configuration']["smtp.username"])) $mail->Username = $config['cops_mail_configuration']["smtp.username"];
 if (!empty ($config['cops_mail_configuration']["smtp.password"])) $mail->Password = $config['cops_mail_configuration']["smtp.password"];
 if (!empty ($config['cops_mail_configuration']["smtp.secure"])) $mail->SMTPSecure = $config['cops_mail_configuration']["smtp.secure"];
+if (!empty ($config['cops_mail_configuration']["smtp.port"])) $mail->Port = $config['cops_mail_configuration']["smtp.port"];
 
 $mail->From = $config['cops_mail_configuration']["address.from"];
 $mail->FromName = $config['cops_title_default'];
