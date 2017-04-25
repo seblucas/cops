@@ -220,6 +220,7 @@
      *                                           "smtp.username" => "",
      *                                           "smtp.password" => "",
      *                                           "smtp.secure"   => "",
+     *                                           "smtp.port"     => "",
      *                                           "address.from"  => "cops@slucas.fr",
      *                                           "subject"       => "Sent by COPS : " // Not mandatory
      *                                           );
@@ -229,6 +230,15 @@
      *                                           "smtp.username" => "YOUR GMAIL ADRESS",
      *                                           "smtp.password" => "YOUR GMAIL PASSWORD",
      *                                           "smtp.secure"   => "ssl",
+     *                                           "address.from"  => "cops@slucas.fr"
+     *                                           );
+     *
+     * For GMX (tls and 587 is mandatory) :
+     * $config['cops_mail_configuration'] = array( "smtp.host"   => "mail.gmx.com",
+     *                                           "smtp.username" => "YOUR GMX ADRESS",
+     *                                           "smtp.password" => "YOUR GMX PASSWORD",
+     *                                           "smtp.secure"   => "tls",
+     *                                           "smtp.port"     => "587",
      *                                           "address.from"  => "cops@slucas.fr"
      *                                           );
      */
