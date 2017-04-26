@@ -220,7 +220,7 @@
      *                                           "smtp.username" => "",
      *                                           "smtp.password" => "",
      *                                           "smtp.secure"   => "",
-     *                                           "smtp.port"     => "",
+     *                                           "smtp.port"     => "", // Not mandatory, if smtp.secure is set then defaults to 465
      *                                           "address.from"  => "cops@slucas.fr",
      *                                           "subject"       => "Sent by COPS : " // Not mandatory
      *                                           );
