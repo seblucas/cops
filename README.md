@@ -59,7 +59,10 @@ On Centos you may have to add :
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
 
-If you like Docker, you can also try [this project](https://github.com/linuxserver/docker-cops)
+If you like Docker, you can also try these docker containers.
+[x64](https://hub.docker.com/r/linuxserver/cops/)
+[armhf](https://hub.docker.com/r/lsioarmhf/cops)
+[arm64](https://hub.docker.com/r/lsioarmhf/cops-aarch64/)
 
 # Install from sources
 
