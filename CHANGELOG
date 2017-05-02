@@ -1,3 +1,9 @@
+1.1.1 - 20170502
+ * Fixed the handling of user specific configuration files. Thanks to marioscube, chadberg for the diagnostic / fix and Neil for the PR.
+ * Changed the cog on the upper right to a magnifying glass icon. Thanks to horus68.
+ * Added test on travis on PHP 5.4.
+ * Added a way to specify the secure SMTP port. Thanks to ubupl.
+
 1.1.0 - 20170402
  * Upgraded to PHPMailer 5.2.21.
  * Merged a huge PR that clean most of COPS source code. Thanks to Markus Birth for his work and his patience.
