@@ -30,6 +30,7 @@
             <fileset dir=".">
                 <include name="**" />
                 <exclude name="components/**" />
+                <exclude name="node_modules/**" />
                 <exclude name="test/**" />
                 <exclude name=".hg*/**" />
                 <exclude name=".git/**" />
