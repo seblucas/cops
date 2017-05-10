@@ -97,6 +97,12 @@ Please see https://github.com/seblucas/cops/issues for open issues
 
 Please read https://github.com/seblucas/cops/wiki and check the FAQ.
 
+# Contributing
+
+As you could see [here](https://github.com/seblucas/cops/graphs/contributors), I appreciate every contributions and there were a lot over time. So don't be shy and submit your Pull Requests.
+
+I only have one limit (I may have more but that one is the worse) : COPS' goal is to provide an alternative to Calibre's content server and not to replace Calibre entirely. So I will refuse any PR making changes to the database content.
+
 # Credits
 
  * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
