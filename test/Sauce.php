@@ -80,7 +80,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
     public function setUpPage()
     {
         if (isset ($_SERVER["TRAVIS_JOB_NUMBER"])) {
-            $this->url('http://127.0.0.1:8888/index.php');
+            $this->url('http://127.0.0.1:8080/index.php');
         } else {
             $this->url('http://cops-demo.slucas.fr/index.php');
         }
