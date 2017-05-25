@@ -101,6 +101,8 @@ Please read https://github.com/seblucas/cops/wiki and check the FAQ.
 
 As you could see [here](https://github.com/seblucas/cops/graphs/contributors), I appreciate every contributions and there were a lot over time. So don't be shy and submit your Pull Requests.
 
+Note to translators : please prefer using [Transifex](https://github.com/seblucas/cops/wiki/Update-translations) instead of doing a PR.
+
 I only have one limit (I may have more but that one is the worse) : COPS' goal is to provide an alternative to Calibre's content server and not to replace Calibre entirely. So I will refuse any PR making changes to the database content.
 
 # Credits
