@@ -49,6 +49,9 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 On any Debian based Linux you can use :
  aptitude install php5-gd php5-sqlite php5-json php5-intl
 
+If you use Debian Stretch :
+ aptitude install php7.0-gd php7.0-sqlite3 php7.0-json php7.0-intl
+
 On Centos you may have to add :
  yum install php-xml
 
