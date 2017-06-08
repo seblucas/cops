@@ -47,10 +47,10 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 3.  The path to a calibre library (metadata.db, format, & cover files).
 
 On any Debian based Linux you can use :
- aptitude install php5-gd php5-sqlite php5-json php5-intl
+ `apt-get install php5-gd php5-sqlite php5-json php5-intl`
 
 If you use Debian Stretch :
- aptitude install php7.0-gd php7.0-sqlite3 php7.0-json php7.0-intl
+ `apt-get install php7.0-gd php7.0-sqlite3 php7.0-json php7.0-intl php7.0-xml php7.0-mbstring php7.0-zip`
 
 On Centos you may have to add :
  yum install php-xml
