@@ -22,7 +22,7 @@ before_script:
   - composer global require "fxp/composer-asset-plugin:~1.1"
   - 'if [ "${TRAVIS_PHP_VERSION}" = "5.5" ] || [ "${TRAVIS_PHP_VERSION}" = "5.4" ]; then rm composer.lock && sed -i "/platform/d" composer.json ; fi'
   - composer install
-  - npm install jshint
+  - npm install jshint --no-save
   - jshint --version
 script:
   - vendor/bin/phpunit
