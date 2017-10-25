@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
+ * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
     require_once dirname(__FILE__) . '/config.php';
@@ -26,6 +26,8 @@
     $bookId = getURLParam('id', NULL);
     $type   = getURLParam('type', 'jpg');
     $idData = getURLParam('data', NULL);
+    $viewOnly = getURLParam('view', FALSE);
+    
     if (is_null($bookId)) {
         $book = Book::getBookByDataId($idData);
     } else {
@@ -103,6 +105,8 @@
     }
     if ($type == 'jpg') {
         header('Content-Disposition: filename="' . basename($file) . '"');
+    } elseif ($viewOnly && ($type == 'pdf' || $type == 'epub')) {
+        header('Content-Disposition: filename="' . basename($file) . '"');        
     } else {
         header('Content-Disposition: attachment; filename="' . basename($file) . '"');
     }
