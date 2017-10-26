@@ -106,7 +106,7 @@
     if ($type == 'jpg') {
         header('Content-Disposition: filename="' . basename($file) . '"');
     } elseif ($viewOnly && ($type == 'pdf' || $type == 'epub')) {
-        header('Content-Disposition: filename="' . basename($file) . '"');        
+        header('Content-Disposition: inline');        
     } else {
         header('Content-Disposition: attachment; filename="' . basename($file) . '"');
     }
