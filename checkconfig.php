@@ -70,7 +70,7 @@
             if (extension_loaded('gd') && function_exists('gd_info')) {
                 echo 'OK';
             } else {
-                echo 'Please install the php5-gd extension and make sure it\'s enabled';
+                echo 'Please install the php5-gd / php7.0-gd extension and make sure it\'s enabled';
             }
             ?>
             </h4>
@@ -82,7 +82,7 @@
             if (extension_loaded('pdo_sqlite')) {
                 echo 'OK';
             } else {
-                echo 'Please install the php5-sqlite extension and make sure it\'s enabled';
+                echo 'Please install the php5-sqlite / php7.0-sqlite3 extension and make sure it\'s enabled';
             }
             ?>
             </h4>
@@ -106,7 +106,7 @@
             if (extension_loaded('json')) {
                 echo 'OK';
             } else {
-                echo 'Please install the php5-json extension and make sure it\'s enabled';
+                echo 'Please install the php5-json / php7.0-json extension and make sure it\'s enabled';
             }
             ?>
             </h4>
@@ -118,7 +118,7 @@
             if (extension_loaded('mbstring')) {
                 echo 'OK';
             } else {
-                echo 'Please install the php5-mbstring extension and make sure it\'s enabled';
+                echo 'Please install the php5-mbstring / php7.0-mbstring extension and make sure it\'s enabled';
             }
             ?>
             </h4>
@@ -130,7 +130,7 @@
             if (extension_loaded('intl')) {
                 echo 'OK';
             } else {
-                echo 'Please install the php5-intl extension and make sure it\'s enabled';
+                echo 'Please install the php5-intl / php7.0-intl extension and make sure it\'s enabled';
             }
             ?>
             </h4>
@@ -189,6 +189,7 @@ Please check
 <li>Value of <a href="http://php.net/manual/en/ini.core.php#ini.open-basedir">open_basedir</a> in your php.ini</li>
 <li>The access rights of the Calibre Database</li>
 <li>Synology users please read <a href="https://github.com/seblucas/cops/wiki/Howto---Synology">this</a></li>
+<li>Note that hosting your Calibre Library in /home is almost impossible due to access rights restriction</li>
 </ul>';
             }
             ?>
