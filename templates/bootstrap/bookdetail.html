@@ -29,10 +29,10 @@
 <div class="col-md-2 col-sm-12">
     <div class="btn-group pull-right">
         {{~it.book.datas:data:i}}
-            <a href="{{=data.url}}" class="btn btn-primary" role="button">{{=data.format}}</a>      
+            <a href="{{=data.url}}" class="btn btn-primary" role="button">{{=data.format}}</a>
             {{? data.format == "PDF"}}
             <a href="{{=data.url}}&view=1" class="btn btn-primary" role="button">VIEW</a>
-            {{?}}        
+            {{?}}
             {{? data.format == "EPUB"}}
             <a href="{{=data.url}}&view=1" class="btn btn-primary" role="button">VIEW</a>
             {{?}}<br />

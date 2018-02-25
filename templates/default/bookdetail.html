@@ -8,10 +8,10 @@
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.format}}</a>        
+        <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.format}}</a>
         {{? data.format == "PDF"}}
         <a href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}>VIEW</a>
-        {{?}}        
+        {{?}}
         {{? data.format == "EPUB"}}
         <a href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}>VIEW</a>
         {{?}}
