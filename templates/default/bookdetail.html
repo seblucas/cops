@@ -8,13 +8,8 @@
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a href="{{=data.url}}" {{=it.c.config.kindleHack}}>{{=data.format}}</a>
-        {{? data.format == "PDF"}}
-        <a href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}>VIEW</a>
-        {{?}}
-        {{? data.format == "EPUB"}}
-        <a href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}>VIEW</a>
-        {{?}}
+        <a title="Download // {{=data.format}}" href="{{=data.url}}" {{=it.c.config.kindleHack}}><i class="icon-download"></i> {{=data.format}}</a>
+        <a title="Open // {{=data.format}}" href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}><i class="icon-folder-open icon-large"></i></a>
         {{? data.mail == 1}}
         <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="icon-envelope icon-large"></i></a>
         {{?}}
