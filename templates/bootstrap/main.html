@@ -47,13 +47,9 @@
             {{~}}
             <div class="text-center bottomright">
             {{~entry.book.preferedData:data:j}}
-                <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button">{{=data.name}}</a>
-                {{? data.name == "PDF"}}
-                <a href="{{=data.url}}&view=1" class="btn btn-primary btn-sm" role="button">VIEW</a>
-                {{?}}
-                {{? data.name == "EPUB"}}
-                <a href="{{=data.url}}&view=1" class="btn btn-primary btn-sm" role="button">VIEW</a>
-                {{?}}<br />
+                <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
+                <a href="{{=data.url}}&view=1" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-folder-open"></span></a>
+                <br />
             {{~}}
             </div>
           </div>
