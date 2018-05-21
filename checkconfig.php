@@ -185,7 +185,7 @@ foreach (Base::getDbList() as $name => $database) {
                 echo $name . ' File ' . Base::getDbFileName($i) . ' not found,
 Please check
 <ul>
-<li>Value of $config[\'calibre_directory\'] in config_local.php</li>
+<li>Value of $config[\'calibre_directory\'] in config_local.php <strong>(Does it end with a \'/\'?)</strong></li>
 <li>Value of <a href="http://php.net/manual/en/ini.core.php#ini.open-basedir">open_basedir</a> in your php.ini</li>
 <li>The access rights of the Calibre Database</li>
 <li>Synology users please read <a href="https://github.com/seblucas/cops/wiki/Howto---Synology">this</a></li>
