@@ -1,3 +1,12 @@
+1.1.2 - 201805XX
+ * Fixed the download of Kepub with recent firmware from Kobo. Thanks to ospring for the report.
+ * Fixed the cache headers. Thanks to CgX for the fix.
+ * Added Bulgarian, Indonesian, Chinese (China and Taywan) translation. Check Transifex for the authors.
+ * Added an open button to use automatically your prefered reader. Thanks to ttan.
+ * Updated Hungarian, Ukranian, Polish, Spanish and Swedish translations. Check Transifex for the authors.
+ * Updated a lot of documentation and checkconfig.php to better help users.
+ * Upgraded to latest jQuery 1.12.X, Normalise 7.0, PHP Mailer 5.2.26, Font Awesome Free 5.0.13.
+
 1.1.1 - 20170502
  * Fixed the handling of user specific configuration files. Thanks to marioscube, chadberg for the diagnostic / fix and Neil for the PR.
  * Changed the cog on the upper right to a magnifying glass icon. Thanks to horus68.
