@@ -93,7 +93,7 @@ function elapsed () {
 }
 
 function retourMail(data) {
-    $("#mailButton :first-child").removeClass ("icon-spinner icon-spin").addClass ("icon-envelope");
+    $("#mailButton :first-child").removeClass ("fas fa-spinner fa-pulse").addClass ("fas fa-envelope");
     alert (data);
 }
 
@@ -112,7 +112,7 @@ function sendToMailAddress (component, dataid) {
     if (currentData.databaseId) {
         url = url + '?db=' + currentData.databaseId;
     }
-    $("#mailButton :first-child").removeClass ("icon-envelope").addClass ("icon-spinner icon-spin");
+    $("#mailButton :first-child").removeClass ("fas fa-envelope").addClass ("fas fa-spinner fa-pulse");
     $.ajax ({'url': url, 'type': 'post', 'data': { 'data':  dataid, 'email': email }, 'success': retourMail});
 }
 
@@ -348,7 +348,7 @@ updatePage = function (data) {
 };
 
 navigateTo = function (url) {
-    $("h1").append (" <i class='icon-spinner icon-spin'></i>");
+    $("h1").append (" <i class='fas fa-spinner fa-pulse'></i>");
     before = new Date ();
     var jsonurl = url.replace ("index", "getJSON");
     var cachedData = cache.get (jsonurl);
