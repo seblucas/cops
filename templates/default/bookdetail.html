@@ -8,18 +8,18 @@
     </span>
     <h2 class="download">
         {{~it.book.datas:data:i}}
-        <a title="Download // {{=data.format}}" href="{{=data.url}}" {{=it.c.config.kindleHack}}><i class="icon-download"></i> {{=data.format}}</a>
-        <a title="Open // {{=data.format}}" href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}><i class="icon-folder-open icon-large"></i></a>
+        <a title="Download // {{=data.format}}" href="{{=data.url}}" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.format}}</a>
+        <a title="Open // {{=data.format}}" href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}><i class="fas fa-folder-open fa-lg"></i></a>
         {{? data.mail == 1}}
-        <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="icon-envelope icon-large"></i></a>
+        <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="fas fa-envelope fa-lg"></i></a>
         {{?}}
         {{? data.readerUrl != ""}}
-        <a title="Reader" href="{{=data.readerUrl}}" target="blank" {{=it.c.config.kindleHack}}><i class="icon-eye-open icon-large"></i></a>
+        <a title="Reader" href="{{=data.readerUrl}}" target="blank" {{=it.c.config.kindleHack}}><i class="fas fa-eye fa-lg"></i></a>
         {{?}}
         <br />
         {{~}}
     </h2>
-    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}><i class="icon-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
+    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}" {{=it.c.config.kindleHack}}><i class="fas fa-link"></i></a>{{=htmlspecialchars (it.title)}}</h1>
     <p class="popupless">
         <h3>{{=it.c.i18n.authorsTitle}}: </h3>
         {{~it.book.authors:author:i}}

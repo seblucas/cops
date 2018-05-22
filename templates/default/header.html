@@ -1,9 +1,9 @@
 <header>
     <a class="headleft" href="{{=it.homeurl}}" {{=it.c.config.kindleHack}}>
-        <div title="{{=it.c.i18n.homeAlt}}" class="hicon hicon64"><i class="icon-home"></i></div>
+        <div title="{{=it.c.i18n.homeAlt}}" class="hicon hicon64"><i class="fas fa-home"></i></div>
     </a>
     {{? it.c.config.server_side_rendering == 0}}
-    <div title="{{=it.c.i18n.cogAlt}}" class="hicon hicon64 headright"><i class="icon-search" id="searchImage"></i></div>
+    <div title="{{=it.c.i18n.cogAlt}}" class="hicon hicon64 headright"><i class="fas fa-search" id="searchImage"></i></div>
     {{?}}
     <div class="headcenter">
         <h1>{{=it.title}}</h1>
@@ -19,14 +19,14 @@
                     <input type="text" data-type="search" required="required" name="query" />
                 </div>
                 <button title="{{=it.c.i18n.searchAlt}}" type="submit" class="hicon hicon32 submit">
-                    <i class="icon-search icon-2x"></i>
+                    <i class="fas fa-search fa-2x"></i>
                 </button>
             </form>
         </div>
         {{? it.c.config.server_side_rendering == 0}}
         <div id="sortForm" style="float: right; width: 45%; display: none">
             <div style="float: right">
-                <div title="{{=it.c.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="icon-sort icon-2x"></i></div>
+                <div title="{{=it.c.i18n.sortAlt}}" id="sort" class="hicon hicon32"><i class="fas fa-sort fa-2x"></i></div>
             </div>
             <div class="stop">
                 <select id="sortchoice">
