@@ -5,6 +5,7 @@
     "require": {
         "ext-gd": "*",
         "ext-xml": "*",
+        "ext-xmlwriter": "*",
         "ext-intl": "*",
         "ext-json": "*",
         "ext-pdo_sqlite": "*",
