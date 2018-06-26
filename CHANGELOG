@@ -1,4 +1,4 @@
-1.1.2 - 201805XX
+1.1.2 - 20180626
  * Fixed the download of Kepub with recent firmware from Kobo. Thanks to ospring for the report.
  * Fixed the cache headers. Thanks to CgX for the fix.
  * Added Bulgarian, Indonesian, Chinese (China and Taywan) translation. Check Transifex for the authors.
