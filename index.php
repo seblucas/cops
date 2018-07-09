@@ -54,6 +54,7 @@
     echo($dot($data));
 ?><body>
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 if (useServerSideRendering()) {
     // Get the data
     $data = JSONRenderer::getJson(true);
