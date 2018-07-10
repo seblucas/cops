@@ -33,7 +33,7 @@ after_success:
   - test/prepareSauceTest.sh
 env:
   global:
-  - SAUCE_USERNAME=seblucas 
+  - SAUCE_USERNAME=seblucas
   - secure: VVxocvmz6WYr3tZSTA42M/LUhaHoBWw5onh85hnquoMaxspd3tDCyfQIowTTmEXikRh2T0CkTH7X3dhVwRTd/Ha9isja1qDo9Lc2flGCoWICF7WFZuom084+d+O+EWx4WZMAw4Lz4w6a5xflpPKnzNs9B0+de0BdTlQ5qSXVrcA=
 
 sudo: false
@@ -47,7 +47,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
-    secure: kNFtDsBbAGRgAYD7KHFMORsItciahDz88AjhpQbtFAN1Nrz4EIQA+0jpS7+5NYHsnb4LMcuH/BubopNlpoumy+IrUZ3+64D+NcK50YmK0sPhM1aAtEIDlXnivIvqFemzW2lCv9vvJjbmJFI1zcH877aBODJB81N6hA5zbSbIszA=
+    secure: nUQ6uX4+x3VtyrtKjHANl3zLyc0Q9qe2O10ufOFBgcQwWETrE6Gk+Rwn/Kz6OJkg0AGfioptvjh8c28ELV98M+KmhiwhT1VQgs3pa6x9CbggA8fdbGUCq+SC8lnU7MBYIO5gZ36F3RfPwXxXkd09bajiVLbI024IqFSIAONzLXw=
   skip_cleanup: true
   file:
     - "${RELEASE_FILE}"
