@@ -129,7 +129,7 @@ External libraries used :
 
 # Copyright & License
 
-COPS - 2012-2017 (c) Sébastien Lucas
+COPS - 2012-2018 (c) Sébastien Lucas
 
 See COPYING and file headers for license info
 
