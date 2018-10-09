@@ -23,7 +23,8 @@ class JSONRenderer
             if ($i == 2) { break; }
             if ($data = $book->getDataFormat ($format)) {
                 $i++;
-                array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
+                array_push ($preferedData, array ("url" => $data->getHtmlLink (),
+                  "viewUrl" => $data->getViewHtmlLink (), "name" => $format));
             }
         }
 

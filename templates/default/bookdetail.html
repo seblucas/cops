@@ -9,7 +9,7 @@
     <h2 class="download">
         {{~it.book.datas:data:i}}
         <a title="Download // {{=data.format}}" href="{{=data.url}}" {{=it.c.config.kindleHack}}><i class="fas fa-download"></i> {{=data.format}}</a>
-        <a title="Open // {{=data.format}}" href="{{=data.url}}&view=1" {{=it.c.config.kindleHack}}><i class="fas fa-folder-open fa-lg"></i></a>
+        <a title="Open // {{=data.format}}" href="{{=data.viewUrl}}" {{=it.c.config.kindleHack}}><i class="fas fa-folder-open fa-lg"></i></a>
         {{? data.mail == 1}}
         <a id="mailButton" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;" {{=it.c.config.kindleHack}}><i class="fas fa-envelope fa-lg"></i></a>
         {{?}}
