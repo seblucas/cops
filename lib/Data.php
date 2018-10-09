@@ -108,31 +108,39 @@ class Data extends Base
                            array('-', '-', ' '), $str );
     }
 
-    public function getDataLink ($rel, $title = NULL) {
+    public function getDataLink ($rel, $title = NULL, $view = false) {
         global $config;
 
         if ($rel == Link::OPDS_ACQUISITION_TYPE && $config['cops_use_url_rewriting'] == "1") {
-            return $this->getHtmlLinkWithRewriting($title);
+            return $this->getHtmlLinkWithRewriting($title, $view);
         }
 
-        return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title);
+        return self::getLink ($this->book, $this->extension, $this->getMimeType (), $rel, $this->getFilename (), $this->id, $title, NULL, $view);
     }
 
     public function getHtmlLink () {
         return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE)->href;
     }
 
+    public function getViewHtmlLink () {
+        return $this->getDataLink(Link::OPDS_ACQUISITION_TYPE, NULL, true)->href;
+    }
+
     public function getLocalPath () {
         return $this->book->path . "/" . $this->getFilename ();
     }
 
-    public function getHtmlLinkWithRewriting ($title = NULL) {
+    public function getHtmlLinkWithRewriting ($title = NULL, $view = false) {
         global $config;
 
         $database = "";
         if (!is_null (GetUrlParam (DB))) $database = GetUrlParam (DB) . "/";
 
-        $href = "download/" . $this->id . "/" . $database;
+        $prefix = "download";
+        if ($view) {
+            $prefix = "view";
+        }
+        $href = $prefix . "/" . $this->id . "/" . $database;
 
         if ($config['cops_provide_kepub'] == "1" &&
             $this->isEpubValidOnKobo () &&
@@ -176,11 +184,12 @@ class Data extends Base
         return $urlParam;
     }
 
-    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL)
+    public static function getLink ($book, $type, $mime, $rel, $filename, $idData, $title = NULL, $height = NULL, $view = false)
     {
         global $config;
 
         $urlParam = addURLParameter("", "data", $idData);
+        if ($view) $urlParam = addURLParameter($urlParam, "view", 1);
 
         if (Base::useAbsolutePath () ||
             $rel == Link::OPDS_THUMBNAIL_TYPE ||
