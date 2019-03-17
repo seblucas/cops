@@ -3,14 +3,14 @@
  * CalibreDbLoader class
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
 require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
 
 /**
  * Calibre database sql file that comes unmodified from Calibre project:
- *   /calibre/resources/metadata_sqlite.sql
+ *   https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
  */
 define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql');
 
@@ -80,6 +80,9 @@ class CalibreDbLoader
 				if (strpos($str, 'title_sort') !== false) {
 					continue;
 				}
+				if (strpos($sql, 'has_cover BOOL DEFAULT 0,') !== false) {
+					$sql = str_replace('has_cover BOOL DEFAULT 0,', 'has_cover BOOL DEFAULT 0, cover TEXT NOT NULL DEFAULT "",', $sql);
+				}
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->execute();
 			}
@@ -106,7 +109,7 @@ class CalibreDbLoader
 			// Open the database
 			$this->mDb = new PDO($dsn); // Send an exception if error
 			$this->mDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			//echo sprintf('Init database ok for: %s%s', $dsn, '<br />');
+			$this->mDb->exec('pragma synchronous = off');
 		}
 		catch (Exception $e) {
 			$error = sprintf('Cannot open database [%s]: %s', $dsn, $e->getMessage());
@@ -117,19 +120,20 @@ class CalibreDbLoader
 	/**
 	 * Add an epub to the db
 	 *
-	 * @param string Epub file name
+	 * @param string Epub base directory
+	 * @param string Epub file name (from base directory)
 	 * @throws Exception if error
 	 *
 	 * @return string Empty string or error if any
 	 */
-	public function AddEpub($inFileName)
+	public function AddEpub($inBasePath, $inFileName)
 	{
 		$error = '';
 
 		try {
 			// Load the book infos
 			$bookInfos = new BookInfos();
-			$bookInfos->LoadFromEpub($inFileName);
+			$bookInfos->LoadFromEpub($inBasePath, $inFileName);
 			// Add the book
 			$this->AddBook($bookInfos);
 		}
@@ -138,7 +142,6 @@ class CalibreDbLoader
 		}
 
 		return $error;
-
 	}
 
 	/**
@@ -151,25 +154,41 @@ class CalibreDbLoader
 	 */
 	private function AddBook($inBookInfo)
 	{
+		$errors = array();
+
 		// Check if the book uuid does not already exist
 		$sql = 'select b.id, b.title, b.path, d.name, d.format from books as b, data as d where d.book = b.id and uuid=:uuid';
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->execute();
 		while ($post = $stmt->fetchObject()) {
-			$error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $post->format, $post->title);
-			throw new Exception($error);
+			$error = sprintf('Warning: Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $inBookInfo->mFormat, $post->title);
+			$errors[] = $error;
+			// Set a new uuid
+			$inBookInfo->CreateUuid();
+			break;
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path)';
+		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
+		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
+		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
+		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
+		if (empty($inBookInfo->mCover)) {
+			$error = 'Warning: Cover not found';
+			$errors[] = $error;
+		}
+		$cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', $inBookInfo->mTitle);
-		$stmt->bindParam(':pubdate', empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate);
-		$stmt->bindParam(':lastmodified', empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate);
+		$stmt->bindParam(':pubdate', $pubDate);
+		$stmt->bindParam(':lastmodified', $lastModified);
 		$stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
+		$stmt->bindParam(':hascover', $hasCover, PDO::PARAM_INT);
+		$stmt->bindParam(':cover', $cover);
+		$stmt->bindParam(':isbn', $inBookInfo->mIsbn);
 		$stmt->execute();
 		// Get the book id
 		$sql = 'select id from books where uuid=:uuid';
@@ -185,13 +204,27 @@ class CalibreDbLoader
 			$error = sprintf('Cannot find book id for uuid: %s', $inBookInfo->mUuid);
 			throw new Exception($error);
 		}
-		// Add the book formats
-		$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
-		$stmt = $this->mDb->prepare($sql);
-		$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-		$stmt->bindParam(':format', $inBookInfo->mFormat);
-		$stmt->bindParam(':name', $inBookInfo->mName);
-		$stmt->execute();
+		// Add the book data (formats)
+		$formats = array($inBookInfo->mFormat, 'pdf');
+		foreach ($formats as $format) {
+			$fileName = sprintf('%s%s%s%s%s.%s', $inBookInfo->mBasePath, DIRECTORY_SEPARATOR, $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
+			if (!is_readable($fileName)) {
+				if ($format == $inBookInfo->mFormat) {
+					$error = sprintf('Cannot read file: %s', $fileName);
+					throw new Exception($error);
+				}
+				continue;
+			}
+			$uncompressedSize = filesize($fileName);
+			$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, :uncompressedSize)';
+			$stmt = $this->mDb->prepare($sql);
+			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
+			$format = strtoupper($format);
+			$stmt->bindParam(':format', $format); // Calibre format is uppercase
+			$stmt->bindParam(':name', $inBookInfo->mName);
+			$stmt->bindParam(':uncompressedSize', $uncompressedSize);
+			$stmt->execute();
+		}
 		// Add the book comments
 		$sql = 'insert into comments(book, text) values(:idBook, :text)';
 		$stmt = $this->mDb->prepare($sql);
@@ -394,6 +427,11 @@ class CalibreDbLoader
 			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
 			$stmt->bindParam(':idSubject', $idSubject, PDO::PARAM_INT);
 			$stmt->execute();
+		}
+		// Send warnings
+		if (count($errors)) {
+			$error = implode(' - ', $errors);
+			throw new Exception($error);
 		}
 	}
 
