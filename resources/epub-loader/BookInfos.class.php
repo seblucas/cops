@@ -5,7 +5,10 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
+
+require_once (realpath(dirname(__FILE__)) . '/BookEPub.class.php');
 require_once (realpath(dirname(__FILE__)) . '/ZipFile.class.php');
+/*
 $fileName = realpath(dirname(dirname(__FILE__))) . '/php-epub-meta/epub.php';
 if (file_exists($fileName)) {
 	require_once ($fileName);
@@ -14,6 +17,7 @@ else {
 	$fileName = realpath(dirname(dirname(dirname(__FILE__)))) . '/vendor/seblucas/php-epub-meta/lib/EPub.php';
 	require_once ($fileName);
 }
+*/
 
 /**
  * BookInfos class contains informations about a book,
@@ -78,7 +82,7 @@ class BookInfos
 		}
 
 		// Load the epub file
-		$ePub = new EPub($fullFileName, 'ZipFile');
+		$ePub = new BookEPub($fullFileName, 'ZipFile');
 
 		// Check epub version
 		$version = $ePub->getEpubVersion();
