@@ -169,9 +169,10 @@ class CalibreDbLoader
 			break;
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
-		$pubDate = empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate;
-		$lastModified = empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate;
+		$sql = 'insert into books(title, sort, timestamp, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :timestamp, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
+		$timeStamp = BookInfos::GetTimeStamp($inBookInfo->mTimeStamp);
+		$pubDate = BookInfos::GetTimeStamp(empty($inBookInfo->mCreationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mCreationDate);
+		$lastModified = BookInfos::GetTimeStamp(empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mModificationDate);
 		$hasCover = empty($inBookInfo->mCover) ? 0 : 1;
 		if (empty($inBookInfo->mCover)) {
 			$error = 'Warning: Cover not found';
@@ -181,6 +182,7 @@ class CalibreDbLoader
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', $inBookInfo->mTitle);
+		$stmt->bindParam(':timestamp', $timeStamp);
 		$stmt->bindParam(':pubdate', $pubDate);
 		$stmt->bindParam(':lastmodified', $lastModified);
 		$stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);

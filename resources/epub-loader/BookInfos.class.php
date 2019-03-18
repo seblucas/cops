@@ -64,6 +64,8 @@ class BookInfos
 
 	public $mModificationDate = '';
 
+	public $mTimeStamp = 0;
+
 	/**
 	 * Loads book infos from an epub file
 	 *
@@ -124,8 +126,48 @@ class BookInfos
 		// Tag sample in opf file:
 		//   <meta content="7" name="calibre:series_index"/>
 		$this->mSerieIndex = $ePub->SerieIndex();
-		$this->mCreationDate = $ePub->CreationDate();
-		$this->mModificationDate = $ePub->ModificationDate();
+		$this->mCreationDate = $this->GetSqlDate($ePub->CreationDate());
+		$this->mModificationDate = $this->GetSqlDate($ePub->ModificationDate());
+		// Timestamp is used to get latest ebooks
+		$this->mTimeStamp = empty($this->mModificationDate) ? $this->mCreationDate : $this->mModificationDate;
+	}
+
+	/**
+	 * Format an date from a date
+	 *
+	 * @param string $inDate
+	 *
+	 * @return string Sql formated date
+	 */
+	private function GetSqlDate($inDate)
+	{
+		if (empty($inDate)) {
+			return null;
+		}
+
+		$date = new \DateTime($inDate);
+		$res = $date->format('Y-m-d H:i:s');
+
+		return $res;
+	}
+
+	/**
+	 * Format a timestamp from a date
+	 *
+	 * @param string $inDate
+	 *
+	 * @return int Timestamp
+	 */
+	public static function GetTimeStamp($inDate)
+	{
+		if (empty($inDate)) {
+			return null;
+		}
+
+		$date = new \DateTime($inDate);
+		$res = $date->getTimestamp();
+
+		return $res;
 	}
 
 	/**
