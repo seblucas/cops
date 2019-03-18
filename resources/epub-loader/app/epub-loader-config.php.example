@@ -8,6 +8,8 @@
 
 defined('DEF_AppName') or die('Restricted access');
 
+if (PHP_SAPI === 'cli') { parse_str(implode('&', array_slice($argv, 1)), $_GET); }
+
 $gConfig = array();
 
 /**
