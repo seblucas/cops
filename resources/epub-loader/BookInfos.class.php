@@ -129,7 +129,7 @@ class BookInfos
 		$this->mCreationDate = $this->GetSqlDate($ePub->CreationDate());
 		$this->mModificationDate = $this->GetSqlDate($ePub->ModificationDate());
 		// Timestamp is used to get latest ebooks
-		$this->mTimeStamp = empty($this->mModificationDate) ? $this->mCreationDate : $this->mModificationDate;
+		$this->mTimeStamp = $this->mCreationDate;
 	}
 
 	/**
