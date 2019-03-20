@@ -171,6 +171,49 @@ class BookInfos
 	}
 
 	/**
+	 * Format a string for sort
+	 *
+	 * @param string Any string
+	 *
+	 * @return string Same string without any accents
+	 */
+	public static function GetSortString($inStr)
+	{
+		$search = array(
+			'@(*UTF8)[éèêëÉÈÊË]@i',
+			'@(*UTF8)[áàâäÁÀÂÄ]@i',
+			'@(*UTF8)[íìîïÍÌÎÏ]@i',
+			'@(*UTF8)[úùûüÚÙÛÜ]@i',
+			'@(*UTF8)[óòôöÓÒÔÖ]@i',
+			'@(*UTF8)[œŒ]@i',
+			'@(*UTF8)[æÆ]@i',
+			'@(*UTF8)[çÇ]@i',
+			//'@[ ]@i',
+			'@[^a-zA-Z0-9_\-\.\ ]@'
+		);
+		$replace = array(
+			'e',
+			'a',
+			'i',
+			'u',
+			'o',
+			'oe',
+			'ae',
+			'c',
+			//'-',
+			''
+		);
+		$res = preg_replace($search, $replace, $inStr);
+
+		// Remove double white spaces
+		while (strpos($res, '  ') !== false) {
+			$res = str_replace('  ', ' ', $res);
+		}
+
+		return trim($res);
+	}
+
+	/**
 	 * Create a new unique id (same as shell uuidgen)
 	 *
 	 * @return void

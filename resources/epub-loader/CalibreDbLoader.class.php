@@ -80,8 +80,13 @@ class CalibreDbLoader
 				if (strpos($str, 'title_sort') !== false) {
 					continue;
 				}
+				// Add 'calibre_database_field_cover' field
 				if (strpos($sql, 'has_cover BOOL DEFAULT 0,') !== false) {
-					$sql = str_replace('has_cover BOOL DEFAULT 0,', 'has_cover BOOL DEFAULT 0, cover TEXT NOT NULL DEFAULT "",', $sql);
+					$sql = str_replace('has_cover BOOL DEFAULT 0,', 'has_cover BOOL DEFAULT 0,' . ' cover TEXT NOT NULL DEFAULT "",', $sql);
+				}
+				// Add 'calibre_database_field_sort' field
+				if (strpos($sql, 'CREATE TABLE tags ') !== false) {
+					$sql = str_replace('name TEXT NOT NULL COLLATE NOCASE,', 'name TEXT NOT NULL COLLATE NOCASE,' . ' sort TEXT COLLATE NOCASE,', $sql);
 				}
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->execute();
@@ -156,6 +161,9 @@ class CalibreDbLoader
 	{
 		$errors = array();
 
+		// Add 'calibre_database_field_sort' field
+		$sortField = 'sort';
+
 		// Check if the book uuid does not already exist
 		$sql = 'select b.id, b.title, b.path, d.name, d.format from books as b, data as d where d.book = b.id and uuid=:uuid';
 		$stmt = $this->mDb->prepare($sql);
@@ -181,7 +189,7 @@ class CalibreDbLoader
 		$cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
 		$stmt = $this->mDb->prepare($sql);
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
-		$stmt->bindParam(':sort', $inBookInfo->mTitle);
+		$stmt->bindParam(':sort', BookInfos::GetSortString($inBookInfo->mTitle));
 		$stmt->bindParam(':timestamp', $timeStamp);
 		$stmt->bindParam(':pubdate', $pubDate);
 		$stmt->bindParam(':lastmodified', $lastModified);
@@ -266,7 +274,7 @@ class CalibreDbLoader
 				$sql = 'insert into series(name, sort) values(:serie, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':serie', $inBookInfo->mSerie);
-				$stmt->bindParam(':sort', $inBookInfo->mSerie);
+				$stmt->bindParam(':sort', BookInfos::GetSortString($inBookInfo->mSerie));
 				$stmt->execute();
 				// Get the serie id
 				$sql = 'select id from series where name=:serie';
@@ -311,7 +319,7 @@ class CalibreDbLoader
 				$sql = 'insert into authors(name, sort) values(:author, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':author', $author);
-				$stmt->bindParam(':sort', $authorSort);
+				$stmt->bindParam(':sort', BookInfos::GetSortString($authorSort));
 				$stmt->execute();
 				// Get the author id
 				$sql = 'select id from authors where name=:author';
@@ -399,9 +407,18 @@ class CalibreDbLoader
 			}
 			else {
 				// Add a new subject
-				$sql = 'insert into tags(name) values(:subject)';
+				if (!empty($sortField)) {
+					$sql = sprintf('insert into tags(name, %s) values(:subject, :%s)', $sortField, $sortField);
+				}
+				else {
+					$sql = 'insert into tags(name) values(:subject)';
+				}
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':subject', $subject);
+				// Add :sort field
+				if (!empty($sortField)) {
+					$stmt->bindParam(':' . $sortField, BookInfos::GetSortString($subject));
+				}
 				$stmt->execute();
 				// Get the subject id
 				$sql = 'select id from tags where name=:subject';
