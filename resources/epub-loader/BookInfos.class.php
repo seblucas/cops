@@ -210,7 +210,9 @@ class BookInfos
 			$res = str_replace('  ', ' ', $res);
 		}
 
-		return trim($res, ' -.');
+		$res = trim($res, ' -.');
+
+		return $res;
 	}
 
 	/**
