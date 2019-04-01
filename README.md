@@ -107,9 +107,9 @@ I only have one limit (I may have more but that one is the worse) : COPS' goal i
 
 # Credits
 
- * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+ * Locale message handling is inspired of https://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php
  * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
- * All icons come from Font Awesome : http://fontawesome.github.io/Font-Awesome/
+ * All icons come from Font Awesome : https://github.com/FortAwesome/Font-Awesome
  * The unofficial OPDS validator : http://opds-validator.appspot.com/
  * Thanks to all testers, translators and contributors.
  * Feed icons made by Freepik from Flaticon website licensed under Creative Commons BY 3.0 http://www.flaticon.com and http://www.freepik.com
@@ -126,7 +126,7 @@ External libraries used :
 
 # Copyright & License
 
-COPS - 2012-2018 (c) Sébastien Lucas
+COPS - 2012-2019 (c) Sébastien Lucas
 
 See COPYING and file headers for license info
 
