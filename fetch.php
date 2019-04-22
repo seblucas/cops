@@ -89,7 +89,9 @@
                 return;
             }
 
-            if ($book->getThumbnail (getURLParam('width'), getURLParam('height'), $thumbnailCacheFullpath)) {
+            $width = getURLParam('width');
+            $height = getURLParam('height');
+            if ($book->getThumbnail($width, $height, $thumbnailCacheFullpath, $type)) {
                 //if we don't cache the thumbnail, imagejpeg() in $book->getThumbnail() already return the image data
                 if ( $thumbnailCacheFullpath === null ) {
                     // The cover had to be resized
