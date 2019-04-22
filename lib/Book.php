@@ -478,7 +478,7 @@ class Book extends Base
         }
     }
 
-    public function getThumbnail($width, $height, $outputfile = NULL) {
+    public function getThumbnail($width, $height, $outputfile = NULL, $inType = 'jpg') {
         if (is_null($width) && is_null($height)) {
             return false;
         }
@@ -504,11 +504,27 @@ class Book extends Base
             return false;
         }
 
-        //draw the image
-        $src_img = imagecreatefromjpeg($file);
+        // Draw the image
+        if ($inType == 'png') {
+        	$src_img = imagecreatefrompng($file);
+        }
+        else {
+        	$src_img = imagecreatefromjpeg($file);
+        }
         $dst_img = imagecreatetruecolor($nw,$nh);
-        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-        imagejpeg($dst_img,$outputfile,80);
+        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
+        	return false;
+        }
+        if ($inType == 'png') {
+        	if (!imagepng($dst_img, $outputfile, 9)) {
+        		return false;
+        	}
+        }
+        else {
+        	if (!imagejpeg($dst_img, $outputfile, 80)) {
+        		return false;
+        	}
+        }
         imagedestroy($src_img);
         imagedestroy($dst_img);
 
