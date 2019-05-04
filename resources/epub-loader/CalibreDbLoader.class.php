@@ -5,12 +5,11 @@
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
-
-require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
+require_once (realpath(dirname(__FILE__)) . '/BookInfos.class.php');
 
 /**
  * Calibre database sql file that comes unmodified from Calibre project:
- *   https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
+ * https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
  */
 define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql');
 
@@ -20,18 +19,27 @@ define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql
  */
 class CalibreDbLoader
 {
+
 	private $mDb = null;
+
+	private $mBookId = null;
+
+	private $mBookIdFileName = '';
 
 	/**
 	 * Open a Calibre database (or create if database does not exist)
 	 *
 	 * @param string Calibre database file name
 	 * @param boolean Force database creation
+	 * @param string File name containing a map of file names to calibre book ids
 	 */
-	public function __construct($inDbFileName, $inCreate = false)
+	public function __construct($inDbFileName, $inCreate = false, $inBookIdsFileName = '')
 	{
 		if ($inCreate) {
 			$this->CreateDatabase($inDbFileName);
+			if (!empty($inBookIdsFileName)) {
+				$this->LoadBookIds($inBookIdsFileName);
+			}
 		}
 		else {
 			$this->OpenDatabase($inDbFileName);
@@ -39,9 +47,82 @@ class CalibreDbLoader
 	}
 
 	/**
+	 * Descructor
+	 */
+	public function __destruct()
+	{
+		$this->SaveBookIds();
+	}
+
+	/**
+	 * Load the book ids map in order to reuse calibe book id when recreating database
+	 *
+	 * @param string File name containing a map of file names to calibre book ids
+	 *
+	 * @return void
+	 */
+	private function LoadBookIds($inBookIdsFileName)
+	{
+		$this->mBookId = array();
+		$this->mBookIdFileName = $inBookIdsFileName;
+
+		if (empty($this->mBookIdFileName) || !file_exists($this->mBookIdFileName)) {
+			return;
+		}
+
+		// Load the book ids file
+		$lines = file($this->mBookIdFileName);
+		foreach ($lines as $line) {
+			$tab = explode("\t", trim($line));
+			if (count($tab) != 2) {
+				continue;
+			}
+			$this->mBookId[$tab[0]] = (int)$tab[1];
+		}
+	}
+
+	/**
+	 * Save the book ids file
+	 */
+	private function SaveBookIds()
+	{
+		if (empty($this->mBookIdFileName)) {
+			return;
+		}
+
+		$tab = array();
+		foreach ($this->mBookId as $key => $value) {
+			$tab[] = sprintf('%s%s%d', $key, "\t", $value);
+		}
+
+		file_put_contents($this->mBookIdFileName, implode("\n", $tab) . "\n");
+	}
+
+	private function GetBookId($inBookFileName)
+	{
+		if (isset($this->mBookId[$inBookFileName])) {
+			$res = (int)$this->mBookId[$inBookFileName];
+		}
+		else {
+			// Get max book id
+			$res = 0;
+			foreach ($this->mBookId as $key => $value) {
+				if ($value > $res) {
+					$res = $value;
+				}
+			}
+			$res++;
+			$this->mBookId[$inBookFileName] = $res;
+		}
+
+		return $res;
+	}
+
+	/**
 	 * Create an sqlite database
 	 *
 	 * @param string Database file name
+	 *
 	 * @throws Exception if error
 	 *
 	 * @return void
@@ -127,6 +208,7 @@ class CalibreDbLoader
 	 *
 	 * @param string Epub base directory
 	 * @param string Epub file name (from base directory)
+	 *
 	 * @throws Exception if error
 	 *
 	 * @return string Empty string or error if any
@@ -140,7 +222,8 @@ class CalibreDbLoader
 			$bookInfos = new BookInfos();
 			$bookInfos->LoadFromEpub($inBasePath, $inFileName);
 			// Add the book
-			$this->AddBook($bookInfos);
+			$bookId = $this->GetBookId($inFileName);
+			$this->AddBook($bookInfos, $bookId);
 		}
 		catch (Exception $e) {
 			$error = $e->getMessage();
@@ -153,11 +236,13 @@ class CalibreDbLoader
 	 * Add a new book into the db
 	 *
 	 * @param object BookInfo object
+	 * @param int Book id the calibre db
+	 *
 	 * @throws Exception if error
 	 *
 	 * @return void
 	 */
-	private function AddBook($inBookInfo)
+	private function AddBook($inBookInfo, $inBookId)
 	{
 		$errors = array();
 
@@ -177,7 +262,15 @@ class CalibreDbLoader
 			break;
 		}
 		// Add the book
-		$sql = 'insert into books(title, sort, timestamp, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(:title, :sort, :timestamp, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
+		$sql = 'insert into books(';
+		if ($inBookId) {
+			$sql .= 'id, ';
+		}
+		$sql .= 'title, sort, timestamp, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(';
+		if ($inBookId) {
+			$sql .= ':id, ';
+		}
+		$sql .= ':title, :sort, :timestamp, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
 		$timeStamp = BookInfos::GetTimeStamp($inBookInfo->mTimeStamp);
 		$pubDate = BookInfos::GetTimeStamp(empty($inBookInfo->mCreationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mCreationDate);
 		$lastModified = BookInfos::GetTimeStamp(empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mModificationDate);
@@ -188,6 +281,9 @@ class CalibreDbLoader
 		}
 		$cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
 		$stmt = $this->mDb->prepare($sql);
+		if ($inBookId) {
+			$stmt->bindParam(':id', $inBookId);
+		}
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
 		$stmt->bindParam(':sort', BookInfos::GetSortString($inBookInfo->mTitle));
 		$stmt->bindParam(':timestamp', $timeStamp);
@@ -215,7 +311,10 @@ class CalibreDbLoader
 			throw new Exception($error);
 		}
 		// Add the book data (formats)
-		$formats = array($inBookInfo->mFormat, 'pdf');
+		$formats = array(
+			$inBookInfo->mFormat,
+			'pdf'
+		);
 		foreach ($formats as $format) {
 			$fileName = sprintf('%s%s%s%s%s.%s', $inBookInfo->mBasePath, DIRECTORY_SEPARATOR, $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
 			if (!is_readable($fileName)) {
@@ -471,7 +570,6 @@ class CalibreDbLoader
 			$sort = $post->sort;
 		}
 	}
-
 }
 
 ?>

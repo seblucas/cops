@@ -8,12 +8,17 @@
 
 defined('DEF_AppName') or die('Restricted access');
 
+global $gConfig;
+global $dbConfig;
+global $gErrorArray;
+
 // Init database file
 $dbPath = $dbConfig['db_path'];
-$fileName = $dbPath . DIRECTORY_SEPARATOR . 'metadata.db';
+$calibreFileName = $dbPath . DIRECTORY_SEPARATOR . 'metadata.db';
+$bookIdsFileName = $dbPath . DIRECTORY_SEPARATOR . 'bookids.txt';
 try {
 	// Open or create the database
-	$db = new CalibreDbLoader($fileName, $gConfig['create_db']);
+	$db = new CalibreDbLoader($calibreFileName, $gConfig['create_db'], $bookIdsFileName);
 	// Add the epub files into the database
 	$nbOk = 0;
 	$epubPath = $dbConfig['epub_path'];
@@ -30,10 +35,10 @@ try {
 		}
 	}
 	// Display info
-	echo sprintf('Load database %s - %d files', $fileName, $nbOk) . '<br />';
+	echo sprintf('Load database %s - %d files', $calibreFileName, $nbOk) . '<br />';
 }
 catch (Exception $e) {
-	$gErrorArray[$fileName] = $e->getMessage();
+	$gErrorArray[$calibreFileName] = $e->getMessage();
 }
 
 ?>
