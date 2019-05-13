@@ -236,7 +236,7 @@ class CalibreDbLoader
 	 * Add a new book into the db
 	 *
 	 * @param object BookInfo object
-	 * @param int Book id the calibre db
+	 * @param int Book id in the calibre db (or 0 for auto incrementation)
 	 *
 	 * @throws Exception if error
 	 *
@@ -285,7 +285,8 @@ class CalibreDbLoader
 			$stmt->bindParam(':id', $inBookId);
 		}
 		$stmt->bindParam(':title', $inBookInfo->mTitle);
-		$stmt->bindParam(':sort', BookInfos::GetSortString($inBookInfo->mTitle));
+		$sortString = BookInfos::GetSortString($inBookInfo->mTitle);
+		$stmt->bindParam(':sort', $sortString);
 		$stmt->bindParam(':timestamp', $timeStamp);
 		$stmt->bindParam(':pubdate', $pubDate);
 		$stmt->bindParam(':lastmodified', $lastModified);
@@ -302,12 +303,16 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->execute();
 		$idBook = null;
-		while ($post = $stmt->fetchObject()) {
+		$post = $stmt->fetchObject();
+		if ($post) {
 			$idBook = $post->id;
-			break;
 		}
-		if (!isset($idBook)) {
+		if (empty($idBook)) {
 			$error = sprintf('Cannot find book id for uuid: %s', $inBookInfo->mUuid);
+			throw new Exception($error);
+		}
+		if ($inBookId && $idBook != $inBookId) {
+			$error = sprintf('Incorrect book id=%d vs %d for uuid: %s', $idBook, $inBookId, $inBookInfo->mUuid);
 			throw new Exception($error);
 		}
 		// Add the book data (formats)
@@ -373,7 +378,8 @@ class CalibreDbLoader
 				$sql = 'insert into series(name, sort) values(:serie, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':serie', $inBookInfo->mSerie);
-				$stmt->bindParam(':sort', BookInfos::GetSortString($inBookInfo->mSerie));
+				$sortString = BookInfos::GetSortString($inBookInfo->mSerie);
+				$stmt->bindParam(':sort', $sortString);
 				$stmt->execute();
 				// Get the serie id
 				$sql = 'select id from series where name=:serie';
@@ -418,7 +424,8 @@ class CalibreDbLoader
 				$sql = 'insert into authors(name, sort) values(:author, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':author', $author);
-				$stmt->bindParam(':sort', BookInfos::GetSortString($authorSort));
+				$sortString = BookInfos::GetSortString($authorSort);
+				$stmt->bindParam(':sort', $sortString);
 				$stmt->execute();
 				// Get the author id
 				$sql = 'select id from authors where name=:author';
@@ -516,7 +523,8 @@ class CalibreDbLoader
 				$stmt->bindParam(':subject', $subject);
 				// Add :sort field
 				if (!empty($sortField)) {
-					$stmt->bindParam(':' . $sortField, BookInfos::GetSortString($subject));
+					$sortString = BookInfos::GetSortString($subject);
+					$stmt->bindParam(':' . $sortField, $sortString);
 				}
 				$stmt->execute();
 				// Get the subject id
