@@ -145,7 +145,8 @@ class Book extends Base
         			}
         		}
         		if (empty($this->coverFileName)) {
-        			$data = $this->getDataById($this->id);
+        			// Try with the epub file name
+        			$data = $this->getDataFormat('EPUB');
         			if ($data) {
         				$this->coverFileName = sprintf('%s%s/%s', $imgDirectory, $data->name, $line->cover);
         				if (!file_exists($this->coverFileName)) {
