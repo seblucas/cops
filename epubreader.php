@@ -56,6 +56,7 @@ $book->initSpineComponent();
     </script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("styles/cops-monocle.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/cops-monocle.css") ?>" media="screen" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 </head>
 <body>
   <div id="readerBg">
