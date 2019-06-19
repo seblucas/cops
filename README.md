@@ -34,10 +34,11 @@ So COPS's main advantages are :
  * No need for a lot of CPU or RAM.
  * Not much code.
  * Search is available.
- * With Dropbox / owncloud it's very easy to have an up to date OPDS server.
  * It was fun to code.
 
 If you want to use the OPDS feed don't forget to specify feed.php at the end of your URL.
+
+You just have to sync your Calibre directory to your COPS server the way you prefer (Dropbox, Bt Sync, Syncthing, use a directory shared with Nextcloud, ...).
 
 # Prerequisites
 
