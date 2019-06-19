@@ -17,7 +17,7 @@
         "bower-asset/jquery-cookie": "~1.4",
         "bower-asset/normalize.css": "~7.0",
         "twitter/typeahead.js": "~0.10.5",
-        "seblucas/dot-php": "~1.0.0",
+        "seblucas/dot-php": "~1.1.0",
         "seblucas/php-epub-meta": "~1.0.0",
         "seblucas/tbszip": "~2.16",
         "simonpioli/sortelements": "dev-master",
