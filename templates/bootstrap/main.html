@@ -45,11 +45,15 @@
             {{~entry.book.customcolumns_list :column:column_index}}
             <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
             {{~}}
+            {{~entry.book.preferedData:data:j}}
+              <div style="height: 40px;"></div>
+            {{~}}  
             <div class="text-center bottomright">
             {{~entry.book.preferedData:data:j}}
+              <p>
                 <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
                 <a href="{{=data.viewUrl}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-folder-open"></span></a>
-                <br />
+              </p>
             {{~}}
             </div>
           </div>
