@@ -48,6 +48,7 @@
     "customize.paging": "Nombre de livres par page (-1 pour désactiver)",
     "customize.style": "Thème",
     "customize.title": "Paramétrage de COPS",
+    "filter.clearall": "Effacer tout",
     "home.alternate": "Accueil",
     "i18n.coversection": "Couverture",
     "language.title": "Langue",

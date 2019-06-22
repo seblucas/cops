@@ -160,6 +160,7 @@ class JSONRenderer
                            "pubdateTitle" => localize("pubdate.title"),
                            "languagesTitle" => localize("language.title"),
                            "contentTitle" => localize("content.summary"),
+                           "filterClearAll" => localize("filter.clearall"),
                            "sortorderAsc" => localize("search.sortorder.asc"),
                            "sortorderDesc" => localize("search.sortorder.desc"),
                            "customizeEmail" => localize("customize.email")),
