@@ -7,7 +7,7 @@
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
-const CLEAR_FILTER_ID = "_CLEAR_";
+var CLEAR_FILTER_ID = "_CLEAR_";
 
 if (typeof LRUCache != 'undefined') {
     console.log('ERROR: LRUCache module not loaded!');
@@ -204,8 +204,12 @@ function updateFilters () {
 
     // Sort the list alphabetically
     $('#filter ul li').sortElements(function(a, b){
-        if (a.id === CLEAR_FILTER_ID) return 1;
-        if (b.id === CLEAR_FILTER_ID) return -1;
+        if (a.id === CLEAR_FILTER_ID) {
+            return 1;
+        }
+        if (b.id === CLEAR_FILTER_ID) {
+            return -1;
+        }
         return $(a).text() > $(b).text() ? 1 : -1;
     });
 }
