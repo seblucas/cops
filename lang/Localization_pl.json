@@ -48,6 +48,7 @@
     "customize.paging": "Maksymalna liczba książek na stronie (-1 bez stronicowania)",
     "customize.style": "Szablon wyglądu",
     "customize.title": "Ustawienia COPS",
+    "filter.clearall": "Usuń Wszystkie",
     "home.alternate": "Strona głowna",
     "i18n.coversection": "Okładka",
     "language.title": "Język",

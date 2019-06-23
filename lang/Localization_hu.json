@@ -48,6 +48,7 @@
     "customize.paging": "Maximum könyv oldalanként (-1 kikapcsolja)",
     "customize.style": "Téma",
     "customize.title": "Saját COPS felület",
+    "filter.clearall": "Összes törlése",
     "home.alternate": "Kezdőlap",
     "i18n.coversection": "Boritó",
     "language.title": "Nyelv",

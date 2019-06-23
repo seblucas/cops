@@ -48,6 +48,7 @@
     "customize.paging": "Maks antall bøker per side (-1 for å deaktivere)",
     "customize.style": "Tema",
     "customize.title": "Tilpass COPS brukergrensesnitt",
+    "filter.clearall": "Fjern alt",
     "home.alternate": "Hjem",
     "i18n.coversection": "Omslag",
     "language.title": "Språk",

@@ -48,6 +48,7 @@
     "customize.paging": "Bir sayfada gösterilecek en fazla kitap sayısı (Sınırsız için -1)",
     "customize.style": "Tema",
     "customize.title": "Görünüm Seçenekleri",
+    "filter.clearall": "Tümünü Bırak",
     "home.alternate": "Anasayfa",
     "i18n.coversection": "Kapak",
     "language.title": "Dil",

@@ -48,6 +48,7 @@
     "customize.paging": "페이지마다 표시할 도서 권수 (-1인 경우 무시)",
     "customize.style": "스타일",
     "customize.title": "COPS 설정",
+    "filter.clearall": "모두 지우기",
     "home.alternate": "최초",
     "i18n.coversection": "Cover",
     "language.title": "언어",

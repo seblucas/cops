@@ -48,6 +48,7 @@
     "customize.paging": "页内最大书籍数(-1表示禁用)",
     "customize.style": "主题",
     "customize.title": "自定义界面",
+    "filter.clearall": "全部清除",
     "home.alternate": "首页",
     "i18n.coversection": "封面",
     "language.title": "语言",
