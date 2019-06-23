@@ -48,6 +48,7 @@
     "customize.paging": "Número máximo de títulos por página (-1 para desativar)",
     "customize.style": "Estilo",
     "customize.title": "Personalizar interface do utilizador",
+    "filter.clearall": "Limpar tudo",
     "home.alternate": "Entrada",
     "i18n.coversection": "Capa",
     "language.title": "Idioma",

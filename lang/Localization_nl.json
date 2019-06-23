@@ -48,6 +48,7 @@
     "customize.paging": "Maximaal aantal boeken per pagina (-1 voor oneindig aantal)",
     "customize.style": "Opmaak COPS gebruikersomgeving",
     "customize.title": "Aanpassen COPS gebruikersomgeving",
+    "filter.clearall": "Wis alles",
     "home.alternate": "Terug",
     "i18n.coversection": "Omslag",
     "language.title": "Taal",

@@ -48,6 +48,7 @@
     "customize.paging": "Max antal böcker per sida (-1 för att inaktivera)",
     "customize.style": "Tema",
     "customize.title": "Anpassa COPS gränssnitt",
+    "filter.clearall": "Rensa alla",
     "home.alternate": "Hem",
     "i18n.coversection": "Omslag",
     "language.title": "Språk",

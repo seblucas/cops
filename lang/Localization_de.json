@@ -48,6 +48,7 @@
     "customize.paging": "Maximale Anzahl von Büchern pro Seite (-1 zum Deaktivieren)",
     "customize.style": "Thema",
     "customize.title": "Anpassungen an COPS",
+    "filter.clearall": "Alle Markierungen entfernen",
     "home.alternate": "Startseite",
     "i18n.coversection": "Umschlag",
     "language.title": "Sprache",

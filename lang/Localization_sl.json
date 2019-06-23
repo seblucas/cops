@@ -48,6 +48,7 @@
     "customize.paging": "Max number of books per page (-1 to disable)",
     "customize.style": "Theme",
     "customize.title": "Customize COPS UI",
+    "filter.clearall": "Izbriši vse",
     "home.alternate": "Domov",
     "i18n.coversection": "Cover",
     "language.title": "Jezik",

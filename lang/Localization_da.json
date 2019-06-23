@@ -48,6 +48,7 @@
     "customize.paging": "Max number of books per page (-1 to disable)",
     "customize.style": "Tema",
     "customize.title": "Customize COPS UI",
+    "filter.clearall": "Slet alt",
     "home.alternate": "Startside",
     "i18n.coversection": "Cover",
     "language.title": "Sprog",
