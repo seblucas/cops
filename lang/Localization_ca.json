@@ -48,6 +48,7 @@
     "customize.paging": "Nombre màx de llibres per pàgina (-1 per deshabilitar)",
     "customize.style": "Tema",
     "customize.title": "Configura COPS UI",
+    "filter.clearall": "Desmarcar Tots",
     "home.alternate": "Inici",
     "i18n.coversection": "Portada",
     "language.title": "Idioma",

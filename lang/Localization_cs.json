@@ -48,6 +48,7 @@
     "customize.paging": "Maximální počet knih na stránku (-1 pro vypnutí)",
     "customize.style": "Téma",
     "customize.title": "Úpravy vzhledu COPS",
+    "filter.clearall": "Smazat vše",
     "home.alternate": "Domů",
     "i18n.coversection": "Obálka",
     "language.title": "Jazyk",

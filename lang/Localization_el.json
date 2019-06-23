@@ -48,6 +48,7 @@
     "customize.paging": "Μέγιστος αριθμός βιβλίων ανά σελίδα (-1 για απενεργοποίηση)",
     "customize.style": "Θέμα",
     "customize.title": "Προσαρμογή COPS UI",
+    "filter.clearall": "Εκκαθάριση Όλων",
     "home.alternate": "Αρχική",
     "i18n.coversection": "Εξώφυλλο",
     "language.title": "Γλώσσα",

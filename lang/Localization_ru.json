@@ -48,6 +48,7 @@
     "customize.paging": "Максимальное число книг на странице (-1 - не ограничивать)",
     "customize.style": "Тема",
     "customize.title": "Изменить Интерфейс COPS",
+    "filter.clearall": "Очистить все",
     "home.alternate": "Домой",
     "i18n.coversection": "Обложка",
     "language.title": "Язык",

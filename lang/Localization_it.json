@@ -48,6 +48,7 @@
     "customize.paging": "Numero massimo di libri per pagina (-1 per disabilitare)",
     "customize.style": "Tema",
     "customize.title": "Personalizza l'interfaccia di COPS",
+    "filter.clearall": "Azzera tutto",
     "home.alternate": "Home",
     "i18n.coversection": "Copertina",
     "language.title": "Lingua",
