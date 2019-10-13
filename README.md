@@ -85,8 +85,12 @@ Note that if your PHP version is lower that 5.6, then you may have to remove `co
 
 Long story short : ALWAYS outside of COPS's directory especially if COPS is installed on a VPS / Server. If you follow my advice then your data will be safe.
 
-If you choose to put your Calibre directory inside your web directory and use Nginx then you will have to edit /etc/nginx/mime.types to add this line :
-`application/epub+zip epub;`
+If you choose to put your Calibre directory inside your web directory and use Nginx then you will have to edit /etc/nginx/mime.types to add these lines :
+
+```
+application/epub+zip epub;
+application/x-mobipocket-ebook mobi prc azw;
+```
 
 # Known problems
 
