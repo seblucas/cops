@@ -1,17 +1,19 @@
 <?php
+defined('DEF_AppName') or die('Restricted access');
 header('Content-type: text/html; charset=utf-8');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo $gConfig['app_name']; ?></title>
-	<meta name="author" content="opale-concept.com" />
+	<title><?php echo empty($gConfig['app_name']) ? DEF_AppName : $gConfig['app_name']; ?></title>
+	<meta name="author" content="atoll-digital-library.org" />
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css">
 /*<![CDATA[*/
   body {
-	  font-family: "Times New Roman", Times, serif;
+	  font-family: Arial, Times, serif;
+	  font-size: 80%;
 	  background-color: #ffffff;
 	  color: #333333;
 	  margin: 20px;
@@ -45,6 +47,9 @@ header('Content-type: text/html; charset=utf-8');
 	  padding-bottom: 5px;
   	font-weight: bold;
 	}
+	.small {
+		font-size: 80%;
+	}
 	table {
 		border-collapse: collapse;
 		border-color: #ccc;
@@ -76,11 +81,10 @@ header('Content-type: text/html; charset=utf-8');
   /*]]>*/
   </style>
 </head>
-
 <body>
 	<!-- Header begin -->
 	<div class="header">
-		<a href="."><?php echo $gConfig['app_name']; ?></a>
+		<a href="."><?php echo empty($gConfig['app_name']) ? DEF_AppName : $gConfig['app_name']; ?></a> <span class="small"><?php echo ' - version ' . DEF_AppVersion; ?></span>
 	</div>
 	<!-- Header end -->
 
