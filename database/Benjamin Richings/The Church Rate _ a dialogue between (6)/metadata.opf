@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">6</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">39fe59a9-b74e-43eb-bd44-000517698c90</dc:identifier>
+        <dc:title>The Church Rate / a dialogue between a Churchman and a Dissenter</dc:title>
+        <dc:creator opf:file-as="Richings, Benjamin" opf:role="aut">Benjamin Richings</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2020-05-02T22:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/62004</dc:identifier>
+        <dc:language>eng</dc:language>
+        <meta content="{&quot;Benjamin Richings&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:46:18.282000+00:00" name="calibre:timestamp"/>
+        <meta content="Church Rate / a dialogue between a Churchman and a Dissenter, The" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>

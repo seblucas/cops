@@ -11,3 +11,5 @@
 /cops.sublime-*
 /config_local.php
 /config_local.*.php
+
+/.idea/

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">13</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">e15972ad-f2e0-44b9-b77d-34263601cbca</dc:identifier>
+        <dc:title>Het Eiland Marken en Zijne Bewoners</dc:title>
+        <dc:creator opf:file-as="Allan, Francis" opf:role="aut">Francis Allan</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2013-12-24T23:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/44507</dc:identifier>
+        <dc:language>nld</dc:language>
+        <dc:subject>Marken Island (Netherlands)</dc:subject>
+        <meta content="{&quot;Francis Allan&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:47:25.519000+00:00" name="calibre:timestamp"/>
+        <meta content="Het Eiland Marken en Zijne Bewoners" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>

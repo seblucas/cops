@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">4</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">65a4c9a2-836d-4ac5-99d7-662c8f1e2865</dc:identifier>
+        <dc:title>Leben und Meinungen des Herrn Andreas von Balthesser, eines Dandy und Dilettanten</dc:title>
+        <dc:creator opf:file-as="Schaukal, Richard" opf:role="aut">Richard Schaukal</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2020-05-02T22:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/62006</dc:identifier>
+        <dc:language>deu</dc:language>
+        <meta content="{&quot;Richard Schaukal&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:46:18.073000+00:00" name="calibre:timestamp"/>
+        <meta content="Leben und Meinungen des Herrn Andreas von Balthesser, eines Dandy und Dilettanten" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>
