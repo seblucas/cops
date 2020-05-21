@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">15</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">7d0f832b-6e0b-4eb7-adcc-2569a307bb2c</dc:identifier>
+        <dc:title>De Noordwestelijke Doorvaart / De Aarde en haar Volken, 1909</dc:title>
+        <dc:creator opf:file-as="Amundsen, Roald" opf:role="aut">Roald Amundsen</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2007-06-19T22:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/21878</dc:identifier>
+        <dc:language>nld</dc:language>
+        <dc:subject>Amundsen</dc:subject>
+        <dc:subject>Roald</dc:subject>
+        <dc:subject>1872-1928 -- Travel -- Northwest Passage</dc:subject>
+        <dc:subject>Gjøa (Ship)</dc:subject>
+        <dc:subject>Northwest Passage -- Discovery and exploration</dc:subject>
+        <meta content="{&quot;Roald Amundsen&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:47:25.739000+00:00" name="calibre:timestamp"/>
+        <meta content="De Noordwestelijke Doorvaart / De Aarde en haar Volken, 1909" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>

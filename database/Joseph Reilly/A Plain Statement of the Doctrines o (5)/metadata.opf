@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">5</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">e534c7ee-9521-43f1-ab78-a58e12eb2afa</dc:identifier>
+        <dc:title>A Plain Statement of the Doctrines objected to in the Church of Rome</dc:title>
+        <dc:creator opf:file-as="Reilly, Joseph" opf:role="aut">Joseph Reilly</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2020-05-02T22:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/62002</dc:identifier>
+        <dc:language>eng</dc:language>
+        <meta content="{&quot;Joseph Reilly&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:46:18.186000+00:00" name="calibre:timestamp"/>
+        <meta content="Plain Statement of the Doctrines objected to in the Church of Rome, A" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">14</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">a21ff842-16cf-441b-a6e4-e7d6810d496b</dc:identifier>
+        <dc:title>De complete werken van Joost van Vondel. Hymnus of Lofzang van de Kristelijke Ridder, [etc.]</dc:title>
+        <dc:creator opf:file-as="Vondel, Joost van den" opf:role="aut">Joost van den Vondel</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2017-11-09T23:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/55929</dc:identifier>
+        <dc:language>nld</dc:language>
+        <dc:subject>Dutch poetry</dc:subject>
+        <meta content="{&quot;Joost van den Vondel&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:47:25.636000+00:00" name="calibre:timestamp"/>
+        <meta content="De complete werken van Joost van Vondel. Hymnus of Lofzang van de Kristelijke Ridder, [etc.]" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>

@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="uuid_id" version="2.0">
+    <metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+        <dc:identifier opf:scheme="calibre" id="calibre_id">10</dc:identifier>
+        <dc:identifier opf:scheme="uuid" id="uuid_id">d625e0b0-219e-4713-a209-441ac3460d9e</dc:identifier>
+        <dc:title>Jean-Christophe, Volume 4 (of 4) / Le Buisson Ardent, La Nouvelle Journée</dc:title>
+        <dc:creator opf:file-as="Rolland, Romain" opf:role="aut">Romain Rolland</dc:creator>
+        <dc:contributor opf:file-as="calibre" opf:role="bkp">calibre (4.15.0) [https://calibre-ebook.com]</dc:contributor>
+        <dc:date>2020-05-03T22:00:00+00:00</dc:date>
+        <dc:identifier opf:scheme="URI">http://www.gutenberg.org/62021</dc:identifier>
+        <dc:language>fra</dc:language>
+        <meta content="{&quot;Romain Rolland&quot;: &quot;&quot;}" name="calibre:author_link_map"/>
+        <meta content="2020-05-05T09:46:18.691000+00:00" name="calibre:timestamp"/>
+        <meta content="Jean-Christophe, Volume 4 (of 4) / Le Buisson Ardent, La Nouvelle Journée" name="calibre:title_sort"/>
+    </metadata>
+    <guide>
+        <reference href="cover.jpg" title="Cover" type="cover"/>
+    </guide>
+</package>
