@@ -14,6 +14,8 @@ Don't forget to check the [Wiki](https://github.com/seblucas/cops/wiki).
 
 [![Build Status](https://travis-ci.org/seblucas/cops.svg?branch=master)](https://travis-ci.org/seblucas/cops)
 
+[![BCH compliance](https://bettercodehub.com/edge/badge/peltos/cops?branch=master)](https://bettercodehub.com/)
+
 [![Selenium Test Status](https://saucelabs.com/browser-matrix/seblucas.svg)](https://saucelabs.com/u/seblucas)
 
 # Why ?
