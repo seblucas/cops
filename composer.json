@@ -11,7 +11,7 @@
         "ext-pdo_sqlite": "*",
         "ext-mbstring": "*",
         "dimsemenov/magnific-popup": "~1.0",
-        "phpmailer/phpmailer": "~5.2",
+        "phpmailer/phpmailer": "~6.1",
         "twbs/bootstrap": "~3.3",
         "bower-asset/jquery": "~1.12",
         "bower-asset/jquery-cookie": "~1.4",
