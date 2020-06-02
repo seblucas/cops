@@ -64,12 +64,30 @@ function notFound()
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
+$urlParams = array();
+function initURLParam()
+{
+    global $urlParams;
+    if (!empty ($_GET)) {
+        foreach($_GET as $name => $value) {
+            $urlParams[$name] = $_GET[$name];
+        }
+    }
+}
+
 function getURLParam($name, $default = NULL)
 {
-    if (!empty ($_GET) && isset($_GET[$name]) && $_GET[$name] != '') {
-        return $_GET[$name];
+    global $urlParams;
+    if (!empty ($urlParams) && isset($urlParams[$name]) && $urlParams[$name] != '') {
+        return $urlParams[$name];
     }
     return $default;
+}
+
+function setURLParam($name, $value)
+{
+    global $urlParams;
+    $urlParams[$name] = $value;
 }
 
 function getCurrentOption($option)

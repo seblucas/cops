@@ -8,6 +8,9 @@
  */
 
 require('config.php');
+require('base.php');
+
+initURLParam();
 
 header('Content-Type:application/json;charset=utf-8');
 

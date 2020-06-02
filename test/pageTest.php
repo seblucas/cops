@@ -161,7 +161,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
-        $_GET ["custom"] = "1";
+        setURLParam('custom' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -171,8 +171,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("SeriesLike", $currentPage->entryArray [0]->title);
         $this->assertEquals (2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageAllCustom_Type2 ()
@@ -182,7 +180,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
-        $_GET ["custom"] = "2";
+        setURLParam('custom' , 2);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -192,8 +190,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("tag1", $currentPage->entryArray [0]->title);
         $this->assertEquals (2, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageAllCustom_Type1 ()
@@ -203,7 +199,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
-        $_GET ["custom"] = "3";
+        setURLParam('custom' , 3);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -213,8 +209,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("other", $currentPage->entryArray [0]->title);
         $this->assertEquals (1, $currentPage->entryArray [0]->numberOfElement);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageCustomDetail_Type4 ()
@@ -224,7 +218,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = "1";
         $n = "1";
 
-        $_GET ["custom"] = "1";
+        setURLParam('custom' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -233,8 +227,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageCustomDetail_Type2 ()
@@ -244,7 +236,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = "1";
         $n = "1";
 
-        $_GET ["custom"] = "2";
+        setURLParam('custom' , 2);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
@@ -253,8 +245,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Alice's Adventures in Wonderland", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageCustomDetail_Type1 ()
@@ -264,7 +254,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = "1";
         $n = "1";
 
-        $_GET ["custom"] = "3";
+        setURLParam('custom' , 3);
         $qid = "2";
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
@@ -274,8 +264,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (1, $currentPage->entryArray);
         $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET ["custom"] = NULL;
     }
 
     public function testPageAllAuthors_WithFullName ()
@@ -646,7 +634,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
-        $_GET["tag"] = "Historical";
+        setURLParam('tag' , "Historical");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
@@ -654,8 +642,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Twenty Years After", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET["tag"] = NULL;
     }
 
     public function testPageRecent_WithFacets_ExcludedTag ()
@@ -665,7 +651,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = NULL;
         $n = "1";
 
-        $_GET["tag"] = "!Romance";
+        setURLParam('tag' , "!Romance");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
@@ -673,8 +659,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (13, $currentPage->entryArray);
         $this->assertEquals ("La curée", $currentPage->entryArray [0]->title);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET["tag"] = NULL;
     }
 
     public function testPageBookDetail ()
@@ -833,7 +817,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "Lewis Carroll";
-        $_GET ["scope"] = "author";
+        setURLParam('scope' , "author");
         $qid = NULL;
         $n = "1";
 
@@ -851,7 +835,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         global $config;
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "Carroll, Lewis";
-        $_GET ["scope"] = "author";
+        setURLParam('scope' , "author");
         $qid = NULL;
         $n = "1";
 
@@ -869,7 +853,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
-        $_GET ["scope"] = "author";
+        setURLParam('scope' , "author");
 
         // Match Lewis Carroll
         $query = "car";
@@ -880,8 +864,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (1, $currentPage->entryArray);
         $this->assertEquals ("Carroll, Lewis", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["scope"] = NULL;
     }
 
     public function testPageSearchScopeSeries ()
@@ -889,7 +871,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
-        $_GET ["scope"] = "series";
+        setURLParam('scope' , "series");
 
         // Match Holmes
         $query = "hol";
@@ -900,8 +882,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (1, $currentPage->entryArray);
         $this->assertEquals ("Sherlock Holmes", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["scope"] = NULL;
     }
 
     public function testPageSearchScopeBooks ()
@@ -909,7 +889,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
-        $_GET ["scope"] = "book";
+        setURLParam('scope' , "book");
 
         // Match Holmes
         $query = "hol";
@@ -919,8 +899,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Search result for *hol* in books", $currentPage->title);
         $this->assertCount (4, $currentPage->entryArray);
         $this->assertTrue ($currentPage->ContainsBook ());
-
-        $_GET ["scope"] = NULL;
     }
 
     public function testPageSearchScopePublishers ()
@@ -928,7 +906,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
-        $_GET ["scope"] = "publisher";
+        setURLParam('scope' , "publisher");
 
         // Match Holmes
         $query = "millan";
@@ -939,8 +917,6 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertEquals ("Macmillan and Co. London", $currentPage->entryArray [0]->title);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["scope"] = NULL;
     }
 
     public function testPageSearchScopeTags ()
@@ -948,7 +924,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = NULL;
         $n = "1";
-        $_GET ["scope"] = "tag";
+        setURLParam('scope' , "tag");
 
         // Match Holmes
         $query = "fic";
@@ -958,7 +934,5 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals ("Search result for *fic* in tags", $currentPage->title);
         $this->assertCount (2, $currentPage->entryArray);
         $this->assertFalse ($currentPage->ContainsBook ());
-
-        $_GET ["scope"] = NULL;
     }
 }

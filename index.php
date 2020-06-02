@@ -16,6 +16,8 @@
         exit();
     }
 
+    initURLParam();
+
     $page     = getURLParam('page', Base::PAGE_INDEX);
     $query    = getURLParam('query');
     $qid      = getURLParam('id');
