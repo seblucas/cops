@@ -362,3 +362,12 @@ function normAndUp($s)
 {
     return mb_strtoupper(normalizeUtf8String($s), 'UTF-8');
 }
+
+function dd($m, $e = false){
+    echo '<pre>';
+    print_r($m);
+    echo '</pre>';
+    if($e){
+        exit;
+    }
+}
