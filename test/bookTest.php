@@ -468,159 +468,135 @@ class BookTest extends PHPUnit_Framework_TestCase
 
     public function testTypeaheadSearch_Tag ()
     {
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "fic";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (3, $array);
-        $this->assertEquals ("2 tags", $array[0]["title"]);
-        $this->assertEquals ("Fiction", $array[1]["title"]);
-        $this->assertEquals ("Science Fiction", $array[2]["title"]);
-
-        $_GET["search"] = NULL;
+        $this->assertCount (3, $currentPage->entryArray);
+        $this->assertEquals ("2 tags", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("Fiction", $currentPage->entryArray[1]->title);
+        $this->assertEquals ("Science Fiction", $currentPage->entryArray[2]->title);
     }
 
     public function testTypeaheadSearch_BookAndAuthor ()
     {
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "car";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (4, $array);
-        $this->assertEquals ("1 book", $array[0]["title"]);
-        $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
-        $this->assertEquals ("1 author", $array[2]["title"]);
-        $this->assertEquals ("Carroll, Lewis", $array[3]["title"]);
+        $this->assertCount (4, $currentPage->entryArray);
+        $this->assertEquals ("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        $_GET["search"] = NULL;
+        $this->assertEquals ("1 author", $currentPage->entryArray[2]->content);
+        $this->assertEquals ("Carroll, Lewis", $currentPage->entryArray[3]->title);
     }
 
     public function testTypeaheadSearch_AuthorAndSeries ()
     {
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "art";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (5, $array);
-        $this->assertEquals ("1 author", $array[0]["title"]);
-        $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
-        $this->assertEquals ("2 series", $array[2]["title"]);
-        $this->assertEquals ("D'Artagnan Romances", $array[3]["title"]);
+        $this->assertCount (5, $currentPage->entryArray);
+        $this->assertEquals ("1 author", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
 
-        $_GET["search"] = NULL;
+        $this->assertEquals ("2 series", $currentPage->entryArray[2]->content);
+        $this->assertEquals ("D'Artagnan Romances", $currentPage->entryArray[3]->title);
     }
 
     public function testTypeaheadSearch_Publisher ()
     {
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "Macmillan";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (3, $array);
-        $this->assertEquals ("2 publishers", $array[0]["title"]);
-        $this->assertEquals ("Macmillan and Co. London", $array[1]["title"]);
-        $this->assertEquals ("Macmillan Publishers USA", $array[2]["title"]);
-
-        $_GET["search"] = NULL;
+        $this->assertCount (3, $currentPage->entryArray);
+        $this->assertEquals ("2 publishers", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("Macmillan and Co. London", $currentPage->entryArray[1]->title);
+        $this->assertEquals ("Macmillan Publishers USA", $currentPage->entryArray[2]->title);
     }
 
     public function testTypeaheadSearchWithIgnored_SingleCategory ()
     {
         global $config;
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "car";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $config ['cops_ignored_categories'] = array ("author");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (2, $array);
-        $this->assertEquals ("1 book", $array[0]["title"]);
-        $this->assertEquals ("A Study in Scarlet", $array[1]["title"]);
-
-        $_GET["search"] = NULL;
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("A Study in Scarlet", $currentPage->entryArray[1]->title);
     }
 
     public function testTypeaheadSearchWithIgnored_MultipleCategory ()
     {
         global $config;
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "art";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
 
         $config ['cops_ignored_categories'] = array ("series");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (2, $array);
-        $this->assertEquals ("1 author", $array[0]["title"]);
-        $this->assertEquals ("Doyle, Arthur Conan", $array[1]["title"]);
-
-        $_GET["search"] = NULL;
+        $this->assertCount (2, $currentPage->entryArray);
+        $this->assertEquals ("1 author", $currentPage->entryArray[0]->content);
+        $this->assertEquals ("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
     }
 
     public function testTypeaheadSearchMultiDatabase ()
     {
         global $config;
-        $_GET["search"] = "1"; // needs for global variable. different result without this
-        $_GET["multi"] = "1";
-
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $qid = getURLParam ("id");
         $query = "art";
         $n = getURLParam ("n", "1");
+        setURLParam('search' , 1);
+        setURLParam('multi' , 1);
 
         $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
             "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
-        $array = JSONRenderer::getContentArrayTypeahead ($currentPage);
 
-        $this->assertCount (5, $array);
-        $this->assertEquals ("Some books", $array[0]["title"]);
-        $this->assertEquals ("1 author", $array[1]["title"]);
-        $this->assertEquals ("2 series", $array[2]["title"]);
-        $this->assertEquals ("One book", $array[3]["title"]);
-        $this->assertEquals ("1 book", $array[4]["title"]);
+        dd($currentPage->entryArray);
 
-        $_GET["search"] = NULL;
+        $this->assertCount (5, $currentPage->entryArray);
+        $this->assertEquals ("Some books", $currentPage->entryArray[0]->title);
+        $this->assertEquals ("1 author", $currentPage->entryArray[1]->content);
+        $this->assertEquals ("2 series", $currentPage->entryArray[2]->content);
+        $this->assertEquals ("One book", $currentPage->entryArray[3]->title);
+        $this->assertEquals ("1 book", $currentPage->entryArray[4]->content);
     }
 
     public function tearDown () {
