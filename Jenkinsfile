@@ -1,9 +1,5 @@
 #!/usr/bin/env
 
-environment {
-    scannerHome = tool 'SonarQubeScanner'
-}
-
 node {
 
     stage("checkout"){
@@ -27,11 +23,6 @@ node {
 //     }
 
     stage('Sonarqube') {
-        withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner"
-        }
-        timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
+        sh "sonar-scanner -Dsonar.projectKey=cops -Dsonar.sources=. -Dsonar.host.url=http://localhost:9009 -Dsonar.login=12e6b0c2af14d7db285bdb5416e10aa259580cd4"
     }
 }
