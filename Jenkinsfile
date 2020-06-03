@@ -1,5 +1,9 @@
 #!/usr/bin/env
 
+environment {
+    scannerHome = tool 'SonarQubeScanner'
+}
+
 node {
 
     stage("checkout"){
@@ -23,16 +27,11 @@ node {
 //     }
 
     stage('Sonarqube') {
-        environment {
-            scannerHome = tool 'SonarQubeScanner'
+        withSonarQubeEnv('sonarqube') {
+            sh "${scannerHome}/bin/sonar-scanner"
         }
-        steps {
-            withSonarQubeEnv('sonarqube') {
-                sh "${scannerHome}/bin/sonar-scanner"
-            }
-            timeout(time: 10, unit: 'MINUTES') {
-                waitForQualityGate abortPipeline: true
-            }
+        timeout(time: 10, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
         }
     }
 }
