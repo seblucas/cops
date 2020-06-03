@@ -589,8 +589,6 @@ class BookTest extends PHPUnit_Framework_TestCase
         $currentPage = Page::getPage ($page, $qid, $query, $n);
         $currentPage->InitializeContent ();
 
-        dd($currentPage->entryArray);
-
         $this->assertCount (5, $currentPage->entryArray);
         $this->assertEquals ("Some books", $currentPage->entryArray[0]->title);
         $this->assertEquals ("1 author", $currentPage->entryArray[1]->content);
