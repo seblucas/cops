@@ -235,10 +235,10 @@ class BookTest extends PHPUnit_Framework_TestCase
 
     public function testGetRating_NoStars_Zero ()
     {
-        $book = Book::getBookById(2);
-        $book->rating = 0;
+      $book = Book::getBookById(2);
+      $book->rating = 0;
 
-        $this->assertEquals ("", $book->getRating ());
+      $this->assertEquals ("", $book->getRating ());
     }
 
     public function testGetRating_NoStars_Null ()
