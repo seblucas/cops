@@ -11,6 +11,21 @@ require_once (dirname(__FILE__) . "/../base.php");
 
 class BaseTest extends PHPUnit_Framework_TestCase
 {
+
+    public function setUp(){
+    }
+
+    public function tearDown() {
+      // Reset config values
+      $config['cops_basic_authentication'] = NULL;
+
+      // Reset accept language
+      $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
+
+      // Remove author title cache
+      localize ("authors.title", -1, true);
+    }
+
     public function testAddURLParameter ()
     {
         $this->assertEquals ("?db=0", addURLParameter ("?", "db", "0"));
@@ -73,18 +88,12 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3";
         $this->assertEquals ("Auteurs", localize ("authors.title", -1, true));
-
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
-        localize ("authors.title", -1, true);
     }
 
     public function testLocalizeUnknown ()
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "aa";
         $this->assertEquals ("Authors", localize ("authors.title", -1, true));
-
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
-        localize ("authors.title", -1, true);
     }
 
     /**
@@ -121,9 +130,6 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
         $langs = array_keys(GetAcceptLanguages ());
         $this->assertEquals ($result, $langs[0]);
-
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
-        localize ("authors.title", -1, true);
     }
 
     public function providerGetAcceptLanguages ()
@@ -218,8 +224,4 @@ class BaseTest extends PHPUnit_Framework_TestCase
       $_SERVER['PHP_AUTH_PW'] = 'secret';
       $this->assertTrue(verifyLogin());
     }
-
-  public function setUp(){
-    $config['cops_basic_authentication'] = NULL;
-  }
 }
