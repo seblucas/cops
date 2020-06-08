@@ -23,6 +23,6 @@ node {
 //     }
 
     stage('Sonarqube') {
-        sh "sonar-scanner -Dsonar.projectKey=cops -Dsonar.sources=. -Dsonar.host.url=http://localhost:9009 -Dsonar.login=12e6b0c2af14d7db285bdb5416e10aa259580cd4"
-    }
-}
+         sh "sonar-scanner -Dsonar.projectKey=cops -Dsonar.sources=. -Dsonar.host.url=http://172.17.0.3:9000  -Dsonar.login=12e6b0c2af14d7db285bdb5416e10aa259580cd4"
+     }
+ }
