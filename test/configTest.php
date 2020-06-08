@@ -97,4 +97,31 @@ class ConfigTest extends PHPUnit_Framework_TestCase
         global $config;
         $this->assertTrue(is_array($config["cops_ignored_categories"]));
     }
+
+    public function testCheckConfigurationTemplate ()
+    {
+        $_SERVER["HTTP_USER_AGENT"] = "Firefox";
+        global $config;
+        $style = 'bootstrap';
+
+        $config["cops_template"] = $style;
+
+        $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $config["cops_template"] . '/file.html');
+        $template = new doT ();
+        $tpl = $template->template ($headcontent, NULL);
+        $data = array("title"                 => $config['cops_title_default'],
+            "version"               => VERSION,
+            "opds_url"              => $config['cops_full_url'] . "feed.php",
+            "customHeader"          => "",
+            "template"              => $config["cops_template"],
+            "server_side_rendering" => useServerSideRendering (),
+            "current_css"           => getCurrentCss (),
+            "favico"                => $config['cops_icon'],
+            "getjson_url"           => "getJSON.php?" . addURLParameter (getQueryString (), "complete", 1));
+
+        $head = $tpl ($data);
+
+        $this->assertContains ($style.".min.css", $head);
+        $this->assertContains ($style.".min.js", $head);
+    }
 }
