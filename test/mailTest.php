@@ -43,22 +43,24 @@ class MailTest extends PHPUnit_Framework_TestCase
         $this->assertStringStartsWith("NOK", checkConfiguration ());
     }
 
+    public function testCheckConfigurationEmailNotEmpty () {
+        global $config;
+        $email = "a";
+        $config['cops_mail_configuration']["address.from"] = $email;
+
+        $this->assertContains($email, $config['cops_mail_configuration']["address.from"]);
+    }
+
     public function testCheckConfigurationEmailNotValid () {
         global $config;
         $email = "a";
         $this->assertNotRegExp('/^.+\@\S+\.\S+$/', $email);
-
-        $config['cops_mail_configuration']["address.from"] = $email;
-        $this->assertContains($email, $config['cops_mail_configuration']["address.from"]);
     }
 
     public function testCheckConfigurationEmailValid () {
         global $config;
         $email = "a@a.com";
         $this->assertRegExp('/^.+\@\S+\.\S+$/', $email);
-
-        $config['cops_mail_configuration']["address.from"] = $email;
-        $this->assertContains($email, $config['cops_mail_configuration']["address.from"]);
     }
 
     public function testCheckRequest () {
