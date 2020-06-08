@@ -289,10 +289,10 @@ class Book extends Base
         }
         $retour = '';
         for ($i = 0; $i < $this->rating / 2; $i++) {
-            $retour .= '&#9733;';
+            $retour .= '&#9733;'; // full star
         }
         for ($i = 0; $i < 5 - $this->rating / 2; $i++) {
-            $retour .= '&#9734;';
+            $retour .= '&#9734;'; // empty star
         }
         return $retour;
     }
