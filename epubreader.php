@@ -13,6 +13,8 @@
 require_once 'config.php';
 require_once 'base.php';
 
+initURLParam();
+
 $idData = getURLParam('data', NULL);
 $add = 'data=' . $idData . '&';
 if (!is_null (GetUrlParam (DB))) {
