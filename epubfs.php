@@ -9,6 +9,8 @@
 require 'config.php';
 require 'base.php';
 
+initURLParam();
+
 function getComponentContent($book, $component, $add)
 {
     $data = $book->component($component);
