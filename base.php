@@ -108,7 +108,12 @@ function getCurrentOption($option)
 
 function getCurrentCss()
 {
-    return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
+    global $config;
+    $style = getCurrentOption ('style');
+    if(!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
+      return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
+    }
+    return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
 }
 
 function getCurrentTemplate() {
