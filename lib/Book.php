@@ -6,57 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-// Silly thing because PHP forbid string concatenation in class const
-define ('SQL_BOOKS_LEFT_JOIN', 'left outer join comments on comments.book = books.id
-                                left outer join books_ratings_link on books_ratings_link.book = books.id
-                                left outer join ratings on books_ratings_link.rating = ratings.id ');
-define ('SQL_BOOKS_ALL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . ' order by books.sort ');
-define ('SQL_BOOKS_BY_PUBLISHER', 'select {0} from books_publishers_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_publishers_link.book = books.id and publisher = ? {1} order by publisher');
-define ('SQL_BOOKS_BY_FIRST_LETTER', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where upper (books.sort) like ? order by books.sort');
-define ('SQL_BOOKS_BY_AUTHOR', 'select {0} from books_authors_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    left outer join books_series_link on books_series_link.book = books.id
-                                                    where books_authors_link.book = books.id and author = ? {1} order by series desc, series_index asc, pubdate asc');
-define ('SQL_BOOKS_BY_SERIE', 'select {0} from books_series_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_series_link.book = books.id and series = ? {1} order by series_index');
-define ('SQL_BOOKS_BY_TAG', 'select {0} from books_tags_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_tags_link.book = books.id and tag = ? {1} order by sort');
-define ('SQL_BOOKS_BY_LANGUAGE', 'select {0} from books_languages_link, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_languages_link.book = books.id and lang_code = ? {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.{3} = ? {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_BOOL_TRUE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = 1 {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_BOOL_FALSE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = 0 {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_BOOL_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books.id not in (select book from {2}) {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    left join {2} on {2}.book = books.id
-                                                    left join {3} on {3}.id = {2}.{4}
-                                                    where {3}.value = ?  order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_RATING_NULL', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-								                    left join {2} on {2}.book = books.id
-								                    left join {3} on {3}.id = {2}.{4}
-                                                    where ((books.id not in (select {2}.book from {2})) or ({3}.value = 0)) {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_DATE', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and date({2}.value) = ? {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_DIRECT', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.value = ? {1} order by sort');
-define ('SQL_BOOKS_BY_CUSTOM_DIRECT_ID', 'select {0} from {2}, books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where {2}.book = books.id and {2}.id = ? {1} order by sort');
-define ('SQL_BOOKS_QUERY', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where (
-                                                    exists (select null from authors, books_authors_link where book = books.id and author = authors.id and authors.name like ?) or
-                                                    exists (select null from tags, books_tags_link where book = books.id and tag = tags.id and tags.name like ?) or
-                                                    exists (select null from series, books_series_link on book = books.id and books_series_link.series = series.id and series.name like ?) or
-                                                    exists (select null from publishers, books_publishers_link where book = books.id and books_publishers_link.publisher = publishers.id and publishers.name like ?) or
-                                                    title like ?) {1} order by books.sort');
-define ('SQL_BOOKS_RECENT', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where 1=1 {1} order by timestamp desc limit ');
-define ('SQL_BOOKS_BY_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
-                                                    where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort');
+require_once dirname(__FILE__) . '/SQL_Querries.php';
 
 class Book extends Base
 {
@@ -64,27 +14,6 @@ class Book extends Base
     const ALL_BOOKS_ID = 'cops:books';
     const ALL_RECENT_BOOKS_ID = 'cops:recentbooks';
     const BOOK_COLUMNS = 'books.id as id, books.title as title, text as comment, path, timestamp, pubdate, series_index, uuid, has_cover, ratings.rating';
-
-    const SQL_BOOKS_LEFT_JOIN = SQL_BOOKS_LEFT_JOIN;
-    const SQL_BOOKS_ALL = SQL_BOOKS_ALL;
-    const SQL_BOOKS_BY_PUBLISHER = SQL_BOOKS_BY_PUBLISHER;
-    const SQL_BOOKS_BY_FIRST_LETTER = SQL_BOOKS_BY_FIRST_LETTER;
-    const SQL_BOOKS_BY_AUTHOR = SQL_BOOKS_BY_AUTHOR;
-    const SQL_BOOKS_BY_SERIE = SQL_BOOKS_BY_SERIE;
-    const SQL_BOOKS_BY_TAG = SQL_BOOKS_BY_TAG;
-    const SQL_BOOKS_BY_LANGUAGE = SQL_BOOKS_BY_LANGUAGE;
-    const SQL_BOOKS_BY_CUSTOM = SQL_BOOKS_BY_CUSTOM;
-    const SQL_BOOKS_BY_CUSTOM_BOOL_TRUE = SQL_BOOKS_BY_CUSTOM_BOOL_TRUE;
-    const SQL_BOOKS_BY_CUSTOM_BOOL_FALSE = SQL_BOOKS_BY_CUSTOM_BOOL_FALSE;
-    const SQL_BOOKS_BY_CUSTOM_BOOL_NULL = SQL_BOOKS_BY_CUSTOM_BOOL_NULL;
-    const SQL_BOOKS_BY_CUSTOM_RATING = SQL_BOOKS_BY_CUSTOM_RATING;
-    const SQL_BOOKS_BY_CUSTOM_RATING_NULL = SQL_BOOKS_BY_CUSTOM_RATING_NULL;
-    const SQL_BOOKS_BY_CUSTOM_DATE = SQL_BOOKS_BY_CUSTOM_DATE;
-    const SQL_BOOKS_BY_CUSTOM_DIRECT = SQL_BOOKS_BY_CUSTOM_DIRECT;
-    const SQL_BOOKS_BY_CUSTOM_DIRECT_ID = SQL_BOOKS_BY_CUSTOM_DIRECT_ID;
-    const SQL_BOOKS_QUERY = SQL_BOOKS_QUERY;
-    const SQL_BOOKS_RECENT = SQL_BOOKS_RECENT;
-    const SQL_BOOKS_BY_RATING = SQL_BOOKS_BY_RATING;
 
     const BAD_SEARCH = 'QQQQQ';
 
@@ -490,27 +419,27 @@ class Book extends Base
     }
 
     public static function getBooksByAuthor($authorId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_AUTHOR, array($authorId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_AUTHOR, array($authorId), $n);
     }
 
     public static function getBooksByRating($ratingId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_RATING, array($ratingId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_RATING, array($ratingId), $n);
     }
 
     public static function getBooksByPublisher($publisherId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_PUBLISHER, array($publisherId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_PUBLISHER, array($publisherId), $n);
     }
 
     public static function getBooksBySeries($serieId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_SERIE, array($serieId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_SERIE, array($serieId), $n);
     }
 
     public static function getBooksByTag($tagId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_TAG, array($tagId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_TAG, array($tagId), $n);
     }
 
     public static function getBooksByLanguage($languageId, $n) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_LANGUAGE, array($languageId), $n);
+        return self::getEntryArray(SQL_BOOKS_BY_LANGUAGE, array($languageId), $n);
     }
 
     /**
@@ -527,25 +456,31 @@ class Book extends Base
 
     public static function getBookById($bookId) {
         $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . '
-from books ' . self::SQL_BOOKS_LEFT_JOIN . '
+from books ' . SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute(array($bookId));
-        $book = new Book($result->fetchObject());
-        return $book;
+        while ($post = $result->fetchObject())
+        {
+            $book = new Book($post);
+            return $book;
+        }
+        return NULL;
     }
 
     public static function getBookByDataId($dataId) {
         $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
-from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
+from data, books ' . SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
         $result->execute(array($dataId));
-        $book = null;
-        $post = $result->fetchObject();
-        $book = new Book($post);
-        $data = new Data($post, $book);
-        $data->id = $dataId;
-        $book->datas = array($data);
-        return $book;
+        while ($post = $result->fetchObject())
+        {
+            $book = new Book($post);
+            $data = new Data($post, $book);
+            $data->id = $dataId;
+            $book->datas = array($data);
+            return $book;
+        }
+        return NULL;
     }
 
     public static function getBooksByQuery($query, $n, $database = NULL, $numberPerPage = NULL) {
@@ -569,11 +504,11 @@ where data.book = books.id and data.id = ?');
             }
             $i++;
         }
-        return self::getEntryArray(self::SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);
+        return self::getEntryArray(SQL_BOOKS_QUERY, $critArray, $n, $database, $numberPerPage);
     }
 
     public static function getBooks($n) {
-        list ($entryArray, $totalNumber) = self::getEntryArray(self::SQL_BOOKS_ALL , array (), $n);
+        list ($entryArray, $totalNumber) = self::getEntryArray(SQL_BOOKS_ALL , array (), $n);
         return array($entryArray, $totalNumber);
     }
 
@@ -596,7 +531,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
     }
 
     public static function getBooksByStartingLetter($letter, $n, $database = NULL, $numberPerPage = NULL) {
-        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, array($letter . '%'), $n, $database, $numberPerPage);
+        return self::getEntryArray(SQL_BOOKS_BY_FIRST_LETTER, array($letter . '%'), $n, $database, $numberPerPage);
     }
 
     public static function getEntryArray($query, $params, $n, $database = NULL, $numberPerPage = NULL) {
@@ -615,7 +550,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
     public static function getAllRecentBooks() {
         global $config;
-        list ($entryArray, ) = self::getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array(), -1);
+        list ($entryArray, ) = self::getEntryArray(SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array(), -1);
         return $entryArray;
     }
 
