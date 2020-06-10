@@ -95,7 +95,7 @@ function getCurrentOption($option)
     if (isset($_COOKIE[$option])) {
         if (isset($config ['cops_' . $option]) && is_array ($config ['cops_' . $option])) {
             return explode (',', $_COOKIE[$option]);
-        } else {
+        } else if(!preg_match('/[^A-Za-z0-9\-_]/', $_COOKIE[$option])) {
             return $_COOKIE[$option];
         }
     }
