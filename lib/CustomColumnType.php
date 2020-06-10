@@ -188,19 +188,16 @@ abstract class CustomColumnType extends Base
 
         switch ($datatype) {
             case self::CUSTOM_TYPE_TEXT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId);
             case self::CUSTOM_TYPE_SERIES:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeSeries($customId);
             case self::CUSTOM_TYPE_ENUM:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeEnumeration($customId);
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeText($customId, $datatype);
             case self::CUSTOM_TYPE_COMMENT:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeComment($customId);
             case self::CUSTOM_TYPE_DATE:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeDate($customId);
-            case self::CUSTOM_TYPE_FLOAT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeFloat($customId);
             case self::CUSTOM_TYPE_INT:
-                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId);
+            case self::CUSTOM_TYPE_FLOAT:
+                return self::$customColumnCacheID[$customId] = new CustomColumnTypeInteger($customId, $datatype);
             case self::CUSTOM_TYPE_RATING:
                 return self::$customColumnCacheID[$customId] = new CustomColumnTypeRating($customId);
             case self::CUSTOM_TYPE_BOOL:
@@ -217,6 +214,7 @@ abstract class CustomColumnType extends Base
      *
      * @param string $lookup the lookup-name of the custom column
      * @return CustomColumnType|null
+     * @throws Exception
      */
     public static function createByLookup($lookup)
     {
