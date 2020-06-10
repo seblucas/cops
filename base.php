@@ -15,7 +15,7 @@ date_default_timezone_set($config['default_timezone']);
 function useServerSideRendering()
 {
     global $config;
-    return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
+    return !preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
 }
 
 function serverSideRender($data)
@@ -111,9 +111,13 @@ function getCurrentCss()
     return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
 }
 
-function getCurrentTemplate()
-{
-    return getCurrentOption ('template');
+function getCurrentTemplate() {
+  global $config;
+  $template = getCurrentOption ('template');
+  if(!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
+    return $template;
+  }
+  return $config['cops_template'];
 }
 
 function getUrlWithVersion($url)
