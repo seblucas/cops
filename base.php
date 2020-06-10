@@ -10,7 +10,7 @@ require dirname(__FILE__).'/config.php';
 
 define ('VERSION', '1.2.0');
 define ('DB', 'db');
-define('template_dir', '/template');
+define('template_dir', 'templates/');
 date_default_timezone_set($config['default_timezone']);
 
 function useServerSideRendering()
