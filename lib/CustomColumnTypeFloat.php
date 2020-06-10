@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+require_once dirname(__FILE__) . '/SQLQueries.php';
+
 class CustomColumnTypeFloat extends CustomColumnType
 {
     protected function __construct($pcustomId)
@@ -25,7 +27,7 @@ class CustomColumnTypeFloat extends CustomColumnType
 
     public function getQuery($id)
     {
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
+        $query = str_format(SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
         return array($query, array($id));
     }
 
