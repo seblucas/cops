@@ -10,9 +10,22 @@ require_once dirname(__FILE__) . '/SQLQueries.php';
 
 class CustomColumnTypeInteger extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    private static $type;
+
+    protected function __construct($pcustomId, $datatype)
     {
-        parent::__construct($pcustomId, self::CUSTOM_TYPE_INT);
+        self::$type = $datatype;
+
+        switch ($datatype) {
+            case self::CUSTOM_TYPE_INT:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_INT);
+                break;
+            case self::CUSTOM_TYPE_FLOAT:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
+                break;
+            default:
+                throw new Exception("Unkown column type: " . $datatype);
+        }
     }
 
     /**
@@ -70,7 +83,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.int.unknown"), $this);
+        return new CustomColumn(NULL, localize("customcolumn.".self::$type.".unknown"), $this);
     }
 
     public function isSearchable()
