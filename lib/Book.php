@@ -530,10 +530,7 @@ class Book extends Base
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute(array($bookId));
-        $book = null;
-        while ($post = $result->fetchObject()) {
-            $book = new Book($post);
-        }
+        $book = new Book($result->fetchObject());
         return $book;
     }
 
@@ -543,12 +540,11 @@ from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
         $result->execute(array($dataId));
         $book = null;
-        while ($post = $result->fetchObject()) {
-            $book = new Book($post);
-            $data = new Data($post, $book);
-            $data->id = $dataId;
-            $book->datas = array($data);
-        }
+        $post = $result->fetchObject();
+        $book = new Book($post);
+        $data = new Data($post, $book);
+        $data->id = $dataId;
+        $book->datas = array($data);
         return $book;
     }
 
