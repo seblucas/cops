@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+require_once dirname(__FILE__) . '/SQLQueries.php';
+
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays
@@ -33,13 +35,13 @@ class CustomColumnTypeBool extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == -1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
+            $query = str_format(SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
             return array($query, array());
         } else if ($id == 0) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
             return array($query, array());
         } else if ($id == 1) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
+            $query = str_format(SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
             return array($query, array());
         } else {
             return NULL;

@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+require_once dirname(__FILE__) . '/SQLQueries.php';
+
 class CustomColumnTypeRating extends CustomColumnType
 {
     protected function __construct($pcustomId)
@@ -47,10 +49,10 @@ class CustomColumnTypeRating extends CustomColumnType
     public function getQuery($id)
     {
         if ($id == 0) {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+            $query = str_format(SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return array($query, array());
         } else {
-            $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
+            $query = str_format(SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
             return array($query, array($id));
         }
     }

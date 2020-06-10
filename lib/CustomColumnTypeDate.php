@@ -6,6 +6,8 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
+require_once dirname(__FILE__) . '/SQLQueries.php';
+
 class CustomColumnTypeDate extends CustomColumnType
 {
     protected function __construct($pcustomId)
@@ -25,14 +27,22 @@ class CustomColumnTypeDate extends CustomColumnType
 
     public function getQuery($id)
     {
-        $date = new DateTime($id);
-        $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
+        try {
+            $date = new DateTime($id);
+        } catch (Exception $e) {
+            throwException($e);
+        }
+        $query = str_format(SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
         return array($query, array($date->format("Y-m-d")));
     }
 
     public function getCustom($id)
     {
-        $date = new DateTime($id);
+        try {
+            $date = new DateTime($id);
+        } catch (Exception $e) {
+            throwException($e);
+        }
 
         return new CustomColumn($id, $date->format(localize("customcolumn.date.format")), $this);
     }
@@ -45,7 +55,11 @@ class CustomColumnTypeDate extends CustomColumnType
 
         $entryArray = array();
         while ($post = $result->fetchObject()) {
-            $date = new DateTime($post->datevalue);
+            try {
+                $date = new DateTime($post->datevalue);
+            } catch (Exception $e) {
+                throwException($e);
+            }
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
@@ -73,7 +87,11 @@ class CustomColumnTypeDate extends CustomColumnType
 
         $result = $this->getDb()->query($query);
         if ($post = $result->fetchObject()) {
-            $date = new DateTime($post->datevalue);
+            try {
+                $date = new DateTime($post->datevalue);
+            } catch (Exception $e) {
+                throwException($e);
+            }
 
             return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
         }
