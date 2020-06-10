@@ -33,8 +33,6 @@ abstract class Base
     const PAGE_ALL_RATINGS = "22";
     const PAGE_RATING_DETAIL = "23";
 
-    const COMPATIBILITY_XML_ALDIKO = "aldiko";
-
     private static $db = NULL;
 
     public static function isMultipleDatabaseEnabled () {

@@ -31,16 +31,6 @@ class Entry
         Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
     );
 
-    public function getUpdatedTime () {
-        if (!is_null ($this->localUpdated)) {
-            return date (DATE_ATOM, $this->localUpdated);
-        }
-        if (is_null (self::$updated)) {
-            self::$updated = time();
-        }
-        return date (DATE_ATOM, self::$updated);
-    }
-
     public function getNavLink () {
         foreach ($this->linkArray as $link) {
             /* @var $link LinkNavigation */

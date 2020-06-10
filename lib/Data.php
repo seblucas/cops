@@ -98,10 +98,6 @@ class Data extends Base
         return $this->book->getAuthorsSort () . " - " . $this->book->title;
     }
 
-    public function getUpdatedFilenameEpub () {
-        return $this->getUpdatedFilename () . ".epub";
-    }
-
     public function getUpdatedFilenameKepub () {
         $str = $this->getUpdatedFilename () . ".kepub.epub";
         return str_replace(array(':', '#', '&'),
