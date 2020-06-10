@@ -36,16 +36,6 @@ class CustomColumn extends Base
     }
 
     /**
-     * Get the URI to show all books with this value
-     *
-     * @return string
-     */
-    public function getUri()
-    {
-        return $this->customColumnType->getUri($this->valueID);
-    }
-
-    /**
      * Get the EntryID to show all books with this value
      *
      * @return string
@@ -66,16 +56,6 @@ class CustomColumn extends Base
     public function getQuery()
     {
         return $this->customColumnType->getQuery($this->valueID);
-    }
-
-    /**
-     * Return the value of this column as an HTML snippet
-     *
-     * @return string
-     */
-    public function getHTMLEncodedValue()
-    {
-        return $this->htmlvalue;
     }
 
     /**

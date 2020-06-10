@@ -6,7 +6,7 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once dirname(__FILE__) . '/SQL_Querries.php';
+require_once dirname(__FILE__) . '/SQLQueries.php';
 
 class Book extends Base
 {
@@ -33,9 +33,6 @@ class Book extends Base
     public $publisher = NULL;
     public $serie = NULL;
     public $tags = NULL;
-    public $languages = NULL;
-    public $format = array ();
-
 
     public function __construct($line) {
         $this->id = $line->id;
@@ -91,10 +88,6 @@ class Book extends Base
 
     public function getAuthorsName () {
         return implode(', ', array_map(function ($author) { return $author->name; }, $this->getAuthors()));
-    }
-
-    public function getAuthorsSort () {
-        return implode(', ', array_map(function ($author) { return $author->sort; }, $this->getAuthors()));
     }
 
     public function getPublisher () {
