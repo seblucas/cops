@@ -20,7 +20,8 @@ define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql
  */
 class CalibreDbLoader
 {
-	private $mDb = null;
+	private $mDb;
+	/** @var $mDb PDO */
 
 	/**
 	 * Open a Calibre database (or create if database does not exist)
@@ -160,6 +161,39 @@ class CalibreDbLoader
 			$error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $post->format, $post->title);
 			throw new Exception($error);
 		}
+		$idBook = $this->createBook($inBookInfo);
+		$this->addBookSerie($inBookInfo, $idBook);
+
+		$this->addBookAuthor($inBookInfo, $idBook);
+		$this->addBookLanguage($inBookInfo, $idBook);
+		$this->addBookTags($inBookInfo, $idBook);
+
+		}
+
+	/**
+	 * Check database for debug
+	 *
+	 * @return void
+	 */
+	private function CheckDatabase()
+	{
+		// Retrieve some infos for check only
+		$sql = 'select id, title, sort from books';
+		$stmt = $this->mDb->prepare($sql);
+		$stmt->execute();
+		while ($post = $stmt->fetchObject()) {
+			$id = $post->id;
+			$title = $post->title;
+			$sort = $post->sort;
+		}
+	}
+
+	/**
+	 * @param $inBookInfo
+	 * @return string
+	 * @throws Exception
+	 */
+	private function createBook($inBookInfo): string {
 		// Add the book
 		$sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path)';
 		$stmt = $this->mDb->prepare($sql);
@@ -171,20 +205,11 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
 		$stmt->execute();
-		// Get the book id
-		$sql = 'select id from books where uuid=:uuid';
-		$stmt = $this->mDb->prepare($sql);
-		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
-		$stmt->execute();
-		$idBook = null;
-		while ($post = $stmt->fetchObject()) {
-			$idBook = $post->id;
-			break;
-		}
-		if (!isset($idBook)) {
-			$error = sprintf('Cannot find book id for uuid: %s', $inBookInfo->mUuid);
+		if ($stmt->errorCode() !== '00000') {
+			$error = sprintf('Insert failed for uuid: %s', $inBookInfo->mUuid);
 			throw new Exception($error);
 		}
+		$idBook = $this->mDb->lastInsertId();
 		// Add the book formats
 		$sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
 		$stmt = $this->mDb->prepare($sql);
@@ -215,7 +240,17 @@ class CalibreDbLoader
 				$stmt->execute();
 			}
 		}
-		// Add the book serie
+		return $idBook;
+	}
+
+	/**
+	 * @param $inBookInfo
+	 * @param $idBook
+	 * @return array
+	 * @throws Exception
+	 */
+	private function addBookSerie($inBookInfo, $idBook): array {
+// Add the book serie
 		if (!empty($inBookInfo->mSerie)) {
 			// Get the serie id
 			$sql = 'select id from series where name=:serie';
@@ -225,33 +260,18 @@ class CalibreDbLoader
 			$post = $stmt->fetchObject();
 			if ($post) {
 				$idSerie = $post->id;
-			}
-			else {
+			} else {
 				// Add a new serie
 				$sql = 'insert into series(name, sort) values(:serie, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':serie', $inBookInfo->mSerie);
 				$stmt->bindParam(':sort', $inBookInfo->mSerie);
 				$stmt->execute();
-				// Get the serie id
-				$sql = 'select id from series where name=:serie';
-				$stmt = $this->mDb->prepare($sql);
-				$stmt->bindParam(':serie', $inBookInfo->mSerie);
-				$stmt->execute();
-				$idSerie = null;
-				while ($post = $stmt->fetchObject()) {
-					if (!isset($idSerie)) {
-						$idSerie = $post->id;
-					}
-					else {
-						$error = sprintf('Multiple series for name: %s', $inBookInfo->mSerie);
-						throw new Exception($error);
-					}
-				}
-				if (!isset($idSerie)) {
-					$error = sprintf('Cannot find serie id for name: %s', $inBookInfo->mSerie);
+				if ($stmt->errorCode() !== '00000') {
+					$error = sprintf('Insert failed for series: %s', $inBookInfo->mSerie);
 					throw new Exception($error);
 				}
+				$idSerie = $this->mDb->lastInsertId();
 			}
 			// Add the book serie link
 			$sql = 'insert into books_series_link(book, series) values(:idBook, :idSerie)';
@@ -260,7 +280,16 @@ class CalibreDbLoader
 			$stmt->bindParam(':idSerie', $idSerie, PDO::PARAM_INT);
 			$stmt->execute();
 		}
-		// Add the book authors
+	}
+
+	/**
+	 * @param $inBookInfo
+	 * @param $idBook
+	 * @return array
+	 * @throws Exception
+	 */
+	private function addBookAuthor($inBookInfo, $idBook): array {
+// Add the book authors
 		foreach ($inBookInfo->mAuthors as $authorSort => $author) {
 			// Get the author id
 			$sql = 'select id from authors where name=:author';
@@ -270,33 +299,18 @@ class CalibreDbLoader
 			$post = $stmt->fetchObject();
 			if ($post) {
 				$idAuthor = $post->id;
-			}
-			else {
+			} else {
 				// Add a new author
 				$sql = 'insert into authors(name, sort) values(:author, :sort)';
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':author', $author);
 				$stmt->bindParam(':sort', $authorSort);
 				$stmt->execute();
-				// Get the author id
-				$sql = 'select id from authors where name=:author';
-				$stmt = $this->mDb->prepare($sql);
-				$stmt->bindParam(':author', $author);
-				$stmt->execute();
-				$idAuthor = null;
-				while ($post = $stmt->fetchObject()) {
-					if (!isset($idAuthor)) {
-						$idAuthor = $post->id;
-					}
-					else {
-						$error = sprintf('Multiple authors for name: %s', $author);
-						throw new Exception($error);
-					}
-				}
-				if (!isset($idAuthor)) {
-					$error = sprintf('Cannot find author id for name: %s', $author);
+				if ($stmt->errorCode() !== '00000') {
+					$error = sprintf('Insert failed for author: %s', $author);
 					throw new Exception($error);
 				}
+				$idAuthor = $this->mDb->lastInsertId();
 			}
 			// Add the book author link
 			$sql = 'insert into books_authors_link(book, author) values(:idBook, :idAuthor)';
@@ -305,53 +319,53 @@ class CalibreDbLoader
 			$stmt->bindParam(':idAuthor', $idAuthor, PDO::PARAM_INT);
 			$stmt->execute();
 		}
-		// Add the book language
-		{
-			// Get the language id
-			$sql = 'select id from languages where lang_code=:language';
+	}
+
+	/**
+	 * @param $inBookInfo
+	 * @param $idBook
+	 * @return array
+	 * @throws Exception
+	 */
+	private function addBookLanguage($inBookInfo, $idBook): array {
+// Add the book language
+		$sql = 'select id from languages where lang_code=:language';
+		$stmt = $this->mDb->prepare($sql);
+		$stmt->bindParam(':language', $inBookInfo->mLanguage);
+		$stmt->execute();
+		$post = $stmt->fetchObject();
+		if ($post) {
+			$idLanguage = $post->id;
+		} else {
+			// Add a new language
+			$sql = 'insert into languages(lang_code) values(:language)';
 			$stmt = $this->mDb->prepare($sql);
 			$stmt->bindParam(':language', $inBookInfo->mLanguage);
 			$stmt->execute();
-			$post = $stmt->fetchObject();
-			if ($post) {
-				$idLanguage = $post->id;
+			if ($stmt->errorCode() !== '00000') {
+				$error = sprintf('Insert failed for author: %s', $inBookInfo->mLanguage);
+				throw new Exception($error);
 			}
-			else {
-				// Add a new language
-				$sql = 'insert into languages(lang_code) values(:language)';
-				$stmt = $this->mDb->prepare($sql);
-				$stmt->bindParam(':language', $inBookInfo->mLanguage);
-				$stmt->execute();
-				// Get the language id
-				$sql = 'select id from languages where lang_code=:language';
-				$stmt = $this->mDb->prepare($sql);
-				$stmt->bindParam(':language', $inBookInfo->mLanguage);
-				$stmt->execute();
-				$idLanguage = null;
-				while ($post = $stmt->fetchObject()) {
-					if (!isset($idLanguage)) {
-						$idLanguage = $post->id;
-					}
-					else {
-						$error = sprintf('Multiple languages for lang_code: %s', $inBookInfo->mLanguage);
-						throw new Exception($error);
-					}
-				}
-				if (!isset($idLanguage)) {
-					$error = sprintf('Cannot find language id for lang_code: %s', $inBookInfo->mLanguage);
-					throw new Exception($error);
-				}
-			}
-			// Add the book language link
-			$itemOder = 0;
-			$sql = 'insert into books_languages_link(book, lang_code, item_order) values(:idBook, :idLanguage, :itemOrder)';
-			$stmt = $this->mDb->prepare($sql);
-			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-			$stmt->bindParam(':idLanguage', $idLanguage, PDO::PARAM_INT);
-			$stmt->bindParam(':itemOrder', $itemOder, PDO::PARAM_INT);
-			$stmt->execute();
+			$idLanguage = $this->mDb->lastInsertId();
 		}
-		// Add the book tags (subjects)
+		// Add the book language link
+		$itemOder = 0;
+		$sql = 'insert into books_languages_link(book, lang_code, item_order) values(:idBook, :idLanguage, :itemOrder)';
+		$stmt = $this->mDb->prepare($sql);
+		$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
+		$stmt->bindParam(':idLanguage', $idLanguage, PDO::PARAM_INT);
+		$stmt->bindParam(':itemOrder', $itemOder, PDO::PARAM_INT);
+		$stmt->execute();
+	}
+
+	/**
+	 * @param $inBookInfo
+	 * @param $idBook
+	 * @return array
+	 * @throws Exception
+	 */
+	private function addBookTags($inBookInfo, $idBook): array {
+// Add the book tags (subjects)
 		foreach ($inBookInfo->mSubjects as $subject) {
 			// Get the subject id
 			$sql = 'select id from tags where name=:subject';
@@ -361,8 +375,7 @@ class CalibreDbLoader
 			$post = $stmt->fetchObject();
 			if ($post) {
 				$idSubject = $post->id;
-			}
-			else {
+			} else {
 				// Add a new subject
 				$sql = 'insert into tags(name) values(:subject)';
 				$stmt = $this->mDb->prepare($sql);
@@ -373,20 +386,11 @@ class CalibreDbLoader
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':subject', $subject);
 				$stmt->execute();
-				$idSubject = null;
-				while ($post = $stmt->fetchObject()) {
-					if (!isset($idSubject)) {
-						$idSubject = $post->id;
-					}
-					else {
-						$error = sprintf('Multiple subjects for name: %s', $subject);
-						throw new Exception($error);
-					}
-				}
-				if (!isset($idSubject)) {
-					$error = sprintf('Cannot find subject id for name: %s', $subject);
+				if ($stmt->errorCode() !== '00000') {
+					$error = sprintf('Insert failed for author: %s', $subject);
 					throw new Exception($error);
 				}
+				$idSubject = $this->mDb->lastInsertId();
 			}
 			// Add the book subject link
 			$sql = 'insert into books_tags_link(book, tag) values(:idBook, :idSubject)';
@@ -394,24 +398,6 @@ class CalibreDbLoader
 			$stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
 			$stmt->bindParam(':idSubject', $idSubject, PDO::PARAM_INT);
 			$stmt->execute();
-		}
-	}
-
-	/**
-	 * Check database for debug
-	 *
-	 * @return void
-	 */
-	private function CheckDatabase()
-	{
-		// Retrieve some infos for check only
-		$sql = 'select id, title, sort from books';
-		$stmt = $this->mDb->prepare($sql);
-		$stmt->execute();
-		while ($post = $stmt->fetchObject()) {
-			$id = $post->id;
-			$title = $post->title;
-			$sort = $post->sort;
 		}
 	}
 
