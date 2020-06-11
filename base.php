@@ -12,6 +12,8 @@ define ('VERSION', '1.2.0');
 define ('DB', 'db');
 date_default_timezone_set($config['default_timezone']);
 
+const COPS_TEMPLATE = 'cops_template';
+
 function useServerSideRendering()
 {
     global $config;
@@ -113,7 +115,7 @@ function getCurrentCss()
     if(!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
       return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
     }
-    return 'templates/' . $config['cops_template'] . '/styles/style-' . $config['cops_template'] . '.css';
+    return 'templates/' . $config[COPS_TEMPLATE] . '/styles/style-' . $config[COPS_TEMPLATE] . '.css';
 }
 
 function getCurrentTemplate() {
@@ -122,7 +124,7 @@ function getCurrentTemplate() {
   if(!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
     return $template;
   }
-  return $config['cops_template'];
+  return $config[COPS_TEMPLATE];
 }
 
 function getUrlWithVersion($url)

@@ -24,7 +24,7 @@ class CustomColumnTypeInteger extends CustomColumnType
                 parent::__construct($pcustomId, self::CUSTOM_TYPE_FLOAT);
                 break;
             default:
-                throw new Exception("Unkown column type: " . $datatype);
+                throw new UnexpectedValueException;
         }
     }
 
