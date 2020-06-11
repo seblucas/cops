@@ -28,7 +28,7 @@ class CustomColumnTypeText extends CustomColumnType
                 parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
                 break;
             default:
-                throw new Exception("Unkown column type: " . $datatype);
+                throw new UnexpectedValueException;
         }
         parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
@@ -112,7 +112,7 @@ class CustomColumnTypeText extends CustomColumnType
             case self::CUSTOM_TYPE_SERIES:
                 return str_format(localize("customcolumn.description.".self::$type, $this->getDistinctValueCount()), $this->getDistinctValueCount());
             default:
-                throw new Exception("Unkown column type: " . self::$type);
+                throw new UnexpectedValueException;
         }
     }
 
@@ -129,7 +129,7 @@ class CustomColumnTypeText extends CustomColumnType
                 $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
                 break;
             default:
-                throw new Exception("Unkown column type: " . self::$type);
+                throw new UnexpectedValueException;
         }
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
@@ -144,7 +144,7 @@ class CustomColumnTypeText extends CustomColumnType
                     return new CustomColumn($post->id, $post->name . " [" . $post->extra . "]", $this);
                     break;
                 default:
-                    throw new Exception("Unkown column type: " . self::$type);
+                    throw new UnexpectedValueException;
             }
         }
         return new CustomColumn(NULL, "", $this);
