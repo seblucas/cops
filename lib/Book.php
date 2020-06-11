@@ -452,7 +452,7 @@ class Book extends Base
 from books ' . SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute(array($bookId));
-        return $book = new Book($result->fetchObject());
+        return new Book($result->fetchObject());
     }
 
     public static function getBookByDataId($dataId) {
