@@ -10,6 +10,7 @@ require dirname(__FILE__).'/config.php';
 
 define ('VERSION', '1.2.0');
 define ('DB', 'db');
+define('template_dir', 'templates/');
 date_default_timezone_set($config['default_timezone']);
 
 const COPS_TEMPLATE = 'cops_template';
@@ -24,11 +25,11 @@ function serverSideRender($data)
 {
     // Get the templates
     $theme = getCurrentTemplate ();
-    $header = file_get_contents('templates/' . $theme . '/header.html');
-    $footer = file_get_contents('templates/' . $theme . '/footer.html');
-    $main = file_get_contents('templates/' . $theme . '/main.html');
-    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
-    $page = file_get_contents('templates/' . $theme . '/page.html');
+    $header = file_get_contents(template_dir . $theme . '/header.html');
+    $footer = file_get_contents(template_dir . $theme . '/footer.html');
+    $main = file_get_contents(template_dir . $theme . '/main.html');
+    $bookdetail = file_get_contents(template_dir . $theme . '/bookdetail.html');
+    $page = file_get_contents(template_dir . $theme . '/page.html');
 
     // Generate the function for the template
     $template = new doT ();
@@ -113,7 +114,7 @@ function getCurrentCss()
     global $config;
     $style = getCurrentOption ('style');
     if(!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
-      return 'templates/' . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
+      return template_dir . getCurrentTemplate () . '/styles/style-' . getCurrentOption('style') . '.css';
     }
     return 'templates/' . $config[COPS_TEMPLATE] . '/styles/style-' . $config[COPS_TEMPLATE] . '.css';
 }
