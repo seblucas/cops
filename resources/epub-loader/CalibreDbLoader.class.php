@@ -8,6 +8,8 @@
 
 require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
 
+define('PDO_SUCCES_CODE', '00000');
+
 /**
  * Calibre database sql file that comes unmodified from Calibre project:
  *   /calibre/resources/metadata_sqlite.sql
@@ -171,24 +173,6 @@ class CalibreDbLoader
 		}
 
 	/**
-	 * Check database for debug
-	 *
-	 * @return void
-	 */
-	private function CheckDatabase()
-	{
-		// Retrieve some infos for check only
-		$sql = 'select id, title, sort from books';
-		$stmt = $this->mDb->prepare($sql);
-		$stmt->execute();
-		while ($post = $stmt->fetchObject()) {
-			$id = $post->id;
-			$title = $post->title;
-			$sort = $post->sort;
-		}
-	}
-
-	/**
 	 * @param $inBookInfo
 	 * @return string
 	 * @throws Exception
@@ -205,7 +189,7 @@ class CalibreDbLoader
 		$stmt->bindParam(':uuid', $inBookInfo->mUuid);
 		$stmt->bindParam(':path', $inBookInfo->mPath);
 		$stmt->execute();
-		if ($stmt->errorCode() !== '00000') {
+		if ($stmt->errorCode() !== PDO_SUCCES_CODE) {
 			$error = sprintf('Insert failed for uuid: %s', $inBookInfo->mUuid);
 			throw new Exception($error);
 		}
@@ -267,7 +251,7 @@ class CalibreDbLoader
 				$stmt->bindParam(':serie', $inBookInfo->mSerie);
 				$stmt->bindParam(':sort', $inBookInfo->mSerie);
 				$stmt->execute();
-				if ($stmt->errorCode() !== '00000') {
+				if ($stmt->errorCode() !== PDO_SUCCES_CODE) {
 					$error = sprintf('Insert failed for series: %s', $inBookInfo->mSerie);
 					throw new Exception($error);
 				}
@@ -306,7 +290,7 @@ class CalibreDbLoader
 				$stmt->bindParam(':author', $author);
 				$stmt->bindParam(':sort', $authorSort);
 				$stmt->execute();
-				if ($stmt->errorCode() !== '00000') {
+				if ($stmt->errorCode() !== PDO_SUCCES_CODE) {
 					$error = sprintf('Insert failed for author: %s', $author);
 					throw new Exception($error);
 				}
@@ -342,7 +326,7 @@ class CalibreDbLoader
 			$stmt = $this->mDb->prepare($sql);
 			$stmt->bindParam(':language', $inBookInfo->mLanguage);
 			$stmt->execute();
-			if ($stmt->errorCode() !== '00000') {
+			if ($stmt->errorCode() !== PDO_SUCCES_CODE) {
 				$error = sprintf('Insert failed for author: %s', $inBookInfo->mLanguage);
 				throw new Exception($error);
 			}
@@ -386,7 +370,7 @@ class CalibreDbLoader
 				$stmt = $this->mDb->prepare($sql);
 				$stmt->bindParam(':subject', $subject);
 				$stmt->execute();
-				if ($stmt->errorCode() !== '00000') {
+				if ($stmt->errorCode() !== PDO_SUCCES_CODE) {
 					$error = sprintf('Insert failed for author: %s', $subject);
 					throw new Exception($error);
 				}
