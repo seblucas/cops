@@ -16,7 +16,6 @@ class Entry
     public $linkArray;
     public $localUpdated;
     public $className;
-    private static $updated = NULL;
 
     public static $icons = array(
         Author::ALL_AUTHORS_ID           => 'images/author.png',

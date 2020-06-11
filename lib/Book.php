@@ -442,7 +442,7 @@ class Book extends Base
      * @return array
      */
     public static function getBooksByCustom($customColumn, $id, $n) {
-        list($query, $params) = $customColumn->getQuery($id);
+        list($query, $params) = $customColumn->getQuery();
 
         return self::getEntryArray($query, $params, $n);
     }
@@ -452,8 +452,7 @@ class Book extends Base
 from books ' . SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute(array($bookId));
-        $book = new Book($result->fetchObject());
-        return $book;
+        return $book = new Book($result->fetchObject());
     }
 
     public static function getBookByDataId($dataId) {
@@ -537,8 +536,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
     public static function getAllRecentBooks() {
         global $config;
-        list ($entryArray, ) = self::getEntryArray(SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array(), -1);
-        return $entryArray;
+        return self::getEntryArray(SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array(), -1);
     }
 
     /**
