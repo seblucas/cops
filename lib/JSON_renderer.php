@@ -23,7 +23,8 @@ class JSONRenderer
             if ($i == 2) { break; }
             if ($data = $book->getDataFormat ($format)) {
                 $i++;
-                array_push ($preferedData, array ("url" => $data->getHtmlLink (), "name" => $format));
+                array_push ($preferedData, array ("url" => $data->getHtmlLink (),
+                  "viewUrl" => $data->getViewHtmlLink (), "name" => $format));
             }
         }
 
@@ -82,7 +83,12 @@ class JSONRenderer
         $out ["datas"] = array ();
         $dataKindle = $book->GetMostInterestingDataToSendToKindle ();
         foreach ($book->getDatas() as $data) {
-            $tab = array ("id" => $data->id, "format" => $data->format, "url" => $data->getHtmlLink (), "mail" => 0, "readerUrl" => "");
+            $tab = array ("id" => $data->id,
+                "format" => $data->format, 
+                "url" => $data->getHtmlLink (),
+                "viewUrl" => $data->getViewHtmlLink (),
+                "mail" => 0, 
+                "readerUrl" => "");
             if (!empty ($config['cops_mail_configuration']) && !is_null ($dataKindle) && $data->id == $dataKindle->id) {
                 $tab ["mail"] = 1;
             }
@@ -154,6 +160,7 @@ class JSONRenderer
                            "pubdateTitle" => localize("pubdate.title"),
                            "languagesTitle" => localize("language.title"),
                            "contentTitle" => localize("content.summary"),
+                           "filterClearAll" => localize("filter.clearall"),
                            "sortorderAsc" => localize("search.sortorder.asc"),
                            "sortorderDesc" => localize("search.sortorder.desc"),
                            "customizeEmail" => localize("customize.email")),

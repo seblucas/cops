@@ -29,9 +29,13 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteRule ^download/(\d*)/(\d*)/.*\.kepub\.epub$ fetch.php?data=$1&db=$2&type=epub [L]
+RewriteRule ^view/(\d*)/(\d*)/.*\.kepub\.epub$ fetch.php?data=$1&db=$2&type=epub&view=1 [L]
 RewriteRule ^download/(\d*)/(\d*)/.*\.(.*)$ fetch.php?data=$1&db=$2&type=$3 [L]
+RewriteRule ^view/(\d*)/(\d*)/.*\.(.*)$ fetch.php?data=$1&db=$2&type=$3&view=1 [L]
 RewriteRule ^download/(\d*)/.*\.kepub\.epub$ fetch.php?data=$1&type=epub [L]
+RewriteRule ^view/(\d*)/.*\.kepub\.epub$ fetch.php?data=$1&type=epub&view=1 [L]
 RewriteRule ^download/(\d*)/.*\.(.*)$ fetch.php?data=$1&type=$2 [L]
+RewriteRule ^view/(\d*)/.*\.(.*)$ fetch.php?data=$1&type=$2&view=1 [L]
 </IfModule>
 
 <IfModule mod_expires.c>

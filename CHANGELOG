@@ -1,4 +1,13 @@
-1.1.3 - XXXXXXXX
+1.1.3 - 20190624
+ * Fixed an error with PHP > 7.2.X where create_function is deprecated, also fixed another error with PHP 7.3.X. Thanks to Turkish for the report.
+ * Fixed the view button when URL Rewriting is enabled.
+ * Fixed an error in epubreader with headers. thanks to worstje for the report. 
+ * Added a real logo for COPS. Thanks to horus68 for doing all the work ;).
+ * Added a proper translation for `_CLEAR_` text. Was reported for many year :(. 
+ * Added Galician translation. Thanks to Sadrarin Highland.
+ * Added Afrikaan translation. Thanks to PetrusVermaak.
+ * Updated Spanish, Basque, Italian, Dutch, French, Portuguese, Romanian, Russian, Swedish, Turkish. Thanks to the translators and horus68.
+ * Upgraded to latest phpmailer 5.2.27 and bootstrap 3.4.1.
 
 1.1.2 - 20180626
  * Fixed the download of Kepub with recent firmware from Kobo. Thanks to ospring for the report.

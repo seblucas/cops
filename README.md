@@ -34,10 +34,11 @@ So COPS's main advantages are :
  * No need for a lot of CPU or RAM.
  * Not much code.
  * Search is available.
- * With Dropbox / owncloud it's very easy to have an up to date OPDS server.
  * It was fun to code.
 
 If you want to use the OPDS feed don't forget to specify feed.php at the end of your URL.
+
+You just have to sync your Calibre directory to your COPS server the way you prefer (Dropbox, Bt Sync, Syncthing, use a directory shared with Nextcloud, ...).
 
 # Prerequisites
 
@@ -62,10 +63,7 @@ On Centos you may have to add :
 3.  Edit config_local.php to match your config.
 4.  If needed add other configuration item from config_default.php
 
-If you like Docker, you can also try these docker containers.
-[x64](https://hub.docker.com/r/linuxserver/cops/)
-[armhf](https://hub.docker.com/r/lsioarmhf/cops)
-[arm64](https://hub.docker.com/r/lsioarmhf/cops-aarch64/)
+If you like Docker, you can also try this multiarch docker container from [linuxserver.io](https://hub.docker.com/r/linuxserver/cops/)  It has builds for x64, armhf and arm64. 
 
 # Install from sources
 
@@ -87,8 +85,12 @@ Note that if your PHP version is lower that 5.6, then you may have to remove `co
 
 Long story short : ALWAYS outside of COPS's directory especially if COPS is installed on a VPS / Server. If you follow my advice then your data will be safe.
 
-If you choose to put your Calibre directory inside your web directory and use Nginx then you will have to edit /etc/nginx/mime.types to add this line :
-`application/epub+zip epub;`
+If you choose to put your Calibre directory inside your web directory and use Nginx then you will have to edit /etc/nginx/mime.types to add these lines :
+
+```
+application/epub+zip epub;
+application/x-mobipocket-ebook mobi prc azw;
+```
 
 # Known problems
 
@@ -110,9 +112,9 @@ I only have one limit (I may have more but that one is the worse) : COPS' goal i
 
 # Credits
 
- * Locale message handling is inspired of http://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php/
+ * Locale message handling is inspired of https://www.mind-it.info/2010/02/22/a-simple-approach-to-localization-in-php
  * str_format function come from http://tmont.com/blargh/2010/1/string-format-in-php
- * All icons come from Font Awesome : http://fontawesome.github.io/Font-Awesome/
+ * All icons come from Font Awesome : https://github.com/FortAwesome/Font-Awesome
  * The unofficial OPDS validator : http://opds-validator.appspot.com/
  * Thanks to all testers, translators and contributors.
  * Feed icons made by Freepik from Flaticon website licensed under Creative Commons BY 3.0 http://www.flaticon.com and http://www.freepik.com
@@ -129,7 +131,7 @@ External libraries used :
 
 # Copyright & License
 
-COPS - 2012-2017 (c) Sébastien Lucas
+COPS - 2012-2019 (c) Sébastien Lucas
 
 See COPYING and file headers for license info
 

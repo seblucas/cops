@@ -99,7 +99,7 @@
             break;
     }
     $file = $book->getFilePath($type, $idData, true);
-    if ($type == 'epub' && $config['cops_update_epub-metadata']) {
+    if (!$viewOnly && $type == 'epub' && $config['cops_update_epub-metadata']) {
         $book->getUpdatedEpub($idData);
         return;
     }

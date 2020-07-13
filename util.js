@@ -7,6 +7,8 @@
 
 var templatePage, templateBookDetail, templateMain, templateSuggestion, currentData, before, filterList;
 
+var CLEAR_FILTER_ID = "_CLEAR_";
+
 if (typeof LRUCache != 'undefined') {
     console.log('ERROR: LRUCache module not loaded!');
 }
@@ -198,10 +200,16 @@ function updateFilters () {
         }
     }
 
-    $("#filter ul").append ("<li>_CLEAR_</li>");
+    $("#filter ul").append ("<li id='" + CLEAR_FILTER_ID + "'>" + currentData.c.i18n.filterClearAll + "</li>");
 
     // Sort the list alphabetically
     $('#filter ul li').sortElements(function(a, b){
+        if (a.id === CLEAR_FILTER_ID) {
+            return 1;
+        }
+        if (b.id === CLEAR_FILTER_ID) {
+            return -1;
+        }
         return $(a).text() > $(b).text() ? 1 : -1;
     });
 }
@@ -256,7 +264,9 @@ function doFilter () {
 function handleFilterEvents () {
     $("#filter ul").on ("click", "li", function(){
         var filter = $(this).text ();
-        if (filter === "_CLEAR_") {
+        var filterId = this.id;
+        console.log(filter, filterId);
+        if (filterId === CLEAR_FILTER_ID) {
             filterList = {};
             $("#filter ul li").removeClass ("filter-exclude");
             $("#filter ul li").removeClass ("filter-include");

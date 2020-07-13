@@ -1,4 +1,6 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<?php 
+  header('Content-Type: text/html;charset=utf-8'); 
+?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <?php
 /**
@@ -10,8 +12,6 @@
 
 require_once 'config.php';
 require_once 'base.php';
-
-header('Content-Type: text/html;charset=utf-8');
 
 $idData = getURLParam('data', NULL);
 $add = 'data=' . $idData . '&';
@@ -56,6 +56,7 @@ $book->initSpineComponent();
     </script>
     <script type="text/javascript" src="<?php echo getUrlWithVersion("styles/cops-monocle.js") ?>"></script>
     <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion("styles/cops-monocle.css") ?>" media="screen" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 </head>
 <body>
   <div id="readerBg">

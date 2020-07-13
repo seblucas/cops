@@ -1,6 +1,6 @@
 {
-    "name": "Calibre OPDS (and HTML) PHP Server",
-    "description": "web-based light alternative to Calibre content server / Calibre2OPDS to serve ebooks (epub, mobi, pdf, ...)",
+    "name": "seblucas/cops",
+    "description": "Calibre OPDS (and HTML) PHP Server : web-based light alternative to Calibre content server / Calibre2OPDS to serve ebooks (epub, mobi, pdf, ...)",
     "config": { "platform": { "php": "5.6" } },
     "require": {
         "ext-gd": "*",
@@ -13,15 +13,15 @@
         "dimsemenov/magnific-popup": "~1.0",
         "phpmailer/phpmailer": "~5.2",
         "twbs/bootstrap": "~3.3",
-        "bower-asset/jQuery": "~1.12",
+        "bower-asset/jquery": "~1.12",
         "bower-asset/jquery-cookie": "~1.4",
         "bower-asset/normalize.css": "~7.0",
         "twitter/typeahead.js": "~0.10.5",
-        "seblucas/dot-php": "~1.0.0",
+        "seblucas/dot-php": "~1.1.0",
         "seblucas/php-epub-meta": "~1.0.0",
         "seblucas/tbszip": "~2.16",
         "simonpioli/sortelements": "dev-master",
-        "bower-asset/doT": "~1.0.1",
+        "bower-asset/dot": "~1.0.1",
         "rsms/js-lru": "dev-v2"
     },
     "require-dev": {
