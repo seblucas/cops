@@ -196,12 +196,8 @@ class OPDSRenderer
         self::getXmlStream ()->endElement ();
         self::getXmlStream ()->startElement ("content");
             self::getXmlStream ()->writeAttribute ("type", $entry->contentType);
-            if ($entry->contentType == "text") {
-                self::getXmlStream ()->text ($entry->content);
-            } else {
-                self::getXmlStream ()->writeRaw ($entry->content);
-            }
-        self::getXmlStream ()->endElement ();
+            self::getXmlStream ()->text ($entry->content);
+         self::getXmlStream ()->endElement ();
         foreach ($entry->linkArray as $link) {
             self::renderLink ($link);
         }
