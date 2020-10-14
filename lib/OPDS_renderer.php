@@ -197,7 +197,7 @@ class OPDSRenderer
         self::getXmlStream ()->startElement ("content");
             self::getXmlStream ()->writeAttribute ("type", $entry->contentType);
             self::getXmlStream ()->text ($entry->content);
-         self::getXmlStream ()->endElement ();
+        self::getXmlStream ()->endElement ();
         foreach ($entry->linkArray as $link) {
             self::renderLink ($link);
         }
