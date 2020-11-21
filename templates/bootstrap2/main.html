@@ -10,22 +10,26 @@
     <ul>
     </ul>
 </div>
-<div class="row">
-{{~it.entries:entry:i}}
-    {{? it.containsBook == 0}}
-        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
-            <div class="panel panel-default" style="height: 70px;">
-                <div class="panel-heading">
-                    <h2 class="panel-title">
-                        <a href="{{=entry.navlink}}" style="display: block;">{{=htmlspecialchars (entry.title)}}</a>
-                    </h2>
-                </div>
+
+{{? it.containsBook == 0}}
+<div class="container-fluid">
+    <div class="row">
+        {{~it.entries:entry:i}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            <div class="panel panel-default">
                 <div class="panel-body">
-                    <span class="badge bottomright">{{=entry.number}}</span>
+                    <a href="{{=entry.navlink}}">{{=htmlspecialchars (entry.title)}}
+                        <span class="badge pull-right">{{=entry.number}}</span>
+                    </a>
                 </div>
             </div>
         </div>
-    {{??}}
+        {{~}}
+    </div>
+</div>
+{{??}}
+<div class="row">
+    {{~it.entries:entry:i}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 books">
         <div class="panel panel-default" style="min-height: 320px;">
           <div class="panel-heading">
@@ -59,9 +63,9 @@
           </div>
         </div>
         </div>
-    {{?}}
-{{~}}
+    {{~}}
 </div>
+{{?}}
 {{?}}
 {{? it.isPaginated == 1}}
     <ul class="pager">
