@@ -64,6 +64,10 @@
           </div>
         </div>
         </div>
+        {{? i % 2 == 1 }}<div class="clearfix visible-xs"><!-- clear every 2 columns on xs--></div>{{?}}
+        {{? i % 3 == 2 }}<div class="clearfix visible-sm"><!-- clear every 3 columns on sm--></div>{{?}}
+        {{? i % 4 == 3 }}<div class="clearfix visible-md"><!-- clear every 4 columns on md--></div>{{?}}
+        {{? i % 6 == 5 }}<div class="clearfix visible-lg"><!-- clear every 6 columns on lg--></div>{{?}}
     {{~}}
 </div>
 {{?}}
