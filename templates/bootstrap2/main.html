@@ -32,45 +32,43 @@
 <div class="row d-flex">
     {{~it.entries:entry:i}}
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
-        <div class="panel panel-default" style="min-height: 300px;">
-          <div class="panel-heading">
-            <h2 class="panel-title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></h2>
-          </div>
-          <div class="panel-body">
             <div class="cover-image">
-            {{? entry.book.hasCover == 1}}
-                <a href="{{=str_format (it.c.url.coverUrl, entry.book.id, it.databaseId)}}">
-                    <img src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
-                </a>
-            {{?}}
+                {{? entry.book.hasCover == 1}}
+                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
+                        <img class ="img-responsive" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                    </a>
+                {{?}}
             </div>
-            <div class="ellipsis"><span class="glyphicon glyphicon-user"></span> <span class="sa">{{=htmlspecialchars (entry.book.authorsName)}}</span></div>
-            {{? entry.book.seriesName != ""}}<div class="ellipsis"><span class="glyphicon glyphicon-list"></span> <span class="ss">{{=htmlspecialchars (entry.book.seriesName)}} ({{=entry.book.seriesIndex}})</span></div>{{?}}
-            {{~entry.book.customcolumns_list :column:column_index}}
-            <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
-            {{~}}
-            <div class="text-center bottomright">
-<!-- download Split button -->
-{{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
-    {{~entry.book.preferedData:data:j}}
-        {{? j == 0}}
-            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
-            {{? entry.book.preferedData.length > 1}}
-                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                {{? entry.book.preferedData.length > 1}}<ul class="dropdown-menu">{{?}}
-            {{?}}
-        {{??}}
-            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
-            {{? entry.book.preferedData.length = j + 1}}</ul>{{?}}
-        {{?}}
-    {{~}}
-{{? entry.book.preferedData.length > 1}}</div>{{?}}
+            <div class="meta">
+                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></p>
+                <div class="author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
+                {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                <!-- custom columns not tested -->
+                {{~entry.book.customcolumns_list :column:column_index}}
+                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
+                {{~}}
             </div>
-          </div>
-        </div>
+            <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
+            <div class="download bottom">
+                <!-- download Split button -->
+                {{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
+                    {{~entry.book.preferedData:data:j}}
+                        {{? j == 0}}
+                            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
+                            {{? entry.book.preferedData.length > 1}}
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                {{? entry.book.preferedData.length > 1}}<ul class="dropdown-menu">{{?}}
+                            {{?}}
+                        {{??}}
+                            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
+                            {{? entry.book.preferedData.length = j + 1}}</ul>{{?}}
+                        {{?}}
+                    {{~}}
+                {{? entry.book.preferedData.length > 1}}</div>{{?}}
+            </div>
         </div>
     {{~}}
 </div>
