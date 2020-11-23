@@ -50,16 +50,25 @@
             {{~entry.book.customcolumns_list :column:column_index}}
             <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
             {{~}}
-            {{~entry.book.preferedData:data:j}}
-              <div style="height: 40px;"></div>
-            {{~}}  
             <div class="text-center bottomright">
-            {{~entry.book.preferedData:data:j}}
-              <p>
-                <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
-                <a href="{{=data.viewUrl}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-folder-open"></span></a>
-              </p>
-            {{~}}
+<!-- download Split button -->
+{{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
+    {{~entry.book.preferedData:data:j}}
+        {{? j == 0}}
+            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
+            {{? entry.book.preferedData.length > 1}}
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                {{? entry.book.preferedData.length > 1}}<ul class="dropdown-menu">{{?}}
+            {{?}}
+        {{??}}
+            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
+            {{? entry.book.preferedData.length = j + 1}}</ul>{{?}}
+        {{?}}
+    {{~}}
+{{? entry.book.preferedData.length > 1}}</div>{{?}}
             </div>
           </div>
         </div>
