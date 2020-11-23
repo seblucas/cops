@@ -68,6 +68,18 @@
 
     .panel-heading { padding: 10px 7px; }
 
+    .d-flex {
+        display: flex;
+    }
+
+    .row.d-flex {
+        flex-wrap: wrap;
+    }
+
+    .row.d-flex > [class*='col-'] {
+        flex-direction: column;
+    }
+
     .panel { margin-bottom: 5px; }
 
     div[class*="books"] {
