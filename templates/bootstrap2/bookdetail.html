@@ -17,7 +17,7 @@
         </h4>
     {{?}}
     {{? it.book.seriesName != ""}}
-        <h4><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : {{=htmlspecialchars (it.book.seriesCompleteName)}}</h4>
+        <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
     {{?}}
 </div>
 <div class="col-md-4 col-sm-6 col-xs-12">
