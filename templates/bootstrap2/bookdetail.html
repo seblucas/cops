@@ -7,9 +7,7 @@
         {{?}}
 </div>
 <div class="col-md-4 col-sm-6 col-xs-12">
-    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}">
-        <span class="glyphicon glyphicon-link"></span></a>{{=htmlspecialchars (it.title)}}
-    </h1>
+    <h1>{{=htmlspecialchars (it.title)}}</h1>
     <h4>{{=it.c.i18n.authorsTitle}}: 
     {{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
     </h4>
