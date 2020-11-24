@@ -47,22 +47,22 @@
 <div class="col-md-4 col-sm-6 col-xs-12">
     {{? it.book.publisherName != ""}}
     <p>
-        <h4>{{=it.c.i18n.publisherName}}: </h4><a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a>
+        <h4>{{=it.c.i18n.publisherName}}: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>
     </p>
     {{?}}
     {{? it.book.pubDate != ""}}
     <p>
-        <h4>{{=it.c.i18n.pubdateTitle}}: </h4>{{=it.book.pubDate}}
+        <h4>{{=it.c.i18n.pubdateTitle}}: {{=it.book.pubDate}}</h4>
     </p>
     {{?}}
     {{? it.book.languagesName != ""}}
     <p>
-        <h4>{{=it.c.i18n.languagesTitle}}: </h4>{{=it.book.languagesName}}
+        <h4>{{=it.c.i18n.languagesTitle}}: {{=it.book.languagesName}}</h4>
     </p>
     {{?}}
     {{~it.book.customcolumns_preview :column:column_index}}
     <p>
-        <h4>{{=column.customColumnType.columnTitle}}: </h4>{{=column.htmlvalue}}
+        <h4>{{=column.customColumnType.columnTitle}}: {{=column.htmlvalue}}</h4>
     </p>
     {{~}}
 
