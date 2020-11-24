@@ -8,19 +8,8 @@
         {{?}}
     </div>
 </div>
-<div class="col-md-4 col-sm-6 col-xs-12">
-    <h1>{{=htmlspecialchars (it.title)}}</h1>
-    <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
-    {{? it.book.tagsName != ""}}
-        <h4>{{=it.c.i18n.tagsTitle}}: 
-        {{~it.book.tags:tag:i}}{{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>{{~}}
-        </h4>
-    {{?}}
-    {{? it.book.seriesName != ""}}
-        <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
-    {{?}}
-</div>
-<div class="col-md-4 col-sm-6 col-xs-12">
+
+<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 text-xs-center text-sm-left ">
     {{~it.book.datas:data:i}}
     <div class="btn-group">
         <a title="Download // {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.format}}</a>
@@ -36,7 +25,30 @@
     {{~}}
 </div>
 
+
 <div class="col-md-4 col-sm-6 col-xs-12">
+    <h1>{{=htmlspecialchars (it.title)}}</h1>
+    <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
+    {{? it.book.seriesName != ""}}
+        <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
+    {{?}}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-xs-12">
+
+    {{? it.book.languagesName != ""}}
+    <p>
+        <span class="label label-default">{{=it.c.i18n.languagesTitle}}: {{=it.book.languagesName}}</span>
+    </p>
+    {{?}}
+
+    {{? it.book.tagsName != ""}}
+        <p><span class="glyphicon glyphicon-tags" title="{{=it.c.i18n.tagsTitle}}"></span>
+        {{~it.book.tags:tag:i}}<a class="btn btn-xs btn-info" role="button" href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a> {{~}}
+        </p>
+    {{?}}
+
     {{? it.book.publisherName != ""}}
     <p>
         <h4>{{=it.c.i18n.publisherName}}: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>
@@ -45,11 +57,6 @@
     {{? it.book.pubDate != ""}}
     <p>
         <h4>{{=it.c.i18n.pubdateTitle}}: {{=it.book.pubDate}}</h4>
-    </p>
-    {{?}}
-    {{? it.book.languagesName != ""}}
-    <p>
-        <h4>{{=it.c.i18n.languagesTitle}}: {{=it.book.languagesName}}</h4>
     </p>
     {{?}}
     {{~it.book.customcolumns_preview :column:column_index}}
