@@ -1,10 +1,12 @@
 <div class="row">
 <div class="col-md-offset-2 col-md-4 col-sm-6 col-xs-12">
+    <div class="cover-image">
         {{? it.book.hasCover == 1}}
         <a href="{{=it.book.coverurl}}">
           <img class="img-responsive center-block" src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
         </a>
         {{?}}
+    </div>
 </div>
 <div class="col-md-4 col-sm-6 col-xs-12">
     <h1>{{=htmlspecialchars (it.title)}}</h1>
