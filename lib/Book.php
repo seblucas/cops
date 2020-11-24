@@ -314,14 +314,7 @@ class Book extends Base
         if (!is_null ($se) && $withSerie) {
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
-        if (preg_match('/<\/(div|p|a|span)>/', $this->comment))
-        {
-            return $addition . html2xhtml($this->comment);
-        }
-        else
-        {
-            return $addition . htmlspecialchars($this->comment);
-        }
+        return $addition . html2xhtml($this->comment);
     }
 
     public function getDataFormat($format) {
