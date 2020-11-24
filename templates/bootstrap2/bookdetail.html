@@ -11,15 +11,11 @@
         <span class="glyphicon glyphicon-link"></span></a>{{=htmlspecialchars (it.title)}}
     </h1>
     <h4>{{=it.c.i18n.authorsTitle}}: 
-    {{~it.book.authors:author:i}}
-    {{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
-    {{~}}
+    {{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}
     </h4>
     {{? it.book.tagsName != ""}}
         <h4>{{=it.c.i18n.tagsTitle}}: 
-        {{~it.book.tags:tag:i}}
-        {{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>
-        {{~}}
+        {{~it.book.tags:tag:i}}{{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>{{~}}
         </h4>
     {{?}}
     {{? it.book.seriesName != ""}}
