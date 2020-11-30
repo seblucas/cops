@@ -34,13 +34,13 @@
         <div class="col-lg-2 col-sm-3 col-xs-6 books">
             <div class="cover-image">
                 {{? entry.book.hasCover == 1}}
-                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">
+                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
                         <img class ="img-responsive" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
                     </a>
                 {{?}}
             </div>
             <div class="meta">
-                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}">{{=htmlspecialchars (entry.title)}}</a></p>
+                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></p>
                 <div class="author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
                 {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
                 <!-- custom columns not tested -->
