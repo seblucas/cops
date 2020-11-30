@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="apple-touch-icon" href="./images/icons/icon57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="./images/icons/icon72.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="./images/icons/icon114.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="./images/icons/icon144.png" />
+    <meta name="msapplication-TileColor" content="#123456"/>
+    <meta name="msapplication-TileImage" content="./images/icons/icon144.png"/>
+
+    <title>{{=it.title}}</title>
+
+    <script type="text/javascript" src="vendor/bower-asset/jquery/dist/jquery.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/bower-asset/jquery-cookie/jquery.cookie.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/simonpioli/sortelements/jquery.sortElements.js?v={{=it.version}}"></script>
+{{? it.server_side_rendering == 0}}
+    <script type="text/javascript" src="vendor/dimsemenov/magnific-popup/dist/jquery.magnific-popup.min.js?v={{=it.version}}"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/dimsemenov/magnific-popup/dist/magnific-popup.css?v={{=it.version}}" media="screen" />
+    <script type="text/javascript" src="vendor/bower-asset/dot/doT.min.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/rsms/js-lru/lru.js?v={{=it.version}}"></script>
+    <script type="text/javascript" src="vendor/twitter/typeahead.js/dist/typeahead.bundle.min.js?v={{=it.version}}"></script>
+{{?}}
+    <script type="text/javascript" src="templates/bootstrap/scripts/cops.js"></script>
+    <script type="text/javascript" src="util.js"></script>
+    <link rel="related" href="{{=it.opds_url}}" type="application/atom+xml;profile=opds-catalog" title="{{=it.title}}" />
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{=it.favico}}" />
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <style media="screen" type="text/css">
+    .demo{
+        margin-bottom: -99999px;
+        padding-bottom: 99999px;
+        border:1px solid #efefef;
+    }
+
+    .panel-body { padding: 5px; }
+
+    .bottomright {position:absolute; bottom:15px;  right: 10px; }
+
+    .panel-title a {
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        display:block;
+    }
+
+    .ellipsis {
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        display:block;
+    }
+
+    .cover-image { height:164px; text-align: center;}
+
+    .cover-image img {
+        max-width:100%;
+        max-height:100%;
+        color: white;
+    }
+
+    .panel-heading { padding: 10px 7px; }
+
+    .panel { margin-bottom: 5px; }
+
+    div[class^="col-"] {
+        padding: 7px 7px;
+    }
+
+    .tt-dropdown-menu {
+      width: 322px;
+      text-align: left;
+      margin-top: 6px;
+      /*color: #000066;*/
+      padding: 4px 0;
+      background-color: #fff;
+      border: 1px solid #DDD;
+    }
+
+    .tt-header {
+        border-bottom: 1px solid #DDD;
+        font-weight: bold;
+    }
+
+    .tt-suggestion {
+      padding: 3px 20px;
+      line-height: 14px;
+    }
+
+    .tt-suggestion.tt-cursor {
+      /*color: #1c1c1c;*/
+      background-color: #EEE;
+    }
+
+    .tt-suggestion p {
+      margin: 0;
+    }
+
+    .filtered { display: none; }
+
+    #filter ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        text-align: left;
+        text-transform:none;
+    }
+
+    #filter ul li {
+        cursor: pointer;
+    }
+
+    #filter li {
+        display: inline-block;
+        padding: .2em 1em;
+        border: 2px solid #DDDDDD;
+        margin: 2px;
+        color: black;
+        background-color: white;
+        opacity: 0.5;
+    }
+
+    #filter li.filter-include {
+        border-left:thick solid blue;
+        opacity: 1;
+    }
+
+    #filter li.filter-exclude {
+        border-right:thick solid red;
+        opacity: 1;
+    }
+
+    </style>
+
+{{? it.server_side_rendering == 0}}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            initiateAjax ("{{=it.getjson_url}}", "{{=it.template}}");
+        });
+    </script>
+{{?}}
+</head>

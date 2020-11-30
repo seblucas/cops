@@ -1,0 +1,29 @@
+<div class="navbar navbar-inverse" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+    </div>
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" onclick='$.removeCookie("template"); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Default COPS template">
+          <span class="glyphicon glyphicon-picture"></span><span class="visible-xs-inline"> Default COPS template</span>
+        </a></li>
+        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+          <span class="glyphicon glyphicon-info-sign"></span><span class="visible-xs-inline"> {{=it.c.i18n.aboutTitle}}</span>
+        </a></li>
+      </ul>
+      <form id="searchForm" class="navbar-form navbar-right" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
+        </div>
+        <button type="submit" class="btn btn-default hidden-xs"><span class="glyphicon glyphicon-search"></span></button>
+      </form>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>

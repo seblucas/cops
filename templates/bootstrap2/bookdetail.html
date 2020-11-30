@@ -1,0 +1,76 @@
+<div class="row">
+<div class="col-md-offset-2 col-md-2 col-sm-12">
+        {{? it.book.hasCover == 1}}
+        <a href="{{=it.book.coverurl}}">
+          <img class="img-responsive center-block" src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
+        </a>
+        {{?}}
+</div>
+<div class="col-md-4 text-center">
+    <h1><a title="{{=it.c.i18n.permalinkAlt}}" rel="bookmark" href="{{=str_format (it.c.url.detailUrl, it.book.id, it.databaseId)}}">
+        <span class="glyphicon glyphicon-link"></span></a>{{=htmlspecialchars (it.title)}}
+    </h1>
+    <h4>{{=it.c.i18n.authorsTitle}}: 
+    {{~it.book.authors:author:i}}
+    {{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>
+    {{~}}
+    </h4>
+    {{? it.book.tagsName != ""}}
+        <h4>{{=it.c.i18n.tagsTitle}}: 
+        {{~it.book.tags:tag:i}}
+        {{? i > 0}}, {{?}}<a href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a>
+        {{~}}
+        </h4>
+    {{?}}
+    {{? it.book.seriesName != ""}}
+        <h4><a href="{{=it.book.seriesurl}}">{{=it.c.i18n.seriesTitle}}</a> : {{=htmlspecialchars (it.book.seriesCompleteName)}}</h4>
+    {{?}}
+</div>
+<div class="col-md-2 col-sm-12">
+    <div class="btn-group pull-right">
+        {{~it.book.datas:data:i}}
+            <a title="Download // {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.format}}</a>
+            <a title="Open // {{=data.format}}" href="{{=data.viewUrl}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-folder-open"></span></a>
+            {{? data.mail == 1}}
+            <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
+            <span class="glyphicon glyphicon-envelope"></span></a>
+            {{?}}
+            {{? data.readerUrl != ""}}
+            <a title="Reader" class="btn btn-primary" role="button" href="{{=data.readerUrl}}" target="blank">
+            <span class="glyphicon glyphicon-eye-open"></span></a>
+            {{?}}
+            <br />
+        {{~}}
+    </div>
+</div>
+</div>
+
+<div class="row">
+<div class="col-md-offset-2 col-md-8 col-sm-12">
+    {{? it.book.publisherName != ""}}
+    <p>
+        <h4>{{=it.c.i18n.publisherName}}: </h4><a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a>
+    </p>
+    {{?}}
+    {{? it.book.pubDate != ""}}
+    <p>
+        <h4>{{=it.c.i18n.pubdateTitle}}: </h4>{{=it.book.pubDate}}
+    </p>
+    {{?}}
+    {{? it.book.languagesName != ""}}
+    <p>
+        <h4>{{=it.c.i18n.languagesTitle}}: </h4>{{=it.book.languagesName}}
+    </p>
+    {{?}}
+    {{~it.book.customcolumns_preview :column:column_index}}
+    <p>
+        <h4>{{=column.customColumnType.columnTitle}}: </h4>{{=column.htmlvalue}}
+    </p>
+    {{~}}
+    {{? it.book.content != ""}}
+    <br />
+    <h4>{{=it.c.i18n.contentTitle}}</h4>
+    <div>{{=it.book.content}}</div>
+    {{?}}
+</div>
+</div>
