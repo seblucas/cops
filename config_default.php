@@ -110,6 +110,11 @@
     $config['cops_prefered_format'] = array('EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ');
 
     /*
+     * Specify the ignored formats that will never display in COPS
+     */
+    $config['cops_ignored_formats'] = array();
+
+    /*
      * use URL rewriting for downloading of ebook in HTML catalog
      * See Github wiki for more information
      *  1 : enable
