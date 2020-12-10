@@ -152,6 +152,7 @@ class JSONRenderer
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
                            "tagsTitle" => localize("tags.title"),
+                           "linksTitle" => localize("links.title"),
                            "seriesTitle" => localize("series.title"),
                            "customizeTitle" => localize ("customize.title"),
                            "aboutTitle" => localize ("about.title"),
