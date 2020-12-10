@@ -107,6 +107,12 @@ class JSONRenderer
             $link = new LinkNavigation ($tag->getUri ());
             array_push ($out ["tags"], array ("name" => $tag->name, "url" => $link->hrefXhtml ()));
         }
+
+        $out ["identifiers"] = array ();
+        foreach ($book->getIdentifiers () as $ident) {
+            array_push ($out ["identifiers"], array ("name" => $ident->formattedType, "url" => $ident->getUri ()));
+        }
+
         $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview'], true);
 
         return $out;
