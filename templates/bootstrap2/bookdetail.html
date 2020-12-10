@@ -45,9 +45,10 @@
     {{?}}
 
     {{? it.book.tagsName != ""}}
-        <p><span class="glyphicon glyphicon-tags" title="{{=it.c.i18n.tagsTitle}}"></span>
+    <div class="tags">
+        <span class="glyphicon glyphicon-tags" title="{{=it.c.i18n.tagsTitle}}"></span>
         {{~it.book.tags:tag:i}}<a class="btn btn-xs btn-info" role="button" href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a> {{~}}
-        </p>
+    </div>
     {{?}}
 
     {{? it.book.publisherName != ""}}
