@@ -153,9 +153,20 @@ class Data extends Base
     }
 
     public static function getDataByBook ($book) {
+        global $config;
+
         $out = array ();
-        $result = parent::getDb ()->prepare('select id, format, name
-                                             from data where book = ?');
+
+        $sql = 'select id, format, name from data where book = ?';
+        
+        $ignored_formats = $config['cops_ignored_formats'];
+        if (count($ignored_formats) > 0) {
+            $sql .= " and format not in ('" 
+            . implode("','", $ignored_formats) 
+            . "')";
+        }
+
+        $result = parent::getDb ()->prepare($sql);
         $result->execute (array ($book->id));
 
         while ($post = $result->fetchObject ())
