@@ -44,6 +44,15 @@
     </p>
     {{?}}
 
+    {{? it.book.identifiers != ""}}
+    <div class="tags">
+        <p>
+        <span class="glyphicon glyphicon-link" title="{{=it.c.i18n.linksTitle}}"></span>
+        {{~it.book.identifiers:id:i}}<a class="btn btn-xs btn-success" role="button" href="{{=id.url}}">{{=htmlspecialchars (id.name)}}</a> {{~}}
+        </p>
+    </div>
+    {{?}}
+
     {{? it.book.tagsName != ""}}
     <div class="tags">
         <span class="glyphicon glyphicon-tags" title="{{=it.c.i18n.tagsTitle}}"></span>
