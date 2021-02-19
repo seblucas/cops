@@ -315,7 +315,6 @@ updatePage = function (data) {
     }
     document.title = data.title;
     currentData = data;
-    setTimeout( function() { $("input[name=query]").focus(); }, 500 );
 
     debug_log (elapsed ());
 
@@ -442,7 +441,6 @@ function handleLinks () {
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
-            $("input[name=query]").focus();
             $.cookie('toolbar', '1', { expires: 365 });
         } else {
             $("#tool").slideUp();

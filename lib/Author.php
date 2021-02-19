@@ -83,7 +83,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     public static function getAuthorByBookId ($bookId) {
         $result = parent::getDb ()->prepare('select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
 where author = authors.id
-and book = ?');
+and book = ? order by books_authors_link.id');
         $result->execute (array ($bookId));
         $authorArray = array ();
         while ($post = $result->fetchObject ()) {

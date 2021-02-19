@@ -1,0 +1,84 @@
+<div class="container-fluid">
+{{? it.page == 13 || it.page == 16}}
+    {{? it.page == 13}}
+        {{#def.bookdetail}}
+    {{??}}
+        {{= it.fullhtml}}
+    {{?}}
+{{??}}
+<div id="filter">
+    <ul>
+    </ul>
+</div>
+
+{{? it.containsBook == 0}}
+<div class="container-fluid">
+    <div class="row">
+        {{~it.entries:entry:i}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-12 col-half-padding">
+            <div class="panel panel-default">
+                <a href="{{=entry.navlink}}">
+                    <div class="panel-body">
+                        {{=htmlspecialchars (entry.title)}}
+                        <span class="badge pull-right">{{=entry.number}}</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {{~}}
+    </div>
+</div>
+{{??}}
+<div class="row d-flex">
+    {{~it.entries:entry:i}}
+        <div class="col-lg-2 col-sm-3 col-xs-6 books">
+            <div class="cover-image">
+                {{? entry.book.hasCover == 1}}
+                    <a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">
+                        <img class ="img-responsive" src="{{=str_format (it.c.url.thumbnailUrl, entry.book.id, it.databaseId)}}" alt="{{=it.c.i18n.coverAlt}}" />
+                    </a>
+                {{?}}
+            </div>
+            <div class="meta">
+                <p class="title"><a href="{{=str_format (it.c.url.detailUrl, entry.book.id, it.databaseId)}}#cover">{{=htmlspecialchars (entry.title)}}</a></p>
+                <div class="author ellipsis">{{=htmlspecialchars (entry.book.authorsName)}}</div>
+                {{? entry.book.seriesName != ""}}<div class="series ellipsis"><a href="{{=entry.book.seriesurl}}">{{=htmlspecialchars (entry.book.seriesName)}}</a> ({{=entry.book.seriesIndex}})</div>{{?}}
+                <!-- custom columns not tested -->
+                {{~entry.book.customcolumns_list :column:column_index}}
+                <div class="ellipsis"><span class="glyphicon glyphicon-minus"></span> <span class="ss">{{=column.customColumnType.columnTitle}} : {{=column.htmlvalue}}</span></div>
+                {{~}}
+            </div>
+            <div style="height: 40px;"><!-- reserve space for absolutely positioned bottom download button --></div>
+            <div class="download bottom">
+                <!-- download Split button -->
+                {{? entry.book.preferedData.length > 1}}<div class="btn-group">{{?}}
+                    {{~entry.book.preferedData:data:j}}
+                        {{? j == 0}}
+                            <a href="{{=data.url}}" class="btn btn-primary btn-sm" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.name}}</a>
+                            {{? entry.book.preferedData.length > 1}}
+                                <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                {{? entry.book.preferedData.length > 1}}<ul class="dropdown-menu">{{?}}
+                            {{?}}
+                        {{??}}
+                            <li><a href="{{=data.url}}">{{=data.name}}</a></li>
+                            {{? entry.book.preferedData.length = j + 1}}</ul>{{?}}
+                        {{?}}
+                    {{~}}
+                {{? entry.book.preferedData.length > 1}}</div>{{?}}
+            </div>
+        </div>
+    {{~}}
+</div>
+{{?}}
+{{?}}
+{{? it.isPaginated == 1}}
+    <ul class="pager">
+        <li class="{{? it.prevLink == ""}}disabled{{?}}"><a id="prevLink" href="{{=it.prevLink}}"><span class="glyphicon glyphicon-chevron-left"></span>{{=it.c.i18n.previousAlt}}</a></li>
+        <li> {{=it.currentPage}} / {{=it.maxPage}} </li>
+        <li class="{{? it.nextLink == ""}}disabled{{?}}"><a id="nextLink" href="{{=it.nextLink}}">{{=it.c.i18n.nextAlt}}<span class="glyphicon glyphicon-chevron-right"></span></a></li>
+    </ul>
+{{?}}
+</div>

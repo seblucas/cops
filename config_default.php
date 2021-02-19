@@ -80,7 +80,7 @@
     /*
      * Height of thumbnail image for HTML
      */
-    $config['cops_html_thumbnail_height'] = '164';
+    $config['cops_html_thumbnail_height'] = '225';
 
     /*
      * Icon for both OPDS and HTML catalog
@@ -110,6 +110,11 @@
     $config['cops_prefered_format'] = array('EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ');
 
     /*
+     * Specify the ignored formats that will never display in COPS
+     */
+    $config['cops_ignored_formats'] = array();
+
+    /*
      * use URL rewriting for downloading of ebook in HTML catalog
      * See Github wiki for more information
      *  1 : enable
@@ -130,7 +135,7 @@
      * Max number of items per page
      * -1 unlimited
      */
-    $config['cops_max_item_per_page'] = '-1';
+    $config['cops_max_item_per_page'] = '48';
 
     /*
      * split authors by first letter
@@ -321,7 +326,7 @@
      * 'default'
      * 'bootstrap'
      */
-    $config['cops_template'] = 'default';
+    $config['cops_template'] = 'bootstrap2';
 
     /*
      * Which style is used by default :

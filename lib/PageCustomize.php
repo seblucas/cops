@@ -29,6 +29,16 @@ class PageCustomize extends Page
         return "";
     }
 
+    private function getTemplateList () {
+        $result = array ();
+        foreach (glob ("templates/*") as $filename) {
+            if (preg_match ('/templates\/(.*)/', $filename, $m)) {
+                array_push ($result, $m [1]);
+            }            
+        }
+        return $result;
+    }    
+
     private function getStyleList () {
         $result = array ();
         foreach (glob ("templates/" . getCurrentTemplate () . "/styles/style-*.css") as $filename) {
@@ -52,9 +62,23 @@ class PageCustomize extends Page
                                    "language");
 
         $content = "";
+        if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
+            $content .= "<select id='template' onchange='updateCookie (this); window.location=$(\".headleft\").attr(\"href\");'>";
+
+            foreach ($this-> getTemplateList () as $filename) {
+                $content .= "<option value='{$filename}' " . $this->isSelected ("template", $filename) . ">{$filename}</option>";
+            }
+            $content .= '</select>';
+        } else {
+            foreach ($this-> getTemplateList () as $filename) {
+                $content .= "<input type='radio' onchange='updateCookieFromCheckbox (this); window.location=$(\".headleft\").attr(\"href\");' id='template' name='template' value='{$filename}' " . $this->isChecked ("template", $filename) . " /><label for='template-{$filename}'> {$filename} </label>";
+            }
+        }
         array_push ($this->entryArray, new Entry ("Template", "",
-                                        "<span style='cursor: pointer;' onclick='$.cookie(\"template\", \"bootstrap\", { expires: 365 });window.location=$(\".headleft\").attr(\"href\");'>Click to switch to Bootstrap</span>", "text",
+                                        $content, "text",
                                         array ()));
+
+        $content = "";
         if (!preg_match("/(Kobo|Kindle\/3.0|EBRD1101)/", $_SERVER['HTTP_USER_AGENT'])) {
             $content .= '<select id="style" onchange="updateCookie (this);">';
             foreach ($this-> getStyleList () as $filename) {

@@ -1,0 +1,91 @@
+<div class="row">
+<div class="col-md-offset-2 col-md-4 col-sm-6 col-xs-12" id="cover" name="cover">
+    <div class="cover-image">
+        {{? it.book.hasCover == 1}}
+        <div class="visible-xs topspace"></div>
+        <a href="{{=it.book.coverurl}}">
+          <img class="img-responsive center-block" src="{{=it.book.thumbnailurl}}" alt="{{=it.c.i18n.coverAlt}}" />
+        </a>
+        {{?}}
+    </div>
+</div>
+
+<div class="col-lg-4 col-md-5 col-sm-6 col-xs-12 text-xs-center text-sm-left ">
+    {{~it.book.datas:data:i}}
+    <div class="btn-group">
+        <a title="Download // {{=data.format}}" href="{{=data.url}}" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-download"></span> {{=data.format}}</a>
+        {{? data.mail == 1}}
+        <a id="mailButton" class="btn btn-primary" role="button" title="Mail // {{=data.format}}" href="empty.php" onclick="sendToMailAddress (this, {{=data.id}}); return false;">
+        <span class="glyphicon glyphicon-envelope"></span></a>
+        {{?}}
+        {{? data.readerUrl != ""}}
+        <a title="Reader" class="btn btn-primary" role="button" href="{{=data.readerUrl}}" target="blank">
+        <span class="glyphicon glyphicon-eye-open"></span></a>
+        {{?}}
+    </div>
+    {{~}}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-xs-12">
+    <h1>{{=htmlspecialchars (it.title)}}</h1>
+    <h4>{{~it.book.authors:author:i}}{{? i > 0}}, {{?}}<a href="{{=author.url}}">{{=htmlspecialchars (author.name)}}</a>{{~}}</h4>
+    {{? it.book.seriesName != ""}}
+        <h4><a href="{{=it.book.seriesurl}}">{{=htmlspecialchars (it.book.seriesName)}}</a> ({{=it.book.seriesIndex}})</h4>
+    {{?}}
+</div>
+
+
+<div class="col-md-4 col-sm-6 col-xs-12">
+
+    {{? it.book.languagesName != ""}}
+    <p>
+        <span class="label label-default">{{=it.c.i18n.languagesTitle}}: {{=it.book.languagesName}}</span>
+    </p>
+    {{?}}
+
+    {{? it.book.identifiers != ""}}
+    <div class="tags">
+        <p>
+        <span class="glyphicon glyphicon-link" title="{{=it.c.i18n.linksTitle}}"></span>
+        {{~it.book.identifiers:id:i}}<a class="btn btn-xs btn-success" role="button" href="{{=id.url}}">{{=htmlspecialchars (id.name)}}</a> {{~}}
+        </p>
+    </div>
+    {{?}}
+
+    {{? it.book.tagsName != ""}}
+    <div class="tags">
+        <span class="glyphicon glyphicon-tags" title="{{=it.c.i18n.tagsTitle}}"></span>
+        {{~it.book.tags:tag:i}}<a class="btn btn-xs btn-info" role="button" href="{{=tag.url}}">{{=htmlspecialchars (tag.name)}}</a> {{~}}
+    </div>
+    {{?}}
+
+    {{? it.book.publisherName != ""}}
+    <p>
+        <h4>{{=it.c.i18n.publisherName}}: <a href="{{=it.book.publisherurl}}">{{=htmlspecialchars (it.book.publisherName)}}</a></h4>
+    </p>
+    {{?}}
+    {{? it.book.pubDate != ""}}
+    <p>
+        <h4>{{=it.c.i18n.pubdateTitle}}: {{=it.book.pubDate}}</h4>
+    </p>
+    {{?}}
+    {{~it.book.customcolumns_preview :column:column_index}}
+    <p>
+        <h4>{{=column.customColumnType.columnTitle}}: {{=column.htmlvalue}}</h4>
+    </p>
+    {{~}}
+
+</div>
+
+</div>
+
+<div class="row">
+<div class="col-md-offset-2 col-md-8 col-sm-12">    
+    {{? it.book.content != ""}}
+    <br />
+    <h4>{{=it.c.i18n.contentTitle}}</h4>
+    <div>{{=it.book.content}}</div>
+    {{?}}
+</div>
+</div>
