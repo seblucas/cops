@@ -38,6 +38,10 @@ class ZipFile
 	{
 		$this->Close();
 
+		if (!function_exists('zip_open')) {
+			throw new Exception('Missing function zip_open');
+		}
+
 		$this->mZip = zip_open($inFileName);
 		if (!$this->mZip) {
 			return false;
