@@ -118,9 +118,9 @@
 
     if (empty($config['cops_x_accel_redirect'])) {
         $filename = $dir . $file;
-        $fp = fopen($filename, 'rb');
         header('Content-Length: ' . filesize($filename));
-        fpassthru($fp);
+        ob_end_flush();
+        readfile($filename);
     } else {
         header($config['cops_x_accel_redirect'] . ': ' . $dir . $file);
     }
