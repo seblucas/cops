@@ -36,7 +36,7 @@ if ($config ['cops_fetch_protect'] == '1') {
 
 header('Content-Type:text/html;charset=utf-8');
 
-$data = array('title'                 => $config['cops_title_default'],
+$data = ['title'                 => $config['cops_title_default'],
               'version'               => VERSION,
               'opds_url'              => $config['cops_full_url'] . 'feed.php',
               'customHeader'          => '',
@@ -44,7 +44,7 @@ $data = array('title'                 => $config['cops_title_default'],
               'server_side_rendering' => useServerSideRendering(),
               'current_css'           => getCurrentCss(),
               'favico'                => $config['cops_icon'],
-              'getjson_url'           => 'getJSON.php?' . addURLParameter(getQueryString(), 'complete', 1));
+              'getjson_url'           => 'getJSON.php?' . addURLParameter(getQueryString(), 'complete', 1)];
 if (preg_match('/Kindle/', $_SERVER['HTTP_USER_AGENT'])) {
     $data['customHeader'] = '<style media="screen" type="text/css"> html { font-size: 75%; -webkit-text-size-adjust: 75%; -ms-text-size-adjust: 75%; }</style>';
 }

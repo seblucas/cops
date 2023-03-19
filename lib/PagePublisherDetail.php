@@ -12,7 +12,7 @@ class PagePublisherDetail extends Page
     {
         $publisher = Publisher::getPublisherById($this->idGet);
         $this->title = $publisher->name;
-        list($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByPublisher($this->idGet, $this->n);
         $this->idPage = $publisher->getEntryId();
     }
 }

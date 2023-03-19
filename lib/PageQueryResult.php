@@ -50,7 +50,7 @@ class PageQueryResult extends Page
                 break;
             default:
                 $array = Book::getBooksByQuery(
-                    array("all" => "%" . $queryNormedAndUp . "%"),
+                    ["all" => "%" . $queryNormedAndUp . "%"],
                     $n
                 );
         }
@@ -61,9 +61,9 @@ class PageQueryResult extends Page
     public function doSearchByCategory()
     {
         $database = GetUrlParam(DB);
-        $out = array();
+        $out = [];
         $pagequery = Base::PAGE_OPENSEARCH_QUERY;
-        $dbArray = array("");
+        $dbArray = [""];
         $d = $database;
         $query = $this->query;
         // Special case when no databases were chosen, we search on all databases
@@ -78,16 +78,16 @@ class PageQueryResult extends Page
                     DB . ":query:{$d}",
                     " ",
                     "text",
-                    array( new LinkNavigation("?" . DB . "={$d}")),
+                    [ new LinkNavigation("?" . DB . "={$d}")],
                     "tt-header"
                 ));
                 Base::getDb($d);
             }
-            foreach (array(PageQueryResult::SCOPE_BOOK,
+            foreach ([PageQueryResult::SCOPE_BOOK,
                             PageQueryResult::SCOPE_AUTHOR,
                             PageQueryResult::SCOPE_SERIES,
                             PageQueryResult::SCOPE_TAG,
-                            PageQueryResult::SCOPE_PUBLISHER) as $key) {
+                            PageQueryResult::SCOPE_PUBLISHER] as $key) {
                 if (in_array($key, getCurrentOption('ignored_categories'))) {
                     continue;
                 }
@@ -112,7 +112,7 @@ class PageQueryResult extends Page
                         DB . ":query:{$d}:{$key}",
                         str_format(localize("{$key}word", $total), $total),
                         "text",
-                        array( new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")),
+                        [ new LinkNavigation("?page={$pagequery}&query={$query}&db={$d}&scope={$key}")],
                         Base::noDatabaseSelected() ? "" : "tt-header",
                         $total
                     ));
@@ -157,13 +157,13 @@ class PageQueryResult extends Page
             $i = 0;
             foreach (Base::getDbNameList() as $key) {
                 Base::clearDb();
-                list($array, $totalNumber) = Book::getBooksByQuery(array("all" => $crit), 1, $i, 1);
+                [$array, $totalNumber] = Book::getBooksByQuery(["all" => $crit], 1, $i, 1);
                 array_push($this->entryArray, new Entry(
                     $key,
                     DB . ":query:{$i}",
                     str_format(localize("bookword", $totalNumber), $totalNumber),
                     "text",
-                    array( new LinkNavigation("?" . DB . "={$i}&page=9&query=" . $this->query)),
+                    [ new LinkNavigation("?" . DB . "={$i}&page=9&query=" . $this->query)],
                     "",
                     $totalNumber
                 ));
@@ -178,7 +178,7 @@ class PageQueryResult extends Page
 
         $array = $this->searchByScope($scope);
         if (count($array) == 2 && is_array($array [0])) {
-            list($this->entryArray, $this->totalNumber) = $array;
+            [$this->entryArray, $this->totalNumber] = $array;
         } else {
             $this->entryArray = $array;
         }

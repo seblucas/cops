@@ -7,7 +7,7 @@
  */
 
 if (!isset($config)) {
-    $config = array();
+    $config = [];
 }
 
 /*
@@ -107,7 +107,7 @@ $config['default_timezone'] = 'Europe/Paris';
  * The two first will be displayed in book entries
  * The other only appear in book detail
  */
-$config['cops_prefered_format'] = array('EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ');
+$config['cops_prefered_format'] = ['EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ'];
 
 /*
  * use URL rewriting for downloading of ebook in HTML catalog
@@ -169,7 +169,7 @@ $config['cops_update_epub-metadata'] = '0';
  *
  * Example : array ("All" => "", "Unread" => "!Read", "Read" => "Read")
  */
-$config['cops_books_filter'] = array();
+$config['cops_books_filter'] = [];
 
 /*
  * Custom Columns for the index page
@@ -179,7 +179,7 @@ $config['cops_books_filter'] = array();
  *
  * Note that the composite custom columns are not supported
  */
-$config['cops_calibre_custom_column'] = array();
+$config['cops_calibre_custom_column'] = [];
 
 /*
  * Custom Columns for the list representation
@@ -189,7 +189,7 @@ $config['cops_calibre_custom_column'] = array();
  *
  * Note that the composite custom columns are not supported
  */
-$config['cops_calibre_custom_column_list'] = array();
+$config['cops_calibre_custom_column_list'] = [];
 
 /*
  * Custom Columns for the book preview panel
@@ -199,7 +199,7 @@ $config['cops_calibre_custom_column_list'] = array();
  *
  * Note that the composite custom columns are not supported
  */
-$config['cops_calibre_custom_column_preview'] = array();
+$config['cops_calibre_custom_column_preview'] = [];
 
 /*
  * Rename .epub to .kepub.epub if downloaded from a Kobo eReader
@@ -288,7 +288,7 @@ $config['cops_server_side_render'] = 'Kindle\/1\.0|Kindle\/2\.0|Kindle\/3\.0|EBR
  * - rating
  * - language
  */
-$config ['cops_ignored_categories'] = array();
+$config ['cops_ignored_categories'] = [];
 
 /*
  * If you use a Sony eReader or Aldiko you can't download ebooks if your catalog

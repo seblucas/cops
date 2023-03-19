@@ -43,7 +43,7 @@ class Serie extends Base
         $result = parent::getDb()->prepare('select  series.id as id, name
 from books_series_link, series
 where series.id = series and book = ?');
-        $result->execute(array($bookId));
+        $result->execute([$bookId]);
         if ($post = $result->fetchObject()) {
             return new Serie($post);
         }
@@ -53,7 +53,7 @@ where series.id = series and book = ?');
     public static function getSerieById($serieId)
     {
         $result = parent::getDb()->prepare('select id, name  from series where id = ?');
-        $result->execute(array($serieId));
+        $result->execute([$serieId]);
         if ($post = $result->fetchObject()) {
             return new Serie($post);
         }
@@ -62,11 +62,11 @@ where series.id = series and book = ?');
 
     public static function getAllSeries()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SERIES_COLUMNS, array(), "Serie");
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_SERIES, self::SERIES_COLUMNS, [], "Serie");
     }
 
     public static function getAllSeriesByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, array('%' . $query . '%'), "Serie");
+        return Base::getEntryArrayWithBookNumber(self::SQL_SERIES_FOR_SEARCH, self::SERIES_COLUMNS, ['%' . $query . '%'], "Serie");
     }
 }

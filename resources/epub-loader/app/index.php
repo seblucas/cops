@@ -36,10 +36,10 @@ require_once($fileName);
 //------------------------------------------------------------------------------
 
 // Global vars
-$gErrorArray = array();
+$gErrorArray = [];
 
 // Get the url parameters
-$action = isset($_GET['action']) ? $_GET['action'] : null;
+$action = $_GET['action'] ?? null;
 $dbNum = isset($_GET['dbnum']) ? (int)$_GET['dbnum'] : null;
 
 // Include html header
@@ -53,7 +53,7 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . 'header.php');
  */
 function RecursiveGlob($inPath = '', $inPattern = '*')
 {
-    $res = array();
+    $res = [];
 
     // Check path
     if (!is_dir($inPath)) {

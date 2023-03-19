@@ -12,7 +12,7 @@ class PageSerieDetail extends Page
     {
         $serie = Serie::getSerieById($this->idGet);
         $this->title = $serie->name;
-        list($this->entryArray, $this->totalNumber) = Book::getBooksBySeries($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksBySeries($this->idGet, $this->n);
         $this->idPage = $serie->getEntryId();
     }
 }

@@ -26,7 +26,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)
@@ -40,10 +40,10 @@ class CustomColumnTypeFloat extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getDb()->query($query);
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
             $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 

@@ -9,11 +9,11 @@
 class CustomColumnTypeBool extends CustomColumnType
 {
     // PHP pre 5.6 does not support const arrays
-    private $BOOLEAN_NAMES = array(
+    private $BOOLEAN_NAMES = [
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
         00 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
-    );
+    ];
 
     protected function __construct($pcustomId)
     {
@@ -34,13 +34,13 @@ class CustomColumnTypeBool extends CustomColumnType
     {
         if ($id == -1) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
-            return array($query, array());
+            return [$query, []];
         } elseif ($id == 0) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
-            return array($query, array());
+            return [$query, []];
         } elseif ($id == 1) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
-            return array($query, array());
+            return [$query, []];
         } else {
             return null;
         }
@@ -57,10 +57,10 @@ class CustomColumnTypeBool extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName());
         $result = $this->getDb()->query($query);
 
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
             $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 

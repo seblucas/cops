@@ -196,7 +196,7 @@ class CalibreDbLoader
         // Add the book identifiers
         if (!empty($inBookInfo->mUri)) {
             $sql = 'insert into identifiers(book, type, val) values(:idBook, :type, :value)';
-            $identifiers = array();
+            $identifiers = [];
             $identifiers['URI'] = $inBookInfo->mUri;
             $identifiers['ISBN'] = $inBookInfo->mIsbn;
             foreach ($identifiers as $key => $value) {

@@ -49,18 +49,18 @@ class Author extends Base
 
     public static function getAllAuthorsByFirstLetter()
     {
-        list(, $result) = parent::executeQuery("select {0}
+        [, $result] = parent::executeQuery("select {0}
 from authors
 group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", array(), -1);
-        $entryArray = array();
+order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, count(*) as count", "", [], -1);
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->title,
                 Author::getEntryIdByLetter($post->title),
                 str_format(localize("authorword", $post->count), $post->count),
                 "text",
-                array( new LinkNavigation("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode($post->title))),
+                [ new LinkNavigation("?page=".parent::PAGE_AUTHORS_FIRST_LETTER."&id=". rawurlencode($post->title))],
                 "",
                 $post->count
             ));
@@ -70,17 +70,17 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
 
     public static function getAuthorsByStartingLetter($letter)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_BY_FIRST_LETTER, array($letter . "%"));
+        return self::getEntryArray(self::SQL_AUTHORS_BY_FIRST_LETTER, [$letter . "%"]);
     }
 
     public static function getAuthorsForSearch($query)
     {
-        return self::getEntryArray(self::SQL_AUTHORS_FOR_SEARCH, array($query . "%", $query . "%"));
+        return self::getEntryArray(self::SQL_AUTHORS_FOR_SEARCH, [$query . "%", $query . "%"]);
     }
 
     public static function getAllAuthors()
     {
-        return self::getEntryArray(self::SQL_ALL_AUTHORS, array());
+        return self::getEntryArray(self::SQL_ALL_AUTHORS, []);
     }
 
     public static function getEntryArray($query, $params)
@@ -91,7 +91,7 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
     public static function getAuthorById($authorId)
     {
         $result = parent::getDb()->prepare('select ' . self::AUTHOR_COLUMNS . ' from authors where id = ?');
-        $result->execute(array($authorId));
+        $result->execute([$authorId]);
         $post = $result->fetchObject();
         return new Author($post);
     }
@@ -101,8 +101,8 @@ order by substr (upper (sort), 1, 1)", "substr (upper (sort), 1, 1) as title, co
         $result = parent::getDb()->prepare('select authors.id as id, authors.name as name, authors.sort as sort from authors, books_authors_link
 where author = authors.id
 and book = ?');
-        $result->execute(array($bookId));
-        $authorArray = array();
+        $result->execute([$bookId]);
+        $authorArray = [];
         while ($post = $result->fetchObject()) {
             array_push($authorArray, new Author($post));
         }

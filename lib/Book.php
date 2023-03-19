@@ -105,7 +105,7 @@ class Book extends Base
     public $serie = null;
     public $tags = null;
     public $languages = null;
-    public $format = array();
+    public $format = [];
 
 
     public function __construct($line)
@@ -207,13 +207,13 @@ class Book extends Base
      */
     public function getLanguages()
     {
-        $lang = array();
+        $lang = [];
         $result = parent::getDb()->prepare('select languages.lang_code
                 from books_languages_link, languages
                 where books_languages_link.lang_code = languages.id
                 and book = ?
                 order by item_order');
-        $result->execute(array($this->id));
+        $result->execute([$this->id]);
         while ($post = $result->fetchObject()) {
             array_push($lang, Language::getLanguageString($post->lang_code));
         }
@@ -226,14 +226,14 @@ class Book extends Base
     public function getTags()
     {
         if (is_null($this->tags)) {
-            $this->tags = array();
+            $this->tags = [];
 
             $result = parent::getDb()->prepare('select tags.id as id, name
                 from books_tags_link, tags
                 where tag = tags.id
                 and book = ?
                 order by name');
-            $result->execute(array($this->id));
+            $result->execute([$this->id]);
             while ($post = $result->fetchObject()) {
                 array_push($this->tags, new Tag($post));
             }
@@ -285,7 +285,7 @@ class Book extends Base
 
     public function GetMostInterestingDataToSendToKindle()
     {
-        $bestFormatForKindle = array('EPUB', 'PDF', 'AZW3', 'MOBI');
+        $bestFormatForKindle = ['EPUB', 'PDF', 'AZW3', 'MOBI'];
         $bestRank = -1;
         $bestData = null;
         foreach ($this->getDatas() as $data) {
@@ -383,7 +383,7 @@ class Book extends Base
             $epub = new EPub($data->getLocalPath());
 
             $epub->Title($this->title);
-            $authorArray = array();
+            $authorArray = [];
             foreach ($this->getAuthors() as $author) {
                 $authorArray[$author->sort] = $author->name;
             }
@@ -451,7 +451,7 @@ class Book extends Base
 
     public function getLinkArray()
     {
-        $linkArray = array();
+        $linkArray = [];
 
         if ($this->hasCover) {
             array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
@@ -500,13 +500,13 @@ class Book extends Base
     {
         global $config;
         $nBooks = parent::executeQuerySingle('select count(*) from books');
-        $result = array();
+        $result = [];
         $entry = new Entry(
             localize('allbooks.title'),
             self::ALL_BOOKS_ID,
             str_format(localize('allbooks.alphabetical', $nBooks), $nBooks),
             'text',
-            array(new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS)),
+            [new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS)],
             '',
             $nBooks
         );
@@ -517,7 +517,7 @@ class Book extends Base
                 self::ALL_RECENT_BOOKS_ID,
                 str_format(localize('recent.list'), $config['cops_recentbooks_limit']),
                 'text',
-                array( new LinkNavigation('?page='.parent::PAGE_ALL_RECENT_BOOKS)),
+                [ new LinkNavigation('?page='.parent::PAGE_ALL_RECENT_BOOKS)],
                 '',
                 $config['cops_recentbooks_limit']
             );
@@ -528,32 +528,32 @@ class Book extends Base
 
     public static function getBooksByAuthor($authorId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_AUTHOR, array($authorId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_AUTHOR, [$authorId], $n);
     }
 
     public static function getBooksByRating($ratingId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_RATING, array($ratingId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_RATING, [$ratingId], $n);
     }
 
     public static function getBooksByPublisher($publisherId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_PUBLISHER, array($publisherId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_PUBLISHER, [$publisherId], $n);
     }
 
     public static function getBooksBySeries($serieId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_SERIE, array($serieId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_SERIE, [$serieId], $n);
     }
 
     public static function getBooksByTag($tagId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_TAG, array($tagId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_TAG, [$tagId], $n);
     }
 
     public static function getBooksByLanguage($languageId, $n)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_LANGUAGE, array($languageId), $n);
+        return self::getEntryArray(self::SQL_BOOKS_BY_LANGUAGE, [$languageId], $n);
     }
 
     /**
@@ -564,7 +564,7 @@ class Book extends Base
      */
     public static function getBooksByCustom($customColumn, $id, $n)
     {
-        list($query, $params) = $customColumn->getQuery($id);
+        [$query, $params] = $customColumn->getQuery($id);
 
         return self::getEntryArray($query, $params, $n);
     }
@@ -574,7 +574,7 @@ class Book extends Base
         $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
-        $result->execute(array($bookId));
+        $result->execute([$bookId]);
         while ($post = $result->fetchObject()) {
             $book = new Book($post);
             return $book;
@@ -587,12 +587,12 @@ where books.id = ?');
         $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
-        $result->execute(array($dataId));
+        $result->execute([$dataId]);
         while ($post = $result->fetchObject()) {
             $book = new Book($post);
             $data = new Data($post, $book);
             $data->id = $dataId;
-            $book->datas = array($data);
+            $book->datas = [$data];
             return $book;
         }
         return null;
@@ -601,12 +601,12 @@ where data.book = books.id and data.id = ?');
     public static function getBooksByQuery($query, $n, $database = null, $numberPerPage = null)
     {
         $i = 0;
-        $critArray = array();
-        foreach (array(PageQueryResult::SCOPE_AUTHOR,
+        $critArray = [];
+        foreach ([PageQueryResult::SCOPE_AUTHOR,
                        PageQueryResult::SCOPE_TAG,
                        PageQueryResult::SCOPE_SERIES,
                        PageQueryResult::SCOPE_PUBLISHER,
-                       PageQueryResult::SCOPE_BOOK) as $key) {
+                       PageQueryResult::SCOPE_BOOK] as $key) {
             if (in_array($key, getCurrentOption('ignored_categories')) ||
                 (!array_key_exists($key, $query) && !array_key_exists('all', $query))) {
                 $critArray[$i] = self::BAD_SEARCH;
@@ -624,27 +624,27 @@ where data.book = books.id and data.id = ?');
 
     public static function getBooks($n)
     {
-        list($entryArray, $totalNumber) = self::getEntryArray(self::SQL_BOOKS_ALL, array(), $n);
-        return array($entryArray, $totalNumber);
+        [$entryArray, $totalNumber] = self::getEntryArray(self::SQL_BOOKS_ALL, [], $n);
+        return [$entryArray, $totalNumber];
     }
 
     public static function getAllBooks()
     {
         /* @var $result PDOStatement */
 
-        list(, $result) = parent::executeQuery('select {0}
+        [, $result] = parent::executeQuery('select {0}
 from books
 group by substr (upper (sort), 1, 1)
-order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, count(*) as count', self::getFilterString(), array(), -1);
+order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, count(*) as count', self::getFilterString(), [], -1);
 
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             array_push($entryArray, new Entry(
                 $post->title,
                 Book::getEntryIdByLetter($post->title),
                 str_format(localize('bookword', $post->count), $post->count),
                 'text',
-                array(new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS_LETTER.'&id='. rawurlencode($post->title))),
+                [new LinkNavigation('?page='.parent::PAGE_ALL_BOOKS_LETTER.'&id='. rawurlencode($post->title))],
                 '',
                 $post->count
             ));
@@ -654,27 +654,27 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
 
     public static function getBooksByStartingLetter($letter, $n, $database = null, $numberPerPage = null)
     {
-        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, array($letter . '%'), $n, $database, $numberPerPage);
+        return self::getEntryArray(self::SQL_BOOKS_BY_FIRST_LETTER, [$letter . '%'], $n, $database, $numberPerPage);
     }
 
     public static function getEntryArray($query, $params, $n, $database = null, $numberPerPage = null)
     {
         /* @var $totalNumber integer */
         /* @var $result PDOStatement */
-        list($totalNumber, $result) = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString(), $params, $n, $database, $numberPerPage);
+        [$totalNumber, $result] = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString(), $params, $n, $database, $numberPerPage);
 
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $book = new Book($post);
             array_push($entryArray, $book->getEntry());
         }
-        return array($entryArray, $totalNumber);
+        return [$entryArray, $totalNumber];
     }
 
     public static function getAllRecentBooks()
     {
         global $config;
-        list($entryArray, ) = self::getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], array(), -1);
+        [$entryArray, ] = self::getEntryArray(self::SQL_BOOKS_RECENT . $config['cops_recentbooks_limit'], [], -1);
         return $entryArray;
     }
 
@@ -686,7 +686,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
      */
     public function getCustomColumnValues($columns, $asArray = false)
     {
-        $result = array();
+        $result = [];
 
         foreach ($columns as $lookup) {
             $col = CustomColumnType::createByLookup($lookup);

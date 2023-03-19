@@ -15,7 +15,7 @@ class JsonTest extends PHPUnit_Framework_TestCase
         global $config;
 
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
-        $test = array();
+        $test = [];
         $test = JSONRenderer::addCompleteArray($test);
         $this->assertArrayHasKey("c", $test);
         $this->assertArrayHasKey("version", $test ["c"]);
@@ -27,14 +27,14 @@ class JsonTest extends PHPUnit_Framework_TestCase
 
         // The thumbnails should be the same as the covers
         $config['cops_thumbnail_handling'] = "1";
-        $test = array();
+        $test = [];
         $test = JSONRenderer::addCompleteArray($test);
 
         $this->assertTrue($test ["c"]["url"]["thumbnailUrl"] == $test ["c"]["url"]["coverUrl"]);
 
         // The thumbnails should be the same as the covers
         $config['cops_thumbnail_handling'] = "/images.png";
-        $test = array();
+        $test = [];
         $test = JSONRenderer::addCompleteArray($test);
 
         $this->assertEquals("/images.png", $test ["c"]["url"]["thumbnailUrl"]);

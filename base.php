@@ -31,10 +31,10 @@ function serverSideRender($data)
 
     // Generate the function for the template
     $template = new doT();
-    $dot = $template->template($page, array('bookdetail' => $bookdetail,
+    $dot = $template->template($page, ['bookdetail' => $bookdetail,
                                               'header' => $header,
                                               'footer' => $footer,
-                                              'main' => $main));
+                                              'main' => $main]);
     // If there is a syntax error in the function created
     // $dot will be equal to FALSE
     if (!$dot) {
@@ -107,7 +107,7 @@ function getUrlWithVersion($url)
 function xml2xhtml($xml)
 {
     return preg_replace_callback('#<(\w+)([^>]*)\s*/>#s', function ($m) {
-        $xhtml_tags = array('br', 'hr', 'input', 'frame', 'img', 'area', 'link', 'col', 'base', 'basefont', 'param');
+        $xhtml_tags = ['br', 'hr', 'input', 'frame', 'img', 'area', 'link', 'col', 'base', 'basefont', 'param'];
         if (in_array($m[1], $xhtml_tags)) {
             return '<' . $m[1] . $m[2] . ' />';
         } else {
@@ -212,7 +212,7 @@ function str_format($format)
  */
 function getAcceptLanguages()
 {
-    $langs = array();
+    $langs = [];
 
     if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         // break up string into pieces (languages and q factors)
@@ -224,7 +224,7 @@ function getAcceptLanguages()
         preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $accept, $lang_parse);
 
         if (count($lang_parse[1])) {
-            $langs = array();
+            $langs = [];
             foreach ($lang_parse[1] as $lang) {
                 // Format the language code (not standard among browsers)
                 if (strlen($lang) == 5) {
@@ -259,7 +259,7 @@ function getAcceptLanguages()
 function getLangAndTranslationFile()
 {
     global $config;
-    $langs = array();
+    $langs = [];
     $lang = 'en';
     if (!empty($config['cops_language'])) {
         $lang = $config['cops_language'];
@@ -279,7 +279,7 @@ function getLangAndTranslationFile()
     if (empty($lang_file)) {
         $lang_file = dirname(__FILE__). '/lang/Localization_' . $lang . '.json';
     }
-    return array($lang, $lang_file);
+    return [$lang, $lang_file];
 }
 
 /**
@@ -307,7 +307,7 @@ function localize($phrase, $count=-1, $reset=false)
     /* If no instance of $translations has occured load the language file */
     if (is_null($translations)) {
         $lang_file_en = null;
-        list($lang, $lang_file) = getLangAndTranslationFile();
+        [$lang, $lang_file] = getLangAndTranslationFile();
         if ($lang != 'en') {
             $lang_file_en = dirname(__FILE__). '/lang/' . 'Localization_en.json';
         }
@@ -344,7 +344,7 @@ function addURLParameter($urlParams, $paramName, $paramValue)
         $start = '?';
         $urlParams = $matches[1];
     }
-    $params = array();
+    $params = [];
     parse_str($urlParams, $params);
     if (empty($paramValue) && $paramValue != 0) {
         unset($params[$paramName]);

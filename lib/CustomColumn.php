@@ -99,11 +99,11 @@ class CustomColumn extends Base
      */
     public function toArray()
     {
-        return array(
+        return [
             'valueID'          => $this->valueID,
             'value'            => $this->value,
             'customColumnType' => (array)$this->customColumnType,
             'htmlvalue'        => $this->htmlvalue,
-        );
+        ];
     }
 }

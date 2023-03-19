@@ -47,13 +47,13 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)
     {
         $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
-        $result->execute(array($id));
+        $result->execute([$id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
@@ -66,10 +66,10 @@ class CustomColumnTypeSeries extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = $this->getDb()->query($query);
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
             $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 

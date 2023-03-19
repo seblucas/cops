@@ -43,7 +43,7 @@ class ZipFile
             return false;
         }
 
-        $this->mEntries = array();
+        $this->mEntries = [];
 
         while ($entry = zip_read($this->mZip)) {
             $fileName = zip_entry_name($entry);

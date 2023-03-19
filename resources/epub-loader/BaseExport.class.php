@@ -32,12 +32,12 @@ class BaseExport
 
         $this->mFileName = $inFileName;
 
-        $this->mProperties = array();
+        $this->mProperties = [];
     }
 
     public function ClearProperties()
     {
-        $this->mProperties = array();
+        $this->mProperties = [];
     }
 
     public function SetProperty($inKey, $inValue)

@@ -13,8 +13,8 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
     public function testPageIndex()
     {
         global $config;
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         $page = Base::PAGE_INDEX;
         $query = null;
         $qid = null;
@@ -40,8 +40,8 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
     public function testPageSearchXXX($maxItem)
     {
         global $config;
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "art";
         $qid = null;
@@ -64,10 +64,10 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
 
     public function providerSearch()
     {
-        return array(
-            array(2),
-            array(-1)
-        );
+        return [
+            [2],
+            [-1],
+        ];
     }
 
     public static function tearDownAfterClass()

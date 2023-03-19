@@ -22,11 +22,11 @@ class CsvExport extends BaseExport
      */
     public function __construct($inFileName, $inCreate = false)
     {
-        $this->mSearch = array("\r", "\n", self::CsvSeparator);
-        $this->mReplace = array('', '<br />', '');
+        $this->mSearch = ["\r", "\n", self::CsvSeparator];
+        $this->mReplace = ['', '<br />', ''];
 
         // Init container
-        $this->mLines = array();
+        $this->mLines = [];
 
         parent::__construct($inFileName, $inCreate);
     }

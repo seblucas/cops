@@ -86,16 +86,16 @@ class BookTest extends PHPUnit_Framework_TestCase
         global $config;
 
         $config['cops_max_item_per_page'] = 5;
-        list($entryArray, $totalNumber) = Book::getBooksByAuthor(1, 1);
+        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, 1);
         $this->assertEquals(5, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
-        list($entryArray, $totalNumber) = Book::getBooksByAuthor(1, 2);
+        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, 2);
         $this->assertEquals(3, count($entryArray));
         $this->assertEquals(8, $totalNumber);
 
         $config['cops_max_item_per_page'] = -1;
-        list($entryArray, $totalNumber) = Book::getBooksByAuthor(1, -1);
+        [$entryArray, $totalNumber] = Book::getBooksByAuthor(1, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -103,7 +103,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     public function testGetBooksBySeries()
     {
         // All book from the Sherlock Holmes series
-        list($entryArray, $totalNumber) = Book::getBooksBySeries(1, -1);
+        [$entryArray, $totalNumber] = Book::getBooksBySeries(1, -1);
         $this->assertEquals(7, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -111,7 +111,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     public function testGetBooksByPublisher()
     {
         // All books from Strand Magazine
-        list($entryArray, $totalNumber) = Book::getBooksByPublisher(6, -1);
+        [$entryArray, $totalNumber] = Book::getBooksByPublisher(6, -1);
         $this->assertEquals(8, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -119,7 +119,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     public function testGetBooksByTag()
     {
         // All book with the Fiction tag
-        list($entryArray, $totalNumber) = Book::getBooksByTag(1, -1);
+        [$entryArray, $totalNumber] = Book::getBooksByTag(1, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -127,7 +127,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     public function testGetBooksByLanguage()
     {
         // All english book (= all books)
-        list($entryArray, $totalNumber) = Book::getBooksByLanguage(1, -1);
+        [$entryArray, $totalNumber] = Book::getBooksByLanguage(1, -1);
         $this->assertEquals(14, count($entryArray));
         $this->assertEquals(-1, $totalNumber);
     }
@@ -142,7 +142,7 @@ class BookTest extends PHPUnit_Framework_TestCase
     public function testGetBooksByStartingLetter()
     {
         // All books by first letter
-        list($entryArray, $totalNumber) = Book::getBooksByStartingLetter("T", -1);
+        [$entryArray, $totalNumber] = Book::getBooksByStartingLetter("T", -1);
         $this->assertEquals(-1, $totalNumber);
         $this->assertCount(3, $entryArray);
     }
@@ -182,14 +182,14 @@ class BookTest extends PHPUnit_Framework_TestCase
 
     public function providerPublicationDate()
     {
-        return array(
-            array('2010-10-05 22:00:00+00:00', '2010'),
-            array('1982-11-15 13:05:29.908657+00:00', '1982'),
-            array('1562-10-05 00:00:00+00:00', '1562'),
-            array('0100-12-31 23:00:00+00:00', ''),
-            array('', ''),
-            array(null, '')
-            );
+        return [
+            ['2010-10-05 22:00:00+00:00', '2010'],
+            ['1982-11-15 13:05:29.908657+00:00', '1982'],
+            ['1562-10-05 00:00:00+00:00', '1562'],
+            ['0100-12-31 23:00:00+00:00', ''],
+            ['', ''],
+            [null, ''],
+            ];
     }
 
     public function testGetBookById()
@@ -314,10 +314,10 @@ class BookTest extends PHPUnit_Framework_TestCase
 
     public function providerThumbnail()
     {
-        return array(
-            array(164, null, 164, 246),
-            array(null, 164, 109, 164)
-        );
+        return [
+            [164, null, 164, 246],
+            [null, 164, 109, 164],
+        ];
     }
 
     public function testGetMostInterestingDataToSendToKindle_WithMOBI()
@@ -554,7 +554,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "car";
         $_GET["search"] = "1";
 
-        $config ['cops_ignored_categories'] = array("author");
+        $config ['cops_ignored_categories'] = ["author"];
         $array = JSONRenderer::getJson();
 
         $this->assertCount(2, $array);
@@ -572,7 +572,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["query"] = "art";
         $_GET["search"] = "1";
 
-        $config ['cops_ignored_categories'] = array("series");
+        $config ['cops_ignored_categories'] = ["series"];
         $array = JSONRenderer::getJson();
 
         $this->assertCount(2, $array);
@@ -591,8 +591,8 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = "1";
         $_GET["multi"] = "1";
 
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
 
         $array = JSONRenderer::getJson();
 

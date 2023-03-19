@@ -39,13 +39,13 @@ class Rating extends Base
 
     public static function getAllRatings()
     {
-        return self::getEntryArray(self::SQL_ALL_RATINGS, array());
+        return self::getEntryArray(self::SQL_ALL_RATINGS, []);
     }
 
     public static function getEntryArray($query, $params)
     {
-        list(, $result) = parent::executeQuery($query, self::RATING_COLUMNS, "", $params, -1);
-        $entryArray = array();
+        [, $result] = parent::executeQuery($query, self::RATING_COLUMNS, "", $params, -1);
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $ratingObj = new Rating($post->id, $post->rating);
             $rating=$post->rating/2;
@@ -55,7 +55,7 @@ class Rating extends Base
                 $ratingObj->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                array( new LinkNavigation($ratingObj->getUri())),
+                [ new LinkNavigation($ratingObj->getUri())],
                 "",
                 $post->count
             ));
@@ -66,7 +66,7 @@ class Rating extends Base
     public static function getRatingById($ratingId)
     {
         $result = parent::getDb()->prepare('select rating from ratings where id = ?');
-        $result->execute(array($ratingId));
+        $result->execute([$ratingId]);
         return new Rating($ratingId, $result->fetchColumn());
     }
 }

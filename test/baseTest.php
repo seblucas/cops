@@ -39,7 +39,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
         $headcontent = file_get_contents(dirname(__FILE__) . '/../templates/' . $templateName . '/file.html');
         $template = new doT();
         $tpl = $template->template($headcontent, null);
-        $data = array("title"                 => $config['cops_title_default'],
+        $data = ["title"                 => $config['cops_title_default'],
                   "version"               => VERSION,
                   "opds_url"              => $config['cops_full_url'] . "feed.php",
                   "customHeader"          => "",
@@ -47,7 +47,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
                   "server_side_rendering" => useServerSideRendering(),
                   "current_css"           => getCurrentCss(),
                   "favico"                => $config['cops_icon'],
-                  "getjson_url"           => "getJSON.php?" . addURLParameter(getQueryString(), "complete", 1));
+                  "getjson_url"           => "getJSON.php?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
         $this->assertContains("<head>", $head);
@@ -56,10 +56,10 @@ class BaseTest extends PHPUnit_Framework_TestCase
 
     public function providerTemplate()
     {
-        return array(
-            array("bootstrap"),
-            array("default")
-        );
+        return [
+            ["bootstrap"],
+            ["default"],
+        ];
     }
 
     public function testLocalize()
@@ -93,7 +93,7 @@ class BaseTest extends PHPUnit_Framework_TestCase
     public function testGetLangAndTranslationFile($acceptLanguage, $result)
     {
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $acceptLanguage;
-        list($lang, $lang_file) = GetLangAndTranslationFile();
+        [$lang, $lang_file] = GetLangAndTranslationFile();
         $this->assertEquals($result, $lang);
 
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = "en";
@@ -102,15 +102,15 @@ class BaseTest extends PHPUnit_Framework_TestCase
 
     public function providerGetLangAndTranslationFile()
     {
-        return array(
-            array("en", "en"),
-            array("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"),
-            array("fr-FR", "fr"),
-            array("pt,en-us;q=0.7,en;q=0.3", "en"),
-            array("pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3", "pt_BR"),
-            array("pt-pt,pt;q=0.8,en;q=0.5,en-us;q=0.3", "pt_PT"),
-            array("zl", "en"),
-        );
+        return [
+            ["en", "en"],
+            ["fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"],
+            ["fr-FR", "fr"],
+            ["pt,en-us;q=0.7,en;q=0.3", "en"],
+            ["pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3", "pt_BR"],
+            ["pt-pt,pt;q=0.8,en;q=0.5,en-us;q=0.3", "pt_PT"],
+            ["zl", "en"],
+        ];
     }
 
     /**
@@ -128,15 +128,15 @@ class BaseTest extends PHPUnit_Framework_TestCase
 
     public function providerGetAcceptLanguages()
     {
-        return array(
-            array("en", "en"),
-            array("en-US", "en_US"),
-            array("fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"), // French locale with Firefox
-            array("fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4", "fr_FR"), // French locale with Chrome
-            array("fr-FR", "fr_FR"), // French locale with IE11
-            array("pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3", "pt_BR"),
-            array("zl", "zl"),
-        );
+        return [
+            ["en", "en"],
+            ["en-US", "en_US"],
+            ["fr,fr-fr;q=0.8,en-us;q=0.5,en;q=0.3", "fr"], // French locale with Firefox
+            ["fr-FR,fr;q=0.8,en-US;q=0.6,en;q=0.4", "fr_FR"], // French locale with Chrome
+            ["fr-FR", "fr_FR"], // French locale with IE11
+            ["pt-br,pt;q=0.8,en-us;q=0.5,en;q=0.3", "pt_BR"],
+            ["zl", "zl"],
+        ];
     }
 
     public function testBaseFunction()
@@ -144,10 +144,10 @@ class BaseTest extends PHPUnit_Framework_TestCase
         global $config;
 
         $this->assertFalse(Base::isMultipleDatabaseEnabled());
-        $this->assertEquals(array("" => dirname(__FILE__) . "/BaseWithSomeBooks/"), Base::getDbList());
+        $this->assertEquals(["" => dirname(__FILE__) . "/BaseWithSomeBooks/"], Base::getDbList());
 
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
 
         $this->assertTrue(Base::isMultipleDatabaseEnabled());
         $this->assertEquals("Some books", Base::getDbName(0));
@@ -164,8 +164,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         global $config;
 
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
 
         $this->assertTrue(Base::checkDatabaseAvailability());
     }
@@ -178,8 +178,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         global $config;
 
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/OneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/OneBook/"];
 
         $this->assertTrue(Base::checkDatabaseAvailability());
     }
@@ -192,8 +192,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
     {
         global $config;
 
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/SomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/SomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
 
         $this->assertTrue(Base::checkDatabaseAvailability());
     }

@@ -38,7 +38,7 @@ function _transliteration_process($string, $unknown = '?', $source_langcode = nu
 
     if (!isset($tail_bytes)) {
         // Each UTF-8 head byte is followed by a certain number of tail bytes.
-        $tail_bytes = array();
+        $tail_bytes = [];
         for ($n = 0; $n < 256; $n++) {
             if ($n < 0xc0) {
                 $remaining = 0;
@@ -165,7 +165,7 @@ function _transliteration_process($string, $unknown = '?', $source_langcode = nu
  */
 function _transliteration_replace($ord, $unknown = '?', $langcode = null)
 {
-    static $map = array();
+    static $map = [];
 
     //GL: set language later
     /*
@@ -180,8 +180,8 @@ function _transliteration_replace($ord, $unknown = '?', $langcode = null)
     if (!isset($map[$bank][$langcode])) {
         $file = './resources/transliteration-data/' . sprintf('x%02x', $bank) . '.php';
         if (file_exists($file)) {
-            $base = array();
-            $variant = array();
+            $base = [];
+            $variant = [];
             include $file;
             if ($langcode != 'en' && isset($variant[$langcode])) {
                 // Merge in language specific mappings.
@@ -190,11 +190,11 @@ function _transliteration_replace($ord, $unknown = '?', $langcode = null)
                 $map[$bank][$langcode] = $base;
             }
         } else {
-            $map[$bank][$langcode] = array();
+            $map[$bank][$langcode] = [];
         }
     }
 
     $ord = $ord & 255;
 
-    return isset($map[$bank][$langcode][$ord]) ? $map[$bank][$langcode][$ord] : $unknown;
+    return $map[$bank][$langcode][$ord] ?? $unknown;
 }

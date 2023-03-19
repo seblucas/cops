@@ -62,7 +62,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled()) {
             return $config['calibre_directory'];
         } else {
-            return array("" => $config['calibre_directory']);
+            return ["" => $config['calibre_directory']];
         }
     }
 
@@ -72,7 +72,7 @@ abstract class Base
         if (self::isMultipleDatabaseEnabled()) {
             return array_keys($config['calibre_directory']);
         } else {
-            return array("");
+            return [""];
         }
     }
 
@@ -178,7 +178,7 @@ abstract class Base
             $id,
             str_format(localize($numberOfString, $count), $count),
             "text",
-            array( new LinkNavigation("?page=".$pageId)),
+            [ new LinkNavigation("?page=".$pageId)],
             "",
             $count
         );
@@ -189,8 +189,8 @@ abstract class Base
     {
         /* @var $result PDOStatement */
 
-        list(, $result) = self::executeQuery($query, $columns, "", $params, -1);
-        $entryArray = array();
+        [, $result] = self::executeQuery($query, $columns, "", $params, -1);
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             /* @var $instance Author|Tag|Serie|Publisher */
 
@@ -205,7 +205,7 @@ abstract class Base
                 $instance->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                array( new LinkNavigation($instance->getUri())),
+                [ new LinkNavigation($instance->getUri())],
                 "",
                 $post->count
             ));
@@ -239,6 +239,6 @@ abstract class Base
 
         $result = self::getDb($database)->prepare(str_format($query, $columns, $filter));
         $result->execute($params);
-        return array($totalResult, $result);
+        return [$totalResult, $result];
     }
 }

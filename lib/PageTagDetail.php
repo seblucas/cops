@@ -13,6 +13,6 @@ class PageTagDetail extends Page
         $tag = Tag::getTagById($this->idGet);
         $this->idPage = $tag->getEntryId();
         $this->title = $tag->name;
-        list($this->entryArray, $this->totalNumber) = Book::getBooksByTag($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n);
     }
 }

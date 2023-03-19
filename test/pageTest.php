@@ -58,7 +58,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config ['cops_ignored_categories'] = array("author", "series", "tag", "publisher", "language");
+        $config ['cops_ignored_categories'] = ["author", "series", "tag", "publisher", "language"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -81,7 +81,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config['cops_calibre_custom_column'] = array("type1");
+        $config['cops_calibre_custom_column'] = ["type1"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -91,7 +91,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Custom column 'Type1'", $currentPage->entryArray [6]->content);
         $this->assertEquals(2, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = array();
+        $config['cops_calibre_custom_column'] = [];
     }
 
     public function testPageIndexWithCustomColumn_Type2()
@@ -102,7 +102,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config['cops_calibre_custom_column'] = array("type2");
+        $config['cops_calibre_custom_column'] = ["type2"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -112,7 +112,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Custom column 'Type2'", $currentPage->entryArray [6]->content);
         $this->assertEquals(3, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = array();
+        $config['cops_calibre_custom_column'] = [];
     }
 
     public function testPageIndexWithCustomColumn_Type4()
@@ -123,7 +123,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config['cops_calibre_custom_column'] = array("type4");
+        $config['cops_calibre_custom_column'] = ["type4"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -133,7 +133,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("Alphabetical index of the 2 series", $currentPage->entryArray [6]->content);
         $this->assertEquals(2, $currentPage->entryArray [6]->numberOfElement);
 
-        $config['cops_calibre_custom_column'] = array();
+        $config['cops_calibre_custom_column'] = [];
     }
 
     public function testPageIndexWithCustomColumn_ManyTypes()
@@ -144,14 +144,14 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config['cops_calibre_custom_column'] = array("type1", "type2", "type4");
+        $config['cops_calibre_custom_column'] = ["type1", "type2", "type4"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
 
         $this->assertCount(11, $currentPage->entryArray);
 
-        $config['cops_calibre_custom_column'] = array();
+        $config['cops_calibre_custom_column'] = [];
     }
 
     public function testPageAllCustom_Type4()
@@ -720,7 +720,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $qid = null;
         $n = "1";
 
-        $config ['cops_ignored_categories'] = array("author");
+        $config ['cops_ignored_categories'] = ["author"];
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
 
@@ -730,7 +730,7 @@ class PageTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("1 book", $currentPage->entryArray [0]->content);
         $this->assertFalse($currentPage->ContainsBook());
 
-        $config ['cops_ignored_categories'] = array();
+        $config ['cops_ignored_categories'] = [];
     }
 
     public function testPageSearch_WithTwoCategories()
@@ -777,13 +777,13 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function providerAccentuatedCharacters()
     {
-        return array(
-            array("curée", 1, "1 book"),
-            array("Émile zola", 1, "1 author"),
-            array("émile zola", 0, null), // With standard search upper does not work with diacritics
-            array("Littérature", 1, "1 tag"),
-            array("Eugène Fasquelle", 1, "1 publisher")
-        );
+        return [
+            ["curée", 1, "1 book"],
+            ["Émile zola", 1, "1 author"],
+            ["émile zola", 0, null], // With standard search upper does not work with diacritics
+            ["Littérature", 1, "1 tag"],
+            ["Eugène Fasquelle", 1, "1 publisher"],
+        ];
     }
 
     /**
@@ -817,15 +817,15 @@ class PageTest extends PHPUnit_Framework_TestCase
 
     public function providerNormalizedSearch()
     {
-        return array(
-            array("curee", 1, "1 book"),
-            array("emile zola", 1, "1 author"),
-            array("émile zola", 1, "1 author"),
-            array("Litterature", 1, "1 tag"),
-            array("Litterâture", 1, "1 tag"),
-            array("Serie des Rougon", 1, "1 series"),
-            array("Eugene Fasquelle", 1, "1 publisher")
-        );
+        return [
+            ["curee", 1, "1 book"],
+            ["emile zola", 1, "1 author"],
+            ["émile zola", 1, "1 author"],
+            ["Litterature", 1, "1 tag"],
+            ["Litterâture", 1, "1 tag"],
+            ["Serie des Rougon", 1, "1 series"],
+            ["Eugene Fasquelle", 1, "1 publisher"],
+        ];
     }
 
     public function testAuthorSearch_ByName()
