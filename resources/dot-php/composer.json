@@ -1,0 +1,22 @@
+{
+    "name": "seblucas/dot-php",
+    "type": "library",
+    "description": "PHP rendering engine for doT.js (The fastest + concise javascript template engine for nodejs and browsers)",
+    "keywords": ["doT", "template", "engine", "rendering"],
+    "homepage": "https://github.com/seblucas/doT-php",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Sébastien Lucas",
+            "email": "sebastien@slucas.fr",
+            "homepage": "http://www.slucas.fr/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "classmap": ["doT.php"]
+    }
+}

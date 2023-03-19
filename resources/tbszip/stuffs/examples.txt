@@ -1,0 +1,4 @@
+example_01.epub:
+
+This zip archive has data sections with Special Spanning information in the header but without the Signature 0x08074b50.
+This case is fixed in TbsZip 2.12.
