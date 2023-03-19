@@ -1,29 +1,31 @@
 <?php
 
-class EPubTest extends PHPUnit_Framework_TestCase {
-
+class EPubTest extends PHPUnit_Framework_TestCase
+{
     protected $epub;
 
-    protected function setUp(){
+    protected function setUp()
+    {
         // sometime I might have accidentally broken the test file
-        if(filesize(realpath( dirname( __FILE__ ) ) . '/test.epub') != 768780){
+        if (filesize(realpath(dirname(__FILE__)) . '/test.epub') != 768780) {
             die('test.epub has wrong size, make sure it\'s unmodified');
         }
 
         // we work on a copy to test saving
-        if(!copy(realpath( dirname( __FILE__ ) ) . '/test.epub', realpath( dirname( __FILE__ ) ) . '/test.copy.epub')){
+        if (!copy(realpath(dirname(__FILE__)) . '/test.epub', realpath(dirname(__FILE__)) . '/test.copy.epub')) {
             die('failed to create copy of the test book');
         }
 
-        $this->epub = new EPub(realpath( dirname( __FILE__ ) ) . '/test.copy.epub');
+        $this->epub = new EPub(realpath(dirname(__FILE__)) . '/test.copy.epub');
     }
 
     public static function tearDownAfterClass()
     {
-        unlink(realpath( dirname( __FILE__ ) ) . '/test.copy.epub');
+        unlink(realpath(dirname(__FILE__)) . '/test.copy.epub');
     }
 
-    public function testAuthors(){
+    public function testAuthors()
+    {
         // read curent value
         $this->assertEquals(
             $this->epub->Authors(),
@@ -86,7 +88,8 @@ class EPubTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testTitle(){
+    public function testTitle()
+    {
         // get current value
         $this->assertEquals(
             $this->epub->Title(),
@@ -118,7 +121,8 @@ class EPubTest extends PHPUnit_Framework_TestCase {
         );
     }
 
-    public function testSubject(){
+    public function testSubject()
+    {
         // get current values
         $this->assertEquals(
             $this->epub->Subjects(),

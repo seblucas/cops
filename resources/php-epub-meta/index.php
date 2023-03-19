@@ -102,7 +102,7 @@
     }
 
     header('Content-Type: text/html; charset=utf-8');
-?>
+    ?>
 <html>
 <head>
     <title>EPub Manager</title>
@@ -112,7 +112,9 @@
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
 
     <script type="text/javascript">
-        <?php if($error) echo "alert('" . htmlspecialchars($error) . "');";?>
+        <?php if($error) {
+            echo "alert('" . htmlspecialchars($error) . "');";
+        }?>
     </script>
 </head>
 <body>
@@ -121,14 +123,14 @@
     <ul id="booklist">
         <?php
             $list = glob($bookdir . '/*.epub');
-            foreach ($list as $book) {
-                $base = basename($book, '.epub');
-                $name = book_output($base);
-                echo '<li ' . ($base == $_REQUEST['book'] ? 'class="active"' : '' ) . '>';
-                echo '<a href="?book=' . htmlspecialchars($base) . '">' . $name . '</a>';
-                echo '</li>';
-            }
-        ?>
+    foreach ($list as $book) {
+        $base = basename($book, '.epub');
+        $name = book_output($base);
+        echo '<li ' . ($base == $_REQUEST['book'] ? 'class="active"' : '') . '>';
+        echo '<a href="?book=' . htmlspecialchars($base) . '">' . $name . '</a>';
+        echo '</li>';
+    }
+    ?>
     </ul>
 
     <?php if($epub): ?>
@@ -144,23 +146,24 @@
                 <th>Authors</th>
                 <td id="authors">
                     <?php
-                        $count = 0;
-                        foreach ($epub->Authors() as $as => $name) {
-                    ?>
+                    $count = 0;
+        foreach ($epub->Authors() as $as => $name) {
+            ?>
                             <p>
                                 <input type="text" name="authorname[<?php echo $count?>]" value="<?php echo htmlspecialchars($name)?>" />
                                 (<input type="text" name="authoras[<?php echo $count?>]" value="<?php echo htmlspecialchars($as)?>" />)
                             </p>
                     <?php
-                            $count++;
-                        }
-                    ?>
+                    $count++;
+        }
+        ?>
                 </td>
             </tr>
             <tr>
                 <th>Description<br />
                     <img src="?book=<?php echo htmlspecialchars($_REQUEST['book'])?>&amp;img=1" id="cover" width="90"
-                         class="<?php $c = $epub->Cover(); echo ($c['found']?'hasimg':'noimg')?>" />
+                         class="<?php $c = $epub->Cover();
+                         echo($c['found'] ? 'hasimg' : 'noimg')?>" />
                 </th>
                 <td><textarea name="description"><?php echo htmlspecialchars($epub->Description())?></textarea></td>
             </tr>

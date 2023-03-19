@@ -196,9 +196,11 @@ class EPub
      */
     private function encodeComponentName($src)
     {
-        return str_replace(array('/', '-'),
-                           array('~SLASH~', '~DASH~'),
-                           $src);
+        return str_replace(
+            array('/', '-'),
+            array('~SLASH~', '~DASH~'),
+            $src
+        );
     }
 
     /**
@@ -206,9 +208,11 @@ class EPub
      */
     private function decodeComponentName($src)
     {
-        return str_replace(array('~SLASH~', '~DASH~'),
-                           array('/', '-'),
-                           $src);
+        return str_replace(
+            array('~SLASH~', '~DASH~'),
+            array('/', '-'),
+            $src
+        );
     }
 
 
@@ -236,7 +240,7 @@ class EPub
     {
         $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
         $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
-        $src = $this->encodeComponentName ($src);
+        $src = $this->encodeComponentName($src);
         return array('title' => preg_replace('~[\r\n]+~', '', $title), 'src' => $src);
     }
 
@@ -604,7 +608,7 @@ class EPub
         if (!$nodes->length) {
             return $this->no_cover();
         }
-        $coverid = (String) $nodes->item(0)->attr('opf:content');
+        $coverid = (string) $nodes->item(0)->attr('opf:content');
         if (!$coverid) {
             return $this->no_cover();
         }
@@ -635,17 +639,17 @@ class EPub
     {
         $nodes = $this->xpath->query('//opf:metadata/opf:meta[@name="cover"]');
         if (!$nodes->length) {
-            return NULL;
+            return null;
         }
 
-        $coverid = (String)$nodes->item(0)->attr('opf:content');
+        $coverid = (string)$nodes->item(0)->attr('opf:content');
         if (!$coverid) {
-            return NULL;
+            return null;
         }
 
         $nodes = $this->xpath->query('//opf:manifest/opf:item[@id="' . $coverid . '"]');
         if (!$nodes->length) {
-            return NULL;
+            return null;
         }
 
         return $nodes->item(0);
@@ -689,7 +693,7 @@ class EPub
         }
     }
 
-    private function getFullPath($file, $context = NULL)
+    private function getFullPath($file, $context = null)
     {
         $path = dirname('/' . $this->meta) . '/' . $file;
         $path = ltrim($path, '\\');
@@ -767,7 +771,7 @@ class EPub
         if ($value !== false) {
             $value = htmlspecialchars($value);
             $nodes = $this->xpath->query($xpath);
-            if ($nodes->length == 1 ) {
+            if ($nodes->length == 1) {
                 if ($value === '') {
                     // the user want's to empty this value -> delete the node
                     $nodes->item(0)->delete();

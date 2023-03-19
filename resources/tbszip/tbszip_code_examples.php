@@ -1,4 +1,4 @@
-<?
+<?php
 
 /* Some code examples for TbsZip
 Skrol29, 2010-09-03
@@ -31,7 +31,9 @@ $text1 = $zip->FileRead('readme.txt');
 $text2 = $zip->FileRead('subfolder/readme.txt');
 
 
-if ($ok) $zip->FileExists('subfolder/help.html');
+if ($ok) {
+    $zip->FileExists('subfolder/help.html');
+}
 
 // -----------------------------
 // Modifying data in the archive
@@ -72,4 +74,4 @@ $zip->Flush(TBSZIP_DOWNLOAD+TBSZIP_NOHEADER);
 // Close the archive
 // -----------------
 
-$zip->Close(); // stop to work with the opened archive. Modifications are not applied to the opened archive, use Flush() to commit  
+$zip->Close(); // stop to work with the opened archive. Modifications are not applied to the opened archive, use Flush() to commit
