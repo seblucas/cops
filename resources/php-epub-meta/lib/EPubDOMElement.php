@@ -8,15 +8,15 @@
 
 class EPubDOMElement extends DOMElement
 {
-    public $namespaces = array(
+    public $namespaces = [
         'n'   => 'urn:oasis:names:tc:opendocument:xmlns:container',
         'opf' => 'http://www.idpf.org/2007/opf',
         'dc'  => 'http://purl.org/dc/elements/1.1/',
-    );
+    ];
 
     public function __construct($name, $value='', $namespaceURI='')
     {
-        list($ns, $name) = $this->splitns($name);
+        [$ns, $name] = $this->splitns($name);
         $value = htmlspecialchars($value);
         if (!$namespaceURI && $ns) {
             $namespaceURI = $this->namespaces[$ns];
@@ -31,7 +31,7 @@ class EPubDOMElement extends DOMElement
      */
     public function newChild($name, $value='')
     {
-        list($ns, $local) = $this->splitns($name);
+        [$ns, $local] = $this->splitns($name);
         if ($ns) {
             $nsuri = $this->namespaces[$ns];
             if ($this->isDefaultNamespace($nsuri)) {
@@ -65,7 +65,7 @@ class EPubDOMElement extends DOMElement
      */
     public function attr($attr, $value=null)
     {
-        list($ns, $attr) = $this->splitns($attr);
+        [$ns, $attr] = $this->splitns($attr);
 
         $nsuri = '';
         if ($ns) {

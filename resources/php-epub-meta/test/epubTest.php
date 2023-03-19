@@ -29,62 +29,62 @@ class EPubTest extends PHPUnit_Framework_TestCase
         // read curent value
         $this->assertEquals(
             $this->epub->Authors(),
-            array('Shakespeare, William' => 'William Shakespeare')
+            ['Shakespeare, William' => 'William Shakespeare']
         );
 
         // remove value with string
         $this->assertEquals(
             $this->epub->Authors(''),
-            array()
+            []
         );
 
         // set single value by String
 
         $this->assertEquals(
             $this->epub->Authors('John Doe'),
-            array('John Doe' => 'John Doe')
+            ['John Doe' => 'John Doe']
         );
 
         // set single value by indexed array
         $this->assertEquals(
-            $this->epub->Authors(array('John Doe')),
-            array('John Doe' => 'John Doe')
+            $this->epub->Authors(['John Doe']),
+            ['John Doe' => 'John Doe']
         );
 
         // remove value with array
         $this->assertEquals(
-            $this->epub->Authors(array()),
-            array()
+            $this->epub->Authors([]),
+            []
         );
 
         // set single value by associative array
         $this->assertEquals(
-            $this->epub->Authors(array('Doe, John' => 'John Doe')),
-            array('Doe, John' => 'John Doe')
+            $this->epub->Authors(['Doe, John' => 'John Doe']),
+            ['Doe, John' => 'John Doe']
         );
 
         // set multi value by string
         $this->assertEquals(
             $this->epub->Authors('John Doe, Jane Smith'),
-            array('John Doe' => 'John Doe', 'Jane Smith' => 'Jane Smith')
+            ['John Doe' => 'John Doe', 'Jane Smith' => 'Jane Smith']
         );
 
         // set multi value by indexed array
         $this->assertEquals(
-            $this->epub->Authors(array('John Doe', 'Jane Smith')),
-            array('John Doe' => 'John Doe', 'Jane Smith' => 'Jane Smith')
+            $this->epub->Authors(['John Doe', 'Jane Smith']),
+            ['John Doe' => 'John Doe', 'Jane Smith' => 'Jane Smith']
         );
 
         // set multi value by associative  array
         $this->assertEquals(
-            $this->epub->Authors(array('Doe, John' => 'John Doe', 'Smith, Jane' => 'Jane Smith')),
-            array('Doe, John' => 'John Doe', 'Smith, Jane' => 'Jane Smith')
+            $this->epub->Authors(['Doe, John' => 'John Doe', 'Smith, Jane' => 'Jane Smith']),
+            ['Doe, John' => 'John Doe', 'Smith, Jane' => 'Jane Smith']
         );
 
         // check escaping
         $this->assertEquals(
-            $this->epub->Authors(array('Doe, John&nbsp;' => 'John Doe&nbsp;')),
-            array('Doe, John&nbsp;' => 'John Doe&nbsp;')
+            $this->epub->Authors(['Doe, John&nbsp;' => 'John Doe&nbsp;']),
+            ['Doe, John&nbsp;' => 'John Doe&nbsp;']
         );
     }
 
@@ -126,37 +126,37 @@ class EPubTest extends PHPUnit_Framework_TestCase
         // get current values
         $this->assertEquals(
             $this->epub->Subjects(),
-            array('Fiction','Drama','Romance')
+            ['Fiction','Drama','Romance']
         );
 
         // delete current values with String
         $this->assertEquals(
             $this->epub->Subjects(''),
-            array()
+            []
         );
 
         // set new values with String
         $this->assertEquals(
             $this->epub->Subjects('Fiction, Drama, Romance'),
-            array('Fiction','Drama','Romance')
+            ['Fiction','Drama','Romance']
         );
 
         // delete current values with Array
         $this->assertEquals(
-            $this->epub->Subjects(array()),
-            array()
+            $this->epub->Subjects([]),
+            []
         );
 
         // set new values with array
         $this->assertEquals(
-            $this->epub->Subjects(array('Fiction','Drama','Romance')),
-            array('Fiction','Drama','Romance')
+            $this->epub->Subjects(['Fiction','Drama','Romance']),
+            ['Fiction','Drama','Romance']
         );
 
         // check escaping
         $this->assertEquals(
-            $this->epub->Subjects(array('Fiction','Drama&nbsp;','Romance')),
-            array('Fiction','Drama&nbsp;','Romance')
+            $this->epub->Subjects(['Fiction','Drama&nbsp;','Romance']),
+            ['Fiction','Drama&nbsp;','Romance']
         );
     }
 

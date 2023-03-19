@@ -18,7 +18,7 @@ function book_output($input)
     $input = str_replace('_', ' ', $input);
     $input = str_replace(',', ', ', $input);
     $input = str_replace('-', ' - ', $input);
-    list($author, $title) = explode('-', $input, 2);
+    [$author, $title] = explode('-', $input, 2);
     $author = trim($author);
     $title  = trim($title);
 

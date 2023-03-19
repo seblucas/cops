@@ -40,7 +40,7 @@
         $epub->ISBN($_POST['isbn']);
         $epub->Subjects($_POST['subjects']);
 
-        $authors = array();
+        $authors = [];
         foreach ((array)$_POST['authorname'] as $num => $name) {
             if ($name) {
                 $as = $_POST['authoras'][$num];

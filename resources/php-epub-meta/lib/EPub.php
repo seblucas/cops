@@ -150,7 +150,7 @@ class EPub
      */
     public function components()
     {
-        $spine = array();
+        $spine = [];
         $nodes = $this->xpath->query('//opf:spine/opf:itemref');
         foreach ($nodes as $node) {
             $idref =  $node->getAttribute('idref');
@@ -197,8 +197,8 @@ class EPub
     private function encodeComponentName($src)
     {
         return str_replace(
-            array('/', '-'),
-            array('~SLASH~', '~DASH~'),
+            ['/', '-'],
+            ['~SLASH~', '~DASH~'],
             $src
         );
     }
@@ -209,8 +209,8 @@ class EPub
     private function decodeComponentName($src)
     {
         return str_replace(
-            array('~SLASH~', '~DASH~'),
-            array('/', '-'),
+            ['~SLASH~', '~DASH~'],
+            ['/', '-'],
             $src
         );
     }
@@ -241,7 +241,7 @@ class EPub
         $title = $this->toc_xpath->query('x:navLabel/x:text', $node)->item(0)->nodeValue;
         $src = $this->toc_xpath->query('x:content', $node)->item(0)->attr('src');
         $src = $this->encodeComponentName($src);
-        return array('title' => preg_replace('~[\r\n]+~', '', $title), 'src' => $src);
+        return ['title' => preg_replace('~[\r\n]+~', '', $title), 'src' => $src];
     }
 
     /**
@@ -251,7 +251,7 @@ class EPub
      */
     public function contents()
     {
-        $contents = array();
+        $contents = [];
         $nodes = $this->toc_xpath->query('//x:ncx/x:navMap/x:navPoint');
         foreach ($nodes as $node) {
             $contents[] = $this->getNavPointDetail($node);
@@ -286,7 +286,7 @@ class EPub
             // Author where given as a comma separated list
             if (is_string($authors)) {
                 if ($authors == '') {
-                    $authors = array();
+                    $authors = [];
                 } else {
                     $authors = explode(',', $authors);
                     $authors = array_map('trim', $authors);
@@ -315,7 +315,7 @@ class EPub
 
         // read current data
         $rolefix = false;
-        $authors = array();
+        $authors = [];
         $nodes = $this->xpath->query('//opf:metadata/dc:creator[@opf:role="aut"]');
         if ($nodes->length == 0) {
             // no nodes where found, let's try again without role
@@ -516,7 +516,7 @@ class EPub
         if ($subjects !== false) {
             if (is_string($subjects)) {
                 if ($subjects === '') {
-                    $subjects = array();
+                    $subjects = [];
                 } else {
                     $subjects = explode(',', $subjects);
                     $subjects = array_map('trim', $subjects);
@@ -539,7 +539,7 @@ class EPub
         }
 
         //getter
-        $subjects = array();
+        $subjects = [];
         $nodes = $this->xpath->query('//opf:metadata/dc:subject');
         foreach ($nodes as $node) {
             $subjects[] =  $node->nodeValue;
@@ -628,11 +628,11 @@ class EPub
         }
         $data = $zip->getFromName($path);
 
-        return array(
+        return [
             'mime'  => $mime,
             'data'  => $data,
-            'found' => $path
-        );
+            'found' => $path,
+        ];
     }
 
     public function getCoverItem()
@@ -669,7 +669,7 @@ class EPub
         $splittedA = preg_split('#/#', $a);
         $splittedB = preg_split('#/#', $b);
 
-        $pathParts = array();
+        $pathParts = [];
         $mergedPath = array_merge($splittedA, $splittedB);
 
         foreach ($mergedPath as $item) {
@@ -826,11 +826,11 @@ class EPub
      */
     protected function no_cover()
     {
-        return array(
+        return [
             'data'  => base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAEALAAAAAABAAEAAAIBTAA7'),
             'mime'  => 'image/gif',
-            'found' => false
-        );
+            'found' => false,
+        ];
     }
 
     /**
