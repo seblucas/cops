@@ -57,7 +57,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return NULL;
+        return null;
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -92,7 +92,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name . " [" . $post->extra . "]", $this);
         }
-        return new CustomColumn(NULL, "", $this);
+        return new CustomColumn(null, "", $this);
     }
 
     public function isSearchable()

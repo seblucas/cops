@@ -49,7 +49,7 @@ class CustomColumnTypeDate extends CustomColumnType
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation ($this->getUri($id)));
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($id)));
 
             $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
@@ -62,7 +62,9 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -77,7 +79,7 @@ class CustomColumnTypeDate extends CustomColumnType
 
             return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.date.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
     }
 
     public function isSearchable()

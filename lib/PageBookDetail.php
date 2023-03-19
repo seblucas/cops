@@ -8,9 +8,9 @@
 
 class PageBookDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $this->book = Book::getBookById ($this->idGet);
+        $this->book = Book::getBookById($this->idGet);
         $this->title = $this->book->title;
     }
 }

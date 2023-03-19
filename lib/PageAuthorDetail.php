@@ -8,11 +8,11 @@
 
 class PageAuthorDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $author = Author::getAuthorById ($this->idGet);
-        $this->idPage = $author->getEntryId ();
+        $author = Author::getAuthorById($this->idGet);
+        $this->idPage = $author->getEntryId();
         $this->title = $author->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor ($this->idGet, $this->n);
+        list($this->entryArray, $this->totalNumber) = Book::getBooksByAuthor($this->idGet, $this->n);
     }
 }

@@ -8,7 +8,7 @@
 
 class PageAllTags extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
         $this->title = localize("tags.title");
         $this->entryArray = Tag::getAllTags();

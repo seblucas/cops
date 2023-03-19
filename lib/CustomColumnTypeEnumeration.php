@@ -55,9 +55,9 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
         $result->execute(array($id));
         if ($post = $result->fetchObject()) {
-            return new CustomColumn ($id, $post->name, $this);
+            return new CustomColumn($id, $post->name, $this);
         }
-        return NULL;
+        return null;
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -69,9 +69,9 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
-            $entry = new Entry ($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
+            $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
             array_push($entryArray, $entry);
         }
@@ -92,7 +92,7 @@ class CustomColumnTypeEnumeration extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.enum.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.enum.unknown"), $this);
     }
 
     public function isSearchable()

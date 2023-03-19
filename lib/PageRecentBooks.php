@@ -8,10 +8,10 @@
 
 class PageRecentBooks extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $this->title = localize ("recent.title");
-        $this->entryArray = Book::getAllRecentBooks ();
+        $this->title = localize("recent.title");
+        $this->entryArray = Book::getAllRecentBooks();
         $this->idPage = Book::ALL_RECENT_BOOKS_ID;
     }
 }

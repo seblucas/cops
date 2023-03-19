@@ -57,7 +57,7 @@ class CustomColumnTypeText extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return NULL;
+        return null;
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -67,10 +67,9 @@ class CustomColumnTypeText extends CustomColumnType
 
         $result = $this->getDb()->query($query);
         $entryArray = array();
-        while ($post = $result->fetchObject())
-        {
+        while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
             $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
@@ -82,7 +81,9 @@ class CustomColumnTypeText extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -95,7 +96,7 @@ class CustomColumnTypeText extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name, $this);
         }
-        return new CustomColumn(NULL, "", $this);
+        return new CustomColumn(null, "", $this);
     }
 
     public function isSearchable()

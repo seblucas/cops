@@ -8,14 +8,13 @@
 
 class PageAllBooks extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $this->title = localize ("allbooks.title");
-        if (getCurrentOption ("titles_split_first_letter") == 1) {
+        $this->title = localize("allbooks.title");
+        if (getCurrentOption("titles_split_first_letter") == 1) {
             $this->entryArray = Book::getAllBooks();
-        }
-        else {
-            list ($this->entryArray, $this->totalNumber) = Book::getBooks ($this->n);
+        } else {
+            list($this->entryArray, $this->totalNumber) = Book::getBooks($this->n);
         }
         $this->idPage = Book::ALL_BOOKS_ID;
     }

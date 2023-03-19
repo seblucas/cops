@@ -57,7 +57,7 @@ class CustomColumnTypeRating extends CustomColumnType
 
     public function getCustom($id)
     {
-        return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
+        return new CustomColumn($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -100,7 +100,7 @@ class CustomColumnTypeRating extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value / 2), $post->value / 2), $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.rating.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.rating.unknown"), $this);
     }
 
     public function isSearchable()

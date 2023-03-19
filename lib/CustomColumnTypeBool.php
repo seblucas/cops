@@ -35,14 +35,14 @@ class CustomColumnTypeBool extends CustomColumnType
         if ($id == -1) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_NULL, "{0}", "{1}", $this->getTableName());
             return array($query, array());
-        } else if ($id == 0) {
+        } elseif ($id == 0) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_FALSE, "{0}", "{1}", $this->getTableName());
             return array($query, array());
-        } else if ($id == 1) {
+        } elseif ($id == 1) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_BOOL_TRUE, "{0}", "{1}", $this->getTableName());
             return array($query, array());
         } else {
-            return NULL;
+            return null;
         }
     }
 
@@ -60,7 +60,7 @@ class CustomColumnTypeBool extends CustomColumnType
         $entryArray = array();
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation ($this->getUri($post->id)));
+            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
 
             $entry = new Entry(localize($this->BOOLEAN_NAMES[$post->id]), $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 

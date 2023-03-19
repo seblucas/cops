@@ -8,7 +8,7 @@
 
 class PageAllRating extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
         $this->title = localize("ratings.title");
         $this->entryArray = Rating::getAllRatings();
