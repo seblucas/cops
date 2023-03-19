@@ -7,8 +7,9 @@
  */
 
 require_once(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
-class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
+class PageMultiDatabaseTest extends TestCase
 {
     public function testPageIndex()
     {
@@ -70,7 +71,7 @@ class PageMultiDatabaseTest extends PHPUnit_Framework_TestCase
         ];
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         Base::clearDb();
     }

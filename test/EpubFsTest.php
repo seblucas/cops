@@ -8,15 +8,16 @@
 
 require(dirname(__FILE__) . "/../epubfs.php");
 require(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
 
-class EpubFsTest extends PHPUnit_Framework_TestCase
+class EpubFsTest extends TestCase
 {
     private static $book;
     private static $add;
 
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $idData = 20;
         self::$add = "data=$idData&";

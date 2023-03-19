@@ -6,10 +6,12 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once(dirname(__FILE__) . "/config_test.php");
 require_once(dirname(__FILE__) . "/../base.php");
+require_once(dirname(__FILE__) . "/config_test.php");
+//require_once(dirname(__FILE__) . "/../base.php");
+use PHPUnit\Framework\TestCase;
 
-class BaseTest extends PHPUnit_Framework_TestCase
+class BaseTest extends TestCase
 {
     public function testAddURLParameter()
     {
@@ -50,8 +52,8 @@ class BaseTest extends PHPUnit_Framework_TestCase
                   "getjson_url"           => "getJSON.php?" . addURLParameter(getQueryString(), "complete", 1)];
 
         $head = $tpl($data);
-        $this->assertContains("<head>", $head);
-        $this->assertContains("</head>", $head);
+        $this->assertStringContainsString("<head>", $head);
+        $this->assertStringContainsString("</head>", $head);
     }
 
     public function providerTemplate()

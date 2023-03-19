@@ -7,6 +7,7 @@
  */
 
 require_once(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
 /*
 Publishers:
@@ -21,9 +22,9 @@ define("TEST_THUMBNAIL", dirname(__FILE__) . "/thumbnail.jpg");
 define("COVER_WIDTH", 400);
 define("COVER_HEIGHT", 600);
 
-class BookTest extends PHPUnit_Framework_TestCase
+class BookTest extends TestCase
 {
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         $book = Book::getBookById(2);
         if (!is_dir($book->path)) {
@@ -35,7 +36,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         imagejpeg($im, $book->path . "/cover.jpg", 80);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $book = Book::getBookById(2);
         if (!file_exists($book->path . "/cover.jpg")) {
@@ -607,7 +608,7 @@ class BookTest extends PHPUnit_Framework_TestCase
         $_GET["search"] = null;
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         Base::clearDb();
     }

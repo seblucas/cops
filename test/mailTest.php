@@ -8,8 +8,9 @@
 
 require_once(dirname(__FILE__) . "/config_test.php");
 require_once(dirname(__FILE__) . "/../sendtomail.php");
+use PHPUnit\Framework\TestCase;
 
-class MailTest extends PHPUnit_Framework_TestCase
+class MailTest extends TestCase
 {
     public function testCheckConfigurationOk()
     {
