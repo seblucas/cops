@@ -17,9 +17,6 @@
         "bower-asset/jquery-cookie": "~1.4",
         "bower-asset/normalize.css": "~7.0",
         "twitter/typeahead.js": "~0.10.5",
-        "seblucas/dot-php": "~1.1.0",
-        "seblucas/php-epub-meta": "~1.0.0",
-        "seblucas/tbszip": "~2.16",
         "simonpioli/sortelements": "dev-master",
         "bower-asset/dot": "~1.0.1",
         "rsms/js-lru": "dev-v2"
@@ -33,21 +30,6 @@
         "classmap": ["lib/", "resources/"]
     },
     "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "seblucas/dot-php",
-                "version": "dev-master",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/seblucas/doT-php",
-                    "reference": "master"
-                },
-                "autoload": {
-                    "classmap": ["./"]
-                }
-            }
-        },
         {
             "type": "package",
             "package": {
