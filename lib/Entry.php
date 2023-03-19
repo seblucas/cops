@@ -18,7 +18,7 @@ class Entry
     public $className;
     private static $updated = null;
 
-    public static $icons = array(
+    public static $icons = [
         Author::ALL_AUTHORS_ID           => 'images/author.png',
         Serie::ALL_SERIES_ID             => 'images/serie.png',
         Book::ALL_RECENT_BOOKS_ID        => 'images/recent.png',
@@ -28,8 +28,8 @@ class Entry
         Rating::ALL_RATING_ID            => 'images/rating.png',
         "cops:books$"                    => 'images/allbook.png',
         "cops:books:letter"              => 'images/allbook.png',
-        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png'
-    );
+        Publisher::ALL_PUBLISHERS_ID     => 'images/publisher.png',
+    ];
 
     public function getUpdatedTime()
     {

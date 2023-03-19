@@ -4,57 +4,57 @@ require_once 'vendor/autoload.php';
 
 class Cops extends Sauce\Sausage\WebDriverTestCase
 {
-    public static $browsers = array(
+    public static $browsers = [
         // run FF15 on Windows 8 on Sauce
-        array(
+        [
             'browserName' => 'firefox',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'version' => '28',
                 'platform' => 'Windows 8.1',
-            )
-        ),
+            ],
+        ],
         // run IE11 on Windows 8 on Sauce
-        array(
+        [
             'browserName' => 'internet explorer',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'version' => '11',
                 'platform' => 'Windows 8.1',
-            )
-        ),
+            ],
+        ],
         // run Safari 7 on Maverick on Sauce
-        array(
+        [
             'browserName' => 'safari',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'version' => '7',
                 'platform' => 'OS X 10.9',
-            )
-        ),
+            ],
+        ],
         // run Mobile Safari on iOS
-        array(
+        [
             'browserName' => 'iphone',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'app' => 'safari',
                 'device' => 'iPhone 6',
                 'version' => '9.2',
                 'platform' => 'OS X 10.10',
-            )
-        ),
+            ],
+        ],
         // run Mobile Browser on Android
-        array(
+        [
             'browserName' => 'Android',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'version' => '5.1',
                 'platform' => 'Linux',
-            )
-        ),
+            ],
+        ],
         // run Chrome on Linux on Sauce
-        array(
+        [
             'browserName' => 'chrome',
-            'desiredCapabilities' => array(
+            'desiredCapabilities' => [
                 'version' => '33',
-                'platform' => 'Linux'
-          )
-        )
+                'platform' => 'Linux',
+          ],
+        ],
 
 
         // run Chrome locally
@@ -63,7 +63,7 @@ class Cops extends Sauce\Sausage\WebDriverTestCase
             //'local' => true,
             //'sessionStrategy' => 'shared'
         //)
-    );
+    ];
 
     public function setUp()
     {

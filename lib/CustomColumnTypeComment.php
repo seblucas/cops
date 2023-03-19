@@ -26,7 +26,7 @@ class CustomColumnTypeComment extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)

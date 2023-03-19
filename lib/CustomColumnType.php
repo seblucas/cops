@@ -25,10 +25,10 @@ abstract class CustomColumnType extends Base
     public const CUSTOM_TYPE_COMPOSITE = "composite";   // type 11 + 12
 
     /** @var array[integer]CustomColumnType  */
-    private static $customColumnCacheID = array();
+    private static $customColumnCacheID = [];
 
     /** @var array[string]CustomColumnType  */
-    private static $customColumnCacheLookup = array();
+    private static $customColumnCacheLookup = [];
 
     /** @var integer the id of this column */
     public $customId;
@@ -107,7 +107,7 @@ abstract class CustomColumnType extends Base
     public function getDatabaseDescription()
     {
         $result = $this->getDb()->prepare('SELECT display FROM custom_columns WHERE id = ?');
-        $result->execute(array($this->customId));
+        $result->execute([$this->customId]);
         if ($post = $result->fetchObject()) {
             $json = json_decode($post->display);
             return (isset($json->description) && !empty($json->description)) ? $json->description : null;
@@ -127,7 +127,7 @@ abstract class CustomColumnType extends Base
         $pid = $this->getAllCustomsId();
         $pcontent = $this->getDescription();
         $pcontentType = $this->datatype;
-        $plinkArray = array(new LinkNavigation($this->getUriAllCustoms()));
+        $plinkArray = [new LinkNavigation($this->getUriAllCustoms())];
         $pclass = "";
         $pcount = $this->getDistinctValueCount();
 
@@ -164,7 +164,7 @@ abstract class CustomColumnType extends Base
     private static function getDatatypeByCustomID($customId)
     {
         $result = parent::getDb()->prepare('SELECT datatype FROM custom_columns WHERE id = ?');
-        $result->execute(array($customId));
+        $result->execute([$customId]);
         if ($post = $result->fetchObject()) {
             return $post->datatype;
         }
@@ -227,7 +227,7 @@ abstract class CustomColumnType extends Base
         }
 
         $result = parent::getDb()->prepare('SELECT id FROM custom_columns WHERE label = ?');
-        $result->execute(array($lookup));
+        $result->execute([$lookup]);
         if ($post = $result->fetchObject()) {
             return self::$customColumnCacheLookup[$lookup] = self::createByCustomID($post->id);
         }
@@ -259,7 +259,7 @@ abstract class CustomColumnType extends Base
     protected static function getTitleByCustomID($customId)
     {
         $result = parent::getDb()->prepare('SELECT name FROM custom_columns WHERE id = ?');
-        $result->execute(array($customId));
+        $result->execute([$customId]);
         if ($post = $result->fetchObject()) {
             return $post->name;
         }

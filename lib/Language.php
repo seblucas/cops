@@ -47,7 +47,7 @@ class Language extends Base
     public static function getLanguageById($languageId)
     {
         $result = parent::getDb()->prepare('select id, lang_code  from languages where id = ?');
-        $result->execute(array($languageId));
+        $result->execute([$languageId]);
         if ($post = $result->fetchObject()) {
             return new Language($post->id, Language::getLanguageString($post->lang_code));
         }
@@ -63,7 +63,7 @@ from languages, books_languages_link
 where languages.id = books_languages_link.lang_code
 group by languages.id, books_languages_link.lang_code
 order by languages.lang_code');
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $language = new Language($post->id, $post->lang_code);
             array_push($entryArray, new Entry(
@@ -71,7 +71,7 @@ order by languages.lang_code');
                 $language->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                array( new LinkNavigation($language->getUri())),
+                [ new LinkNavigation($language->getUri())],
                 "",
                 $post->count
             ));

@@ -18,15 +18,15 @@ class JSONRenderer
     {
         global $config;
         $i = 0;
-        $preferedData = array();
+        $preferedData = [];
         foreach ($config['cops_prefered_format'] as $format) {
             if ($i == 2) {
                 break;
             }
             if ($data = $book->getDataFormat($format)) {
                 $i++;
-                array_push($preferedData, array("url" => $data->getHtmlLink(),
-                  "viewUrl" => $data->getViewHtmlLink(), "name" => $format));
+                array_push($preferedData, ["url" => $data->getHtmlLink(),
+                  "viewUrl" => $data->getViewHtmlLink(), "name" => $format]);
             }
         }
 
@@ -53,7 +53,7 @@ class JSONRenderer
         }
         $cc = $book->getCustomColumnValues($config['cops_calibre_custom_column_list'], true);
 
-        return array("id" => $book->id,
+        return ["id" => $book->id,
                       "hasCover" => $book->hasCover,
                       "preferedData" => $preferedData,
                       "rating" => $book->getRating(),
@@ -67,7 +67,7 @@ class JSONRenderer
                       "seriesIndex" => $book->seriesIndex,
                       "seriesCompleteName" => $scn,
                       "seriesurl" => $su,
-                      "customcolumns_list" => $cc);
+                      "customcolumns_list" => $cc];
     }
 
     /**
@@ -83,15 +83,15 @@ class JSONRenderer
         $out ["coverurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_IMAGE_TYPE, "cover.jpg", null)->hrefXhtml();
         $out ["thumbnailurl"] = Data::getLink($book, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null, null, $config['cops_html_thumbnail_height'] * 2)->hrefXhtml();
         $out ["content"] = $book->getComment(false);
-        $out ["datas"] = array();
+        $out ["datas"] = [];
         $dataKindle = $book->GetMostInterestingDataToSendToKindle();
         foreach ($book->getDatas() as $data) {
-            $tab = array("id" => $data->id,
+            $tab = ["id" => $data->id,
                 "format" => $data->format,
                 "url" => $data->getHtmlLink(),
                 "viewUrl" => $data->getViewHtmlLink(),
                 "mail" => 0,
-                "readerUrl" => "");
+                "readerUrl" => ""];
             if (!empty($config['cops_mail_configuration']) && !is_null($dataKindle) && $data->id == $dataKindle->id) {
                 $tab ["mail"] = 1;
             }
@@ -100,15 +100,15 @@ class JSONRenderer
             }
             array_push($out ["datas"], $tab);
         }
-        $out ["authors"] = array();
+        $out ["authors"] = [];
         foreach ($book->getAuthors() as $author) {
             $link = new LinkNavigation($author->getUri());
-            array_push($out ["authors"], array("name" => $author->name, "url" => $link->hrefXhtml()));
+            array_push($out ["authors"], ["name" => $author->name, "url" => $link->hrefXhtml()]);
         }
-        $out ["tags"] = array();
+        $out ["tags"] = [];
         foreach ($book->getTags() as $tag) {
             $link = new LinkNavigation($tag->getUri());
-            array_push($out ["tags"], array("name" => $tag->name, "url" => $link->hrefXhtml()));
+            array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml()]);
         }
         $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview'], true);
 
@@ -118,24 +118,24 @@ class JSONRenderer
     public static function getContentArray($entry)
     {
         if ($entry instanceof EntryBook) {
-            $out = array( "title" => $entry->title);
+            $out = [ "title" => $entry->title];
             $out ["book"] = self::getBookContentArray($entry->book);
             return $out;
         }
-        return array( "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement );
+        return [ "title" => $entry->title, "content" => $entry->content, "navlink" => $entry->getNavLink(), "number" => $entry->numberOfElement ];
     }
 
     public static function getContentArrayTypeahead($page)
     {
-        $out = array();
+        $out = [];
         foreach ($page->entryArray as $entry) {
             if ($entry instanceof EntryBook) {
-                array_push($out, array("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()));
+                array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->book->getDetailUrl()]);
             } else {
                 if (empty($entry->className) xor Base::noDatabaseSelected()) {
-                    array_push($out, array("class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()));
+                    array_push($out, ["class" => $entry->className, "title" => $entry->title, "navlink" => $entry->getNavLink()]);
                 } else {
-                    array_push($out, array("class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()));
+                    array_push($out, ["class" => $entry->className, "title" => $entry->content, "navlink" => $entry->getNavLink()]);
                 }
             }
         }
@@ -147,7 +147,7 @@ class JSONRenderer
         global $config;
         $out = $in;
 
-        $out ["c"] = array("version" => VERSION, "i18n" => array(
+        $out ["c"] = ["version" => VERSION, "i18n" => [
                            "coverAlt" => localize("i18n.coversection"),
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
@@ -169,17 +169,17 @@ class JSONRenderer
                            "filterClearAll" => localize("filter.clearall"),
                            "sortorderAsc" => localize("search.sortorder.asc"),
                            "sortorderDesc" => localize("search.sortorder.desc"),
-                           "customizeEmail" => localize("customize.email")),
-                       "url" => array(
+                           "customizeEmail" => localize("customize.email")],
+                       "url" => [
                            "detailUrl" => "index.php?page=13&id={0}&db={1}",
                            "coverUrl" => "fetch.php?id={0}&db={1}",
-                           "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"),
-                       "config" => array(
+                           "thumbnailUrl" => "fetch.php?height=" . $config['cops_html_thumbnail_height'] . "&id={0}&db={1}"],
+                       "config" => [
                            "use_fancyapps" => $config ["cops_use_fancyapps"],
                            "max_item_per_page" => $config['cops_max_item_per_page'],
                            "kindleHack"        => "",
                            "server_side_rendering" => useServerSideRendering(),
-                           "html_tag_filter" => $config['cops_html_tag_filter']));
+                           "html_tag_filter" => $config['cops_html_tag_filter']]];
         if ($config['cops_thumbnail_handling'] == "1") {
             $out ["c"]["url"]["thumbnailUrl"] = $out ["c"]["url"]["coverUrl"];
         } elseif (!empty($config['cops_thumbnail_handling'])) {
@@ -208,8 +208,8 @@ class JSONRenderer
             return self::getContentArrayTypeahead($currentPage);
         }
 
-        $out = array( "title" => $currentPage->title);
-        $entries = array();
+        $out = [ "title" => $currentPage->title];
+        $entries = [];
         foreach ($currentPage->entryArray as $entry) {
             array_push($entries, self::getContentArray($entry));
         }

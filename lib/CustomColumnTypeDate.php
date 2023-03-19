@@ -27,7 +27,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $date = new DateTime($id);
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
-        return array($query, array($date->format("Y-m-d")));
+        return [$query, [$date->format("Y-m-d")]];
     }
 
     public function getCustom($id)
@@ -43,13 +43,13 @@ class CustomColumnTypeDate extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName());
         $result = $this->getDb()->query($query);
 
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($id))];
 
             $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 

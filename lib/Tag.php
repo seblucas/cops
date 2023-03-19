@@ -40,7 +40,7 @@ class Tag extends Base
     public static function getTagById($tagId)
     {
         $result = parent::getDb()->prepare('select id, name  from tags where id = ?');
-        $result->execute(array($tagId));
+        $result->execute([$tagId]);
         if ($post = $result->fetchObject()) {
             return new Tag($post);
         }
@@ -49,15 +49,15 @@ class Tag extends Base
 
     public static function getAllTags()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_TAGS, self::TAG_COLUMNS, array(), "Tag");
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_TAGS, self::TAG_COLUMNS, [], "Tag");
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)
     {
         $columns  = "tags.id as id, tags.name as name, (select count(*) from books_tags_link where tags.id = tag) as count";
         $sql = 'select {0} from tags where upper (tags.name) like ? {1} order by tags.name';
-        list($totalNumber, $result) = parent::executeQuery($sql, $columns, "", array('%' . $query . '%'), $n, $database, $numberPerPage);
-        $entryArray = array();
+        [$totalNumber, $result] = parent::executeQuery($sql, $columns, "", ['%' . $query . '%'], $n, $database, $numberPerPage);
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $tag = new Tag($post);
             array_push($entryArray, new Entry(
@@ -65,9 +65,9 @@ class Tag extends Base
                 $tag->getEntryId(),
                 str_format(localize("bookword", $post->count), $post->count),
                 "text",
-                array( new LinkNavigation($tag->getUri()))
+                [ new LinkNavigation($tag->getUri())]
             ));
         }
-        return array($entryArray, $totalNumber);
+        return [$entryArray, $totalNumber];
     }
 }

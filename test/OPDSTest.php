@@ -109,23 +109,23 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
     public function providerPage()
     {
-        return array(
-            array(Base::PAGE_OPENSEARCH, "car"),
-            array(Base::PAGE_ALL_AUTHORS, null),
-            array(Base::PAGE_ALL_SERIES, null),
-            array(Base::PAGE_ALL_TAGS, null),
-            array(Base::PAGE_ALL_PUBLISHERS, null),
-            array(Base::PAGE_ALL_LANGUAGES, null),
-            array(Base::PAGE_ALL_RECENT_BOOKS, null),
-            array(Base::PAGE_ALL_BOOKS, null)
-        );
+        return [
+            [Base::PAGE_OPENSEARCH, "car"],
+            [Base::PAGE_ALL_AUTHORS, null],
+            [Base::PAGE_ALL_SERIES, null],
+            [Base::PAGE_ALL_TAGS, null],
+            [Base::PAGE_ALL_PUBLISHERS, null],
+            [Base::PAGE_ALL_LANGUAGES, null],
+            [Base::PAGE_ALL_RECENT_BOOKS, null],
+            [Base::PAGE_ALL_BOOKS, null],
+        ];
     }
 
     public function testPageIndexMultipleDatabase()
     {
         global $config;
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         $page = Base::PAGE_INDEX;
         $query = null;
         $qid = "1";
@@ -156,8 +156,8 @@ class OpdsTest extends PHPUnit_Framework_TestCase
     public function testPageAuthorMultipleDatabase()
     {
         global $config;
-        $config['calibre_directory'] = array("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
         $page = Base::PAGE_AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
@@ -220,7 +220,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
         $_GET["tag"] = "Short Stories";
 
-        $config['cops_books_filter'] = array("Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories");
+        $config['cops_books_filter'] = ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"];
 
         $currentPage = Page::getPage($page, $qid, $query, $n);
         $currentPage->InitializeContent();
@@ -230,7 +230,7 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
-        $config['cops_books_filter'] = array();
+        $config['cops_books_filter'] = [];
     }
 
     public function testPageAuthorsDetail_WithoutAnyId()

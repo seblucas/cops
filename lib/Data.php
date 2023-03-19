@@ -15,7 +15,7 @@ class Data extends Base
     public $extension;
     public $book;
 
-    public static $mimetypes = array(
+    public static $mimetypes = [
         'aac'   => 'audio/aac',
         'azw'   => 'application/x-mobipocket-ebook',
         'azw1'  => 'application/x-topaz-ebook',
@@ -52,8 +52,8 @@ class Data extends Base
         'wmf'   => 'image/wmf',
         'xhtml' => 'application/xhtml+xml',
         'xpgt'  => 'application/adobe-page-template+xml',
-        'zip'   => 'application/zip'
-    );
+        'zip'   => 'application/zip',
+    ];
 
     public function __construct($post, $book = null)
     {
@@ -111,8 +111,8 @@ class Data extends Base
     {
         $str = $this->getUpdatedFilename() . ".kepub.epub";
         return str_replace(
-            array(':', '#', '&'),
-            array('-', '-', ' '),
+            [':', '#', '&'],
+            ['-', '-', ' '],
             $str
         );
     }
@@ -170,10 +170,10 @@ class Data extends Base
 
     public static function getDataByBook($book)
     {
-        $out = array();
+        $out = [];
         $result = parent::getDb()->prepare('select id, format, name
                                              from data where book = ?');
-        $result->execute(array($book->id));
+        $result->execute([$book->id]);
 
         while ($post = $result->fetchObject()) {
             array_push($out, new Data($post, $book));

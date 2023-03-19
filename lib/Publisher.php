@@ -44,7 +44,7 @@ class Publisher extends Base
         $result = parent::getDb()->prepare('select publishers.id as id, name
 from books_publishers_link, publishers
 where publishers.id = publisher and book = ?');
-        $result->execute(array($bookId));
+        $result->execute([$bookId]);
         if ($post = $result->fetchObject()) {
             return new Publisher($post);
         }
@@ -55,7 +55,7 @@ where publishers.id = publisher and book = ?');
     {
         $result = parent::getDb()->prepare('select id, name
 from publishers where id = ?');
-        $result->execute(array($publisherId));
+        $result->execute([$publisherId]);
         if ($post = $result->fetchObject()) {
             return new Publisher($post);
         }
@@ -64,11 +64,11 @@ from publishers where id = ?');
 
     public static function getAllPublishers()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, array(), "Publisher");
+        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_PUBLISHERS, self::PUBLISHERS_COLUMNS, [], "Publisher");
     }
 
     public static function getAllPublishersByQuery($query)
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, array('%' . $query . '%'), "Publisher");
+        return Base::getEntryArrayWithBookNumber(self::SQL_PUBLISHERS_FOR_SEARCH, self::PUBLISHERS_COLUMNS, ['%' . $query . '%'], "Publisher");
     }
 }

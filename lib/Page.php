@@ -22,7 +22,7 @@ class Page
     public $totalNumber = -1;
 
     /* @var Entry[] */
-    public $entryArray = array();
+    public $entryArray = [];
 
     public static function getPage($pageId, $id, $query, $n)
     {
@@ -105,7 +105,7 @@ class Page
                     "cops:{$i}:catalog",
                     str_format(localize("bookword", $nBooks), $nBooks),
                     "text",
-                    array( new LinkNavigation("?" . DB . "={$i}")),
+                    [ new LinkNavigation("?" . DB . "={$i}")],
                     "",
                     $nBooks
                 ));
