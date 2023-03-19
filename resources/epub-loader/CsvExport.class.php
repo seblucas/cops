@@ -10,68 +10,64 @@ require_once(realpath(dirname(__FILE__)) . '/BaseExport.class.php');
 
 class CsvExport extends BaseExport
 {
-	private $mLines = null;
+    private $mLines = null;
 
-	const CsvSeparator = "\t";
+    public const CsvSeparator = "\t";
 
-	/**
-	 * Open an export file (or create if file does not exist)
-	 *
-	 * @param string Export file name
-	 * @param boolean Force file creation
-	 */
-	public function __construct($inFileName, $inCreate = false)
-	{
-		$this->mSearch = array("\r", "\n", self::CsvSeparator);
-		$this->mReplace = array('', '<br />', '');
+    /**
+     * Open an export file (or create if file does not exist)
+     *
+     * @param string Export file name
+     * @param boolean Force file creation
+     */
+    public function __construct($inFileName, $inCreate = false)
+    {
+        $this->mSearch = array("\r", "\n", self::CsvSeparator);
+        $this->mReplace = array('', '<br />', '');
 
-		// Init container
-		$this->mLines = array();
+        // Init container
+        $this->mLines = array();
 
-		parent::__construct($inFileName, $inCreate);
-	}
+        parent::__construct($inFileName, $inCreate);
+    }
 
-	/**
-	 * Add the current properties into the export content
-	 * and reset the properties
-	 */
-	public function AddContent()
-	{
-		$text = '';
-		foreach ($this->mProperties as $key => $value) {
-			$info = '';
-			if (is_array($value)) {
-				foreach ($value as $value1) {
-					// Escape quotes
-					if (strpos($value1, '\'') !== false) {
-						$value1 = '\'' . str_replace('\'', '\'\'', $value1) . '\'';
-					}
-					$text .= $value1 . self::CsvSeparator;
-				}
-				continue;
-			}
-			else {
-				// Escape quotes
-				if (strpos($value, '\'') !== false) {
-					$value = '\'' . str_replace('\'', '\'\'', $value) . '\'';
-				}
-				$info = $value;
-			}
-			$text .= $info . self::CsvSeparator;
-		}
+    /**
+     * Add the current properties into the export content
+     * and reset the properties
+     */
+    public function AddContent()
+    {
+        $text = '';
+        foreach ($this->mProperties as $key => $value) {
+            $info = '';
+            if (is_array($value)) {
+                foreach ($value as $value1) {
+                    // Escape quotes
+                    if (strpos($value1, '\'') !== false) {
+                        $value1 = '\'' . str_replace('\'', '\'\'', $value1) . '\'';
+                    }
+                    $text .= $value1 . self::CsvSeparator;
+                }
+                continue;
+            } else {
+                // Escape quotes
+                if (strpos($value, '\'') !== false) {
+                    $value = '\'' . str_replace('\'', '\'\'', $value) . '\'';
+                }
+                $info = $value;
+            }
+            $text .= $info . self::CsvSeparator;
+        }
 
-		$this->mLines[] = $text;
+        $this->mLines[] = $text;
 
-		$this->ClearProperties();
-	}
+        $this->ClearProperties();
+    }
 
-	protected function GetContent()
-	{
-		$text = implode("\n", $this->mLines) . "\n";
+    protected function GetContent()
+    {
+        $text = implode("\n", $this->mLines) . "\n";
 
-		return $text;
-	}
-
+        return $text;
+    }
 }
-
-?>

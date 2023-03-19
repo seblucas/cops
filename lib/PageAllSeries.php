@@ -8,7 +8,7 @@
 
 class PageAllSeries extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
         $this->title = localize("series.title");
         $this->entryArray = Serie::getAllSeries();

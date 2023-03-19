@@ -16,7 +16,7 @@ $percentage = min(100, max(0, (int) $argv[2]));
 
 if (!file_exists($inputFile)) {
     echo 'Invalid input file provided';
-    exit (0);
+    exit(0);
 }
 
 if (!$percentage) {

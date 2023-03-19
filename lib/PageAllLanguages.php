@@ -8,7 +8,7 @@
 
 class PageAllLanguages extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
         $this->title = localize("languages.title");
         $this->entryArray = Language::getAllLanguages();

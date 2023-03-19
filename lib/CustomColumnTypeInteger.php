@@ -55,7 +55,9 @@ class CustomColumnTypeInteger extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -68,7 +70,7 @@ class CustomColumnTypeInteger extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.int.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.int.unknown"), $this);
     }
 
     public function isSearchable()

@@ -9,7 +9,7 @@
 // Include config file
 $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'epub-loader-config.php';
 if (!file_exists($fileName)) {
-	die ('Missing configuration file: ' . $fileName);
+    die('Missing configuration file: ' . $fileName);
 }
 require_once($fileName);
 
@@ -20,8 +20,6 @@ ini_set('include_path', $includePath . PATH_SEPARATOR . $gConfig['cops_directory
 // Include COPS feed
 $fileName = $gConfig['cops_directory'] . '/feed.php';
 if (!file_exists($fileName)) {
-	die ('Incorrect include file: ' . $fileName);
+    die('Incorrect include file: ' . $fileName);
 }
 require_once($fileName);
-
-?>

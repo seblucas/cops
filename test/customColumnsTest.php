@@ -61,7 +61,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("?page=14&custom=16", $coltype->getUriAllCustoms());
         $this->assertEquals("cops:custom:16", $coltype->getAllCustomsId());
         $this->assertEquals("custom_01b", $coltype->getTitle());
-        $this->assertEquals(NULL, $coltype->getDatabaseDescription());
+        $this->assertEquals(null, $coltype->getDatabaseDescription());
         $this->assertEquals("Custom column 'custom_01b'", $coltype->getDescription());
         $this->assertEquals(true, $coltype->isSearchable());
 
@@ -351,7 +351,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_11"));
 
-        $this->assertEquals(NULL, $coltype);
+        $this->assertEquals(null, $coltype);
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -370,7 +370,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals($coltype, CustomColumnType::createByLookup("custom_12"));
 
-        $this->assertEquals(NULL, $coltype);
+        $this->assertEquals(null, $coltype);
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -409,7 +409,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
 
         $coltype = CustomColumnType::createByLookup("__ERR__");
 
-        $this->assertEquals(NULL, $coltype);
+        $this->assertEquals(null, $coltype);
 
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         $config['cops_calibre_custom_column'] = array();
@@ -424,7 +424,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(15, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -451,7 +451,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_01");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -475,7 +475,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_02");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -499,7 +499,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_03");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(6, $currentPage->entryArray); // Authors, Series, Publishers, Languages, All, Recent
@@ -517,7 +517,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_04");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -541,7 +541,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_05");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -565,7 +565,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_06");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -589,7 +589,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_07");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -613,7 +613,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_08");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -637,7 +637,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_09");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -661,7 +661,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_10");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_INDEX, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_INDEX, null, null, "1");
         $currentPage->InitializeContent();
 
         $this->assertCount(7, $currentPage->entryArray); // Authors, Series, Publishers, Languages, custom, All, Recent
@@ -684,7 +684,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "8";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -695,7 +695,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:8:2", $currentPage->entryArray[2]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -707,7 +707,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "6";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -718,7 +718,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:6:3", $currentPage->entryArray[2]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -730,7 +730,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "4";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -741,7 +741,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:4:6", $currentPage->entryArray[2]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -753,7 +753,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "5";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -765,7 +765,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:5:6", $currentPage->entryArray[3]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -777,7 +777,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "12";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -790,7 +790,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:12:2016-04-24", $currentPage->entryArray[4]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -802,7 +802,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "14";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -816,7 +816,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:14:100000.0", $currentPage->entryArray[5]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -828,7 +828,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "10";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
@@ -836,11 +836,11 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertCount(4, $currentPage->entryArray);
         $this->assertEquals("cops:custom:10:-2", $currentPage->entryArray[0]->id);
         $this->assertEquals("cops:custom:10:-1", $currentPage->entryArray[1]->id);
-        $this->assertEquals("cops:custom:10:1",  $currentPage->entryArray[2]->id);
-        $this->assertEquals("cops:custom:10:2",  $currentPage->entryArray[3]->id);
+        $this->assertEquals("cops:custom:10:1", $currentPage->entryArray[2]->id);
+        $this->assertEquals("cops:custom:10:2", $currentPage->entryArray[3]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -852,21 +852,21 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "9";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
         $this->assertEquals("custom_09", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
-        $this->assertEquals("cops:custom:9:0",  $currentPage->entryArray[0]->id);
-        $this->assertEquals("cops:custom:9:2",  $currentPage->entryArray[1]->id);
-        $this->assertEquals("cops:custom:9:4",  $currentPage->entryArray[2]->id);
-        $this->assertEquals("cops:custom:9:6",  $currentPage->entryArray[3]->id);
-        $this->assertEquals("cops:custom:9:8",  $currentPage->entryArray[4]->id);
+        $this->assertEquals("cops:custom:9:0", $currentPage->entryArray[0]->id);
+        $this->assertEquals("cops:custom:9:2", $currentPage->entryArray[1]->id);
+        $this->assertEquals("cops:custom:9:4", $currentPage->entryArray[2]->id);
+        $this->assertEquals("cops:custom:9:6", $currentPage->entryArray[3]->id);
+        $this->assertEquals("cops:custom:9:8", $currentPage->entryArray[4]->id);
         $this->assertEquals("cops:custom:9:10", $currentPage->entryArray[5]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -878,18 +878,18 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithCustomColumns/";
         $_GET["custom"] = "11";
         Base::clearDb();
-        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, NULL, NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_ALL_CUSTOMS, null, null, "1");
         $currentPage->InitializeContent();
 
 
         $this->assertEquals("custom_10", $currentPage->title);
         $this->assertCount(3, $currentPage->entryArray);
         $this->assertEquals("cops:custom:11:-1", $currentPage->entryArray[0]->id);
-        $this->assertEquals("cops:custom:11:0",  $currentPage->entryArray[1]->id);
-        $this->assertEquals("cops:custom:11:1",  $currentPage->entryArray[2]->id);
+        $this->assertEquals("cops:custom:11:0", $currentPage->entryArray[1]->id);
+        $this->assertEquals("cops:custom:11:1", $currentPage->entryArray[2]->id);
 
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
     }
@@ -903,7 +903,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $config['cops_calibre_custom_column'] = array("custom_01", "custom_02", "custom_03", "custom_04", "custom_05", "custom_06", "custom_07", "custom_08", "custom_09", "custom_10", "custom_11");
         Base::clearDb();
 
-        $currentPage = Page::getPage(Base::PAGE_CUSTOM_DETAIL, "0", NULL, "1");
+        $currentPage = Page::getPage(Base::PAGE_CUSTOM_DETAIL, "0", null, "1");
         $currentPage->InitializeContent();
 
         /* @var EntryBook[] $entries */
@@ -926,7 +926,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("cops:custom:9:2", $customcolumnValues[8]->getEntryId());
         $this->assertEquals("cops:custom:11:0", $customcolumnValues[9]->getEntryId());
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['cops_calibre_custom_column'] = array();
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -982,7 +982,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $this->assertEquals("No", $custom[9]['htmlvalue']);
 
         $_SERVER["HTTP_USER_AGENT"] = "";
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['cops_calibre_custom_column'] = array();
         $config['cops_calibre_custom_column_list'] = array();
         $config['cops_calibre_custom_column_preview'] = array();
@@ -1039,7 +1039,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         list($query, $params) = CustomColumnType::createByLookup("custom_10")->getCustom("1")->getQuery();
         Book::getEntryArray($query, $params, 1);
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['cops_calibre_custom_column'] = array();
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();
@@ -1094,7 +1094,7 @@ class CustomColumnTest extends PHPUnit_Framework_TestCase
         $custom = CustomColumnType::createByLookup("custom_10")->getCustom("1");
         $this->assertEquals($custom->customColumnType->getQuery("1"), $custom->getQuery());
 
-        $_GET["custom"] = NULL;
+        $_GET["custom"] = null;
         $config['cops_calibre_custom_column'] = array();
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
         Base::clearDb();

@@ -41,13 +41,15 @@ class CustomColumnTypeComment extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        return NULL;
+        return null;
     }
 
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -60,7 +62,7 @@ class CustomColumnTypeComment extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.float.unknown"), $this);
     }
 
     public function isSearchable()

@@ -8,8 +8,8 @@
 
 class PageAbout extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $this->title = localize ("about.title");
+        $this->title = localize("about.title");
     }
 }

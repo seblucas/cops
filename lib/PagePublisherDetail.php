@@ -8,11 +8,11 @@
 
 class PagePublisherDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $publisher = Publisher::getPublisherById ($this->idGet);
+        $publisher = Publisher::getPublisherById($this->idGet);
         $this->title = $publisher->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher ($this->idGet, $this->n);
-        $this->idPage = $publisher->getEntryId ();
+        list($this->entryArray, $this->totalNumber) = Book::getBooksByPublisher($this->idGet, $this->n);
+        $this->idPage = $publisher->getEntryId();
     }
 }

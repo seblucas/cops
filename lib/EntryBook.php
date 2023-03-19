@@ -19,28 +19,33 @@ class EntryBook extends Entry
      * @param array $plinkArray
      * @param Book $pbook
      */
-    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook) {
-        parent::__construct ($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
+    public function __construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray, $pbook)
+    {
+        parent::__construct($ptitle, $pid, $pcontent, $pcontentType, $plinkArray);
         $this->book = $pbook;
         $this->localUpdated = $pbook->timestamp;
     }
 
-    public function getCoverThumbnail () {
+    public function getCoverThumbnail()
+    {
         foreach ($this->linkArray as $link) {
             /* @var $link LinkNavigation */
 
-            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE)
-                return $link->hrefXhtml ();
+            if ($link->rel == Link::OPDS_THUMBNAIL_TYPE) {
+                return $link->hrefXhtml();
+            }
         }
         return null;
     }
 
-    public function getCover () {
+    public function getCover()
+    {
         foreach ($this->linkArray as $link) {
             /* @var $link LinkNavigation */
 
-            if ($link->rel == Link::OPDS_IMAGE_TYPE)
-                return $link->hrefXhtml ();
+            if ($link->rel == Link::OPDS_IMAGE_TYPE) {
+                return $link->hrefXhtml();
+            }
         }
         return null;
     }
