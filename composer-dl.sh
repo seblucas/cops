@@ -2,10 +2,10 @@
 # https://getcomposer.org/
 if [ -x `which wget` ]; then
     echo "wget found."
-    wget -q https://getcomposer.org/installer -O - | php
+    wget -q https://getcomposer.org/installer -O - | php -- --version=1.10.26
 elif [ -x `which curl` ]; then
     echo "curl found."
-    curl -sS https://getcomposer.org/installer | php
+    curl -sS https://getcomposer.org/installer | php -- --version=1.10.26
 else
     echo "Please install wget or curl to download Composer."
 fi
