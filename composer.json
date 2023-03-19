@@ -1,7 +1,6 @@
 {
     "name": "seblucas/cops",
     "description": "Calibre OPDS (and HTML) PHP Server : web-based light alternative to Calibre content server / Calibre2OPDS to serve ebooks (epub, mobi, pdf, ...)",
-    "config": { "platform": { "php": "5.6" } },
     "require": {
         "ext-gd": "*",
         "ext-xml": "*",
@@ -22,7 +21,7 @@
         "rsms/js-lru": "dev-v2"
     },
     "require-dev": {
-        "phpunit/phpunit": "5.4.* || 4.8.*",
+        "phpunit/phpunit": "9.5.*",
         "sauce/sausage": ">=0.12.0",
         "phing/phing": "2.*"
     },

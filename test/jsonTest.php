@@ -7,8 +7,9 @@
  */
 
 require_once(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
-class JsonTest extends PHPUnit_Framework_TestCase
+class JsonTest extends TestCase
 {
     public function testCompleteArray()
     {

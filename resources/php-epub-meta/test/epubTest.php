@@ -1,10 +1,11 @@
 <?php
+use PHPUnit\Framework\TestCase;
 
-class EPubTest extends PHPUnit_Framework_TestCase
+class EPubTest extends TestCase
 {
     protected $epub;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // sometime I might have accidentally broken the test file
         if (filesize(realpath(dirname(__FILE__)) . '/test.epub') != 768780) {
@@ -19,7 +20,7 @@ class EPubTest extends PHPUnit_Framework_TestCase
         $this->epub = new EPub(realpath(dirname(__FILE__)) . '/test.copy.epub');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         unlink(realpath(dirname(__FILE__)) . '/test.copy.epub');
     }

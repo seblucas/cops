@@ -7,6 +7,7 @@
  */
 
 require_once(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
 define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
 define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
@@ -14,9 +15,9 @@ define("JING_JAR", dirname(__FILE__) . "/jing.jar");
 define("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
 define("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
-class OpdsTest extends PHPUnit_Framework_TestCase
+class OpdsTest extends TestCase
 {
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         if (!file_exists(TEST_FEED)) {
             return;
