@@ -11,6 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class PageTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
+    }
+
     public function testPageIndex()
     {
         global $config;
@@ -72,6 +79,7 @@ class PageTest extends TestCase
         $this->assertEquals("Recent additions", $currentPage->entryArray [2]->title);
         $this->assertEquals("50 most recent books", $currentPage->entryArray [2]->content);
         $this->assertFalse($currentPage->ContainsBook());
+        $config ['cops_ignored_categories'] = [];
     }
 
     public function testPageIndexWithCustomColumn_Type1()
@@ -357,6 +365,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getPrevLink());
 
+        unset($_SERVER['QUERY_STRING']);
         $config['cops_max_item_per_page'] = -1;
     }
 
@@ -383,6 +392,7 @@ class PageTest extends TestCase
         $this->assertTrue($currentPage->IsPaginated());
         $this->assertNull($currentPage->getNextLink());
 
+        unset($_SERVER['QUERY_STRING']);
         // No pagination
         $config['cops_max_item_per_page'] = -1;
     }
@@ -406,6 +416,8 @@ class PageTest extends TestCase
         $this->assertCount(8, $currentPage->entryArray);
         $this->assertTrue($currentPage->ContainsBook());
         $this->assertFalse($currentPage->IsPaginated());
+
+        unset($_SERVER['QUERY_STRING']);
     }
 
     public function testPageAllBooks_WithFullName()
@@ -845,6 +857,8 @@ class PageTest extends TestCase
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->ContainsBook());
+
+        $_GET ["scope"] = null;
     }
 
     public function testAuthorSearch_BySort()
@@ -863,6 +877,8 @@ class PageTest extends TestCase
         $this->assertCount(1, $currentPage->entryArray);
         $this->assertEquals("Carroll, Lewis", $currentPage->entryArray [0]->title);
         $this->assertFalse($currentPage->ContainsBook());
+
+        $_GET ["scope"] = null;
     }
 
     public function testPageSearchScopeAuthors()

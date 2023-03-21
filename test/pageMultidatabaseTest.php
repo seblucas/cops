@@ -16,6 +16,7 @@ class PageMultiDatabaseTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_INDEX;
         $query = null;
         $qid = null;
@@ -43,6 +44,7 @@ class PageMultiDatabaseTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_OPENSEARCH_QUERY;
         $query = "art";
         $qid = null;

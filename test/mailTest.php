@@ -38,6 +38,7 @@ class MailTest extends TestCase
     public function testCheckConfigurationSmtpEmpty()
     {
         global $config;
+        require(dirname(__FILE__) . "/config_test.php");
         $config['cops_mail_configuration']["smtp.host"] = "";
 
         $this->assertStringStartsWith("NOK", checkConfiguration());
@@ -46,6 +47,7 @@ class MailTest extends TestCase
     public function testCheckConfigurationEmailEmpty()
     {
         global $config;
+        require(dirname(__FILE__) . "/config_test.php");
         $config['cops_mail_configuration']["address.from"] = "";
 
         $this->assertStringStartsWith("NOK", checkConfiguration());
@@ -54,6 +56,7 @@ class MailTest extends TestCase
     public function testCheckConfigurationEmailNotValid()
     {
         global $config;
+        require(dirname(__FILE__) . "/config_test.php");
         $config['cops_mail_configuration']["address.from"] = "a";
 
         $this->markTestIncomplete();
