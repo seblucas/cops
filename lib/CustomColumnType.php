@@ -273,7 +273,7 @@ abstract class CustomColumnType extends Base
      *  - second an array of all PreparedStatement parameters
      *
      * @param string|integer $id the id of the searched value
-     * @return array
+     * @return array|null
      */
     abstract public function getQuery($id);
 
@@ -281,14 +281,14 @@ abstract class CustomColumnType extends Base
      * Get a CustomColumn for a specified (by ID) value
      *
      * @param string|integer $id the id of the searched value
-     * @return CustomColumn
+     * @return CustomColumn|null
      */
     abstract public function getCustom($id);
 
     /**
      * Return an entry array for all possible (in the DB used) values of this column by querying the database
      *
-     * @return Entry[]
+     * @return Entry[]|null
      */
     abstract protected function getAllCustomValuesFromDatabase();
 

@@ -1,0 +1,66 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: fetch.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with CustomColumn will always evaluate to false\\.$#"
+			count: 1
+			path: lib/Book.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with Serie will always evaluate to false\\.$#"
+			count: 3
+			path: lib/Book.php
+
+		-
+			message: "#^Parameter \\#1 \\$string of function str_pad expects string, int\\<103, max\\> given\\.$#"
+			count: 1
+			path: lib/Book.php
+
+		-
+			message: "#^Call to function is_null\\(\\) with Serie will always evaluate to false\\.$#"
+			count: 1
+			path: lib/JSON_renderer.php
+
+		-
+			message: "#^Property doT\\:\\:\\$functionCode is never written, only read\\.$#"
+			count: 1
+			path: resources/dot-php/doT.php
+
+		-
+			message: "#^Method CalibreDbLoader\\:\\:CheckDatabase\\(\\) is unused\\.$#"
+			count: 1
+			path: resources/epub-loader/CalibreDbLoader.class.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:attr\\(\\)\\.$#"
+			count: 1
+			path: resources/php-epub-meta/lib/EPub.php
+
+		-
+			message: "#^Property clsTbsZip\\:\\:\\$ArchHnd \\(bool\\|resource\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: resources/tbszip/tbszip.php
+
+		-
+			message: "#^If condition is always false\\.$#"
+			count: 1
+			path: transliteration.php
+
+		-
+			message: "#^Left side of && is always true\\.$#"
+			count: 1
+			path: transliteration.php
+
+		-
+			message: "#^Offset mixed on array\\{\\} in isset\\(\\) does not exist\\.$#"
+			count: 1
+			path: transliteration.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: transliteration.php

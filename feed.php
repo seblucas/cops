@@ -9,6 +9,7 @@
 
 require_once 'config.php';
 require_once 'base.php';
+/** @var array $config */
 
 header('Content-Type:application/xml');
 $page = getURLParam('page', Base::PAGE_INDEX);

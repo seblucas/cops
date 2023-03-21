@@ -11,7 +11,7 @@ class CustomColumnTypeBool extends CustomColumnType
     // PHP pre 5.6 does not support const arrays
     private $BOOLEAN_NAMES = [
         -1 => "customcolumn.boolean.unknown", // localize("customcolumn.boolean.unknown")
-        00 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
+        0 => "customcolumn.boolean.no",      // localize("customcolumn.boolean.no")
         +1 => "customcolumn.boolean.yes",     // localize("customcolumn.boolean.yes")
     ];
 
@@ -23,7 +23,7 @@ class CustomColumnTypeBool extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {

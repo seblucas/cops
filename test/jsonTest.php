@@ -15,6 +15,9 @@ class JsonTest extends TestCase
     {
         global $config;
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        $config['cops_calibre_custom_column'] = [];
+        $config['cops_calibre_custom_column_list'] = [];
+        $config['cops_calibre_custom_column_preview'] = [];
         Base::clearDb();
     }
 

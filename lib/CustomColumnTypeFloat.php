@@ -16,7 +16,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
