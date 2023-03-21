@@ -17,6 +17,35 @@ define('TBSZIP_STRING', 32);    // output to string, or add from string
 
 class clsTbsZip
 {
+    public $Meth8Ok;
+    public $DisplayError;
+    public $ArchFile;
+    public $Error;
+    public $ArchIsNew;
+    public $CdEndPos;
+    public $CdInfo;
+    public $CdPos;
+    public $ArchIsStream;
+    /**
+     * @var resource|bool
+     */
+    public $ArchHnd;
+    public $CdFileLst;
+    public $CdFileNbr;
+    public $CdFileByName;
+    public $VisFileLst;
+    public $LastReadComp;
+    public $LastReadIdx;
+    public $ReplInfo;
+    public $ReplByPos;
+    public $AddInfo;
+    public $OutputMode;
+    /**
+     * @var resource|bool
+     */
+    public $OutputHandle;
+    public $OutputSrc;
+
     public function __construct()
     {
         $this->Meth8Ok = extension_loaded('zlib'); // check if Zlib extension is available. This is need for compress and uncompress with method 8.
@@ -461,7 +490,7 @@ class clsTbsZip
 
     /**
      * Return the state of the file.
-     * @return {string} 'u'=unchanged, 'm'=modified, 'd'=deleted, 'a'=added, false=unknown
+     * @return string|bool 'u'=unchanged, 'm'=modified, 'd'=deleted, 'a'=added, false=unknown
      */
     public function FileGetState($NameOrIdx)
     {
@@ -706,7 +735,8 @@ class clsTbsZip
                 if ($ContentType!='') {
                     header('Content-Type: '.$ContentType);
                 }
-                if (strlen($File) != strlen(utf8_decode($File))) {
+                // @checkme this should really be deprecated
+                if (function_exists('mb_convert_encoding') && strlen($File) != strlen(mb_convert_encoding($File, 'ISO-8859-1', 'UTF-8'))) {
                     header('Content-Disposition: attachment; filename="book.epub"; filename*=utf-8\'\'' . rawurlencode($File));
                 } else {
                     header('Content-Disposition: attachment; filename="'.$File.'"');
@@ -871,7 +901,7 @@ class clsTbsZip
         $h = ($time & 63488)/2048;
         $i = ($time & 1984)/32;
         $s = ($time & 31) * 2; // seconds have been rounded to an even number in order to save 1 bit
-        return $y.'-'.str_pad($m, 2, '0', STR_PAD_LEFT).'-'.str_pad($d, 2, '0', STR_PAD_LEFT).' '.str_pad($h, 2, '0', STR_PAD_LEFT).':'.str_pad($i, 2, '0', STR_PAD_LEFT).':'.str_pad($s, 2, '0', STR_PAD_LEFT);
+        return $y.'-'.str_pad(strval($m), 2, '0', STR_PAD_LEFT).'-'.str_pad(strval($d), 2, '0', STR_PAD_LEFT).' '.str_pad(strval($h), 2, '0', STR_PAD_LEFT).':'.str_pad(strval($i), 2, '0', STR_PAD_LEFT).':'.str_pad(strval($s), 2, '0', STR_PAD_LEFT);
     }
 
     public function _TxtPos($pos)

@@ -19,9 +19,9 @@ class BookExport
     /**
      * Open an export file (or create if file does not exist)
      *
-     * @param string Export file name
-     * @param enum Export type
-     * @param boolean Force file creation
+     * @param string $inFileName Export file name
+     * @param integer $inExportType Export type
+     * @param boolean $inCreate Force file creation
      * @throws Exception if error
      */
     public function __construct($inFileName, $inExportType, $inCreate = false)
@@ -39,7 +39,7 @@ class BookExport
     /**
      * Add an epub to the export
      *
-     * @param string Epub file name
+     * @param string $inFileName Epub file name
      * @throws Exception if error
      *
      * @return string Empty string or error if any
@@ -64,7 +64,7 @@ class BookExport
     /**
      * Add a new book to the export
      *
-     * @param object BookInfo object
+     * @param BookInfos $inBookInfo BookInfo object
      * @throws Exception if error
      *
      * @return void

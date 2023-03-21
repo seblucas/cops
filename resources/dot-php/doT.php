@@ -10,6 +10,9 @@
 class doT
 {
     public $functionBody;
+    /**
+     * @var callable
+     */
     private $functionCode;
     public $def;
 
@@ -23,7 +26,8 @@ class doT
                 return "";
             }
             if (preg_match("/\{\{#([\s\S]+?)\}\}/", $me->def [$d])) {
-                return $me->resolveDefs($me->def [$d], $me->def);
+                //return $me->resolveDefs($me->def [$d], $me->def);
+                return $me->resolveDefs($me->def [$d]);
             } else {
                 return $me->def [$d];
             }
@@ -103,6 +107,6 @@ class doT
 
     public function execute($data)
     {
-        return $this->functionCode($data);
+        return ($this->functionCode)($data);
     }
 }

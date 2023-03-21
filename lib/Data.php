@@ -78,11 +78,10 @@ class Data extends Base
         } elseif (function_exists('finfo_open') === true) {
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
 
-            if (is_resource($finfo) === true) {
+            if ($finfo !== false) {
                 $result = finfo_file($finfo, $this->getLocalPath());
+                finfo_close($finfo);
             }
-
-            finfo_close($finfo);
         }
         return $result;
     }

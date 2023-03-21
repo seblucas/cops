@@ -51,6 +51,7 @@ class EPub
         $xml->loadXML($data);
         $xpath = new EPubDOMXPath($xml);
         $nodes = $xpath->query('//n:rootfiles/n:rootfile[@media-type="application/oebps-package+xml"]');
+        // @checkme shouldn't this be getAttribute() instead?
         $this->meta = $nodes->item(0)->attr('full-path');
 
         // load metadata
@@ -277,7 +278,7 @@ class EPub
      *      'Simpson, Jacqueline' => 'Jacqueline Simpson',
      * )
      *
-     * @params array $authors
+     * @param mixed $authors
      */
     public function Authors($authors=false)
     {
@@ -340,7 +341,7 @@ class EPub
     /**
      * Set or get the book title
      *
-     * @param string $title
+     * @param string|bool $title
      */
     public function Title($title=false)
     {
@@ -350,7 +351,8 @@ class EPub
     /**
      * Set or get the book's language
      *
-     * @param string $lang
+     * @param string|bool $lang
+     * @return mixed
      */
     public function Language($lang=false)
     {
@@ -360,7 +362,7 @@ class EPub
     /**
      * Set or get the book' publisher info
      *
-     * @param string $publisher
+     * @param string|bool $publisher
      */
     public function Publisher($publisher=false)
     {
@@ -370,7 +372,7 @@ class EPub
     /**
      * Set or get the book's copyright info
      *
-     * @param string $rights
+     * @param string|bool $rights
      */
     public function Copyright($rights=false)
     {
@@ -380,7 +382,7 @@ class EPub
     /**
      * Set or get the book's description
      *
-     * @param string $description
+     * @param string|bool $description
      */
     public function Description($description=false)
     {
@@ -390,7 +392,7 @@ class EPub
     /**
      * Set or get the book's Unique Identifier
      *
-     * @param string Unique identifier
+     * @param string|bool $uuid Unique identifier
      */
     public function Uuid($uuid = false)
     {
@@ -409,7 +411,7 @@ class EPub
     /**
      * Set or get the book's creation date
      *
-     * @param string Date eg: 2012-05-19T12:54:25Z
+     * @param string|bool $date Date eg: 2012-05-19T12:54:25Z
      */
     public function CreationDate($date = false)
     {
@@ -421,7 +423,7 @@ class EPub
     /**
      * Set or get the book's modification date
      *
-     * @param string Date eg: 2012-05-19T12:54:25Z
+     * @param string|bool $date Date eg: 2012-05-19T12:54:25Z
      */
     public function ModificationDate($date = false)
     {
@@ -433,7 +435,7 @@ class EPub
     /**
      * Set or get the book's URI
      *
-     * @param string URI
+     * @param string|bool $uri URI
      */
     public function Uri($uri = false)
     {
@@ -445,7 +447,7 @@ class EPub
     /**
      * Set or get the book's ISBN number
      *
-     * @param string $isbn
+     * @param string|bool $isbn
      */
     public function ISBN($isbn=false)
     {
@@ -455,7 +457,7 @@ class EPub
     /**
      * Set or get the Google Books ID
      *
-     * @param string $google
+     * @param string|bool $google
      */
     public function Google($google=false)
     {
@@ -465,7 +467,7 @@ class EPub
     /**
      * Set or get the Amazon ID of the book
      *
-     * @param string $amazon
+     * @param string|bool $amazon
      */
     public function Amazon($amazon=false)
     {
@@ -475,7 +477,7 @@ class EPub
     /**
      * Set or get the Calibre UUID of the book
      *
-     * @param string $uuid
+     * @param string|bool $uuid
      */
     public function Calibre($uuid=false)
     {
@@ -485,7 +487,7 @@ class EPub
     /**
      * Set or get the Serie of the book
      *
-     * @param string $serie
+     * @param string|bool $serie
      */
     public function Serie($serie=false)
     {
@@ -495,7 +497,7 @@ class EPub
     /**
      * Set or get the Serie Index of the book
      *
-     * @param string $serieIndex
+     * @param string|bool $serieIndex
      */
     public function SerieIndex($serieIndex=false)
     {
@@ -508,7 +510,7 @@ class EPub
      * Subject should be given as array, but a comma separated string will also
      * be accepted.
      *
-     * @param array $subjects
+     * @param array|string|bool $subjects
      */
     public function Subjects($subjects=false)
     {
@@ -563,8 +565,8 @@ class EPub
      * image contents are not in the epub file, yet. The image will be added when
      * the save() method is called.
      *
-     * @param  string $path local filesystem path to a new cover image
-     * @param  string $mime mime type of the given file
+     * @param  string|bool $path local filesystem path to a new cover image
+     * @param  string|bool $mime mime type of the given file
      * @return array
      */
     public function Cover($path=false, $mime=false)
@@ -663,7 +665,7 @@ class EPub
         }
 
         if ($b[0] == '/') {
-            throw new InvalidArgumentException('Second path part must not start with ' . $m_Separator);
+            throw new InvalidArgumentException('Second path part must not start with /');
         }
 
         $splittedA = preg_split('#/#', $a);
@@ -754,10 +756,10 @@ class EPub
      * It should only be used for attributes that are expected to be unique
      *
      * @param string $item   XML node to set/get
-     * @param string $value  New node value
-     * @param string $att    Attribute name
-     * @param string $aval   Attribute value
-     * @param string $datt   Destination attribute
+     * @param string|bool $value  New node value
+     * @param string|bool $att    Attribute name
+     * @param string|bool $aval   Attribute value
+     * @param string|bool $datt   Destination attribute
      */
     protected function getset($item, $value=false, $att=false, $aval=false, $datt=false)
     {

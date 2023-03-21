@@ -7,6 +7,7 @@
  */
 
 require 'config.php';
+/** @var array $config */
 
 define('VERSION', '1.2.0');
 define('DB', 'db');
@@ -198,8 +199,8 @@ function str_format($format)
     $offset = 0;
     foreach ($matches[1] as $data) {
         $i = $data[0];
-        $format = substr_replace($format, @$args[$i], $offset + $data[1] - 1, 2 + strlen($i));
-        $offset += strlen(@$args[$i]) - 2 - strlen($i);
+        $format = substr_replace($format, @$args[(int)$i], $offset + $data[1] - 1, 2 + strlen($i));
+        $offset += strlen(@$args[(int)$i]) - 2 - strlen($i);
     }
 
     return $format;
@@ -346,7 +347,8 @@ function addURLParameter($urlParams, $paramName, $paramValue)
     }
     $params = [];
     parse_str($urlParams, $params);
-    if (empty($paramValue) && $paramValue != 0) {
+    // @checkme changing this removes ?db=0 from the URL
+    if (empty($paramValue) && $paramValue !== 0) {
         unset($params[$paramName]);
     } else {
         $params[$paramName] = $paramValue;

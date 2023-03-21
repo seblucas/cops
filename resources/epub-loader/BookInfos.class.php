@@ -37,7 +37,7 @@ class BookInfos
     /**
      * Loads book infos from an epub file
      *
-     * @param string Epub full file name
+     * @param string $inFileName Epub full file name
      * @throws Exception if error
      *
      * @return void

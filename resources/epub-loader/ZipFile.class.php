@@ -38,15 +38,18 @@ class ZipFile
     {
         $this->Close();
 
-        $this->mZip = zip_open($inFileName);
-        if (!$this->mZip) {
+        $this->mZip = new ZipArchive();
+        $result = $this->mZip->open($inFileName, ZipArchive::RDONLY);
+        if ($result !== true) {
             return false;
         }
 
         $this->mEntries = [];
 
-        while ($entry = zip_read($this->mZip)) {
-            $fileName = zip_entry_name($entry);
+        for ($i = 0; $i <  $this->mZip->numFiles; $i++) {
+            //$fileName =  $this->mZip->getNameIndex($i);
+            $entry =  $this->mZip->statIndex($i);
+            $fileName = $entry['name'];
             $this->mEntries[$fileName] = $entry;
         }
 
@@ -90,12 +93,8 @@ class ZipFile
             return false;
         }
 
-        $entry = $this->mEntries[$inFileName];
-        if (!zip_entry_open($this->mZip, $entry)) {
-            return false;
-        }
-        $data = zip_entry_read($entry, zip_entry_filesize($entry));
-        zip_entry_close($entry);
+        //$entry = $this->mEntries[$inFileName];
+        $data = $this->mZip->getFromName($inFileName);
 
         return $data;
     }
@@ -108,9 +107,10 @@ class ZipFile
     public function Close()
     {
         if (!isset($this->mZip)) {
-            return false;
+            return;
         }
 
-        zip_close($this->mZip);
+        $this->mZip->close();
+        $this->mZip = null;
     }
 }

@@ -32,6 +32,7 @@ class EPubDOMElement extends DOMElement
     public function newChild($name, $value='')
     {
         [$ns, $local] = $this->splitns($name);
+        $nsuri = '';
         if ($ns) {
             $nsuri = $this->namespaces[$ns];
             if ($this->isDefaultNamespace($nsuri)) {

@@ -16,7 +16,7 @@ class CustomColumnTypeText extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -27,7 +27,7 @@ class CustomColumnTypeText extends CustomColumnType
      * Get the name of the linking sqlite table for this column
      * (or NULL if there is no linktable)
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkName()
     {
@@ -37,7 +37,7 @@ class CustomColumnTypeText extends CustomColumnType
     /**
      * Get the name of the linking column in the linktable
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkColumn()
     {

@@ -12,6 +12,8 @@
     require_once dirname(__FILE__) . '/vendor/autoload.php';
     require_once dirname(__FILE__) . '/util.php';
 
+    $epub = null;
+    $error = null;
     if (isset($_REQUEST['book'])) {
         try {
             $book = $_REQUEST['book'];
@@ -86,7 +88,7 @@
         }
 
         // rename
-        $author = array_shift(array_keys($epub->Authors()));
+        $author = array_keys($epub->Authors())[0];
         $title  = $epub->Title();
         $new    = to_file($author . '-' . $title);
         $new    = $bookdir . $new . '.epub';
@@ -163,7 +165,7 @@
                 <th>Description<br />
                     <img src="?book=<?php echo htmlspecialchars($_REQUEST['book'])?>&amp;img=1" id="cover" width="90"
                          class="<?php $c = $epub->Cover();
-                         echo($c['found'] ? 'hasimg' : 'noimg')?>" />
+        echo($c['found'] ? 'hasimg' : 'noimg')?>" />
                 </th>
                 <td><textarea name="description"><?php echo htmlspecialchars($epub->Description())?></textarea></td>
             </tr>

@@ -17,8 +17,8 @@ class CsvExport extends BaseExport
     /**
      * Open an export file (or create if file does not exist)
      *
-     * @param string Export file name
-     * @param boolean Force file creation
+     * @param string $inFileName Export file name
+     * @param boolean $inCreate Force file creation
      */
     public function __construct($inFileName, $inCreate = false)
     {

@@ -25,8 +25,8 @@ class CalibreDbLoader
     /**
      * Open a Calibre database (or create if database does not exist)
      *
-     * @param string Calibre database file name
-     * @param boolean Force database creation
+     * @param string $inDbFileName Calibre database file name
+     * @param boolean $inCreate Force database creation
      */
     public function __construct($inDbFileName, $inCreate = false)
     {
@@ -40,7 +40,7 @@ class CalibreDbLoader
     /**
      * Create an sqlite database
      *
-     * @param string Database file name
+     * @param string $inDbFileName Database file name
      * @throws Exception if error
      *
      * @return void
@@ -91,7 +91,7 @@ class CalibreDbLoader
     /**
      * Open an sqlite database
      *
-     * @param string Database file name
+     * @param string $inDbFileName Database file name
      * @throws Exception if error
      *
      * @return void
@@ -114,7 +114,7 @@ class CalibreDbLoader
     /**
      * Add an epub to the db
      *
-     * @param string Epub file name
+     * @param string $inFileName Epub file name
      * @throws Exception if error
      *
      * @return string Empty string or error if any
@@ -139,7 +139,7 @@ class CalibreDbLoader
     /**
      * Add a new book into the db
      *
-     * @param object BookInfo object
+     * @param BookInfos $inBookInfo object
      * @throws Exception if error
      *
      * @return void
@@ -160,8 +160,10 @@ class CalibreDbLoader
         $stmt = $this->mDb->prepare($sql);
         $stmt->bindParam(':title', $inBookInfo->mTitle);
         $stmt->bindParam(':sort', $inBookInfo->mTitle);
-        $stmt->bindParam(':pubdate', empty($inBookInfo->mCreationDate) ? null : $inBookInfo->mCreationDate);
-        $stmt->bindParam(':lastmodified', empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00+00:00' : $inBookInfo->mModificationDate);
+        $inBookInfo->mCreationDate = $inBookInfo->mCreationDate ?: null;
+        $stmt->bindParam(':pubdate', $inBookInfo->mCreationDate);
+        $inBookInfo->mModificationDate = $inBookInfo->mModificationDate ?: '2000-01-01 00:00:00+00:00';
+        $stmt->bindParam(':lastmodified', $inBookInfo->mModificationDate);
         $stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);
         $stmt->bindParam(':uuid', $inBookInfo->mUuid);
         $stmt->bindParam(':path', $inBookInfo->mPath);

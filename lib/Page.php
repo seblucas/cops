@@ -86,9 +86,9 @@ class Page
         $this->query = $pquery;
         $this->n = $pn;
         $this->favicon = $config['cops_icon'];
-        $this->authorName = empty($config['cops_author_name']) ? utf8_encode('Sébastien Lucas') : $config['cops_author_name'];
-        $this->authorUri = empty($config['cops_author_uri']) ? 'http://blog.slucas.fr' : $config['cops_author_uri'];
-        $this->authorEmail = empty($config['cops_author_email']) ? 'sebastien@slucas.fr' : $config['cops_author_email'];
+        $this->authorName = $config['cops_author_name'] ?: 'Sébastien Lucas';
+        $this->authorUri = $config['cops_author_uri'] ?: 'http://blog.slucas.fr';
+        $this->authorEmail = $config['cops_author_email'] ?: 'sebastien@slucas.fr';
     }
 
     public function InitializeContent()

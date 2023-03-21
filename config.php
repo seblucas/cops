@@ -11,6 +11,7 @@ require dirname(__FILE__) . '/config_default.php';
 if (file_exists(dirname(__FILE__) . '/config_local.php') && (php_sapi_name() !== 'cli')) {
     require dirname(__FILE__) . '/config_local.php';
 }
+/** @var array $config */
 
 $remote_user = array_key_exists('PHP_AUTH_USER', $_SERVER) ? $_SERVER['PHP_AUTH_USER'] : '';
 // Clean username, only allow a-z, A-Z, 0-9, -_ chars

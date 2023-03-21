@@ -2,6 +2,7 @@
 	<!-- Content end -->
 
 <?php
+    /** @var array $gErrorArray */
     if (count($gErrorArray)) {
         $str = '';
         $str .= '	<!-- Error begin -->' . "\n";

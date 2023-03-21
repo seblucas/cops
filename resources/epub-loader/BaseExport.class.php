@@ -18,8 +18,8 @@ class BaseExport
     /**
      * Open an export file (or create if file does not exist)
      *
-     * @param string Export file name
-     * @param boolean Force file creation
+     * @param string $inFileName Export file name
+     * @param boolean $inCreate Force file creation
      */
     public function __construct($inFileName, $inCreate = false)
     {
@@ -57,8 +57,8 @@ class BaseExport
     /**
      * Format a property
      *
-     * @param string or array of strings to format
-     * @return string or array of strings formated
+     * @param string|array|null $inValue of strings to format
+     * @return string|array of strings formated
      */
     protected function FormatProperty($inValue)
     {
@@ -202,5 +202,10 @@ class BaseExport
         echo $content;
 
         exit;
+    }
+
+    protected function GetContent()
+    {
+        return '';
     }
 }

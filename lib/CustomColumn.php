@@ -23,7 +23,7 @@ class CustomColumn extends Base
     /**
      * CustomColumn constructor.
      *
-     * @param integer $pid id of the chosen value
+     * @param integer|string|null $pid id of the chosen value
      * @param string $pvalue string representation of the value
      * @param CustomColumnType $pcustomColumnType the CustomColumn this value lives in
      */

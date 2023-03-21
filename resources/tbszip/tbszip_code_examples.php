@@ -38,6 +38,7 @@ if ($ok) {
 // -----------------------------
 // Modifying data in the archive
 // -----------------------------
+$data = 'content';
 
 // add a file in the archive
 $zip->FileAdd('newfile.txt', $data, TBSZIP_STRING); // add the file by giving the content

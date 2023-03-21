@@ -16,6 +16,7 @@ if (!file_exists($fileName)) {
     die('Missing configuration file: ' . $fileName);
 }
 require_once($fileName);
+/** @var array $gConfig */
 
 // Include Calibre database loader class
 $fileName = $gConfig['cops_directory'] . '/resources/epub-loader/CalibreDbLoader.class.php';
@@ -48,8 +49,8 @@ require_once(__DIR__ . DIRECTORY_SEPARATOR . 'header.php');
 /**
  * Recursive get files
  *
- * @param string Base directory to search in
- * @param string Search pattern
+ * @param string $inPath Base directory to search in
+ * @param string $inPattern Search pattern
  */
 function RecursiveGlob($inPath = '', $inPattern = '*')
 {
@@ -126,6 +127,7 @@ if (isset($action) && isset($dbNum)) {
         $str .= '<th>' . 'Nb Files' . '</th>' . "\n";
         $str .= '</tr>' . "\n";
         $actionTitle = $gConfig['actions'][$action];
+        $numWork = 0;
         foreach ($gConfig['databases'] as $dbNum => $dbConfig) {
             $fileList = RecursiveGlob($dbConfig['epub_path'], '*.epub');
             $str .= '<tr>' . "\n";
