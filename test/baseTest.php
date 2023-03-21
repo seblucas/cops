@@ -10,9 +10,17 @@ require_once(dirname(__FILE__) . "/../base.php");
 require_once(dirname(__FILE__) . "/config_test.php");
 //require_once(dirname(__FILE__) . "/../base.php");
 use PHPUnit\Framework\TestCase;
+use Exception;
 
 class BaseTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
+    }
+
     public function testAddURLParameter()
     {
         $this->assertEquals("?db=0", addURLParameter("?", "db", "0"));
@@ -28,6 +36,8 @@ class BaseTest extends TestCase
     {
         $_COOKIE["template"] = $template;
         $this->assertNull(serverSideRender(null));
+
+        unset($_COOKIE['template']);
     }
 
     /**
@@ -150,11 +160,15 @@ class BaseTest extends TestCase
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
 
         $this->assertTrue(Base::isMultipleDatabaseEnabled());
         $this->assertEquals("Some books", Base::getDbName(0));
         $this->assertEquals("One book", Base::getDbName(1));
         $this->assertEquals($config['calibre_directory'], Base::getDbList());
+
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     public function testCheckDatabaseAvailability_1()
@@ -168,13 +182,17 @@ class BaseTest extends TestCase
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
 
         $this->assertTrue(Base::checkDatabaseAvailability());
+
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage not found
+     * @expectedExceptionMessage Database <1> not found.
      */
     public function testCheckDatabaseAvailability_Exception1()
     {
@@ -182,13 +200,20 @@ class BaseTest extends TestCase
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/OneBook/"];
+        Base::clearDb();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Database <1> not found.');
 
         $this->assertTrue(Base::checkDatabaseAvailability());
+
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     /**
      * @expectedException        Exception
-     * @expectedExceptionMessage not found
+     * @expectedExceptionMessage Database <0> not found.
      */
     public function testCheckDatabaseAvailability_Exception2()
     {
@@ -196,8 +221,15 @@ class BaseTest extends TestCase
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/SomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
+
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Database <0> not found.');
 
         $this->assertTrue(Base::checkDatabaseAvailability());
+
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     /*

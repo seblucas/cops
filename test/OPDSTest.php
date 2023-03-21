@@ -17,6 +17,13 @@ define("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
 class OpdsTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
+    }
+
     public static function tearDownAfterClass(): void
     {
         if (!file_exists(TEST_FEED)) {
@@ -74,6 +81,7 @@ class OpdsTest extends TestCase
         $OPDSRender = new OPDSRenderer();
 
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->jingValidateSchema(TEST_FEED));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
@@ -83,7 +91,9 @@ class OpdsTest extends TestCase
         $this->AssertFalse($this->jingValidateSchema(TEST_FEED));
         $this->AssertFalse($this->opdsValidator(TEST_FEED));
 
-        $_SERVER['QUERY_STRING'] = null;
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['HTTP_USER_AGENT']);
+        $config['cops_generate_invalid_opds_stream'] = "0";
     }
 
     /**
@@ -106,6 +116,9 @@ class OpdsTest extends TestCase
 
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['REQUEST_URI']);
     }
 
     public function providerPage()
@@ -127,6 +140,7 @@ class OpdsTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_INDEX;
         $query = null;
         $qid = "1";
@@ -140,6 +154,10 @@ class OpdsTest extends TestCase
 
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     public function testOpenSearchDescription()
@@ -151,7 +169,7 @@ class OpdsTest extends TestCase
         file_put_contents(TEST_FEED, $OPDSRender->getOpenSearch());
         $this->AssertTrue($this->jingValidateSchema(TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
 
-        $_SERVER['QUERY_STRING'] = null;
+        unset($_SERVER['QUERY_STRING']);
     }
 
     public function testPageAuthorMultipleDatabase()
@@ -159,6 +177,7 @@ class OpdsTest extends TestCase
         global $config;
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_AUTHOR_DETAIL;
         $query = null;
         $qid = "1";
@@ -173,6 +192,11 @@ class OpdsTest extends TestCase
 
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        unset($_GET['db']);
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     public function testPageAuthorsDetail()
@@ -207,6 +231,7 @@ class OpdsTest extends TestCase
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
+        unset($_SERVER['QUERY_STRING']);
         // No pagination
         $config['cops_max_item_per_page'] = -1;
     }
@@ -231,6 +256,8 @@ class OpdsTest extends TestCase
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
+        unset($_SERVER['QUERY_STRING']);
+        unset($_GET['tag']);
         $config['cops_books_filter'] = [];
     }
 
@@ -253,5 +280,8 @@ class OpdsTest extends TestCase
 
         file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
         $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['REQUEST_URI']);
     }
 }

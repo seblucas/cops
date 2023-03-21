@@ -26,6 +26,9 @@ class BookTest extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
         $book = Book::getBookById(2);
         if (!is_dir($book->path)) {
             mkdir($book->path, 0777, true);
@@ -472,7 +475,8 @@ class BookTest extends TestCase
         $data->name = "favicon";
         $data->book->path = realpath(dirname(__FILE__) . "/../");
         if (function_exists('finfo_open') === true) {
-            $this->assertEquals("image/x-icon", $data->getMimeType());
+            //$this->assertEquals("image/x-icon", $data->getMimeType());
+            $this->assertEquals("image/vnd.microsoft.icon", $data->getMimeType());
         } else {
             $this->assertEquals("application/octet-stream", $data->getMimeType());
         }
@@ -491,6 +495,7 @@ class BookTest extends TestCase
         $this->assertEquals("Fiction", $array[1]["title"]);
         $this->assertEquals("Science Fiction", $array[2]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
     }
@@ -509,6 +514,7 @@ class BookTest extends TestCase
         $this->assertEquals("1 author", $array[2]["title"]);
         $this->assertEquals("Carroll, Lewis", $array[3]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
     }
@@ -527,6 +533,7 @@ class BookTest extends TestCase
         $this->assertEquals("2 series", $array[2]["title"]);
         $this->assertEquals("D'Artagnan Romances", $array[3]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
     }
@@ -544,6 +551,7 @@ class BookTest extends TestCase
         $this->assertEquals("Macmillan and Co. London", $array[1]["title"]);
         $this->assertEquals("Macmillan Publishers USA", $array[2]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
     }
@@ -562,8 +570,10 @@ class BookTest extends TestCase
         $this->assertEquals("1 book", $array[0]["title"]);
         $this->assertEquals("A Study in Scarlet", $array[1]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
+        $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchWithIgnored_MultipleCategory()
@@ -580,8 +590,10 @@ class BookTest extends TestCase
         $this->assertEquals("1 author", $array[0]["title"]);
         $this->assertEquals("Doyle, Arthur Conan", $array[1]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
+        $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchMultiDatabase()
@@ -594,6 +606,7 @@ class BookTest extends TestCase
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
                                               "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
 
         $array = JSONRenderer::getJson();
 
@@ -604,8 +617,11 @@ class BookTest extends TestCase
         $this->assertEquals("One book", $array[3]["title"]);
         $this->assertEquals("1 book", $array[4]["title"]);
 
+        $_GET["page"] = null;
         $_GET["query"] = null;
         $_GET["search"] = null;
+        $_GET["multi"] = null;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
     }
 
     public function tearDown(): void

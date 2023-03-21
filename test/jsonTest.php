@@ -11,6 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class JsonTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
+    }
+
     public function testCompleteArray()
     {
         global $config;
