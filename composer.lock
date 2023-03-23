@@ -11,7 +11,7 @@
             "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "git@github.com:olado/doT.git",
+                "url": "https://github.com/olado/doT.git",
                 "reference": "195025f06055761f6da3a900251382e788c42d0e"
             },
             "dist": {
