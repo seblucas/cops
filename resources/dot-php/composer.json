@@ -4,7 +4,7 @@
     "description": "PHP rendering engine for doT.js (The fastest + concise javascript template engine for nodejs and browsers)",
     "keywords": ["doT", "template", "engine", "rendering"],
     "homepage": "https://github.com/seblucas/doT-php",
-    "license": "GPL-2.0",
+    "license": "GPL-2.0-or-later",
     "authors": [
         {
             "name": "Sébastien Lucas",
