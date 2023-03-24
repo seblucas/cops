@@ -809,12 +809,12 @@ class CustomColumnTest extends TestCase
 
         $this->assertEquals("custom_07", $currentPage->title);
         $this->assertCount(6, $currentPage->entryArray);
-        $this->assertEquals("cops:custom:14:-99.0", $currentPage->entryArray[0]->id);
-        $this->assertEquals("cops:custom:14:0.0", $currentPage->entryArray[1]->id);
+        $this->assertEquals("cops:custom:14:-99", $currentPage->entryArray[0]->id);
+        $this->assertEquals("cops:custom:14:0", $currentPage->entryArray[1]->id);
         $this->assertEquals("cops:custom:14:0.1", $currentPage->entryArray[2]->id);
         $this->assertEquals("cops:custom:14:0.2", $currentPage->entryArray[3]->id);
-        $this->assertEquals("cops:custom:14:11.0", $currentPage->entryArray[4]->id);
-        $this->assertEquals("cops:custom:14:100000.0", $currentPage->entryArray[5]->id);
+        $this->assertEquals("cops:custom:14:11", $currentPage->entryArray[4]->id);
+        $this->assertEquals("cops:custom:14:100000", $currentPage->entryArray[5]->id);
 
 
         $_GET["custom"] = null;
@@ -922,7 +922,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("cops:custom:4:4", $customcolumnValues[3]->getEntryId());
         $this->assertEquals("cops:custom:5:6", $customcolumnValues[4]->getEntryId());
         $this->assertEquals("cops:custom:12:2016-04-24", $customcolumnValues[5]->getEntryId());
-        $this->assertEquals("cops:custom:14:11.0", $customcolumnValues[6]->getEntryId());
+        $this->assertEquals("cops:custom:14:11", $customcolumnValues[6]->getEntryId());
         $this->assertEquals("cops:custom:10:-2", $customcolumnValues[7]->getEntryId());
         $this->assertEquals("cops:custom:9:2", $customcolumnValues[8]->getEntryId());
         $this->assertEquals("cops:custom:11:0", $customcolumnValues[9]->getEntryId());
@@ -971,7 +971,7 @@ class CustomColumnTest extends TestCase
         $this->assertEquals("Not Set", $custom[5]['htmlvalue']);
 
         $this->assertEquals("custom_07", $custom[6]['customColumnType']['columnTitle']);
-        $this->assertEquals("100000.0", $custom[6]['htmlvalue']);
+        $this->assertEquals("100000", $custom[6]['htmlvalue']);
 
         $this->assertEquals("custom_08", $custom[7]['customColumnType']['columnTitle']);
         $this->assertEquals("Not Set", $custom[7]['htmlvalue']);

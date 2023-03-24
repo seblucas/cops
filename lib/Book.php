@@ -117,7 +117,7 @@ class Book extends Base
         $this->path = Base::getDbDirectory() . $line->path;
         $this->relativePath = $line->path;
         $this->seriesIndex = $line->series_index;
-        $this->comment = $line->comment;
+        $this->comment = $line->comment ?? '';
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
         if (!file_exists($this->getFilePath('jpg'))) {
@@ -426,13 +426,13 @@ class Book extends Base
                 if ($nw >= $w) {
                     return false;
                 }
-                $nh = ($nw*$h)/$w;
+                $nh = intval(($nw*$h)/$w);
             } else {
                 $nh = $height;
                 if ($nh >= $h) {
                     return false;
                 }
-                $nw = ($nh*$w)/$h;
+                $nw = intval(($nh*$w)/$h);
             }
         } else {
             return false;

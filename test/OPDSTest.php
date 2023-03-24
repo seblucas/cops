@@ -35,10 +35,14 @@ class OpdsTest extends TestCase
     public function jingValidateSchema($feed, $relax = OPDS_RELAX_NG)
     {
         $path = "";
-        $res = system($path . 'java -jar "' . JING_JAR . '" "' . $relax . '" "' . $feed . '"');
+        $code = null;
+        $res = system($path . 'java -jar "' . JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
         if ($res != '') {
             echo 'RelaxNG validation error: '.$res;
             return false;
+        //} elseif (isset($code) && $code > 0) {
+        //    echo 'Return code: '.strval($code);
+        //    return false;
         } else {
             return true;
         }
