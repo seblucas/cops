@@ -1,0 +1,16 @@
+.git/
+*.zip
+test/
+# keep the test database in the image here
+!test/BaseWithSomeBooks/
+vendor/
+# remove docker files
+docker/
+compose.yaml
+compose-dev.yaml
+# remove development files
+.vscode/
+.yarn/
+#!.yarn/releases
+#!.yarn/plugins
+.pnp.*
