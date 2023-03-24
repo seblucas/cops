@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
 require_once dirname(__FILE__) . '/config.php';
@@ -18,6 +18,8 @@ if ($config['cops_fetch_protect'] == '1') {
         return;
     }
 }
+// clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
+ob_end_clean();
 
 $expires = 60*60*24*14;
 header('Pragma: public');
@@ -117,9 +119,9 @@ if (empty($config['calibre_internal_directory'])) {
 
 if (empty($config['cops_x_accel_redirect'])) {
     $filename = $dir . $file;
-    $fp = fopen($filename, 'rb');
     header('Content-Length: ' . filesize($filename));
-    fpassthru($fp);
+    readfile($filename);
 } else {
     header($config['cops_x_accel_redirect'] . ': ' . $dir . $file);
 }
+exit();
