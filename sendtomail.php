@@ -2,6 +2,7 @@
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
+use PHPMailer\PHPMailer\PHPMailer;
 
 function checkConfiguration()
 {
