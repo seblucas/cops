@@ -1,0 +1,8 @@
+FROM webdevops/php-nginx:8.2-alpine AS build
+COPY . /app
+RUN composer install --no-dev -o -d /app
+
+FROM build as dev-envs
+RUN composer update -o -d /app
+#RUN apk --no-cache add nodejs yarn
+#RUN yarn
