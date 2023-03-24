@@ -70,7 +70,7 @@ class JsonTest extends TestCase
 
         $this->assertEquals("Sherlock Holmes", $test ["seriesName"]);
         $this->assertEquals("6.0", $test ["seriesIndex"]);
-        $this->assertEquals("Book 6.0 in the Sherlock Holmes series", $test ["seriesCompleteName"]);
+        $this->assertEquals("Book 6 in the Sherlock Holmes series", $test ["seriesCompleteName"]);
         $this->assertStringEndsWith("?page=7&id=1", $test ["seriesurl"]);
     }
 
