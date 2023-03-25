@@ -9,8 +9,11 @@
  *
  */
 
-    require_once 'config.php';
-require_once 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
+
+initURLParam();
 
 $err   = getURLParam('err', -1);
 $full  = getURLParam('full');

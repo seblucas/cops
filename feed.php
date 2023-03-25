@@ -7,9 +7,11 @@
  *
  */
 
-require_once 'config.php';
-require_once 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
 /** @var array $config */
+
+initURLParam();
 
 header('Content-Type:application/xml');
 $page = getURLParam('page', Base::PAGE_INDEX);
