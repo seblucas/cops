@@ -9,7 +9,7 @@
 require 'config.php';
 /** @var array $config */
 
-define('VERSION', '1.2.0');
+define('VERSION', '1.3.1');
 define('DB', 'db');
 date_default_timezone_set($config['default_timezone']);
 
