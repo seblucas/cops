@@ -78,9 +78,9 @@ $config['cops_x_accel_redirect'] = '';
 $config['cops_opds_thumbnail_height'] = '164';
 
 /*
- * Height of thumbnail image for HTML
- */
-$config['cops_html_thumbnail_height'] = '164';
+    * Height of thumbnail image for HTML
+    */
+$config['cops_html_thumbnail_height'] = '225';
 
 /*
  * Icon for both OPDS and HTML catalog
@@ -110,6 +110,11 @@ $config['default_timezone'] = 'Europe/Paris';
 $config['cops_prefered_format'] = ['EPUB', 'PDF', 'AZW3', 'AZW', 'MOBI', 'CBR', 'CBZ'];
 
 /*
+ * Specify the ignored formats that will never display in COPS
+ */
+$config['cops_ignored_formats'] = [];
+
+/*
  * use URL rewriting for downloading of ebook in HTML catalog
  * See Github wiki for more information
  *  1 : enable
@@ -130,7 +135,7 @@ $config['cops_generate_invalid_opds_stream'] = '0';
  * Max number of items per page
  * -1 unlimited
  */
-$config['cops_max_item_per_page'] = '-1';
+$config['cops_max_item_per_page'] = '48';
 
 /*
  * split authors by first letter
@@ -320,8 +325,9 @@ $config['cops_basic_authentication'] = null;
  * Which template is used by default :
  * 'default'
  * 'bootstrap'
+ * 'bootstrap2'
  */
-$config['cops_template'] = 'default';
+$config['cops_template'] = 'bootstrap2';
 
 /*
  * Which style is used by default :

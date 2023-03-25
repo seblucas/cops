@@ -110,6 +110,12 @@ class JSONRenderer
             $link = new LinkNavigation($tag->getUri());
             array_push($out ["tags"], ["name" => $tag->name, "url" => $link->hrefXhtml()]);
         }
+
+        $out ["identifiers"] = [];
+        foreach ($book->getIdentifiers() as $ident) {
+            array_push($out ["identifiers"], ["name" => $ident->formattedType, "url" => $ident->getUri()]);
+        }
+
         $out ["customcolumns_preview"] = $book->getCustomColumnValues($config['cops_calibre_custom_column_preview'], true);
 
         return $out;
@@ -152,6 +158,7 @@ class JSONRenderer
                            "authorsTitle" => localize("authors.title"),
                            "bookwordTitle" => localize("bookword.title"),
                            "tagsTitle" => localize("tags.title"),
+                           "linksTitle" => localize("links.title"),
                            "seriesTitle" => localize("series.title"),
                            "customizeTitle" => localize("customize.title"),
                            "aboutTitle" => localize("about.title"),
