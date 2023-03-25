@@ -8,8 +8,25 @@
 
 class CustomColumnTypeText extends CustomColumnType
 {
-    protected function __construct($pcustomId)
+    private static $type;
+
+    protected function __construct($pcustomId, $datatype = self::CUSTOM_TYPE_TEXT)
     {
+        self::$type = $datatype;
+
+        switch ($datatype) {
+            case self::CUSTOM_TYPE_TEXT:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
+                break;
+            case self::CUSTOM_TYPE_ENUM:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_ENUM);
+                break;
+            case self::CUSTOM_TYPE_SERIES:
+                parent::__construct($pcustomId, self::CUSTOM_TYPE_SERIES);
+                break;
+            default:
+                throw new UnexpectedValueException();
+        }
         parent::__construct($pcustomId, self::CUSTOM_TYPE_TEXT);
     }
 
@@ -89,7 +106,19 @@ class CustomColumnTypeText extends CustomColumnType
 
     public function getCustomByBook($book)
     {
-        $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+        switch (self::$type) {
+            case self::CUSTOM_TYPE_TEXT:
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3} ORDER BY {0}.value";
+                break;
+            case self::CUSTOM_TYPE_ENUM:
+                $queryFormat = "SELECT {0}.id AS id, {0}.{2} AS name FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+                break;
+            case self::CUSTOM_TYPE_SERIES:
+                $queryFormat = "SELECT {0}.id AS id, {1}.{2} AS name, {1}.extra AS extra FROM {0}, {1} WHERE {0}.id = {1}.{2} AND {1}.book = {3}";
+                break;
+            default:
+                throw new UnexpectedValueException();
+        }
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn(), $book->id);
 
         $result = $this->getDb()->query($query);

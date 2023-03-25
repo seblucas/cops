@@ -372,6 +372,7 @@ class BookTest extends TestCase
         $_SERVER["HTTP_USER_AGENT"] = "Kobo";
         $this->assertEquals("download/20/Carroll%2C%20Lewis%20-%20Alice%27s%20Adventures%20in%20Wonderland.kepub.epub", $epub->getHtmlLink());
         $this->assertEquals("download/17/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.mobi", $mobi->getHtmlLink());
+        $config['cops_provide_kepub'] = "0";
         $_SERVER["HTTP_USER_AGENT"] = "Firefox";
         $this->assertEquals("download/20/Alice%27s%20Adventures%20in%20Wonderland%20-%20Lewis%20Carroll.epub", $epub->getHtmlLink());
         $config['cops_use_url_rewriting'] = "0";
@@ -484,144 +485,152 @@ class BookTest extends TestCase
 
     public function testTypeaheadSearch_Tag()
     {
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "fic";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "fic";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(3, $array);
-        $this->assertEquals("2 tags", $array[0]["title"]);
-        $this->assertEquals("Fiction", $array[1]["title"]);
-        $this->assertEquals("Science Fiction", $array[2]["title"]);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertEquals("2 tags", $currentPage->entryArray[0]->content);
+        $this->assertEquals("Fiction", $currentPage->entryArray[1]->title);
+        $this->assertEquals("Science Fiction", $currentPage->entryArray[2]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_BookAndAuthor()
     {
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "car";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "car";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(4, $array);
-        $this->assertEquals("1 book", $array[0]["title"]);
-        $this->assertEquals("A Study in Scarlet", $array[1]["title"]);
-        $this->assertEquals("1 author", $array[2]["title"]);
-        $this->assertEquals("Carroll, Lewis", $array[3]["title"]);
+        $this->assertCount(4, $currentPage->entryArray);
+        $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        $this->assertEquals("1 author", $currentPage->entryArray[2]->content);
+        $this->assertEquals("Carroll, Lewis", $currentPage->entryArray[3]->title);
+
+        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_AuthorAndSeries()
     {
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "art";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "art";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(5, $array);
-        $this->assertEquals("1 author", $array[0]["title"]);
-        $this->assertEquals("Doyle, Arthur Conan", $array[1]["title"]);
-        $this->assertEquals("2 series", $array[2]["title"]);
-        $this->assertEquals("D'Artagnan Romances", $array[3]["title"]);
+        $this->assertCount(5, $currentPage->entryArray);
+        $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
+        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        $this->assertEquals("2 series", $currentPage->entryArray[2]->content);
+        $this->assertEquals("D'Artagnan Romances", $currentPage->entryArray[3]->title);
+
+        setURLParam('search', null);
     }
 
     public function testTypeaheadSearch_Publisher()
     {
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "Macmillan";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "Macmillan";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(3, $array);
-        $this->assertEquals("2 publishers", $array[0]["title"]);
-        $this->assertEquals("Macmillan and Co. London", $array[1]["title"]);
-        $this->assertEquals("Macmillan Publishers USA", $array[2]["title"]);
+        $this->assertCount(3, $currentPage->entryArray);
+        $this->assertEquals("2 publishers", $currentPage->entryArray[0]->content);
+        $this->assertEquals("Macmillan and Co. London", $currentPage->entryArray[1]->title);
+        $this->assertEquals("Macmillan Publishers USA", $currentPage->entryArray[2]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        setURLParam('search', null);
     }
 
     public function testTypeaheadSearchWithIgnored_SingleCategory()
     {
         global $config;
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "car";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "car";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
         $config ['cops_ignored_categories'] = ["author"];
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(2, $array);
-        $this->assertEquals("1 book", $array[0]["title"]);
-        $this->assertEquals("A Study in Scarlet", $array[1]["title"]);
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals("1 book", $currentPage->entryArray[0]->content);
+        $this->assertEquals("A Study in Scarlet", $currentPage->entryArray[1]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        setURLParam('search', null);
         $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchWithIgnored_MultipleCategory()
     {
         global $config;
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "art";
-        $_GET["search"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "art";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
 
         $config ['cops_ignored_categories'] = ["series"];
-        $array = JSONRenderer::getJson();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $this->assertCount(2, $array);
-        $this->assertEquals("1 author", $array[0]["title"]);
-        $this->assertEquals("Doyle, Arthur Conan", $array[1]["title"]);
+        $this->assertCount(2, $currentPage->entryArray);
+        $this->assertEquals("1 author", $currentPage->entryArray[0]->content);
+        $this->assertEquals("Doyle, Arthur Conan", $currentPage->entryArray[1]->title);
 
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
+        setURLParam('search', null);
         $config ['cops_ignored_categories'] = [];
     }
 
     public function testTypeaheadSearchMultiDatabase()
     {
         global $config;
-        $_GET["page"] = Base::PAGE_OPENSEARCH_QUERY;
-        $_GET["query"] = "art";
-        $_GET["search"] = "1";
-        $_GET["multi"] = "1";
+        $page = Base::PAGE_OPENSEARCH_QUERY;
+        $qid = getURLParam("id");
+        $query = "art";
+        $n = getURLParam("n", "1");
+        setURLParam('search', 1);
+        setURLParam('multi', 1);
 
         $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
-        Base::clearDb();
+            "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $array = JSONRenderer::getJson();
+        $this->assertCount(5, $currentPage->entryArray);
+        $this->assertEquals("Some books", $currentPage->entryArray[0]->title);
+        $this->assertEquals("1 author", $currentPage->entryArray[1]->content);
+        $this->assertEquals("2 series", $currentPage->entryArray[2]->content);
+        $this->assertEquals("One book", $currentPage->entryArray[3]->title);
+        $this->assertEquals("1 book", $currentPage->entryArray[4]->content);
 
-        $this->assertCount(5, $array);
-        $this->assertEquals("Some books", $array[0]["title"]);
-        $this->assertEquals("1 author", $array[1]["title"]);
-        $this->assertEquals("2 series", $array[2]["title"]);
-        $this->assertEquals("One book", $array[3]["title"]);
-        $this->assertEquals("1 book", $array[4]["title"]);
-
-        $_GET["page"] = null;
-        $_GET["query"] = null;
-        $_GET["search"] = null;
-        $_GET["multi"] = null;
+        setURLParam('search', null);
+        setURLParam('multi', null);
         $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
     public function tearDown(): void

@@ -11,24 +11,26 @@ require 'config.php';
 
 define('VERSION', '1.3.1');
 define('DB', 'db');
+define('TEMPLATE_DIR', 'templates/');
 date_default_timezone_set($config['default_timezone']);
 
+const CONFIG_COPS_TEMPLATE = 'cops_template';
 
 function useServerSideRendering()
 {
     global $config;
-    return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
+    return !preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
 }
 
 function serverSideRender($data)
 {
     // Get the templates
     $theme = getCurrentTemplate();
-    $header = file_get_contents('templates/' . $theme . '/header.html');
-    $footer = file_get_contents('templates/' . $theme . '/footer.html');
-    $main = file_get_contents('templates/' . $theme . '/main.html');
-    $bookdetail = file_get_contents('templates/' . $theme . '/bookdetail.html');
-    $page = file_get_contents('templates/' . $theme . '/page.html');
+    $header = file_get_contents(TEMPLATE_DIR . $theme . '/header.html');
+    $footer = file_get_contents(TEMPLATE_DIR . $theme . '/footer.html');
+    $main = file_get_contents(TEMPLATE_DIR . $theme . '/main.html');
+    $bookdetail = file_get_contents(TEMPLATE_DIR . $theme . '/bookdetail.html');
+    $page = file_get_contents(TEMPLATE_DIR . $theme . '/page.html');
 
     // Generate the function for the template
     $template = new doT();
@@ -65,12 +67,30 @@ function notFound()
     $_SERVER['REDIRECT_STATUS'] = 404;
 }
 
+$urlParams = [];
+function initURLParam()
+{
+    global $urlParams;
+    if (!empty($_GET)) {
+        foreach ($_GET as $name => $value) {
+            $urlParams[$name] = $_GET[$name];
+        }
+    }
+}
+
 function getURLParam($name, $default = null)
 {
-    if (!empty($_GET) && isset($_GET[$name]) && $_GET[$name] != '') {
-        return $_GET[$name];
+    global $urlParams;
+    if (!empty($urlParams) && isset($urlParams[$name]) && $urlParams[$name] != '') {
+        return $urlParams[$name];
     }
     return $default;
+}
+
+function setURLParam($name, $value)
+{
+    global $urlParams;
+    $urlParams[$name] = $value;
 }
 
 function getCurrentOption($option)
@@ -79,7 +99,7 @@ function getCurrentOption($option)
     if (isset($_COOKIE[$option])) {
         if (isset($config ['cops_' . $option]) && is_array($config ['cops_' . $option])) {
             return explode(',', $_COOKIE[$option]);
-        } else {
+        } elseif (!preg_match('/[^A-Za-z0-9\-_]/', $_COOKIE[$option])) {
             return $_COOKIE[$option];
         }
     }
@@ -92,12 +112,22 @@ function getCurrentOption($option)
 
 function getCurrentCss()
 {
-    return 'templates/' . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
+    global $config;
+    $style = getCurrentOption('style');
+    if (!preg_match('/[^A-Za-z0-9\-_]/', $style)) {
+        return TEMPLATE_DIR . getCurrentTemplate() . '/styles/style-' . getCurrentOption('style') . '.css';
+    }
+    return 'templates/' . $config[CONFIG_COPS_TEMPLATE] . '/styles/style-' . $config[CONFIG_COPS_TEMPLATE] . '.css';
 }
 
 function getCurrentTemplate()
 {
-    return getCurrentOption('template');
+    global $config;
+    $template = getCurrentOption('template');
+    if (!preg_match('/[^A-Za-z0-9\-_]/', $template)) {
+        return $template;
+    }
+    return $config[CONFIG_COPS_TEMPLATE];
 }
 
 function getUrlWithVersion($url)
@@ -370,4 +400,14 @@ function normalizeUtf8String($s)
 function normAndUp($s)
 {
     return mb_strtoupper(normalizeUtf8String($s), 'UTF-8');
+}
+
+function dd($m, $e = false)
+{
+    echo '<pre>';
+    print_r($m);
+    echo '</pre>';
+    if ($e) {
+        exit;
+    }
 }

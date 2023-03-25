@@ -14,8 +14,6 @@ class MailTest extends TestCase
 {
     public function testCheckConfigurationOk()
     {
-        global $config;
-
         $this->assertFalse(checkConfiguration());
     }
 
@@ -53,13 +51,27 @@ class MailTest extends TestCase
         $this->assertStringStartsWith("NOK", checkConfiguration());
     }
 
+    public function testCheckConfigurationEmailNotEmpty()
+    {
+        global $config;
+        $email = "a";
+        $config['cops_mail_configuration']["address.from"] = $email;
+
+        $this->assertStringContainsString($email, $config['cops_mail_configuration']["address.from"]);
+    }
+
     public function testCheckConfigurationEmailNotValid()
     {
         global $config;
-        require(dirname(__FILE__) . "/config_test.php");
-        $config['cops_mail_configuration']["address.from"] = "a";
+        $email = "a";
+        $this->assertDoesNotMatchRegularExpression('/^.+\@\S+\.\S+$/', $email);
+    }
 
-        $this->markTestIncomplete();
+    public function testCheckConfigurationEmailValid()
+    {
+        global $config;
+        $email = "a@a.com";
+        $this->assertMatchesRegularExpression('/^.+\@\S+\.\S+$/', $email);
     }
 
     public function testCheckRequest()
