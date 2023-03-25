@@ -1,10 +1,14 @@
 <?php
 /**
- * Epub loader application config
+ * Epub loader config
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
+
+defined('DEF_AppName') or die('Restricted access');
+
+if (PHP_SAPI === 'cli') { parse_str(implode('&', array_slice($argv, 1)), $_GET); }
 
 $gConfig = array();
 
@@ -16,7 +20,7 @@ $gConfig['app_name'] = 'Epub loader';
 /**
  * Admin email
  */
-$gConfig['admin_email'] = 'didier.corbiere@opale-concept.com';
+$gConfig['admin_email'] = 'contact@atoll-digital-library.org';
 
 /**
  * Cops directory
@@ -42,13 +46,12 @@ $gConfig['create_db'] = true;
  * For each database:
  *   name: The database name to display
  *   db_path: The path where to create the database
- *   epub_path: The path where to look for the epub files to load
- *   pdf_path: The path where to look for pdf files
+ *   epub_path: The relative path from db_path where to look for the epub files
  */
 $gConfig['databases'] = array();
-$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/ebooks/calibre/demo', 'epub_path' => '/opt/ebooks/epub/demo', 'pdf_path' => '');
-$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/ebooks/calibre/bnr', 'epub_path' => '/opt/ebooks/epub/bnr', 'pdf_path' => '');
-$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/ebooks/calibre/bibebook', 'epub_path' => '/opt/ebooks/epub/bibebook', 'pdf_path' => '');
+$gConfig['databases'][] = array('name' => 'Littérature classique', 'db_path' => '/opt/ebooks/calibre/demo', 'epub_path' => 'epub');
+$gConfig['databases'][] = array('name' => 'Bibliothèque numérique romande', 'db_path' => '/opt/ebooks/calibre/bnr', 'epub_path' => 'epub');
+$gConfig['databases'][] = array('name' => 'La Bibliothèque d\'Ebooks', 'db_path' => '/opt/ebooks/calibre/bibebook', 'epub_path' => 'epub');
 
 /**
  * Available actions

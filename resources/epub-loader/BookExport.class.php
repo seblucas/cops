@@ -3,7 +3,7 @@
  * BookExport class
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
 require_once(realpath(dirname(__FILE__)) . '/CsvExport.class.php');
@@ -39,19 +39,20 @@ class BookExport
     /**
      * Add an epub to the export
      *
-     * @param string $inFileName Epub file name
+     * @param string $inBasePath Epub base directory
+     * @param string $inFileName Epub file name (from base directory)
      * @throws Exception if error
      *
      * @return string Empty string or error if any
      */
-    public function AddEpub($inFileName)
+    public function AddEpub($inBasePath, $inFileName)
     {
         $error = '';
 
         try {
             // Load the book infos
             $bookInfos = new BookInfos();
-            $bookInfos->LoadFromEpub($inFileName);
+            $bookInfos->LoadFromEpub($inBasePath, $inFileName);
             // Add the book
             $this->AddBook($bookInfos);
         } catch (Exception $e) {
@@ -99,7 +100,7 @@ class BookExport
         // Add book infos to the export
         $i = 1;
         $this->mExport->SetProperty($i++, $inBookInfo->mFormat);
-        $this->mExport->SetProperty($i++, $inBookInfo->mPath);
+        $this->mExport->SetProperty($i++, $inBookInfo->mBasePath . DIRECTORY_SEPARATOR . $inBookInfo->mPath);
         $this->mExport->SetProperty($i++, $inBookInfo->mName);
         $this->mExport->SetProperty($i++, $inBookInfo->mUuid);
         $this->mExport->SetProperty($i++, $inBookInfo->mUri);

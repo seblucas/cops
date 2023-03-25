@@ -3,14 +3,13 @@
  * CalibreDbLoader class
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
-
 require_once(realpath(dirname(__FILE__)) . '/BookInfos.class.php');
 
 /**
  * Calibre database sql file that comes unmodified from Calibre project:
- *   /calibre/resources/metadata_sqlite.sql
+ * https://raw.githubusercontent.com/kovidgoyal/calibre/master/resources/metadata_sqlite.sql
  */
 define('CalibreCreateDbSql', realpath(dirname(__FILE__)) . '/metadata_sqlite.sql');
 
@@ -22,25 +21,105 @@ class CalibreDbLoader
 {
     private $mDb = null;
 
+    private $mBookId = null;
+
+    private $mBookIdFileName = '';
+
     /**
      * Open a Calibre database (or create if database does not exist)
      *
      * @param string $inDbFileName Calibre database file name
      * @param boolean $inCreate Force database creation
+     * @param string $inBookIdsFileName File name containing a map of file names to calibre book ids
      */
-    public function __construct($inDbFileName, $inCreate = false)
+    public function __construct($inDbFileName, $inCreate = false, $inBookIdsFileName = '')
     {
         if ($inCreate) {
             $this->CreateDatabase($inDbFileName);
+            if (!empty($inBookIdsFileName)) {
+                $this->LoadBookIds($inBookIdsFileName);
+            }
         } else {
             $this->OpenDatabase($inDbFileName);
         }
     }
 
     /**
+     * Descructor
+     */
+    public function __destruct()
+    {
+        $this->SaveBookIds();
+    }
+
+    /**
+     * Load the book ids map in order to reuse calibe book id when recreating database
+     *
+     * @param string $inBookIdsFileName File name containing a map of file names to calibre book ids
+     *
+     * @return void
+     */
+    private function LoadBookIds($inBookIdsFileName)
+    {
+        $this->mBookId = [];
+        $this->mBookIdFileName = $inBookIdsFileName;
+
+        if (empty($this->mBookIdFileName) || !file_exists($this->mBookIdFileName)) {
+            return;
+        }
+
+        // Load the book ids file
+        $lines = file($this->mBookIdFileName);
+        foreach ($lines as $line) {
+            $tab = explode("\t", trim($line));
+            if (count($tab) != 2) {
+                continue;
+            }
+            $this->mBookId[$tab[0]] = (int)$tab[1];
+        }
+    }
+
+    /**
+     * Save the book ids file
+     */
+    private function SaveBookIds()
+    {
+        if (empty($this->mBookIdFileName)) {
+            return;
+        }
+
+        $tab = [];
+        foreach ($this->mBookId as $key => $value) {
+            $tab[] = sprintf('%s%s%d', $key, "\t", $value);
+        }
+
+        file_put_contents($this->mBookIdFileName, implode("\n", $tab) . "\n");
+    }
+
+    private function GetBookId($inBookFileName)
+    {
+        if (isset($this->mBookId[$inBookFileName])) {
+            $res = (int)$this->mBookId[$inBookFileName];
+        } else {
+            // Get max book id
+            $res = 0;
+            foreach ($this->mBookId as $key => $value) {
+                if ($value > $res) {
+                    $res = $value;
+                }
+            }
+            $res++;
+            $this->mBookId[$inBookFileName] = $res;
+        }
+
+        return $res;
+    }
+
+    /**
      * Create an sqlite database
      *
      * @param string $inDbFileName Database file name
+     *
      * @throws Exception if error
      *
      * @return void
@@ -79,6 +158,14 @@ class CalibreDbLoader
                 if (strpos($str, 'title_sort') !== false) {
                     continue;
                 }
+                // Add 'calibre_database_field_cover' field
+                if (strpos($sql, 'has_cover BOOL DEFAULT 0,') !== false) {
+                    $sql = str_replace('has_cover BOOL DEFAULT 0,', 'has_cover BOOL DEFAULT 0,' . ' cover TEXT NOT NULL DEFAULT "",', $sql);
+                }
+                // Add 'calibre_database_field_sort' field
+                if (strpos($sql, 'CREATE TABLE tags ') !== false) {
+                    $sql = str_replace('name TEXT NOT NULL COLLATE NOCASE,', 'name TEXT NOT NULL COLLATE NOCASE,' . ' sort TEXT COLLATE NOCASE,', $sql);
+                }
                 $stmt = $this->mDb->prepare($sql);
                 $stmt->execute();
             }
@@ -104,7 +191,7 @@ class CalibreDbLoader
             // Open the database
             $this->mDb = new PDO($dsn); // Send an exception if error
             $this->mDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            //echo sprintf('Init database ok for: %s%s', $dsn, '<br />');
+            $this->mDb->exec('pragma synchronous = off');
         } catch (Exception $e) {
             $error = sprintf('Cannot open database [%s]: %s', $dsn, $e->getMessage());
             throw new Exception($error);
@@ -114,21 +201,24 @@ class CalibreDbLoader
     /**
      * Add an epub to the db
      *
-     * @param string $inFileName Epub file name
+     * @param string $inBasePath Epub base directory
+     * @param string $inFileName Epub file name (from base directory)
+     *
      * @throws Exception if error
      *
      * @return string Empty string or error if any
      */
-    public function AddEpub($inFileName)
+    public function AddEpub($inBasePath, $inFileName)
     {
         $error = '';
 
         try {
             // Load the book infos
             $bookInfos = new BookInfos();
-            $bookInfos->LoadFromEpub($inFileName);
+            $bookInfos->LoadFromEpub($inBasePath, $inFileName);
             // Add the book
-            $this->AddBook($bookInfos);
+            $bookId = $this->GetBookId($inFileName);
+            $this->AddBook($bookInfos, $bookId);
         } catch (Exception $e) {
             $error = $e->getMessage();
         }
@@ -139,34 +229,67 @@ class CalibreDbLoader
     /**
      * Add a new book into the db
      *
-     * @param BookInfos $inBookInfo object
+     * @param BookInfos $inBookInfo BookInfo object
+     * @param int $inBookId Book id in the calibre db (or 0 for auto incrementation)
+     *
      * @throws Exception if error
      *
      * @return void
      */
-    private function AddBook($inBookInfo)
+    private function AddBook($inBookInfo, $inBookId)
     {
+        $errors = [];
+
+        // Add 'calibre_database_field_sort' field
+        $sortField = 'sort';
+
         // Check if the book uuid does not already exist
         $sql = 'select b.id, b.title, b.path, d.name, d.format from books as b, data as d where d.book = b.id and uuid=:uuid';
         $stmt = $this->mDb->prepare($sql);
         $stmt->bindParam(':uuid', $inBookInfo->mUuid);
         $stmt->execute();
         while ($post = $stmt->fetchObject()) {
-            $error = sprintf('Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $post->format, $post->title);
-            throw new Exception($error);
+            $error = sprintf('Warning: Multiple book id for uuid: %s (already in file "%s/%s.%s" title "%s")', $inBookInfo->mUuid, $post->path, $post->name, $inBookInfo->mFormat, $post->title);
+            $errors[] = $error;
+            // Set a new uuid
+            $inBookInfo->CreateUuid();
+            break;
         }
         // Add the book
-        $sql = 'insert into books(title, sort, pubdate, last_modified, series_index, uuid, path) values(:title, :sort, :pubdate, :lastmodified, :serieindex, :uuid, :path)';
+        $sql = 'insert into books(';
+        if ($inBookId) {
+            $sql .= 'id, ';
+        }
+        $sql .= 'title, sort, timestamp, pubdate, last_modified, series_index, uuid, path, has_cover, cover, isbn) values(';
+        if ($inBookId) {
+            $sql .= ':id, ';
+        }
+        $sql .= ':title, :sort, :timestamp, :pubdate, :lastmodified, :serieindex, :uuid, :path, :hascover, :cover, :isbn)';
+        $timeStamp = BookInfos::GetTimeStamp($inBookInfo->mTimeStamp);
+        $pubDate = BookInfos::GetTimeStamp(empty($inBookInfo->mCreationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mCreationDate);
+        $lastModified = BookInfos::GetTimeStamp(empty($inBookInfo->mModificationDate) ? '2000-01-01 00:00:00' : $inBookInfo->mModificationDate);
+        $hasCover = empty($inBookInfo->mCover) ? 0 : 1;
+        if (empty($inBookInfo->mCover)) {
+            $error = 'Warning: Cover not found';
+            $errors[] = $error;
+        }
+        $cover = str_replace('OEBPS/', $inBookInfo->mName . '/', $inBookInfo->mCover);
         $stmt = $this->mDb->prepare($sql);
+        if ($inBookId) {
+            $stmt->bindParam(':id', $inBookId);
+        }
         $stmt->bindParam(':title', $inBookInfo->mTitle);
-        $stmt->bindParam(':sort', $inBookInfo->mTitle);
-        $inBookInfo->mCreationDate = $inBookInfo->mCreationDate ?: null;
-        $stmt->bindParam(':pubdate', $inBookInfo->mCreationDate);
-        $inBookInfo->mModificationDate = $inBookInfo->mModificationDate ?: '2000-01-01 00:00:00+00:00';
-        $stmt->bindParam(':lastmodified', $inBookInfo->mModificationDate);
+        $sortString = BookInfos::GetSortString($inBookInfo->mTitle);
+        $stmt->bindParam(':sort', $sortString);
+        $stmt->bindParam(':timestamp', $timeStamp);
+        $stmt->bindParam(':pubdate', $pubDate);
+        $stmt->bindParam(':lastmodified', $lastModified);
         $stmt->bindParam(':serieindex', $inBookInfo->mSerieIndex);
         $stmt->bindParam(':uuid', $inBookInfo->mUuid);
         $stmt->bindParam(':path', $inBookInfo->mPath);
+        $stmt->bindParam(':hascover', $hasCover, PDO::PARAM_INT);
+        $stmt->bindParam(':cover', $cover);
+        $stmt->bindParam(':isbn', $inBookInfo->mIsbn);
         $stmt->execute();
         // Get the book id
         $sql = 'select id from books where uuid=:uuid';
@@ -174,21 +297,42 @@ class CalibreDbLoader
         $stmt->bindParam(':uuid', $inBookInfo->mUuid);
         $stmt->execute();
         $idBook = null;
-        while ($post = $stmt->fetchObject()) {
+        $post = $stmt->fetchObject();
+        if ($post) {
             $idBook = $post->id;
-            break;
         }
-        if (!isset($idBook)) {
+        if (empty($idBook)) {
             $error = sprintf('Cannot find book id for uuid: %s', $inBookInfo->mUuid);
             throw new Exception($error);
         }
-        // Add the book formats
-        $sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, 0)';
-        $stmt = $this->mDb->prepare($sql);
-        $stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
-        $stmt->bindParam(':format', $inBookInfo->mFormat);
-        $stmt->bindParam(':name', $inBookInfo->mName);
-        $stmt->execute();
+        if ($inBookId && $idBook != $inBookId) {
+            $error = sprintf('Incorrect book id=%d vs %d for uuid: %s', $idBook, $inBookId, $inBookInfo->mUuid);
+            throw new Exception($error);
+        }
+        // Add the book data (formats)
+        $formats = [
+            $inBookInfo->mFormat,
+            'pdf',
+        ];
+        foreach ($formats as $format) {
+            $fileName = sprintf('%s%s%s%s%s.%s', $inBookInfo->mBasePath, DIRECTORY_SEPARATOR, $inBookInfo->mPath, DIRECTORY_SEPARATOR, $inBookInfo->mName, $format);
+            if (!is_readable($fileName)) {
+                if ($format == $inBookInfo->mFormat) {
+                    $error = sprintf('Cannot read file: %s', $fileName);
+                    throw new Exception($error);
+                }
+                continue;
+            }
+            $uncompressedSize = filesize($fileName);
+            $sql = 'insert into data(book, format, name, uncompressed_size) values(:idBook, :format, :name, :uncompressedSize)';
+            $stmt = $this->mDb->prepare($sql);
+            $stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
+            $format = strtoupper($format);
+            $stmt->bindParam(':format', $format); // Calibre format is uppercase
+            $stmt->bindParam(':name', $inBookInfo->mName);
+            $stmt->bindParam(':uncompressedSize', $uncompressedSize);
+            $stmt->execute();
+        }
         // Add the book comments
         $sql = 'insert into comments(book, text) values(:idBook, :text)';
         $stmt = $this->mDb->prepare($sql);
@@ -227,7 +371,8 @@ class CalibreDbLoader
                 $sql = 'insert into series(name, sort) values(:serie, :sort)';
                 $stmt = $this->mDb->prepare($sql);
                 $stmt->bindParam(':serie', $inBookInfo->mSerie);
-                $stmt->bindParam(':sort', $inBookInfo->mSerie);
+                $sortString = BookInfos::GetSortString($inBookInfo->mSerie);
+                $stmt->bindParam(':sort', $sortString);
                 $stmt->execute();
                 // Get the serie id
                 $sql = 'select id from series where name=:serie';
@@ -270,7 +415,8 @@ class CalibreDbLoader
                 $sql = 'insert into authors(name, sort) values(:author, :sort)';
                 $stmt = $this->mDb->prepare($sql);
                 $stmt->bindParam(':author', $author);
-                $stmt->bindParam(':sort', $authorSort);
+                $sortString = BookInfos::GetSortString($authorSort);
+                $stmt->bindParam(':sort', $sortString);
                 $stmt->execute();
                 // Get the author id
                 $sql = 'select id from authors where name=:author';
@@ -354,9 +500,18 @@ class CalibreDbLoader
                 $idSubject = $post->id;
             } else {
                 // Add a new subject
-                $sql = 'insert into tags(name) values(:subject)';
+                if (!empty($sortField)) {
+                    $sql = sprintf('insert into tags(name, %s) values(:subject, :%s)', $sortField, $sortField);
+                } else {
+                    $sql = 'insert into tags(name) values(:subject)';
+                }
                 $stmt = $this->mDb->prepare($sql);
                 $stmt->bindParam(':subject', $subject);
+                // Add :sort field
+                if (!empty($sortField)) {
+                    $sortString = BookInfos::GetSortString($subject);
+                    $stmt->bindParam(':' . $sortField, $sortString);
+                }
                 $stmt->execute();
                 // Get the subject id
                 $sql = 'select id from tags where name=:subject';
@@ -383,6 +538,11 @@ class CalibreDbLoader
             $stmt->bindParam(':idBook', $idBook, PDO::PARAM_INT);
             $stmt->bindParam(':idSubject', $idSubject, PDO::PARAM_INT);
             $stmt->execute();
+        }
+        // Send warnings
+        if (count($errors)) {
+            $error = implode(' - ', $errors);
+            throw new Exception($error);
         }
     }
 

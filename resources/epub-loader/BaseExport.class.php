@@ -3,7 +3,7 @@
  * BaseExport class
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Didier Corbière <didier.corbiere@opale-concept.com>
+ * @author     Didier Corbière <contact@atoll-digital-library.org>
  */
 
 class BaseExport
@@ -145,25 +145,25 @@ class BaseExport
             case 'xml':
                 $contentType = 'text/xml';
                 if (!empty($inCodeSet)) {
-                    $contentType .= '; charset=' . $inCodeSet . '"';
+                    $contentType .= '; charset=' . $inCodeSet;
                 }
                 break;
             case 'txt':
                 $contentType = 'text/plain';
                 if (!empty($inCodeSet)) {
-                    $contentType .= '; charset=' . $inCodeSet . '"';
+                    $contentType .= '; charset=' . $inCodeSet;
                 }
                 break;
             case 'csv':
                 $contentType = 'text/csv';
                 if (!empty($inCodeSet)) {
-                    $contentType .= '; charset=' . $inCodeSet . '"';
+                    $contentType .= '; charset=' . $inCodeSet;
                 }
                 break;
             case 'html':
                 $contentType = 'text/html';
                 if (!empty($inCodeSet)) {
-                    $contentType .= '; charset=' . $inCodeSet . '"';
+                    $contentType .= '; charset=' . $inCodeSet;
                 }
                 break;
             default:

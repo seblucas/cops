@@ -109,24 +109,89 @@ class Book extends Base
     public $identifiers = null;
     public $languages = null;
     public $format = [];
+    private $coverFileName = null;
 
     public function __construct($line)
     {
+        global $config;
+
         $this->id = $line->id;
         $this->title = $line->title;
         $this->timestamp = strtotime($line->timestamp);
         $this->pubdate = $line->pubdate;
-        $this->path = Base::getDbDirectory() . $line->path;
-        $this->relativePath = $line->path;
+        //$this->path = Base::getDbDirectory() . $line->path;
+        //$this->relativePath = $line->path;
+        // -DC- Init relative or full path
+        $this->path = $line->path;
+        if (!is_dir($this->path)) {
+            $this->path = Base::getDbDirectory() . $line->path;
+        }
         $this->seriesIndex = $line->series_index;
         $this->comment = $line->comment ?? '';
         $this->uuid = $line->uuid;
         $this->hasCover = $line->has_cover;
-        if (!file_exists($this->getFilePath('jpg'))) {
-            // double check
-            $this->hasCover = 0;
+        // -DC- Use cover file name
+        //if (!file_exists($this->getFilePath('jpg'))) {
+        //    // double check
+        //    $this->hasCover = 0;
+        //}
+        if ($this->hasCover) {
+            if (!empty($config['calibre_database_field_cover'])) {
+                $imgDirectory = Base::getImgDirectory();
+                $this->coverFileName = $line->cover;
+                if (!file_exists($this->coverFileName)) {
+                    $this->coverFileName = null;
+                }
+                if (empty($this->coverFileName)) {
+                    $this->coverFileName = sprintf('%s%s', $imgDirectory, $line->cover);
+                    if (!file_exists($this->coverFileName)) {
+                        $this->coverFileName = null;
+                    }
+                }
+                if (empty($this->coverFileName)) {
+                    // Try with the epub file name
+                    $data = $this->getDataFormat('EPUB');
+                    if ($data) {
+                        $this->coverFileName = sprintf('%s%s/%s', $imgDirectory, $data->name, $line->cover);
+                        if (!file_exists($this->coverFileName)) {
+                            $this->coverFileName = null;
+                        }
+                        if (empty($this->coverFileName)) {
+                            $this->coverFileName = sprintf('%s%s.jpg', $imgDirectory, $data->name);
+                            if (!file_exists($this->coverFileName)) {
+                                $this->coverFileName = null;
+                            }
+                        }
+                    }
+                }
+            }
+            // Else try with default cover file name
+            if (empty($this->coverFileName)) {
+                $cover = $this->getFilePath("jpg");
+                if ($cover === false || !file_exists($cover)) {
+                    $cover = $this->getFilePath("png");
+                }
+                if ($cover === false || !file_exists($cover)) {
+                    $this->hasCover = 0;
+                } else {
+                    $this->coverFileName = $cover;
+                }
+            }
         }
         $this->rating = $line->rating;
+    }
+
+    // -DC- Get customisable book columns
+    private static function getBookColumns()
+    {
+        global $config;
+
+        $res = self::BOOK_COLUMNS;
+        if (!empty($config['calibre_database_field_cover'])) {
+            $res = str_replace('has_cover,', 'has_cover, ' . $config['calibre_database_field_cover'] . ',', $res);
+        }
+
+        return $res;
     }
 
     public function getEntryId()
@@ -377,9 +442,14 @@ class Book extends Base
         return reset($reduced);
     }
 
+    /**
+     * @checkme always returns absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
+     * @param false $relative Deprecated
+     */
     public function getFilePath($extension, $idData = null, $relative = false)
     {
-        if ($extension == 'jpg') {
+        /*if ($extension == 'jpg')
+        {
             $file = 'cover.jpg';
         } else {
             $data = $this->getDataById($idData);
@@ -393,6 +463,24 @@ class Book extends Base
             return $this->relativePath.'/'.$file;
         } else {
             return $this->path.'/'.$file;
+        }*/
+        if ($extension == "jpg" || $extension == "png") {
+            if (empty($this->coverFileName)) {
+                return $this->path . '/cover.' . $extension;
+            } else {
+                $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+                if ($ext == $extension) {
+                    return $this->coverFileName;
+                }
+            }
+            return false;
+        } else {
+            $data = $this->getDataById($idData);
+            if (!$data) {
+                return null;
+            }
+            $file = $data->name . "." . strtolower($data->format);
+            return $this->path . '/' . $file;
         }
     }
 
@@ -413,7 +501,9 @@ class Book extends Base
             $epub->Language($this->getLanguages());
             $epub->Description($this->getComment(false));
             $epub->Subjects($this->getTagsName());
-            $epub->Cover2($this->getFilePath('jpg'), 'image/jpeg');
+            // -DC- Use cover file name
+            // $epub->Cover2($this->getFilePath('jpg'), 'image/jpeg');
+            $epub->Cover2($this->coverFileName, 'image/jpeg');
             $epub->Calibre($this->uuid);
             $se = $this->getSerie();
             if (!is_null($se)) {
@@ -431,13 +521,15 @@ class Book extends Base
         }
     }
 
-    public function getThumbnail($width, $height, $outputfile = null)
+    public function getThumbnail($width, $height, $outputfile = null, $inType = 'jpg')
     {
         if (is_null($width) && is_null($height)) {
             return false;
         }
 
-        $file = $this->getFilePath('jpg');
+        // -DC- Use cover file name
+        //$file = $this->getFilePath('jpg');
+        $file = $this->coverFileName;
         // get image size
         if ($size = GetImageSize($file)) {
             $w = $size[0];
@@ -460,11 +552,25 @@ class Book extends Base
             return false;
         }
 
-        //draw the image
-        $src_img = imagecreatefromjpeg($file);
+        // Draw the image
+        if ($inType == 'png') {
+            $src_img = imagecreatefrompng($file);
+        } else {
+            $src_img = imagecreatefromjpeg($file);
+        }
         $dst_img = imagecreatetruecolor($nw, $nh);
-        imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h);//resizing the image
-        imagejpeg($dst_img, $outputfile, 80);
+        if (!imagecopyresampled($dst_img, $src_img, 0, 0, 0, 0, $nw, $nh, $w, $h)) {
+            return false;
+        }
+        if ($inType == 'png') {
+            if (!imagepng($dst_img, $outputfile, 9)) {
+                return false;
+            }
+        } else {
+            if (!imagejpeg($dst_img, $outputfile, 80)) {
+                return false;
+            }
+        }
         imagedestroy($src_img);
         imagedestroy($dst_img);
 
@@ -476,9 +582,17 @@ class Book extends Base
         $linkArray = [];
 
         if ($this->hasCover) {
-            array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
-
-            array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', null));
+            // -DC- Use cover file name
+            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', NULL));
+            //array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_THUMBNAIL_TYPE, 'cover.jpg', NULL));
+            $ext = strtolower(pathinfo($this->coverFileName, PATHINFO_EXTENSION));
+            if ($ext == 'png') {
+                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_IMAGE_TYPE, "cover.png", null));
+                array_push($linkArray, Data::getLink($this, "png", "image/png", Link::OPDS_THUMBNAIL_TYPE, "cover.png", null));
+            } else {
+                array_push($linkArray, Data::getLink($this, 'jpg', 'image/jpeg', Link::OPDS_IMAGE_TYPE, 'cover.jpg', null));
+                array_push($linkArray, Data::getLink($this, "jpg", "image/jpeg", Link::OPDS_THUMBNAIL_TYPE, "cover.jpg", null));
+            }
         }
 
         foreach ($this->getDatas() as $data) {
@@ -593,7 +707,7 @@ class Book extends Base
 
     public static function getBookById($bookId)
     {
-        $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . '
+        $result = parent::getDb()->prepare('select ' . self::getBookColumns() . '
 from books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where books.id = ?');
         $result->execute([$bookId]);
@@ -606,7 +720,7 @@ where books.id = ?');
 
     public static function getBookByDataId($dataId)
     {
-        $result = parent::getDb()->prepare('select ' . self::BOOK_COLUMNS . ', data.name, data.format
+        $result = parent::getDb()->prepare('select ' . self::getBookColumns() . ', data.name, data.format
 from data, books ' . self::SQL_BOOKS_LEFT_JOIN . '
 where data.book = books.id and data.id = ?');
         $result->execute([$dataId]);
@@ -683,7 +797,7 @@ order by substr (upper (sort), 1, 1)', 'substr (upper (sort), 1, 1) as title, co
     {
         /* @var $totalNumber integer */
         /* @var $result PDOStatement */
-        [$totalNumber, $result] = parent::executeQuery($query, self::BOOK_COLUMNS, self::getFilterString(), $params, $n, $database, $numberPerPage);
+        [$totalNumber, $result] = parent::executeQuery($query, self::getBookColumns(), self::getFilterString(), $params, $n, $database, $numberPerPage);
 
         $entryArray = [];
         while ($post = $result->fetchObject()) {
