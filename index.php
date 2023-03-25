@@ -17,6 +17,8 @@ if (preg_match('/(MantanoReader|FBReader|Stanza|Marvin|Aldiko|Moon\+ Reader|Chun
     exit();
 }
 
+initURLParam();
+
 $page     = getURLParam('page', Base::PAGE_INDEX);
 $query    = getURLParam('query');
 $qid      = getURLParam('id');

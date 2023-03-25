@@ -20,16 +20,10 @@ $user_config_file = 'config_local.' . $remote_user . '.php';
 if (file_exists(dirname(__FILE__) . '/' . $user_config_file) && (php_sapi_name() !== 'cli')) {
     require dirname(__FILE__) . '/' . $user_config_file;
 }
-
-if (!is_null($config['cops_basic_authentication']) &&
-    is_array($config['cops_basic_authentication'])) {
-    if (!isset($_SERVER['PHP_AUTH_USER']) ||
-        (isset($_SERVER['PHP_AUTH_USER']) &&
-        ($_SERVER['PHP_AUTH_USER']!=$config['cops_basic_authentication']['username'] ||
-        $_SERVER['PHP_AUTH_PW'] != $config['cops_basic_authentication']['password']))) {
-        header('WWW-Authenticate: Basic realm="COPS Authentication"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo 'This site is password protected';
-        exit;
-    }
+require_once 'verifyLogin.php';
+if (!verifyLogin()) {
+    header('WWW-Authenticate: Basic realm="COPS Authentication"');
+    header('HTTP/1.0 401 Unauthorized');
+    echo 'This site is password protected';
+    exit;
 }

@@ -400,10 +400,10 @@ class Book extends Base
         }
         $retour = '';
         for ($i = 0; $i < $this->rating / 2; $i++) {
-            $retour .= '&#9733;';
+            $retour .= '&#9733;'; // full star
         }
         for ($i = 0; $i < 5 - $this->rating / 2; $i++) {
-            $retour .= '&#9734;';
+            $retour .= '&#9734;'; // empty star
         }
         return $retour;
     }
@@ -415,7 +415,7 @@ class Book extends Base
         }
         $dateY = (int) substr($this->pubdate, 0, 4);
         if ($dateY > 102) {
-            return str_pad($dateY, 4, '0', STR_PAD_LEFT);
+            return str_pad(strval($dateY), 4, '0', STR_PAD_LEFT);
         }
         return '';
     }

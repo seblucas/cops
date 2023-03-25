@@ -243,4 +243,22 @@ class BaseTest extends TestCase
             normalizeUtf8String("ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏŒÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïœðòóôõöùúûüýÿñ")
         );
     }
+
+    public function testLoginEnabledWithoutCreds()
+    {
+        global $config;
+        require_once __DIR__.'/../verifyLogin.php';
+        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        $this->assertFalse(verifyLogin());
+    }
+
+    public function testLoginEnabledAndLoggingIn()
+    {
+        global $config;
+        require_once __DIR__.'/../verifyLogin.php';
+        $config['cops_basic_authentication'] = [ "username" => "xxx", "password" => "secret"];
+        $_SERVER['PHP_AUTH_USER'] = 'xxx';
+        $_SERVER['PHP_AUTH_PW'] = 'secret';
+        $this->assertTrue(verifyLogin());
+    }
 }

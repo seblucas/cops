@@ -39,7 +39,7 @@ if ($error = checkConfiguration()) {
     exit;
 }
 
-$idData = $_REQUEST["data"];
+$idData = (int)$_REQUEST["data"];
 $emailDest = $_REQUEST["email"];
 if ($error = checkRequest($idData, $emailDest)) {
     echo $error;
