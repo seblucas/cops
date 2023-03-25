@@ -8,6 +8,9 @@
 
 require_once dirname(__FILE__) . '/config.php';
 require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
+
+initURLParam();
 
 global $config;
 
@@ -19,7 +22,9 @@ if ($config['cops_fetch_protect'] == '1') {
     }
 }
 // clean output buffers before sending the ebook data do avoid high memory usage on big ebooks (ie. comic books)
-ob_end_clean();
+if (ob_get_length() !== false) {
+    ob_end_clean();
+}
 
 $expires = 60*60*24*14;
 header('Pragma: public');

@@ -6,8 +6,9 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require 'config.php';
-require 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
 
 initURLParam();
 
