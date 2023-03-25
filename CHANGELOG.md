@@ -1,5 +1,8 @@
 # Change Log for COPS
 
+1.3.2 - 20230325 Improve tests and security
+  * Merge branch 'master' of https://github.com/peltos/cops - see @peltos
+
 1.3.1 - 20230325 Update epub-loader resources
   * Merge commit 'refs/pull/424/head' of https://github.com/seblucas/cops - see seblucas/cops#424 from @marsender
 
