@@ -14,3 +14,9 @@ docker-compose-dev.yaml
 #!.yarn/releases
 #!.yarn/plugins
 .pnp.*
+# remove unused directories
+resources/epub-loader/
+resources/tbszip/stuffs/
+resources/php-epub-meta/assets/
+resources/php-epub-meta/test/
+tools/

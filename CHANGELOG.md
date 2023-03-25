@@ -1,3 +1,20 @@
+# Change Log for COPS
+
+1.3.1 - 20230325 Update epub-loader resources
+  * Merge commit 'refs/pull/424/head' of https://github.com/seblucas/cops - see seblucas/cops#424 from @marsender
+
+1.3.0 - 20230324 Add bootstrap2 templates
+  * Merge branch 'master' of https://github.com/SenorSmartyPants/cops - see seblucas/cops#497 and earlier from @SenorSmartyPants
+
+1.2.3 - 20230324 Add fixes for PHP 8.2
+
+1.2.2 - 20230324 Update fetch.php to lower memory consumption
+  * Merge commit 'refs/pull/518/head' of https://github.com/seblucas/cops - see seblucas/cops#518 from @allandanton
+
+1.2.1 - 20230321 Add phpstan baseline + fixes
+
+1.2.0 - 20230319 Migration to PHP 8.x
+
 1.1.3 - 20190624
  * Fixed an error with PHP > 7.2.X where create_function is deprecated, also fixed another error with PHP 7.3.X. Thanks to Turkish for the report.
  * Fixed the view button when URL Rewriting is enabled.

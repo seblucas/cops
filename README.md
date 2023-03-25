@@ -40,6 +40,11 @@ If you want to use the OPDS feed don't forget to specify feed.php at the end of 
 
 You just have to sync your Calibre directory to your COPS server the way you prefer (Dropbox, Bt Sync, Syncthing, use a directory shared with Nextcloud, ...).
 
+# Prerequisites (this fork)
+1. 	PHP 7.4 or 8.X with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 8.1 or later recommended).
+
+See [CHANGELOG](CHANGELOG.md) for changes compared to upstream repository https://github.com/seblucas/cops from @seblucas
+
 # Prerequisites
 
 1. 	PHP 5.3, 5.4, 5.5, 5.6, 7.X or hhvm with GD image processing, Libxml, Intl, Json & SQLite3 support (PHP 5.6 or later recommended).
