@@ -49,7 +49,15 @@ class Tag extends Base
 
     public static function getAllTags()
     {
-        return Base::getEntryArrayWithBookNumber(self::SQL_ALL_TAGS, self::TAG_COLUMNS, [], "Tag");
+        global $config;
+
+        $sql = self::SQL_ALL_TAGS;
+        $sortField = $config['calibre_database_field_sort'] ?? '';
+        if (!empty($sortField)) {
+            $sql = str_replace('tags.name', 'tags.' . $sortField, $sql);
+        }
+
+        return Base::getEntryArrayWithBookNumber($sql, self::TAG_COLUMNS, [], "Tag");
     }
 
     public static function getAllTagsByQuery($query, $n, $database = null, $numberPerPage = null)

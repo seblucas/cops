@@ -41,8 +41,9 @@ if (!$book) {
     return;
 }
 
-if ($book && ($type == 'jpg' || empty($config['calibre_internal_directory']))) {
-    if ($type == 'jpg') {
+// -DC- Add png type
+if ($book && ($type == 'jpg' || $type == 'png' || empty($config['calibre_internal_directory']))) {
+    if ($type == 'jpg' || $type == 'png') {
         $file = $book->getFilePath($type);
     } else {
         $file = $book->getFilePath($type, $idData);
@@ -54,8 +55,14 @@ if ($book && ($type == 'jpg' || empty($config['calibre_internal_directory']))) {
 }
 
 switch ($type) {
+    // -DC- Add png type
     case 'jpg':
-        header('Content-Type: image/jpeg');
+    case 'png':
+        if ($type == 'jpg') {
+            header('Content-Type: image/jpeg');
+        } else {
+            header('Content-Type: image/png');
+        }
         //by default, we don't cache
         $thumbnailCacheFullpath = null;
         if (isset($config['cops_thumbnail_cache_directory']) && $config['cops_thumbnail_cache_directory'] !== '') {
@@ -68,7 +75,7 @@ switch ($type) {
             //check if cache folder exists or create it
             if (file_exists($thumbnailCacheFullpath) || mkdir($thumbnailCacheFullpath, 0700, true)) {
                 //we name the thumbnail from the book's uuid and it's dimensions (width and/or height)
-                $thumbnailCacheName = substr($book->uuid, 3) . '-' . getURLParam('width') . 'x' . getURLParam('height') . '.jpg';
+                $thumbnailCacheName = substr($book->uuid, 3) . '-' . getURLParam('width') . 'x' . getURLParam('height') . '.' . $type;
                 $thumbnailCacheFullpath = $thumbnailCacheFullpath . $thumbnailCacheName;
             } else {
                 //error creating the folder, so we don't cache
@@ -82,7 +89,9 @@ switch ($type) {
             return;
         }
 
-        if ($book->getThumbnail(getURLParam('width'), getURLParam('height'), $thumbnailCacheFullpath)) {
+        $width = getURLParam('width');
+        $height = getURLParam('height');
+        if ($book->getThumbnail($width, $height, $thumbnailCacheFullpath, $type)) {
             //if we don't cache the thumbnail, imagejpeg() in $book->getThumbnail() already return the image data
             if ($thumbnailCacheFullpath === null) {
                 // The cover had to be resized
@@ -99,12 +108,15 @@ switch ($type) {
         header('Content-Type: ' . $data->getMimeType());
         break;
 }
-$file = $book->getFilePath($type, $idData, true);
+
+// absolute path for single DB in PHP app here - cfr. internal dir for X-Accel-Redirect with Nginx
+$file = $book->getFilePath($type, $idData, false);
 if (!$viewOnly && $type == 'epub' && $config['cops_update_epub-metadata']) {
     $book->getUpdatedEpub($idData);
     return;
 }
-if ($type == 'jpg') {
+// -DC- Add png type
+if ($type == 'jpg' || $type == 'png') {
     header('Content-Disposition: filename="' . basename($file) . '"');
 } elseif ($viewOnly) {
     header('Content-Disposition: inline');
@@ -112,10 +124,12 @@ if ($type == 'jpg') {
     header('Content-Disposition: attachment; filename="' . basename($file) . '"');
 }
 
-$dir = $config['calibre_internal_directory'];
-if (empty($config['calibre_internal_directory'])) {
-    $dir = Base::getDbDirectory();
-}
+// -DC- File is a full path
+//$dir = $config['calibre_internal_directory'];
+//if (empty($config['calibre_internal_directory'])) {
+    //    $dir = Base::getDbDirectory();
+//}
+$dir = '';
 
 if (empty($config['cops_x_accel_redirect'])) {
     $filename = $dir . $file;

@@ -382,21 +382,21 @@ class BookTest extends TestCase
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals("Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, true));
+        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/cover.jpg", $book->getFilePath("jpg", null, false));
     }
 
     public function testGetFilePath_Epub()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, true));
+        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.epub", $book->getFilePath("epub", 20, false));
     }
 
     public function testGetFilePath_Mobi()
     {
         $book = Book::getBookById(17);
 
-        $this->assertEquals("Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, true));
+        $this->assertEquals(Base::getDbDirectory() . "Lewis Carroll/Alice's Adventures in Wonderland (17)/Alice's Adventures in Wonderland - Lewis Carroll.mobi", $book->getFilePath("mobi", 17, false));
     }
 
     public function testGetDataFormat_EPUB()

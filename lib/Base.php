@@ -108,6 +108,19 @@ abstract class Base
         return $config['calibre_directory'];
     }
 
+    // -DC- Add image directory
+    public static function getImgDirectory($database = null)
+    {
+        global $config;
+        if (self::isMultipleDatabaseEnabled()) {
+            if (is_null($database)) {
+                $database = GetUrlParam(DB, 0);
+            }
+            $array = array_values($config['image_directory']);
+            return  $array[$database];
+        }
+        return $config['image_directory'];
+    }
 
     public static function getDbFileName($database = null)
     {
