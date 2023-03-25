@@ -347,8 +347,7 @@ function addURLParameter($urlParams, $paramName, $paramValue)
     }
     $params = [];
     parse_str($urlParams, $params);
-    // @checkme changing this removes ?db=0 from the URL
-    if (empty($paramValue) && $paramValue !== 0) {
+    if (empty($paramValue) && strval($paramValue) !== "0") {
         unset($params[$paramName]);
     } else {
         $params[$paramName] = $paramValue;
