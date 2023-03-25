@@ -19,7 +19,7 @@ const CONFIG_COPS_TEMPLATE = 'cops_template';
 function useServerSideRendering()
 {
     global $config;
-    return !preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
+    return preg_match('/' . $config['cops_server_side_render'] . '/', $_SERVER['HTTP_USER_AGENT']);
 }
 
 function serverSideRender($data)

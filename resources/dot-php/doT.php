@@ -59,6 +59,8 @@ class doT
             $func = $this->resolveDefs($func);
         }
 
+        // @todo this messes up serverside rendering for client-side javascript, e.g. in header template:
+        // <a href="#" onclick='$.cookie("template", "default", { expires: 365 }); window.location.reload(true); ' ...
         $func = preg_replace("/'|\\\/", "\\$&", $func);
 
         // interpolate
