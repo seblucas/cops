@@ -1,5 +1,6 @@
 services:
   web:
+    image: mikespub/seblucas-cops:web
     build:
       context: . 
       dockerfile: docker/Dockerfile.php82
