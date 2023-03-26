@@ -4,80 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f29695a1332a8e48adbc6fc07763aff7",
+    "content-hash": "b2ca6b35ee2005dda8cd69665844f957",
     "packages": [
-        {
-            "name": "bower-asset/dot",
-            "version": "v1.1.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/olado/doT.git",
-                "reference": "d00300e29ab47835322bf948f6e19a478eef8dc1"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/olado/doT/zipball/d00300e29ab47835322bf948f6e19a478eef8dc1",
-                "reference": "d00300e29ab47835322bf948f6e19a478eef8dc1"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MIT"
-            ]
-        },
-        {
-            "name": "bower-asset/jquery",
-            "version": "1.12.4",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:jquery/jquery-dist.git",
-                "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/5e89585e0121e72ff47de177c5ef604f3089a53d",
-                "reference": "5e89585e0121e72ff47de177c5ef604f3089a53d"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MIT"
-            ]
-        },
-        {
-            "name": "bower-asset/jquery-cookie",
-            "version": "v1.4.1",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:carhartl/jquery-cookie.git",
-                "reference": "7f88a4e631aba8a8c688fd8999ce6b9bcfd50718"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/carhartl/jquery-cookie/zipball/7f88a4e631aba8a8c688fd8999ce6b9bcfd50718",
-                "reference": "7f88a4e631aba8a8c688fd8999ce6b9bcfd50718"
-            },
-            "require": {
-                "bower-asset/jquery": ">=1.2"
-            },
-            "type": "bower-asset"
-        },
-        {
-            "name": "bower-asset/normalize.css",
-            "version": "7.0.0",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:necolas/normalize.css.git",
-                "reference": "73b6b0c7e8690ab5005bca9d7e13d3fb319c98ac"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/necolas/normalize.css/zipball/73b6b0c7e8690ab5005bca9d7e13d3fb319c98ac",
-                "reference": "73b6b0c7e8690ab5005bca9d7e13d3fb319c98ac"
-            },
-            "type": "bower-asset",
-            "license": [
-                "MIT"
-            ]
-        },
         {
             "name": "dimsemenov/magnific-popup",
             "version": "1.1.0",
@@ -101,6 +29,66 @@
                 "source": "https://github.com/dimsemenov/Magnific-Popup/tree/1.1.0"
             },
             "time": "2016-02-20T09:06:30+00:00"
+        },
+        {
+            "name": "npm-asset/dot",
+            "version": "1.1.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/dot/-/dot-1.1.3.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/jquery",
+            "version": "1.12.4",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/jquery/-/jquery-1.12.4.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/js-cookie",
+            "version": "2.2.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/lru-fast",
+            "version": "0.2.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/lru-fast/-/lru-fast-0.2.2.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "npm-asset/normalize.css",
+            "version": "8.0.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/normalize.css/-/normalize.css-8.0.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "phpmailer/phpmailer",
@@ -181,26 +169,6 @@
                 }
             ],
             "time": "2023-03-06T14:43:22+00:00"
-        },
-        {
-            "name": "rsms/js-lru",
-            "version": "dev-v2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rsms/js-lru",
-                "reference": "v2"
-            },
-            "type": "library"
-        },
-        {
-            "name": "simonpioli/sortelements",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/simonpioli/sortElements",
-                "reference": "master"
-            },
-            "type": "library"
         },
         {
             "name": "twbs/bootstrap",
@@ -3372,10 +3340,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "simonpioli/sortelements": 20,
-        "rsms/js-lru": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

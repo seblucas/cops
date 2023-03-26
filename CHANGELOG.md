@@ -1,5 +1,14 @@
 # Change Log for COPS
 
+1.3.x - 2023xxxx Update npm asset dependencies (WIP)
+  * Fix link to typeahead.css for bootstrap2 templates
+  * Move simonpioli/sortelements dev-master to resources (last updated in 2012)
+  * Switch from bower-asset/dot 1.1.3 to npm-asset/dot 1.1.3
+  * Switch from bower-asset/jquery 1.12.4 to npm-asset/jquery 1.12.4
+  * Switch from bower-asset/jquery-cookie 1.4.1 to npm-asset/js-cookie 2.2.1
+  * Switch from bower-asset/normalize.css 7.0.0 to npm-asset/normalize.css 8.0.1
+  * Switch from rsms/js-lru dev-v2 to npm-asset/lru-fast 0.2.2
+
 1.3.2 - 20230325 Improve tests and security
   * Merge branch 'master' of https://github.com/peltos/cops - see @peltos
 
