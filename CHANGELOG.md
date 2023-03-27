@@ -1,6 +1,6 @@
 # Change Log for COPS
 
-1.3.x - 2023xxxx Update npm asset dependencies (WIP)
+1.3.3 - 20230327 Update npm asset dependencies
   * Fix link to typeahead.css for bootstrap2 templates
   * Move simonpioli/sortelements dev-master to resources (last updated in 2012)
   * Switch from bower-asset/dot 1.1.3 to npm-asset/dot 1.1.3
