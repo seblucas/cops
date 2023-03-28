@@ -1,0 +1,11 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Variable \\$sortField in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 2
+			path: resources/epub-loader/CalibreDbLoader.class.php
+
+		-
+			message: "#^Call to an undefined method DOMNode\\:\\:attr\\(\\)\\.$#"
+			count: 1
+			path: resources/php-epub-meta/lib/EPub.php

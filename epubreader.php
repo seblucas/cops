@@ -1,5 +1,5 @@
-<?php 
-  header('Content-Type: text/html;charset=utf-8'); 
+<?php
+header('Content-Type: text/html;charset=utf-8');
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 <?php
@@ -10,13 +10,16 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once 'config.php';
-require_once 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
 
-$idData = getURLParam('data', NULL);
+initURLParam();
+
+$idData = (int)getURLParam('data', null);
 $add = 'data=' . $idData . '&';
-if (!is_null (GetUrlParam (DB))) {
-    $add .= DB . '=' . GetUrlParam (DB) . '&';
+if (!is_null(GetUrlParam(DB))) {
+    $add .= DB . '=' . GetUrlParam(DB) . '&';
 }
 $myBook = Book::getBookByDataId($idData);
 
@@ -37,10 +40,14 @@ $book->initSpineComponent();
         Monocle.DEBUG = true;
         var bookData = {
           getComponents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function($comp) { return "'" . $comp . "'"; }, $book->components ())) . '];'; ?>
+            <?php echo 'return [' . implode(', ', array_map(function ($comp) {
+                return "'" . $comp . "'";
+            }, $book->components())) . '];'; ?>
           },
           getContents: function() {
-            <?php echo 'return [' . implode(', ', array_map(function($content) { return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}"; }, $book->contents())) . '];'; ?>
+            <?php echo 'return [' . implode(', ', array_map(function ($content) {
+                return "{title: '" . addslashes($content['title']) . "', src: '". $content['src'] . "'}";
+            }, $book->contents())) . '];'; ?>
           },
           getComponent: function (componentId) {
             return { url: "epubfs.php?<?php echo $add ?>comp="  + componentId };

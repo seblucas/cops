@@ -8,11 +8,11 @@
 
 class PageTagDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $tag = Tag::getTagById ($this->idGet);
-        $this->idPage = $tag->getEntryId ();
+        $tag = Tag::getTagById($this->idGet);
+        $this->idPage = $tag->getEntryId();
         $this->title = $tag->name;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByTag ($this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByTag($this->idGet, $this->n);
     }
 }

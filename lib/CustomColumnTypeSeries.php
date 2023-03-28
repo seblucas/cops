@@ -16,7 +16,7 @@ class CustomColumnTypeSeries extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -27,7 +27,7 @@ class CustomColumnTypeSeries extends CustomColumnType
      * Get the name of the linking sqlite table for this column
      * (or NULL if there is no linktable)
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkName()
     {
@@ -37,7 +37,7 @@ class CustomColumnTypeSeries extends CustomColumnType
     /**
      * Get the name of the linking column in the linktable
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkColumn()
     {
@@ -47,17 +47,17 @@ class CustomColumnTypeSeries extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM, "{0}", "{1}", $this->getTableLinkName(), $this->getTableLinkColumn());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)
     {
         $result = $this->getDb()->prepare(str_format("SELECT id, value AS name FROM {0} WHERE id = ?", $this->getTableName()));
-        $result->execute(array($id));
+        $result->execute([$id]);
         if ($post = $result->fetchObject()) {
             return new CustomColumn($id, $post->name, $this);
         }
-        return NULL;
+        return null;
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -66,10 +66,10 @@ class CustomColumnTypeSeries extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName(), $this->getTableLinkColumn());
 
         $result = $this->getDb()->query($query);
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
             $entry = new Entry($post->name, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
@@ -92,7 +92,7 @@ class CustomColumnTypeSeries extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->name . " [" . $post->extra . "]", $this);
         }
-        return new CustomColumn(NULL, "", $this);
+        return new CustomColumn(null, "", $this);
     }
 
     public function isSearchable()

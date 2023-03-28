@@ -7,9 +7,12 @@
  *
  */
 
-require_once('config.php');
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
+
+initURLParam();
 
 header('Content-Type:application/json;charset=utf-8');
 
 echo json_encode(JSONRenderer::getJson());
-

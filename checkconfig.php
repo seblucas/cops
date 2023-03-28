@@ -9,24 +9,27 @@
  *
  */
 
-    require_once 'config.php';
-    require_once 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
 
-    $err   = getURLParam('err', -1);
-    $full  = getURLParam('full');
-    $error = NULL;
-    switch ($err) {
-        case 1 :
-            $error = 'Database error';
-            break;
-    }
+initURLParam();
+
+$err   = getURLParam('err', -1);
+$full  = getURLParam('full');
+$error = null;
+switch ($err) {
+    case 1:
+        $error = 'Database error';
+        break;
+}
 
 ?>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>COPS Configuration Check</title>
-    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss ()) ?>" media="screen" />
+    <link rel="stylesheet" type="text/css" href="<?php echo getUrlWithVersion(getCurrentCss()) ?>" media="screen" />
 </head>
 <body>
 <div class="container">
@@ -39,150 +42,150 @@
     <section>
         <?php
         if (!is_null($error)) {
-        ?>
+            ?>
         <article class="frontpage">
             <h2>You've been redirected because COPS is not configured properly</h2>
             <h4><?php echo $error ?></h4>
         </article>
         <?php
         }
-        ?>
+?>
         <article class="frontpage">
             <h2>Check if PHP version is correct</h2>
             <h4>
             <?php
-            if (defined('PHP_VERSION_ID')) {
-                if (PHP_VERSION_ID >= 50300) {
-                    echo 'OK (' . PHP_VERSION . ')';
-                } else {
-                    echo 'Please install PHP >= 5.3 (' . PHP_VERSION . ')';
-                }
-            } else {
-                echo 'Please install PHP >= 5.3';
-            }
-            ?>
+    if (defined('PHP_VERSION_ID')) {
+        if (PHP_VERSION_ID >= 50300) {
+            echo 'OK (' . PHP_VERSION . ')';
+        } else {
+            echo 'Please install PHP >= 5.3 (' . PHP_VERSION . ')';
+        }
+    } else {
+        echo 'Please install PHP >= 5.3';
+    }
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if GD is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('gd') && function_exists('gd_info')) {
-                echo 'OK';
-            } else {
-                echo 'Please install the php5-gd / php7.0-gd extension and make sure it\'s enabled';
-            }
-            ?>
+if (extension_loaded('gd') && function_exists('gd_info')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php5-gd / php7.0-gd extension and make sure it\'s enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if Sqlite is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('pdo_sqlite')) {
-                echo 'OK';
-            } else {
-                echo 'Please install the php5-sqlite / php7.0-sqlite3 extension and make sure it\'s enabled';
-            }
-            ?>
+if (extension_loaded('pdo_sqlite')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php5-sqlite / php7.0-sqlite3 extension and make sure it\'s enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if libxml is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('libxml')) {
-                echo 'OK';
-            } else {
-                echo 'Please make sure libxml is enabled';
-            }
-            ?>
+if (extension_loaded('libxml')) {
+    echo 'OK';
+} else {
+    echo 'Please make sure libxml is enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if Json is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('json')) {
-                echo 'OK';
-            } else {
-                echo 'Please install the php5-json / php7.0-json extension and make sure it\'s enabled';
-            }
-            ?>
+if (extension_loaded('json')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php5-json / php7.0-json extension and make sure it\'s enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if mbstring is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('mbstring')) {
-                echo 'OK';
-            } else {
-                echo 'Please install the php5-mbstring / php7.0-mbstring extension and make sure it\'s enabled';
-            }
-            ?>
+if (extension_loaded('mbstring')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php5-mbstring / php7.0-mbstring extension and make sure it\'s enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if intl is properly installed and loaded</h2>
             <h4>
             <?php
-            if (extension_loaded('intl')) {
-                echo 'OK';
-            } else {
-                echo 'Please install the php5-intl / php7.0-intl extension and make sure it\'s enabled';
-            }
-            ?>
+if (extension_loaded('intl')) {
+    echo 'OK';
+} else {
+    echo 'Please install the php5-intl / php7.0-intl extension and make sure it\'s enabled';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if Normalizer class is properly installed and loaded</h2>
             <h4>
             <?php
-            if (class_exists('Normalizer', $autoload = false)) {
-                echo 'OK';
-            } else {
-                echo 'Please make sure intl is enabled in your php.ini';
-            }
-            ?>
+if (class_exists('Normalizer', $autoload = false)) {
+    echo 'OK';
+} else {
+    echo 'Please make sure intl is enabled in your php.ini';
+}
+?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if the rendering will be done on client side or server side</h2>
             <h4>
             <?php
-            if (useServerSideRendering ()) {
-                echo 'Server side rendering';
-            } else {
-                echo 'Client side rendering';
-            }
-            ?>
+if (useServerSideRendering()) {
+    echo 'Server side rendering';
+} else {
+    echo 'Client side rendering';
+}
+?>
             </h4>
         </article>
 <?php
 $i = 0;
 foreach (Base::getDbList() as $name => $database) {
-?>
+    ?>
         <article class="frontpage">
             <h2>Check if Calibre database path is not an URL</h2>
             <h4>
             <?php
-            if (!preg_match ('#^http#', $database)) {
-                echo $name . ' OK';
-            } else {
-                echo $name . ' Calibre path has to be local (no URL allowed)';
-            }
-            ?>
+                if (!preg_match('#^http#', $database)) {
+                    echo $name . ' OK';
+                } else {
+                    echo $name . ' Calibre path has to be local (no URL allowed)';
+                }
+    ?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if Calibre database file exists and is readable</h2>
             <h4>
             <?php
-            if (is_readable(Base::getDbFileName($i))) {
-                echo $name . ' OK';
-            } else {
-                echo $name . ' File ' . Base::getDbFileName($i) . ' not found,
+    if (is_readable(Base::getDbFileName($i))) {
+        echo $name . ' OK';
+    } else {
+        echo $name . ' File ' . Base::getDbFileName($i) . ' not found,
 Please check
 <ul>
 <li>Value of $config[\'calibre_directory\'] in config_local.php <strong>(Does it end with a \'/\'?)</strong></li>
@@ -191,8 +194,8 @@ Please check
 <li>Synology users please read <a href="https://github.com/seblucas/cops/wiki/Howto---Synology">this</a></li>
 <li>Note that hosting your Calibre Library in /home is almost impossible due to access rights restriction</li>
 </ul>';
-            }
-            ?>
+    }
+    ?>
             </h4>
         </article>
     <?php if (is_readable(Base::getDbFileName($i))) { ?>
@@ -200,31 +203,31 @@ Please check
             <h2>Check if Calibre database file can be opened with PHP</h2>
             <h4>
             <?php
-            try {
-                $db = new PDO('sqlite:'. Base::getDbFileName($i));
-                echo $name . ' OK';
-            } catch (Exception $e) {
-                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
-            }
-            ?>
+    try {
+        $db = new PDO('sqlite:'. Base::getDbFileName($i));
+        echo $name . ' OK';
+    } catch (Exception $e) {
+        echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
+    }
+        ?>
             </h4>
         </article>
         <article class="frontpage">
             <h2>Check if Calibre database file contains at least some of the needed tables</h2>
             <h4>
             <?php
-            try {
-                $db = new PDO('sqlite:'. Base::getDbFileName($i));
-                $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
-                if ($count == 4) {
-                    echo $name . ' OK';
-                } else {
-                    echo $name . ' Not all Calibre tables were found. Are you sure you\'re using the correct database.';
-                }
-            } catch (Exception $e) {
-                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
+        try {
+            $db = new PDO('sqlite:'. Base::getDbFileName($i));
+            $count = $db->query('select count(*) FROM sqlite_master WHERE type="table" AND name in ("books", "authors", "tags", "series")')->fetchColumn();
+            if ($count == 4) {
+                echo $name . ' OK';
+            } else {
+                echo $name . ' Not all Calibre tables were found. Are you sure you\'re using the correct database.';
             }
-            ?>
+        } catch (Exception $e) {
+            echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
+        }
+        ?>
             </h4>
         </article>
         <?php if ($full) { ?>
@@ -232,19 +235,18 @@ Please check
             <h2>Check if all Calibre books are found</h2>
             <h4>
             <?php
-            try {
-                $db = new PDO('sqlite:' . Base::getDbFileName($i));
-                $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
-                $result->execute();
-                while ($post = $result->fetchObject())
-                {
-                    if (!is_file (Base::getDbDirectory($i) . $post->fullpath)) {
-                        echo '<p>' . Base::getDbDirectory($i) . $post->fullpath . '</p>';
-                    }
+        try {
+            $db = new PDO('sqlite:' . Base::getDbFileName($i));
+            $result = $db->prepare('select books.path || "/" || data.name || "." || lower (format) as fullpath from data join books on data.book = books.id');
+            $result->execute();
+            while ($post = $result->fetchObject()) {
+                if (!is_file(Base::getDbDirectory($i) . $post->fullpath)) {
+                    echo '<p>' . Base::getDbDirectory($i) . $post->fullpath . '</p>';
                 }
-            } catch (Exception $e) {
-                echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
             }
+        } catch (Exception $e) {
+            echo $name . ' If the file is readable, check your php configuration. Exception detail : ' . $e;
+        }
             ?>
             </h4>
         </article>

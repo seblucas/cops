@@ -1,0 +1,34 @@
+{
+    "name": "seblucas/php-epub-meta",
+    "type": "library",
+    "description": "Reading and writing metadata included in the EPub ebook format",
+    "keywords": ["epub", "metadata", "ebook"],
+    "homepage": "https://github.com/seblucas/php-epub-meta",
+    "authors": [
+        {
+            "name": "Andreas Gohr",
+            "email": "andi@splitbrain.org",
+            "homepage": "https://www.splitbrain.org/",
+            "role": "Developer"
+        },
+        {
+            "name": "Sébastien Lucas",
+            "email": "sebastien@slucas.fr",
+            "homepage": "http://www.slucas.fr/",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "ext-dom": "*",
+        "ext-xml": "*",
+        "ext-zip": "*",
+        "seblucas/tbszip": "~2.16.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.*"
+    },
+    "autoload": {
+        "classmap": ["lib/"]
+    }
+}

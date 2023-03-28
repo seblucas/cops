@@ -9,7 +9,7 @@ var templatePage, templateBookDetail, templateMain, templateSuggestion, currentD
 
 var CLEAR_FILTER_ID = "_CLEAR_";
 
-if (typeof LRUCache != 'undefined') {
+if (typeof LRUCache === 'undefined') {
     console.log('ERROR: LRUCache module not loaded!');
 }
 var cache = new LRUCache(30);
@@ -53,7 +53,7 @@ function updateCookie (id) {
     }
     var name = $(id).attr('id');
     var value = $(id).val ();
-    $.cookie(name, value, { expires: 365 });
+    Cookies.set(name, value, { expires: 365 });
 }
 
 /*exported updateCookieFromCheckbox */
@@ -65,14 +65,14 @@ function updateCookieFromCheckbox (id) {
     if ($(id).is(":checked"))
     {
         if ($(id).is(':radio')) {
-            $.cookie(name, $(id).val (), { expires: 365 });
+            Cookies.set(name, $(id).val (), { expires: 365 });
         } else {
-            $.cookie(name, '1', { expires: 365 });
+            Cookies.set(name, '1', { expires: 365 });
         }
     }
     else
     {
-        $.cookie(name, '0', { expires: 365 });
+        Cookies.set(name, '0', { expires: 365 });
     }
 }
 
@@ -85,7 +85,7 @@ function updateCookieFromCheckboxGroup (id) {
         var id = $(this).attr("id");
         group.push (id.replace (idBase + "_", ""));
     });
-    $.cookie(idBase, group.join (), { expires: 365 });
+    Cookies.set(idBase, group.join (), { expires: 365 });
 }
 
 
@@ -101,14 +101,14 @@ function retourMail(data) {
 
 /*exported sendToMailAddress */
 function sendToMailAddress (component, dataid) {
-    var email = $.cookie ('email');
-    if (!$.cookie ('email')) {
+    var email = Cookies.get('email');
+    if (!Cookies.get('email')) {
         email = window.prompt (currentData.c.i18n.customizeEmail, "");
         if (email === null)
         {
             return;
         }
-        $.cookie ('email', email, { expires: 365 });
+        Cookies.set('email', email, { expires: 365 });
     }
     var url = 'sendtomail.php';
     if (currentData.databaseId) {
@@ -132,12 +132,12 @@ function isDefined(x) {
 }
 
 function getCurrentOption (option) {
-    if (!$.cookie (option)) {
+    if (!Cookies.get(option)) {
         if (currentData && currentData.c && currentData.c.config && currentData.c.config [option]) {
             return currentData.c.config [option];
         }
     }
-    return $.cookie (option);
+    return Cookies.get(option);
 }
 
 /*exported htmlspecialchars */
@@ -315,11 +315,10 @@ updatePage = function (data) {
     }
     document.title = data.title;
     currentData = data;
-    setTimeout( function() { $("input[name=query]").focus(); }, 500 );
 
     debug_log (elapsed ());
 
-    if ($.cookie('toolbar') === '1') { $("#tool").show (); }
+    if (Cookies.get('toolbar') === '1') { $("#tool").show (); }
     if (currentData.containsBook === 1) {
         $("#sortForm").show ();
         if (getCurrentOption ("html_tag_filter") === "1") {
@@ -442,11 +441,10 @@ function handleLinks () {
     $("body").on ("click", ".headright", function(){
         if ($("#tool").is(":hidden")) {
             $("#tool").slideDown("slow");
-            $("input[name=query]").focus();
-            $.cookie('toolbar', '1', { expires: 365 });
+            Cookies.get('toolbar', '1', { expires: 365 });
         } else {
             $("#tool").slideUp();
-            $.removeCookie('toolbar');
+            Cookies.remove('toolbar');
         }
     });
     $("body").magnificPopup({

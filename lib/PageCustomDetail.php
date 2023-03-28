@@ -8,12 +8,12 @@
 
 class PageCustomDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $customId = getURLParam ("custom", NULL);
-        $custom = CustomColumn::createCustom ($customId, $this->idGet);
-        $this->idPage = $custom->getEntryId ();
+        $customId = getURLParam("custom", null);
+        $custom = CustomColumn::createCustom($customId, $this->idGet);
+        $this->idPage = $custom->getEntryId();
         $this->title = $custom->value;
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByCustom ($custom, $this->idGet, $this->n);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByCustom($custom, $this->idGet, $this->n);
     }
 }

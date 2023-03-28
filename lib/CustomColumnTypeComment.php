@@ -16,7 +16,7 @@ class CustomColumnTypeComment extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -26,7 +26,7 @@ class CustomColumnTypeComment extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT_ID, "{0}", "{1}", $this->getTableName());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)
@@ -41,13 +41,15 @@ class CustomColumnTypeComment extends CustomColumnType
 
     protected function getAllCustomValuesFromDatabase()
     {
-        return NULL;
+        return null;
     }
 
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -60,7 +62,7 @@ class CustomColumnTypeComment extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->id, $post->value, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.float.unknown"), $this);
     }
 
     public function isSearchable()

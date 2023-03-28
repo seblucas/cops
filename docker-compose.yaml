@@ -1,0 +1,9 @@
+services:
+  web:
+    image: mikespub/seblucas-cops:web
+    build:
+      context: . 
+      dockerfile: docker/Dockerfile.php82
+      target: build
+    ports:
+      - '8080:80'

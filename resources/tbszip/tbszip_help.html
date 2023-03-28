@@ -1,0 +1,341 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>TbsZip - a zip modifier for PHP</title>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, sans-serif;
+	font-size: 13px;
+}
+.special {
+	background-color: #E6E6FF;
+	border: 1px solid #036;
+	padding: 3px;
+	margin-left: 10px;
+}
+.code {
+	font-family: "Courier New", Courier, monospace;
+	font-size: 12px;
+	margin-left: 10px;
+	color: #036;
+	background-color: #E1EBFF;
+	padding: 3px;
+}
+.versioning {
+	font-style: italic;
+	color: #060;
+}
+.note {
+	margin-left: 10px;
+	padding: 3px;
+}
+.warning {
+	color: #F30;
+}
+.value {
+	color: #036;
+	font-family: "Courier New", Courier, monospace;
+	font-size: 12px;
+}
+-->
+</style></head>
+
+<body>
+<h1>TbsZip - a zip modifier for PHP</h1>
+<div>version 2.16, 2014-04-08, by Skrol29<br />
+  document 
+  updated on 2014-04-08</div>
+<ol>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#features">Features</a></li>
+  <li><a href="#limitations">Limitations</a></li>
+  <li><a href="#example">Example</a></li>
+  <li><a href="#synopsis">Synopsis</a></li>
+  <li><a href="#change">Change-log</a></li>
+  <li><a href="#misc">Contact and license</a></li>
+</ol>
+<h2><a name="intro" id="intro"></a>1. Introduction</h2>
+<p><strong>TbsZip</strong> is a PHP class which can read a zip archive, and even edit  sub-files in the archive  and then create a new archive. It works without  any temporary file.  While this class is independent from other libraries, it has been first created for   the <a href="http://www.tinybutstrong.com/plugins/opentbs/demo/demo.html">OpenTBS</a> project which is a plugin for the <a href="http://www.tinybutstrong.com/">TinyButStrong</a> Template Engine.  OpenTBS  makes TinyButStrong able to build OpenOffice and Ms Office documents with the technique of templates.</p>
+<p>TbsZip is developed under PHP5 but should be compatible with PHP4.</p>
+<p>  See the <a href="http://www.tinybutstrong.com/plugins/opentbs/demo/demo.html">OpenTBS demo</a>.<br />
+See other <a href="http://www.tinybutstrong.com/plugins.php">TinyButStrong plugins</a>.<br />
+</p>
+<h2><a name="features" id="intro2"></a>2. Features</h2>
+<ul>
+  <li> can read a common zip archive, or start with an empty archive</li>
+  <li> can modify the content of files in the archive (replace, delete or add new file)</li>
+  <li> the new file content can come from a PHP string, or an external physical file</li>
+  <li> the modified archive can be released as a new physical file, an HTTP download, or a PHP string</li>
+  <li> the original archive is not modified</li>
+  <li> the class does not use temporary files: when the new archive is flushed, unmodified parts of the archives are directly streamed from the original archive, modified parts are streamed form their sources (external physical files, or PHP string) </li>
+</ul>
+<h2><a name="limitations" id="intro3"></a>3. Limitations</h2>
+<ul>
+  <li>doesn't support Zip64 archives</li>
+  <li> doesn't support zip file comments (very rarely used, not editable in 7-Zip yet)</li>
+  <li> needs the <a href="http://www.php.net/manual/en/book.zlib.php">Zlib extension</a> only to compress or uncompress files in the archive (Zlib is commonly available in most of PHP installations)</li>
+</ul>
+<h2><a name="example" id="intro7"></a>4. Example</h2>
+<pre class="code">$zip = new clsTbsZip(); <span class="versioning">// instantiate the class</span>
+
+$zip-&gt;Open('archive1.zip'); <span class="versioning">// open an existing zip archive</span>
+
+$ok = $zip-&gt;FileExists('innerfolder/subfile1.txt'); <span class="versioning">// check if a sub-file exist in the archive</span>
+
+$txt = $zip-&gt;FileRead('subfile2.txt'); <span class="versioning">// retrieve the content of a sub-file</span>
+
+... <span class="versioning">// some work on the $txt contents</span>
+
+$zip-&gt;FileReplace('subfile2.txt', $txt, TBSZIP_STRING); <span class="versioning">// replace the existing sub-file</span>
+
+$zip-&gt;FileReplace('subfile3.txt', false); <span class="versioning">// delete the existing sub-file</span>
+
+$zip-&gt;FileAdd('subfile4.txt', $txt3, TBSZIP_STRING); <span class="versioning">// add a new sub-file</span>
+
+$zip-&gt;Flush(TBSZIP_FILE, 'archive1_new.zip'); <span class="versioning">// flush the modifications as a new archive</span>
+
+$zip-&gt;Close(); <span class="versioning">// close the current archive</span>
+</pre>
+<h2><a name="synopsis" id="intro4"></a>5. Synopsis</h2>
+<p>Class name: clsTbsZip</p>
+<table border="0" cellspacing="2" cellpadding="3">
+  <tr>
+    <th valign="top"><strong>Method or Property</strong></th>
+    <th valign="top"><strong>Description</strong></th>
+  </tr>
+  <tr>
+    <td valign="top" class="code">Open($ArchFile, $UseIncludePath=false)</td>
+    <td valign="top"> Open an original Zip archive (it can be an LibreOffice document, an MS Office document or any other Zip archive).<br />
+    <span class="versioning">Versioning:<br />
+    -  since TbsZip version 2.14, $ArchFile can be a PHP file handle<br />
+- argument $UseIncludePath is supported since TbsZip version 2.12</span></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">CreateNew()</td>
+    <td valign="top"> Create a new empty Zip archive. The new archive is virtually prepared in the PHP memory, nothing is written at this point. Methods FileExists(), FileRead() and FileReplace() cannot be used when you work on an new archive created by CreateNew(), simply  because the archive is empty.<br />
+    <span class="versioning">Versioning: method CreateNew() is supported since TbsZip version 2.1 </span><br /></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileExists($NameOrIdx)</td>
+    <td valign="top">Return <span class="value">true</span> if the file exists in the original archive. <span class="value">$NameOrIdx</span> must be the full name (including  folder name inside the archive) or the index of an existing file in the archive.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileRead($NameOrIdx, $Uncompress=true)</td>
+    <td valign="top"> Return the contents of the file stored in the original archive. If <span class="value">$Uncompress</span> is <span class="value">true</span>, then TbsZip tryies to uncompressed the contents if needed. If the file is compressed but TbsZip cannot uncompress it then an error is raised. You can check if the result is compressed using property <span class="value">LastReadComp</span>.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileReplace($NameOrIdx, $Data, $DataType=TBSZIP_STRING, $Compress=true)</td>
+    <td valign="top">  <p>Replace or delete an existing file in the archive. Set <span class="value">$Data</span>=<span class="value">false</span> in order to delete the file. <span class="value">$DataType</span> accepts <span class="value">TBSZIP_STRING</span> and <span class="value">TBSZIP_FILE</span> (<span class="value">$Data</span> must then be the path of the external file to insert). <span class="value">$Compress</span> can be <span class="value">true</span>, <span class="value">false</span> or an array with keys (<span class="value">'meth'</span>,<span class="value">'len_u'</span>,<span class="value">'crc32'</span>) which means that the data is already previously compressed. <em>Note that the original archive is not modified, modifications will be provided as a new archive when you call the method Flush().</em></p>
+      Returned values:
+      <table border="0" cellspacing="0" cellpadding="3">
+        <tr>
+          <td class="value">false</td>
+          <td>if the file has not been replaced or deleted.</td>
+        </tr>
+        <tr>
+          <td class="value">true</td>
+          <td>if the file has  been successfully deleted.</td>
+        </tr>
+        <tr>
+          <td class="value">-1</td>
+          <td>if the file could not be compressed and has been stored uncompressed</td>
+        </tr>
+        <tr>
+          <td class="value">0</td>
+          <td>if the file has been stored uncompressed as expected</td>
+        </tr>
+        <tr>
+          <td class="value">1</td>
+          <td>if the file has been stored compressed has expected</td>
+        </tr>
+        <tr>
+          <td class="value">2</td>
+          <td> if the file has been stored as is with pre-compression as defined in the array <span class="value">$Compress</span></td>
+        </tr>
+      </table>
+      <p>It's very interesting to know that when you add or replace a file in the archive with an external file (i.e. using option <span class="value">TBSZIP_FILE</span>), then the contents of the file is not loaded immediately in PHP memory. It will be loaded, compressed and output on the fly and one by one when method <span class="value">Flush()</span> is called. Thus, you can add lot of files in an archive without occupying the PHP memory.</p></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileAdd($Name, $Data, $DataType=TBSZIP_STRING, $Compress=true)</td>
+    <td valign="top"> Add a new file in the archive, works like <span class="value">FileReplace()</span>. <em>Note that the original archive is not modified, modifications will be provided as a new archive when you call the method Flush().</em><br />
+      If <span class="value">$Data</span> is <span class="value">false</span> then the previously add file with the given name is canceled if any.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileCancelModif($NameOrIdx)</td>
+    <td valign="top"> Cancel  add, delete and replacements in the archive for the given file name. Return the number of cancels.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">FileGetState($NameOrIdx)</td>
+    <td valign="top"><p>Return a string that represents the state of the file in the archive:</p>
+      <table border="0" cellspacing="0" cellpadding="3">
+        <tr>
+          <td class="value">'u'</td>
+          <td>Unchanged</td>
+        </tr>
+        <tr>
+          <td class="value">'m'</td>
+          <td>Modified</td>
+        </tr>
+        <tr>
+          <td class="value">'d'</td>
+          <td>Deleted</td>
+        </tr>
+        <tr>
+          <td class="value">'a'</td>
+          <td>Added</td>
+        </tr>
+        <tr>
+          <td class="value">false</td>
+          <td>The file is  not find in the archive </td>
+        </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">Flush($Render=TBSZIP_DOWNLOAD, $File='', $ContentType='')</td>
+    <td valign="top"><p>Actually create the new archive with all modifications. External files to be inserted as sub-files are loaded during this proces and not before. They are  compressed and output on the fly and one by one without staying in the  PHP memory. No temporay files are used.</p>
+      The <span class="value">$Render</span> option:
+<table border="0" cellspacing="0" cellpadding="3">
+        <tr>
+          <td valign="top" class="value">TBSZIP_DOWNLOAD</td>
+          <td valign="top">will provide the new archive as a  download with HTTP headers. Use <span class="value">$File</span> to customize the name of the downloaded file. Use <span class="value">$ContentType</span> to customize the ContentType header.</td>
+        </tr>
+        <tr>
+          <td valign="top" class="value">TBSZIP_DOWNLOAD +<br />TBSZIP_NOHEADER</td>
+          <td valign="top">will provide the new archive as a  download without HTTP</td>
+        </tr>
+        <tr>
+          <td valign="top" class="value">TBSZIP_FILE</td>
+          <td valign="top"> will provide the new archive as a  physical file on the server. Use <span class="value">$File</span> to define the path of the physical file</td>
+        </tr>
+        <tr>
+          <td valign="top" class="value">TBSZIP_STRING</td>
+          <td valign="top">will make method <span class="value">Flush()</span> to return the new archive as a binary string</td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">Debug()</td>
+    <td valign="top">Display information about the original archive.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">Close()</td>
+    <td valign="top"> Close the opened original archive.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">ArchFile</td>
+    <td valign="top">Full path of  the opened original archive.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">CdFileLst</td>
+    <td valign="top"> An array listing all existing files in the original archive with some technical information.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">LastReadIdx</td>
+    <td valign="top"><p>Index of the last file read by <span class="value">FileRead()</span>.<br />
+    false means the file was not found in the archive,</p></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">LastReadComp</td>
+    <td valign="top">Compression information about  of the last file read by <span class="value">FileRead()</span>.<br />
+      false means the file was not found in the archive,<br />
+      <span class="value">-1</span> means the file was compressed and has been successfully uncompressed,<br />
+      <span class="value">0</span> means the file was not compressed,<br />
+      <span class="value">1</span> means the file was compressed but TbsZip was unable to uncompress.</td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">DisplayError</td>
+    <td valign="top">Default value is <span class="value">false</span> until version 2.3, and <span class="value">true</span> since version 2.4.<br />
+      If the value is true,  TbsZip error messages are displayed (using echo).
+      <br />      
+    In any case, the last TbsZip error message is saved into property <span class="value">Error</span>.<br />
+    It can be interesting to not display error directly, for example when you flush the new archive with the Download option, the error message may be merged to the  downloaded file.<br /></td>
+  </tr>
+  <tr>
+    <td valign="top" class="code">Error</td>
+    <td valign="top">Last error message, or <span class="value">false</span> if no TbsZip error. Use this property in order to check errors when property <span class="value">DisplayError</span> is set to false.</td>
+  </tr>
+</table>
+<h2><a name="change" id="intro6"></a>6. Change log</h2>
+<p>Version 2.16, date: 2014-04-08</p>
+<ul>
+  <li>bug fixe: could not download a file that has the same name as the opened archive.</li>
+</ul>
+<p>Version 2.15, date:  2013-10-15</p>
+<ul>
+  <li>Archives with comment can now be opened by TbsZip.</li>
+  <li>Clearer error messages for PHP in CLI mode.</li>
+  <li>Clearer error messages for the interconnection with OpenTBS.</li>
+</ul>
+<p>Version 2.14, date:  2013-06-11</p>
+<ul>
+  <li>can open an archive from a PHP file handle</li>
+</ul>
+<p>Version 2.13, date: 2013-04-14</p>
+<ul>
+  <li> new  method <span class="code">FileGetState()</span></li>
+</ul>
+<p>Version 2.12, date: 2013-03-16</p>
+<ul>
+  <li> bug fixed: may produce a corrupted archive when the original was using data descriptors without the signature.</li>
+  <li> minor  enhancement: new argument $UseIncludePath.</li>
+  <li>minor  enhancement: debug mode is smarter.</li>
+</ul>
+<p>Version 2.11, date: 2011-02-14</p>
+<ul>
+  <li>    bug fixed: method FileCancelModif() doesn't cancel added files.</li>
+</ul>
+<p>Version 2.10, date: 2011-08-13
+</p>
+<ul>
+  <li>    bug fixed: PHP warning <span class="warning">&quot;Notice: Undefined variable: AddDataLen...&quot;</span> happens when deleting a file whitout adding any file.
+  </li>
+</ul>
+<p>Version 2.9, date: 2011-07-22</p>
+<ul>
+  <li> bug fixed: a minor bug on FileRead when the asked file does not exists.</li>
+</ul>
+<p>Version 2.8, date: 2011-06-08</p>
+<ul>
+  <li> bug fixed: PHP warning <span class="warning">&quot;Warning: fclose(): 10 is not a valid stream resource&quot;</span> may happen when closing an archive twice.</li>
+</ul>
+<p>Version 2.7, date: 2011-06-07</p>
+<ul>
+  <li> bug fixed: PHP error <span class="warning">&quot;supplied argument is not a valid stream resource&quot;</span> or <span class="warning">&quot;Undefined property: clsOpenTBS::$OutputHandle&quot;</span> may happen when using method Flush().</li>
+</ul>
+<p>Version 2.6, date: 2011-06-07
+</p>
+<ul>
+  <li> minor  enhancement: now raise a TbsZip error if <span class="value">Flush()</span> attempts to overwrite a locked file.
+  </li>
+</ul>
+<p>Version 2.5, date: 2011-05-12  </p>
+<ul>
+  <li> minor  bug fixed: strict compatibility with PHP 5 (no PHP warning with error reporting E_STRICT)</li>
+</ul>
+<p>  Version 2.4, date: 2011-03-25  </p>
+<ul>
+  <li> minor  bug fixed: the new created archive using <span class="value">Flush()</span> was not unlocked at the end of the flush. The clsTbsZip instance had still an handle on it.</li>
+  <li> minor  enhancement: now raise a TbsZip error if <span class="value">Flush()</span> attempts to overwrite the current archive.</li>
+  <li> minor  enhancement: property <span class="value">DisplayError</span> is set to true by default. </li>
+</ul>
+<p> Version 2.3, date: 2010-11-29</p>
+<ul>
+  <li> minor  bug fixed:  an archive created with both methods <span class="value">CreateNew()</span> and <span class="value">Flush(TBSZIP_DOWNLOAD)</span> could be truncated because the final size of the archive was badly estimated.</li>
+</ul>
+<p> Version 2.2, date: 2010-10-28</p>
+<ul>
+  <li> major bug fixed: some added or modified files can be saved in the archive with a wrong CRC control code. This could make  softwares to consider the file or the archive as corrupted. Only few CRC codes are wrongly saved, thus the bug is rare and can seem to appear randomly.</li>
+</ul>
+<p> Version 2.1, date: 2010-07-01</p>
+<ul>
+  <li> bug fixed: when adding a new file in the archive, the time of the file was wrong (date was ok)</li>
+  <li> TbsZip now changes the date and time of a file in the archive when the file content is replaced</li>
+  <li> new method <span class="value">CreateNew()</span></li>
+</ul>
+<h2><a name="misc" id="intro5"></a>7. Contact and license</h2>
+<p>Author: <a href="http://www.tinybutstrong.com/onlyyou.html">Skrol29</a></p>
+<p>License: <a href="http://www.gnu.org/licenses/lgpl.html">LGLP</a></p>
+</body>
+</html>

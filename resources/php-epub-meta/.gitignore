@@ -1,0 +1,6 @@
+/coverage/*
+/vendor/*
+/php-epub-meta.sublime-*
+/clover.xml
+/composer.phar
+

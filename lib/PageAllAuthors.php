@@ -8,13 +8,12 @@
 
 class PageAllAuthors extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
         $this->title = localize("authors.title");
-        if (getCurrentOption ("author_split_first_letter") == 1) {
+        if (getCurrentOption("author_split_first_letter") == 1) {
             $this->entryArray = Author::getAllAuthorsByFirstLetter();
-        }
-        else {
+        } else {
             $this->entryArray = Author::getAllAuthors();
         }
         $this->idPage = Author::ALL_AUTHORS_ID;

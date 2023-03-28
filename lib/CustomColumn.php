@@ -23,7 +23,7 @@ class CustomColumn extends Base
     /**
      * CustomColumn constructor.
      *
-     * @param integer $pid id of the chosen value
+     * @param integer|string|null $pid id of the chosen value
      * @param string $pvalue string representation of the value
      * @param CustomColumnType $pcustomColumnType the CustomColumn this value lives in
      */
@@ -99,11 +99,11 @@ class CustomColumn extends Base
      */
     public function toArray()
     {
-        return array(
+        return [
             'valueID'          => $this->valueID,
             'value'            => $this->value,
             'customColumnType' => (array)$this->customColumnType,
             'htmlvalue'        => $this->htmlvalue,
-        );
+        ];
     }
 }

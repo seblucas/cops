@@ -1,0 +1,30 @@
+{
+    "name": "seblucas/tbszip",
+    "type": "library",
+    "description": "Work with zip archives without making temporary files or needing binaries",
+    "keywords": ["zip", "compression", "archive"],
+    "homepage": "http://www.tinybutstrong.com/tools.php",
+    "license": "LGPL-2.1-or-later",
+    "authors": [
+        {
+            "name": "Skrol29",
+            "homepage": "http://www.tinybutstrong.com/",
+            "role": "Developer"
+        },
+        {
+            "name": "Sébastien Lucas",
+            "email": "sebastien@slucas.fr",
+            "homepage": "http://www.slucas.fr/",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "ext-zlib": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.5.*"
+    },
+    "autoload": {
+        "classmap": ["tbszip.php"]
+    }
+}

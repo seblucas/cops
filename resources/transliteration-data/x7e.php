@@ -1,6 +1,6 @@
 <?php
 
-$base = array(
+$base = [
   0x00 => 'Xia ', 'Yuan ', 'Zong ', 'Xu ', 'Nawa ', 'Odoshi ', 'Geng ', 'Sen ', 'Ying ', 'Jin ', 'Yi ', 'Zhui ', 'Ni ', 'Bang ', 'Gu ', 'Pan ',
   0x10 => 'Zhou ', 'Jian ', 'Cuo ', 'Quan ', 'Shuang ', 'Yun ', 'Xia ', 'Shuai ', 'Xi ', 'Rong ', 'Tao ', 'Fu ', 'Yun ', 'Zhen ', 'Gao ', 'Ru ',
   0x20 => 'Hu ', 'Zai ', 'Teng ', 'Xian ', 'Su ', 'Zhen ', 'Zong ', 'Tao ', 'Horo ', 'Cai ', 'Bi ', 'Feng ', 'Cu ', 'Li ', 'Suo ', 'Yin ',
@@ -15,6 +15,6 @@ $base = array(
   0xB0 => 'Pi ', 'Sha ', 'Gang ', 'Na ', 'Ren ', 'Zong ', 'Lun ', 'Fen ', 'Zhi ', 'Wen ', 'Fang ', 'Zhu ', 'Yin ', 'Niu ', 'Shu ', 'Xian ',
   0xC0 => 'Gan ', 'Xie ', 'Fu ', 'Lian ', 'Zu ', 'Shen ', 'Xi ', 'Zhi ', 'Zhong ', 'Zhou ', 'Ban ', 'Fu ', 'Zhuo ', 'Shao ', 'Yi ', 'Jing ',
   0xD0 => 'Dai ', 'Bang ', 'Rong ', 'Jie ', 'Ku ', 'Rao ', 'Die ', 'Heng ', 'Hui ', 'Gei ', 'Xuan ', 'Jiang ', 'Luo ', 'Jue ', 'Jiao ', 'Tong ',
-  0xE0 => 'Geng ', 'Xiao ', 'Juan ', 'Xiu ', 'Xi ', 'Sui ', 'Tao ', 'Ji ', 'Ti ', 'Ji ', 'Xu ', 'Ling ', NULL, 'Xu ', 'Qi ', 'Fei ',
+  0xE0 => 'Geng ', 'Xiao ', 'Juan ', 'Xiu ', 'Xi ', 'Sui ', 'Tao ', 'Ji ', 'Ti ', 'Ji ', 'Xu ', 'Ling ', null, 'Xu ', 'Qi ', 'Fei ',
   0xF0 => 'Chuo ', 'Zhang ', 'Gun ', 'Sheng ', 'Wei ', 'Mian ', 'Shou ', 'Beng ', 'Chou ', 'Tao ', 'Liu ', 'Quan ', 'Zong ', 'Zhan ', 'Wan ', 'Lu ',
-);
+];

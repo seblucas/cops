@@ -8,11 +8,11 @@
 
 class Link
 {
-    const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
-    const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
-    const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
-    const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
-    const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
+    public const OPDS_THUMBNAIL_TYPE = "http://opds-spec.org/image/thumbnail";
+    public const OPDS_IMAGE_TYPE = "http://opds-spec.org/image";
+    public const OPDS_ACQUISITION_TYPE = "http://opds-spec.org/acquisition";
+    public const OPDS_NAVIGATION_TYPE = "application/atom+xml;profile=opds-catalog;kind=navigation";
+    public const OPDS_PAGING_TYPE = "application/atom+xml;profile=opds-catalog;kind=acquisition";
 
     public $href;
     public $type;
@@ -21,7 +21,8 @@ class Link
     public $facetGroup;
     public $activeFacet;
 
-    public function __construct($phref, $ptype, $prel = NULL, $ptitle = NULL, $pfacetGroup = NULL, $pactiveFacet = FALSE) {
+    public function __construct($phref, $ptype, $prel = null, $ptitle = null, $pfacetGroup = null, $pactiveFacet = false)
+    {
         $this->href = $phref;
         $this->type = $ptype;
         $this->rel = $prel;
@@ -30,11 +31,13 @@ class Link
         $this->activeFacet = $pactiveFacet;
     }
 
-    public function hrefXhtml () {
+    public function hrefXhtml()
+    {
         return $this->href;
     }
 
-    public function getScriptName() {
+    public function getScriptName()
+    {
         $parts = explode('/', $_SERVER["SCRIPT_NAME"]);
         return $parts[count($parts) - 1];
     }

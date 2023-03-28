@@ -11,3 +11,9 @@
 /cops.sublime-*
 /config_local.php
 /config_local.*.php
+.yarn/*
+#!.yarn/releases
+#!.yarn/plugins
+.pnp.*
+.editorconfig
+.gitattributes

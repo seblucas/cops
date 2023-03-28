@@ -16,7 +16,7 @@ class CustomColumnTypeDate extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -27,7 +27,7 @@ class CustomColumnTypeDate extends CustomColumnType
     {
         $date = new DateTime($id);
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DATE, "{0}", "{1}", $this->getTableName());
-        return array($query, array($date->format("Y-m-d")));
+        return [$query, [$date->format("Y-m-d")]];
     }
 
     public function getCustom($id)
@@ -43,13 +43,13 @@ class CustomColumnTypeDate extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName());
         $result = $this->getDb()->query($query);
 
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $date = new DateTime($post->datevalue);
             $id = $date->format("Y-m-d");
 
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation ($this->getUri($id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($id))];
 
             $entry = new Entry($date->format(localize("customcolumn.date.format")), $this->getEntryId($id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
@@ -62,7 +62,9 @@ class CustomColumnTypeDate extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -77,7 +79,7 @@ class CustomColumnTypeDate extends CustomColumnType
 
             return new CustomColumn($date->format("Y-m-d"), $date->format(localize("customcolumn.date.format")), $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.date.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.date.unknown"), $this);
     }
 
     public function isSearchable()

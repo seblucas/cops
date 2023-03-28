@@ -16,7 +16,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -26,7 +26,7 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getQuery($id)
     {
         $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_DIRECT, "{0}", "{1}", $this->getTableName());
-        return array($query, array($id));
+        return [$query, [$id]];
     }
 
     public function getCustom($id)
@@ -40,10 +40,10 @@ class CustomColumnTypeFloat extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName());
 
         $result = $this->getDb()->query($query);
-        $entryArray = array();
+        $entryArray = [];
         while ($post = $result->fetchObject()) {
             $entryPContent = str_format(localize("bookword", $post->count), $post->count);
-            $entryPLinkArray = array(new LinkNavigation($this->getUri($post->id)));
+            $entryPLinkArray = [new LinkNavigation($this->getUri($post->id))];
 
             $entry = new Entry($post->id, $this->getEntryId($post->id), $entryPContent, $this->datatype, $entryPLinkArray, "", $post->count);
 
@@ -55,7 +55,9 @@ class CustomColumnTypeFloat extends CustomColumnType
     public function getDescription()
     {
         $desc = $this->getDatabaseDescription();
-        if ($desc === NULL || empty($desc)) $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        if ($desc === null || empty($desc)) {
+            $desc = str_format(localize("customcolumn.description"), $this->getTitle());
+        }
         return $desc;
     }
 
@@ -68,7 +70,7 @@ class CustomColumnTypeFloat extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, $post->value, $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.float.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.float.unknown"), $this);
     }
 
     public function isSearchable()

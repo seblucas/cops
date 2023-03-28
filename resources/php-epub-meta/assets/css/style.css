@@ -1,0 +1,180 @@
+body, td, th, input, textarea {
+    font-family: "Arial", sans-serif;
+    color: #333;
+    font-size: 15px;
+}
+
+a {
+    color: #4183C4;
+    text-decoration: none;
+}
+
+a:hover,
+a:active {
+    background-color: #efefef;
+}
+
+#wrapper {
+    height: 95%;
+    width:  920px;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #ccc;
+}
+
+#booklist {
+    float: left;
+    width: 300px;
+    height: 100%;
+    overflow: auto;
+    list-style-type: none;
+    padding: 0;
+    margin: 0 25px 0 0;
+    font-size: 13px;
+}
+
+#booklist li {
+    padding: 5px;
+}
+
+#booklist li:hover {
+    background-color: #efefef;
+}
+
+#booklist li span {
+    display: block;
+}
+#booklist li span.author {
+    padding-left: 5px;
+    font-size: 11px;
+}
+
+#booklist li.active {
+    background-color: #4183C4;
+}
+#booklist li.active a,
+#booklist li.active a:hover,
+#booklist li.active a:active {
+    color: #efefef;
+    background-color: #4183C4;
+}
+
+
+#bookpanel {
+    float: left;
+    width: 590px;
+    height: 100%;
+    overflow: auto;
+}
+
+.center {
+    text-align: center;
+}
+
+table {
+    margin-bottom: 20px;
+}
+
+table th,
+table td {
+    vertical-align: top;
+    padding: 0 0 5px 0;
+}
+
+table th {
+    text-align: right;
+    font-weight: bold;
+    padding: 3px;
+    padding-right: 20px;
+}
+
+table td textarea,
+table td input {
+    width: 450px;
+    border: none;
+    padding: 3px;
+    margin: 0;
+    border-bottom: solid 1px #dfdfdf;
+}
+
+table td .cleditormain {
+    border: solid 1px #dfdfdf;
+}
+
+table td textarea {
+    height: 250px;
+}
+
+table td p {
+    margin: 0;
+    padding: 0;
+}
+
+table td p input {
+    width: 200px;
+}
+
+table td textarea:focus,
+table td input:focus {
+    border: 1px solid #4183C4;
+}
+
+table th img {
+    margin-top: 20px;
+}
+
+a.addauthor {
+    margin-top: -20px;
+    float: right;
+}
+
+div.license {
+    font-size: 11px;
+    margin-top: 300px;
+}
+
+#bookapi-s {
+    float: left;
+}
+
+#bookapi-q {
+    width: 600px;
+}
+
+#bookapi {
+    font-size: 12px;
+}
+
+#bookapi div.head {
+    margin-bottom: 10px;
+}
+
+#bookapi div.result {
+    clear: both;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    min-height: 130px;
+}
+
+#bookapi div.result div {
+    margin-left: 70px;
+}
+
+#bookapi div.result div.buttons {
+    float: right;
+    text-align: right;
+}
+
+#bookapi img {
+    margin-top: 30px;
+    width: 60px;
+    float: left;
+}
+
+#bookapi h1.title {
+    font-size: 14px;
+}
+
+#bookapi span.subjects {
+    font-style: italic;
+}

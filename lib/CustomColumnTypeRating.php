@@ -16,7 +16,7 @@ class CustomColumnTypeRating extends CustomColumnType
     /**
      * Get the name of the sqlite table for this column
      *
-     * @return string|null
+     * @return string
      */
     private function getTableName()
     {
@@ -27,7 +27,7 @@ class CustomColumnTypeRating extends CustomColumnType
      * Get the name of the linking sqlite table for this column
      * (or NULL if there is no linktable)
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkName()
     {
@@ -37,7 +37,7 @@ class CustomColumnTypeRating extends CustomColumnType
     /**
      * Get the name of the linking column in the linktable
      *
-     * @return string|null
+     * @return string
      */
     private function getTableLinkColumn()
     {
@@ -48,16 +48,16 @@ class CustomColumnTypeRating extends CustomColumnType
     {
         if ($id == 0) {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING_NULL, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
-            return array($query, array());
+            return [$query, []];
         } else {
             $query = str_format(Book::SQL_BOOKS_BY_CUSTOM_RATING, "{0}", "{1}", $this->getTableLinkName(), $this->getTableName(), $this->getTableLinkColumn());
-            return array($query, array($id));
+            return [$query, [$id]];
         }
     }
 
     public function getCustom($id)
     {
-        return new CustomColumn ($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
+        return new CustomColumn($id, str_format(localize("customcolumn.stars", $id / 2), $id / 2), $this);
     }
 
     protected function getAllCustomValuesFromDatabase()
@@ -66,19 +66,19 @@ class CustomColumnTypeRating extends CustomColumnType
         $query = str_format($queryFormat, $this->getTableName(), $this->getTableLinkName());
         $result = $this->getDb()->query($query);
 
-        $countArray = array(0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0);
+        $countArray = [0 => 0, 2 => 0, 4 => 0, 6 => 0, 8 => 0, 10 => 0];
         while ($row = $result->fetchObject()) {
             $countArray[$row->value] = $row->count;
         }
 
-        $entryArray = array();
+        $entryArray = [];
 
         for ($i = 0; $i <= 5; $i++) {
             $count = $countArray[$i * 2];
             $name = str_format(localize("customcolumn.stars", $i), $i);
             $entryid = $this->getEntryId($i * 2);
             $content = str_format(localize("bookword", $count), $count);
-            $linkarray = array(new LinkNavigation($this->getUri($i * 2)));
+            $linkarray = [new LinkNavigation($this->getUri($i * 2))];
             $entry = new Entry($name, $entryid, $content, $this->datatype, $linkarray, "", $count);
             array_push($entryArray, $entry);
         }
@@ -100,7 +100,7 @@ class CustomColumnTypeRating extends CustomColumnType
         if ($post = $result->fetchObject()) {
             return new CustomColumn($post->value, str_format(localize("customcolumn.stars", $post->value / 2), $post->value / 2), $this);
         }
-        return new CustomColumn(NULL, localize("customcolumn.rating.unknown"), $this);
+        return new CustomColumn(null, localize("customcolumn.rating.unknown"), $this);
     }
 
     public function isSearchable()

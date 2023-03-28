@@ -1,0 +1,31 @@
+<div class="navbar navbar-inverse navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="{{=it.homeurl}}">{{=it.fullTitle}}</a>
+    </div>
+    <form id="searchForm" class="navbar-form navbar-form-margin navbar-left" role="search">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="{{=it.c.i18n.searchAlt}}" name="query">
+        <div class="input-group-btn">
+          <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+      </div>
+    </form>     
+    <div class="collapse navbar-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" onclick='Cookies.set("template", "default", { expires: 365 }); window.location.reload(true); ' data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Default COPS template">
+          <span class="glyphicon glyphicon-picture"></span><span class="hidden-sm"> Default COPS template</span>
+        </a></li>
+        <li><a href="{{=it.abouturl}}" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="{{=it.c.i18n.aboutTitle}}">
+          <span class="glyphicon glyphicon-info-sign"></span><span class="hidden-sm"> {{=it.c.i18n.aboutTitle}}</span>
+        </a></li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</div>

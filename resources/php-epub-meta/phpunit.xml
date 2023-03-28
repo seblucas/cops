@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./vendor/autoload.php" verbose="true">
+  <coverage processUncoveredFiles="false">
+    <include>
+      <directory suffix=".php">./</directory>
+      <directory suffix=".php">./lib/</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">./test</directory>
+      <directory suffix=".php">./vendor</directory>
+      <file>tbszip.php</file>
+    </exclude>
+    <report>
+      <clover outputFile="./clover.xml"/>
+      <text outputFile="php://stdout" showUncoveredFiles="false"/>
+    </report>
+  </coverage>
+  <logging/>
+  <testsuites>
+    <testsuite name="php-epub-meta">
+      <directory>./test/</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

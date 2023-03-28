@@ -6,14 +6,17 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require 'config.php';
-require 'base.php';
+require_once dirname(__FILE__) . '/config.php';
+require_once dirname(__FILE__) . '/base.php';
+/** @var array $config */
+
+initURLParam();
 
 function getComponentContent($book, $component, $add)
 {
     $data = $book->component($component);
 
-    $callback = function($m) use ($book, $component, $add) {
+    $callback = function ($m) use ($book, $component, $add) {
         $method = $m[1];
         $path = $m[2];
         $end = '';
@@ -51,7 +54,7 @@ if (php_sapi_name() === 'cli') {
     return;
 }
 
-$idData = getURLParam('data', NULL);
+$idData = getURLParam('data', null);
 $add = 'data=' . $idData . '&';
 if (!is_null(GetUrlParam(DB))) {
     $add .= DB . '=' . GetUrlParam(DB) . '&';
@@ -76,7 +79,7 @@ try {
     header('Pragma: public');
     header('Cache-Control: maxage='.$expires);
     header('Expires: ' . gmdate('D, d M Y H:i:s', time()+$expires) . ' GMT');
-    header ('Content-Type: ' . $book->componentContentType($component));
+    header('Content-Type: ' . $book->componentContentType($component));
     echo $data;
 } catch (Exception $e) {
     error_log($e);

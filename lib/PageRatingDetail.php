@@ -8,11 +8,11 @@
 
 class PageRatingDetail extends Page
 {
-    public function InitializeContent ()
+    public function InitializeContent()
     {
-        $rating = Rating::getRatingById ($this->idGet);
-        $this->idPage = $rating->getEntryId ();
-        $this->title =str_format (localize ("ratingword", $rating->name/2), $rating->name/2);
-        list ($this->entryArray, $this->totalNumber) = Book::getBooksByRating ($this->idGet, $this->n);
+        $rating = Rating::getRatingById($this->idGet);
+        $this->idPage = $rating->getEntryId();
+        $this->title =str_format(localize("ratingword", $rating->name/2), $rating->name/2);
+        [$this->entryArray, $this->totalNumber] = Book::getBooksByRating($this->idGet, $this->n);
     }
 }

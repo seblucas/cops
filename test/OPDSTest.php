@@ -6,35 +6,50 @@
  * @author     Sébastien Lucas <sebastien@slucas.fr>
  */
 
-require_once (dirname(__FILE__) . "/config_test.php");
+require_once(dirname(__FILE__) . "/config_test.php");
+use PHPUnit\Framework\TestCase;
 
-define ("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
-define ("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
-define ("JING_JAR", dirname(__FILE__) . "/jing.jar");
-define ("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
-define ("TEST_FEED", dirname(__FILE__) . "/text.atom");
+define("OPDS_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opds_catalog_1_1.rng");
+define("OPENSEARCHDESCRIPTION_RELAX_NG", dirname(__FILE__) . "/opds-relax-ng/opensearchdescription.rng");
+define("JING_JAR", dirname(__FILE__) . "/jing.jar");
+define("OPDSVALIDATOR_JAR", dirname(__FILE__) . "/OPDSValidator.jar");
+define("TEST_FEED", dirname(__FILE__) . "/text.atom");
 
-class OpdsTest extends PHPUnit_Framework_TestCase
+class OpdsTest extends TestCase
 {
-    public static function tearDownAfterClass()
+    public static function setUpBeforeClass(): void
     {
-        if (!file_exists (TEST_FEED)) {
-            return;
-        }
-        unlink (TEST_FEED);
+        global $config;
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
-    function jingValidateSchema($feed, $relax = OPDS_RELAX_NG) {
+    public static function tearDownAfterClass(): void
+    {
+        if (!file_exists(TEST_FEED)) {
+            return;
+        }
+        unlink(TEST_FEED);
+    }
+
+    public function jingValidateSchema($feed, $relax = OPDS_RELAX_NG)
+    {
         $path = "";
-        $res = system($path . 'java -jar "' . JING_JAR . '" "' . $relax . '" "' . $feed . '"');
+        $code = null;
+        $res = system($path . 'java -jar "' . JING_JAR . '" "' . $relax . '" "' . $feed . '"', $code);
         if ($res != '') {
             echo 'RelaxNG validation error: '.$res;
             return false;
-        } else
+        //} elseif (isset($code) && $code > 0) {
+        //    echo 'Return code: '.strval($code);
+        //    return false;
+        } else {
             return true;
+        }
     }
 
-    function opdsValidator($feed) {
+    public function opdsValidator($feed)
+    {
         $oldcwd = getcwd(); // Save the old working directory
         chdir("test");
         $path = "";
@@ -43,137 +58,156 @@ class OpdsTest extends PHPUnit_Framework_TestCase
         if ($res != '') {
             echo 'OPDS validation error: '.$res;
             return false;
-        } else
+        } else {
             return true;
+        }
     }
 
-    function opdsCompleteValidation ($feed) {
+    public function opdsCompleteValidation($feed)
+    {
         return $this->jingValidateSchema($feed) && $this->opdsValidator($feed);
     }
 
-    public function testPageIndex ()
+    public function testPageIndex()
     {
         global $config;
         $page = Base::PAGE_INDEX;
-        $query = NULL;
-        $qid = NULL;
+        $query = null;
+        $qid = null;
         $n = "1";
 
         $_SERVER['QUERY_STRING'] = "";
         $config['cops_subtitle_default'] = "My subtitle";
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->jingValidateSchema(TEST_FEED));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
         $_SERVER ["HTTP_USER_AGENT"] = "XXX";
         $config['cops_generate_invalid_opds_stream'] = "1";
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertFalse ($this->jingValidateSchema (TEST_FEED));
-        $this->AssertFalse ($this->opdsValidator (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertFalse($this->jingValidateSchema(TEST_FEED));
+        $this->AssertFalse($this->opdsValidator(TEST_FEED));
 
-        $_SERVER['QUERY_STRING'] = NULL;
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['HTTP_USER_AGENT']);
+        $config['cops_generate_invalid_opds_stream'] = "0";
     }
 
     /**
      * @dataProvider providerPage
      */
-    public function testMostPages ($page, $query)
+    public function testMostPages($page, $query)
     {
-        $qid = NULL;
+        $qid = null;
         $n = "1";
         $_SERVER['QUERY_STRING'] = "?page={$page}";
-        if (!empty ($query)) {
+        if (!empty($query)) {
             $_SERVER['QUERY_STRING'] .= "&query={$query}";
         }
         $_SERVER['REQUEST_URI'] = "feed.php" . $_SERVER['QUERY_STRING'];
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['REQUEST_URI']);
     }
 
-    public function providerPage ()
+    public function providerPage()
     {
-        return array (
-            array (Base::PAGE_OPENSEARCH, "car"),
-            array (Base::PAGE_ALL_AUTHORS, NULL),
-            array (Base::PAGE_ALL_SERIES, NULL),
-            array (Base::PAGE_ALL_TAGS, NULL),
-            array (Base::PAGE_ALL_PUBLISHERS, NULL),
-            array (Base::PAGE_ALL_LANGUAGES, NULL),
-            array (Base::PAGE_ALL_RECENT_BOOKS, NULL),
-            array (Base::PAGE_ALL_BOOKS, NULL)
-        );
+        return [
+            [Base::PAGE_OPENSEARCH, "car"],
+            [Base::PAGE_ALL_AUTHORS, null],
+            [Base::PAGE_ALL_SERIES, null],
+            [Base::PAGE_ALL_TAGS, null],
+            [Base::PAGE_ALL_PUBLISHERS, null],
+            [Base::PAGE_ALL_LANGUAGES, null],
+            [Base::PAGE_ALL_RECENT_BOOKS, null],
+            [Base::PAGE_ALL_BOOKS, null],
+        ];
     }
 
-    public function testPageIndexMultipleDatabase ()
+    public function testPageIndexMultipleDatabase()
     {
         global $config;
-        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_INDEX;
-        $query = NULL;
+        $query = null;
         $qid = "1";
         $n = "1";
         $_SERVER['QUERY_STRING'] = "";
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
-    public function testOpenSearchDescription ()
+    public function testOpenSearchDescription()
     {
         $_SERVER['QUERY_STRING'] = "";
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->getOpenSearch ());
-        $this->AssertTrue ($this->jingValidateSchema (TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
+        file_put_contents(TEST_FEED, $OPDSRender->getOpenSearch());
+        $this->AssertTrue($this->jingValidateSchema(TEST_FEED, OPENSEARCHDESCRIPTION_RELAX_NG));
 
-        $_SERVER['QUERY_STRING'] = NULL;
+        unset($_SERVER['QUERY_STRING']);
     }
 
-    public function testPageAuthorMultipleDatabase ()
+    public function testPageAuthorMultipleDatabase()
     {
         global $config;
-        $config['calibre_directory'] = array ("Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
-                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/");
+        $config['calibre_directory'] = ["Some books" => dirname(__FILE__) . "/BaseWithSomeBooks/",
+                                              "One book" => dirname(__FILE__) . "/BaseWithOneBook/"];
+        Base::clearDb();
         $page = Base::PAGE_AUTHOR_DETAIL;
-        $query = NULL;
+        $query = null;
         $qid = "1";
         $n = "1";
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1";
         $_GET ["db"] = "0";
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
+
+        unset($_SERVER['QUERY_STRING']);
+        unset($_GET['db']);
+        $config['calibre_directory'] = dirname(__FILE__) . "/BaseWithSomeBooks/";
+        Base::clearDb();
     }
 
-    public function testPageAuthorsDetail ()
+    public function testPageAuthorsDetail()
     {
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
-        $query = NULL;
+        $query = null;
         $qid = "1";
         $n = "1";
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
@@ -182,72 +216,76 @@ class OpdsTest extends PHPUnit_Framework_TestCase
 
         // First page
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
         // Second page
 
         $n = 2;
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
+        unset($_SERVER['QUERY_STRING']);
         // No pagination
         $config['cops_max_item_per_page'] = -1;
-
     }
 
-    public function testPageAuthorsDetail_WithFacets ()
+    public function testPageAuthorsDetail_WithFacets()
     {
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
-        $query = NULL;
+        $query = null;
         $qid = "1";
         $n = "1";
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
         $_GET["tag"] = "Short Stories";
 
-        $config['cops_books_filter'] = array ("Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories");
+        $config['cops_books_filter'] = ["Only Short Stories" => "Short Stories", "No Short Stories" => "!Short Stories"];
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
-        $config['cops_books_filter'] = array ();
+        unset($_SERVER['QUERY_STRING']);
+        unset($_GET['tag']);
+        $config['cops_books_filter'] = [];
     }
 
-    public function testPageAuthorsDetail_WithoutAnyId ()
+    public function testPageAuthorsDetail_WithoutAnyId()
     {
         global $config;
         $page = Base::PAGE_AUTHOR_DETAIL;
-        $query = NULL;
+        $query = null;
         $qid = "1";
         $n = "1";
         $_SERVER['QUERY_STRING'] = "page=" . Base::PAGE_AUTHOR_DETAIL . "&id=1&n=1";
         $_SERVER['REQUEST_URI'] = "index.php?XXXX";
 
 
-        $currentPage = Page::getPage ($page, $qid, $query, $n);
-        $currentPage->InitializeContent ();
-        $currentPage->idPage = NULL;
+        $currentPage = Page::getPage($page, $qid, $query, $n);
+        $currentPage->InitializeContent();
+        $currentPage->idPage = null;
 
-        $OPDSRender = new OPDSRenderer ();
+        $OPDSRender = new OPDSRenderer();
 
-        file_put_contents (TEST_FEED, $OPDSRender->render ($currentPage));
-        $this->AssertTrue ($this->opdsCompleteValidation (TEST_FEED));
+        file_put_contents(TEST_FEED, $OPDSRender->render($currentPage));
+        $this->AssertTrue($this->opdsCompleteValidation(TEST_FEED));
 
+        unset($_SERVER['QUERY_STRING']);
+        unset($_SERVER['REQUEST_URI']);
     }
 }

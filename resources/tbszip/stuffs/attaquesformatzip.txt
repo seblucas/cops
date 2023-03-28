@@ -1,0 +1,1043 @@
+http://docs.webmx.fr/Securite%20reseaux%20et%20Cracking/lotfree/8/sirius_zip/attaquesformatzip.txt
+
+                      .:[ Attaques sur le format ZIP ]:.
+		                 sirius_black
+
+Introduction
+------------
+Tout le monde connait le format ZIP.  C'est le format le plus couramment utilisé
+avec GZ quand on a besoin de compresser des données. C'est en tout cas le format
+le plus utilisé sous Windows.  Cela fait de lui le format  d'archive à connaître
+absolument et  malgré cela  il est encore  plein de ressources  (utilisation par
+la stéganographie par exemple).
+Dans cet article  on va donc étudier comment est foutu  ce vieux format créé par
+PKWare,  décortiquer la  méthode de cryptage dite  'classique',  voir comment on
+peut infécter des fichiers zips etc.
+
+Première étude du format zip
+----------------------------
+Les informations présentes dans cet article se basent sur les spécifications ZIP
+par PKWare (version 6.2.0) ainsi que sur mes propres observations du format.
+
+Le format .zip est assez bizarre. En règle général un fichier commence par un ou
+plusieurs entêtes à la suite décrivant le contenu du fichier. Dans le cas de zip
+c'est un  peu différent...  Il s'agit plutôt  d'une  concaténation de  plusieurs
+fichiers,  chacun avec son entête.  On ne retrouve  pas un entête  principal qui
+prévient qu'il y a  n entrées dans l'archive zip,  en fait on le découvre au fur
+et à mesure de l'étude du fichier.
+
+Voici la structure générale d'un fichier zip :
+
+ [ local file header 1 ]
+ [ file data 1 ]
+ [ data descriptor 1 ]
+ ...
+ ...
+ ...
+ [ local file header n ]
+ [ file data n ]
+ [ data descriptor n ]
+ [ archive decryption header ] (EFS)
+ [ archive extra data record ] (EFS)
+ [ central directory ]
+ [ zip64 end of central directory record ]
+ [ zip64 end of central directory locator ]
+ [ end of central directory record ]
+
+Dans le cadre  de l'article nous  n'avons pas  besoin de connaître  complètement
+l'entête.  Il faut  juste  savoir  que  les  versions  récentes  du  format  ZIP
+permettent l'utilisation de méthode cryptographiques "modernes", ce qui explique
+l'ajout de nouvelles sections dans le format ZIP.
+Si on retire ces sections en question on arrive à un format simplifié qui est le
+suivant :
+
+ [ local file header 1 ]
+ [ file data 1 ]
+ [ data descriptor 1 ]  (on ignorera les data descriptor)
+ ...
+ ...
+ ...
+ [ local file header n ]
+ [ file data n ]
+ [ data descriptor n ]  (on ignorera les data descriptor)
+ [ central directory ]
+ [ end of central directory record ]
+
+Les data descriptor  n'ont aucun rapport avec l'encryption,  c'est pour cela que
+je  les ai  mis dans  cette  version  simplifiée,  toutefois  ils sont  rarement
+présents.  Si vous codez un  programme en  rapport avec le  format zip n'oubliez
+pas de vérifier leurs présences.
+
+Pour expliquer simplement le format zip, on y trouve les choses suivantes :
+L'entête d'une première entrée (fichier ou répertoire)
+Il y a ensuite le contenu du fichier. Celui-ci peut être compressé, crypté...
+Evidemment  si il  s'agit d'un répertoire  il  n'y aura  aucune  données et vous
+tomberez immédiatement sur l'entrée suivante.
+
+Entête de l'entrée suivante.
+Contenu de l'entrée (data).
+
+...
+(comme ça pour toutes les entrées du zip)
+...
+
+Vient ensuite la structure 'central directory' qui ressemble étonemment à ce que
+l'on a vu pour l'instant. L'explication est qu'avec les évolutions du format zip
+il fallait plus de  données pour définir  une entrée...  Agrandir les local file
+header ?  Impossible  !  On ne peut pas modifier  comme ça un format  du jour au
+lendemain ! La solution  utilisée par  PKWare est  d'avoir  recours  à un second
+header qui possède plus d'informations sur les entrées.
+
+Une structure Central Directory ressemble donc à ça :
+ [ file header 1 ]
+ ...
+ ...
+ ...
+ [ file header n ]
+ [ digital signature ] (que l'on ignorera car là encore pas toujours présente)
+
+Il faut savoir que les headers suivent le même ordre que les local file headers.
+Ainsi la première entrée  au début du fichier est aussi  la première à  avoir un
+header dans la structure central directory.
+
+Après  tout  ça on arrive  finalement sur  l'enregistrement  de fin  du  central
+directory (end of central directory record).
+
+La conclusion  de cette étude  globale est que  le format zip a  souffert de ces
+évolutions : certaines informations que l'on a sur une entrée sont en double, ce
+qui est loin d'être génial pour  un format principalement destiné à gagner de la
+place.
+
+Etude du local file header
+--------------------------
+Les entêtes de chaque entrées se divisent de cette façon :
+
+local file header signature   4 octets (0x04034b50)
+version needed to extract     2 octets
+general purpose bit flag      2 octets
+compression method            2 octets
+last mod file time            2 octets
+last mod file date            2 octets
+CRC-32                        4 octets
+compressed size               4 octets
+uncompressed size             4 octets
+file name length              2 octets
+extra field length            2 octets
+
+file name (taille variable, spécifiée dans le header)
+extra field (taille variable, spécifiée dans le header)
+
+[*] Notre header commence par la signature ZIP 0x04034b50.
+Chaque section du format zip commence par une signature de la forme 0xXXXX4b50.
+La notation  0xABCD où  ABCD sont  des octets au format  hexadécimale correspond
+à la suite d'octets 0xC 0xD 0xA 0xB.
+Donc les 4 premiers octets d'un fichier zip sont dans l'ordre :
+0x4b 0x50 0x04 0x03
+Avec 0x4b 0x50 = 'PK' (pour PKWare).
+
+[*] Après  la  signature  de l'entête  on trouve  le numéro  de version  minimum
+nécessaire à l'extraction de l'entrée hors de l'archive.
+Cette information  est très  utile  car on  peut en  déduire  facilement  si des
+options ont été utilisées. Une version 2.0 peut nous indiquer un fichier protégé
+par mot  de passe.  Une version  1.0  indique  un  fichier non  protégé  car les
+protections n'ont été ajoutées qu'avec la version 2.0.  Une version supérieure à
+2.0 indique très  probablement l'utilisation  d'une méthode cryptographique plus
+forte.
+
+[*] On a ensuite une série de flags qui se tiennent sur 2 octets.  Les bits sont
+les suivants :
+ Bit 0 : si activé, indique que le fichier est crypté
+ ...
+ Bit 3 : si actif il ne faut pas prendre en compte le CRC du local file header
+         mais celui du data descriptor.
+ ...
+ Bit 6 : Encodage fort
+ Bit 7 à 11 : non utilisés (message subliminal : stéganographie :p )
+ Bit 12, 14, 15 : réservés par PKWare
+
+[*] Compression Method : la méthode de compression utilisée
+Les valeurs possibles vont de 0 à 12.
+0  -> le fichier est non compressé
+8  -> le fichier est compressé avec l'algorithme deflate
+12 -> le fichier est compressé avec l'algorithme BZIP2
+Nous nous intéresserons uniquement aux cas où aucune compression n'a été mise en
+oeuvre.  Il est assez facile de gérer  la compression deflate en ayant recours à
+la zlib.
+
+[*] Date et Heure de dernière modification du fichier (2 octets chacun)
+La date et l'heure sont au format MSDOS, ce qui n'est pas top à gérer sous Linux
+Voici de quoi changer ça :
+heures = Heure >> 11
+minutes = (Heure>>5) & 63
+jour = Date & 0x1f
+mois = (Date>>5) & 0x0f
+années = (date>>9)+80
+La formule pour les années n'est pas parfaite, à vous de l'améliorer...
+
+[*] Le CRC-32 sur 4 octets a le même rôle qu'un hash MD5,  il permet de vérifier
+l'intégrité du fichier.
+
+[*] Taille compressée et taille décompressée
+Cela nous permet de calculer le ratio de compression. S'il s'agit d'un répertoi-
+re, les tailles sont fixées à 0.
+
+[*] Nous avons  ensuite la longueur du  nom de fichier  ainsi que la longueur du
+champ optionnel.  Le champ optionnel est généralement utilisé  par les logiciels
+de compression pour  y mettre leur 'patte'  ( une valeur qui sert à dire  "cette
+archive a été compressée par LameZip...").
+
+Après nous avons  évidemment le nom de fichier ainsi  que le champ optionnel eux
+même.
+
+Données
+-------
+Les données prennent la place spécifiée par la taille compressée.
+
+Central Directory Structure
+---------------------------
+Comme  dit précédemment,  cette structure  est  uniquement  composée  d'en-têtes
+complémentaires.
+Les entêtes sont composés de la façon suivante :
+[*] Signature du Central File Header     4 octets (0x02014b50 = PK 0x02 0x01)
+[*] Version made by                      2 octets
+[*] Version needed to extract            2 octets
+[*] General purpose bit flag             2 octets
+[*] Compression method                   2 octets
+[*] last mod file time                   2 octets
+[*] last mod file date                   2 octets
+[*] CRC-32                               4 octets
+[*] Compressed size                      4 octets
+[*] Uncompresses size                    4 octets
+[*] File name length                     2 octets
+[*] Extra field length                   2 octets
+[*] File comment length                  2 octets
+[*] Disk number start                    2 octets
+[*] Internal file attributes             2 octets
+[*] External file attributes             4 octets
+[*] Relative offset of local header      4 octets
+
+[*] File name    (taille variable, spécifiée dans le header)
+[*] Extra field  (taille variable, spécifiée dans le header)
+[*] File comment (taille variable, spécifiée dans le header)
+
+La plupart des informations étaient déjà présentes dans le local file header. Ce
+nouveau header apporte  des informations nécessaires  comme  "Disk number start"
+qui indique sur quelle archive se trouve le début d'un fichier lorsque l'archive
+est splittée en plusieurs fichiers zip.
+La valeur  "internal file attributes" permet surtout de savoir si le fichier est
+un fichier texte ou un fichier binaire.
+Ca se  complique  un peu avec  l'adresse  relative du local  file header.  Cette
+valeur  désigne  l'emplacement en octet  du header  (dans sa version  courte)  à
+partir du début du fichier.
+On va prendre un exemple simple  :  un dossier nommé 'lapin' contient un fichier
+nommé 'carote'. Le répertoire 'lapin' est la première entrée dans l'archive. Son
+header se trouve donc à la position 0 (roffset=0).
+Dans un cas classique (sans la présence d'une section supplémentaire) le roffset
+du fichier 'carote' sera 36.
+On compte d'abord la taille du header du répertoire 'lapin' : 30
+On ajoute la taille du mot 'lapin/' : 6
+On ajoute la taille du champ extra : 0 pour l'exemple
+On ajoute la taille des données : 0 car 'lapin' est un répertoire.
+
+Compliquons les choses en rajoutant un fichier 'civet' dans ce même répertoire..
+Les entrées seront alors :
+lapin/        (longueur =  6, data =    0, extra = 0)
+lapin/carote  (longueur = 12, data = 1152, extra = 5)
+lapin/civet
+
+Le roffset de l'entrée 'lapin/civet' sera :
+(30 + 6) + (30 + 12 + 5 + 1152) = 1235
+ou encore
+roffset de l'entrée précédente + taille prise par l'entrée précédente.
+
+Notez bien que zip reconnait les répertoires  au fait que leur noms se terminent
+par le caractère '/'.
+Dans le  cas où on  souhaiterait ajouter  une entrée à  une archive  il est donc
+préférable de  rajouter cette  archive à la fin plutôt qu'au début  (pour éviter
+d'avoir à recalculer tous les roffsets).
+
+End of Central Directory Record
+-------------------------------
+Voici enfin la dernière section
+
+[*] End of central dir signature            4 octets (0x06054b50 = PK 0x06 0x05)
+
+[*] Number of this disk                                             2 octets
+Numérote le fichier zip dans le cas d'une archive splitée
+
+[*] Number of this disk with the start of the central directory     2 octets
+Le numéro de fichier zip sur lequel commence la section Central Directory
+
+[*] Total number of entries in the central directory on this disk  2 octets
+Nombre d'entrées dans le central directory qui se trouve sur le fichier courant
+
+[*] Total number of entries in the central directory               2 octets
+Nombre total d'entrées dans la structure central directory
+
+[*] Size of the central directory                                  4 octets
+La taille de la structure central directory entière
+Il faut savoir que la taille d'un header de central directory est de 46.
+
+[*] Offset of start of central directory with respect to the       4 octets
+    starting disk number
+Adresse relative  au début du  fichier qui  indique la  position du  début de la
+structure central directory.
+
+[*] .ZIP file comment length                                       2 octets
+La taille d'un commentaire sur l'archive entière
+
+[*] .ZIP file comment (taille variable définie juste avant)
+
+Dans le cas d'une archive en un seul morceau on aura :
+
+Number of this disk : 0
+Nb of this disk with the start of the central directory : 0
+Total number of entries in the cdir of this disk : X
+Total number of entries in the cdir : X
+Size of the central directory : Y
+Offset of start of cdir : Z
+.ZIP file comment length : V
+
+avec X = nombres d'entrées dans la structure central directory
+
+Quelques notes
+--------------
+Le format zip fait parfois des surprises... La spécification contient une partie
+"Notes générales" qui contient des informations à ne pas oublier.
+- Les chaines ne sont pas terminées par un zéro terminal
+- Une section  "special spanning signature"  peut se trouver parfois juste après
+  la première entrée dans les local file headers  (après l'entête + les données)
+  La signature est 0x08074b50 (PK 0x08 0x07)
+  La taille de cette section est de 16 octets, signature inclue
+
+Protection des archives ZIP par mot de passe
+--------------------------------------------
+Depuis la  version 2.0 de ZIP,  il est  possible  de protéger  ses documents  en
+cryptant une  archive par  un  mot de passe.  Evidemment il  est possible  de ne
+crypter  qu'une  entrée si  on le  désire car  on a vu  que  l'encryption  était
+signalée par le bit 0 du local file header.
+
+Pour mieux comprendre la protection de PKWare (Traditional PKWARE Encryption) on
+va utiliser un exemple simple.
+
+(sirius@lotfree) (exemples) $ fortune > fortune.txt
+(sirius@lotfree) (exemples) $ cat fortune.txt 
+La science est asymptote à la vérité, elle l'approche sans cesse et ne
+la touche jamais.
+        -+- Hugo, Victor -+-
+(sirius@lotfree) (exemples) $ ls -l fortune.txt 
+-rw-r--r--    1 sirius   sirius        111 2005-03-02 20:53 fortune.txt
+(sirius@lotfree) (test) $ crc32 fortune.txt 
+86b84fd3
+
+Vous avez maintenant toutes les infos nécessaires sur le fichier que nous allons
+zipper...
+
+On crée une archive zip qui contient notre fichier fortune.txt. Aucune compress-
+ion n'est faite.
+(sirius@lotfree) (exemples) $ zip -0 fortune.zip fortune.txt 
+  adding: fortune.txt (stored 0%)
+
+On fait une deuxième archive semblable sauf qu'elle est protégée par un password
+(sirius@lotfree) (exemples) $ zip -0 fortune_crypt.zip fortune.txt -e
+Enter password:  <-- je tappe 'test'
+Verify password: <-- je retape test
+  adding: fortune.txt (stored 0%)
+
+Etudions les fichiers zip que nous avons obtenu :
+(sirius@lotfree) (exemples) $ ls -l *.zip
+-rw-r--r--    1 sirius   sirius        293 2005-03-02 21:00 fortune_crypt.zip
+-rw-r--r--    1 sirius   sirius        265 2005-03-02 20:57 fortune.zip
+
+On a donc 28 octets de plus pour le fichier crypté...
+
+Utilisons zipinfo pour savoir où se trouve la différence (output résumé) :
+(sirius@lotfree) (exemples) $ zipinfo -v fortune.zip
+  minimum software version required to extract:     1.0
+  compression method:                               none (stored)
+  file security status:                             not encrypted
+  extended local header:                            no
+  32-bit CRC value (hex):                           86b84fd3
+  compressed size:                                  111 bytes
+  uncompressed size:                                111 bytes
+  length of filename:                               11 characters
+  length of extra field:                            13 bytes
+  length of file comment:                           0 characters
+
+Et pour le version cryptée :
+(sirius@lotfree) (exemples) $ zipinfo -v fortune_crypt.zip
+  minimum software version required to extract:     1.0
+  compression method:                               none (stored)
+  file security status:                             encrypted
+  extended local header:                            yes
+  32-bit CRC value (hex):                           86b84fd3
+  compressed size:                                  123 bytes
+  uncompressed size:                                111 bytes
+  length of filename:                               11 characters
+  length of extra field:                            13 bytes
+  length of file comment:                           0 characters
+
+A noter que  zipinfo donne une version qui ne doit pas être la version du format
+zip utilisé mais la version du zip de Linux...  (normalement il devrait afficher
+2.0 pour l'archive cryptée)
+
+Où se trouve  nos 28 octets de différences  ?  D'abord il y a un 'extended local
+header'  dans la version cryptée.  Cette structure fait 16 octets en comptant sa
+signature.
+Mais la différence la plus flagrante se situe au niveau de la taille compressée:
+La version cryptée contient un champ data de 123 octets alors que la version non
+cryptée fait 111 octets (normal puisqu'il n'y a aucune compression).
+Cela fait donc 12 octets de différences supplémentaires... le compte y est...
+
+Passons les fichiers à l'afficheur hexadécimal :
+(sirius@lotfree) (exemples) $ hexdump -C fortune.zip 
+00000000  50 4b 03 04 0a 00 00 00  00 00 aa a6 62 32 d3 4f  |PK........ª¦b2ÓO|
+00000010  b8 86 6f 00 00 00 6f 00  00 00 0b 00 15 00 66 6f  |¸.o...o.......fo|
+00000020  72 74 75 6e 65 2e 74 78  74 55 54 09 00 03 af 19  |rtune.txtUT...¯.|
+00000030  26 42 2b 1a 26 42 55 78  04 00 e8 03 e8 03 4c 61  |&B+.&BUx..è.è.La|
+00000040  20 73 63 69 65 6e 63 65  20 65 73 74 20 61 73 79  | science est asy|
+00000050  6d 70 74 6f 74 65 20 e0  20 6c 61 20 76 e9 72 69  |mptote à la véri|
+00000060  74 e9 2c 20 65 6c 6c 65  20 6c 27 61 70 70 72 6f  |té, elle l'appro|
+00000070  63 68 65 20 73 61 6e 73  20 63 65 73 73 65 20 65  |che sans cesse e|
+00000080  74 20 6e 65 0a 6c 61 20  74 6f 75 63 68 65 20 6a  |t ne.la touche j|
+00000090  61 6d 61 69 73 2e 0a 09  2d 2b 2d 20 48 75 67 6f  |amais...-+- Hugo|
+000000a0  2c 20 56 69 63 74 6f 72  20 2d 2b 2d 0a 50 4b 01  |, Victor -+-.PK.|
+000000b0  02 17 03 0a 00 00 00 00  00 aa a6 62 32 d3 4f b8  |.........ª¦b2ÓO¸|
+000000c0  86 6f 00 00 00 6f 00 00  00 0b 00 0d 00 00 00 00  |.o...o..........|
+000000d0  00 00 00 00 00 a4 81 00  00 00 00 66 6f 72 74 75  |.....¤.....fortu|
+000000e0  6e 65 2e 74 78 74 55 54  05 00 03 af 19 26 42 55  |ne.txtUT...¯.&BU|
+000000f0  78 00 00 50 4b 05 06 00  00 00 00 01 00 01 00 46  |x..PK..........F|
+00000100  00 00 00 ad 00 00 00 00  00                       |...­.....|
+
+On remarque tout de suite que le fichier n'est ni compressé ni encrypté :p
+
+(sirius@lotfree) (exemples) $ hexdump -C fortune_crypt.zip     
+00000000  50 4b 03 04 0a 00 09 00  00 00 aa a6 62 32 d3 4f  |PK........ª¦b2ÓO|
+00000010  b8 86 7b 00 00 00 6f 00  00 00 0b 00 15 00 66 6f  |¸.{...o.......fo|
+00000020  72 74 75 6e 65 2e 74 78  74 55 54 09 00 03 af 19  |rtune.txtUT...¯.|
+00000030  26 42 c0 1a 26 42 55 78  04 00 e8 03 e8 03 09 bf  |&BÀ.&BUx..è.è..¿|
+00000040  c2 2a 8a 09 88 09 fe dd  7f 02 e2 ca 42 3a b1 75  |Â*....þÝ..âÊB:±u|
+00000050  70 f5 80 37 16 c6 18 77  28 95 7d c9 2d 53 22 6a  |põ.7.Æ.w(.}É-S"j|
+00000060  77 0a b1 22 52 d8 ed 58  b7 33 df 95 cc d9 03 56  |w.±"RØíX·3ß.ÌÙ.V|
+00000070  3e ca 34 38 10 e0 66 af  c5 45 b2 82 36 1f d6 1d  |>Ê48.àf¯ÅE².6.Ö.|
+00000080  83 49 31 47 db cf ff ac  93 76 3e 41 0f 10 78 77  |.I1GÛÏÿ¬.v>A..xw|
+00000090  83 b1 68 bf 20 8f 22 33  c1 b6 8b 8c 9b e6 fb c3  |.±h¿ ."3Á¶...æûÃ|
+000000a0  35 34 9a 40 83 e1 e2 c9  08 7f c0 12 52 51 3b 80  |54.@.áâÉ..À.RQ;.|
+000000b0  d4 2c 1d a4 68 7d d8 7b  24 50 4b 07 08 d3 4f b8  |Ô,.¤h}Ø{$PK..ÓO¸|
+000000c0  86 7b 00 00 00 6f 00 00  00 50 4b 01 02 17 03 0a  |.{...o...PK.....|
+000000d0  00 09 00 00 00 aa a6 62  32 d3 4f b8 86 7b 00 00  |.....ª¦b2ÓO¸.{..|
+000000e0  00 6f 00 00 00 0b 00 0d  00 00 00 00 00 00 00 00  |.o..............|
+000000f0  00 a4 81 00 00 00 00 66  6f 72 74 75 6e 65 2e 74  |.¤.....fortune.t|
+00000100  78 74 55 54 05 00 03 af  19 26 42 55 78 00 00 50  |xtUT...¯.&BUx..P|
+00000110  4b 05 06 00 00 00 00 01  00 01 00 46 00 00 00 c9  |K..........F...É|
+00000120  00 00 00 00 00                                    |.....|
+00000125
+
+C'est le moment de se jeter dans les spécifications PKWare. On y lit :
+--cut--cut--
+PKZIP encrypts the compressed data stream.  Encrypted files must
+be decrypted before they can be extracted.
+
+Each encrypted file has an extra 12 bytes stored at the start of
+the data area defining the encryption header for that file.  The
+encryption header is originally set to random values, and then
+itself encrypted, using three, 32-bit keys.  The key values are
+initialized using the supplied encryption password.  After each byte
+is encrypted, the keys are then updated using pseudo-random number
+generation techniques in combination with the same CRC-32 algorithm
+used in PKZIP and described elsewhere in this document.
+--cut--cut--
+
+Pour ceux qui speak pas la  langue de Sid Vicious ça veut dire que le champ data
+de la version cryptée commence par  un header de 12 octets qui nous servira pour
+le décryptage :)
+Ici notre header encrypté est 09BFC22A8A098809FEDD7F02.
+On apprend aussi que le décryptage utilise 3 clés de 32 bits (quatre octets).
+La spécification donne  quelques  algorithmes  pour  expliquer  le mécanisme  de
+décryptage.
+
+Voici la technique pour décrypter les données :
+1. Initialiser les trois clés de 32 bits avec le mot de passe
+2. Décrypter le header avec avec les trois clés
+3. Décrypter le reste des données
+
+Tout ce mécanisme tourne autour d'une table CRC.
+
+Initialisation des clés d'encryption
+------------------------------------
+loop for i <- 0 to length(password)-1
+    update_keys(password(i))
+end loop
+
+Avec update_keys() définie de la façon suivante :
+
+update_keys(char):
+  Key(0) <- crc32(key(0),char)
+  Key(1) <- Key(1) + (Key(0) & 000000ffH)    <-- & correspond à un AND
+  Key(1) <- Key(1) * 134775813 + 1
+  Key(2) <- crc32(key(2),key(1) >> 24)
+end update_keys
+
+crc32(old_crc,char)  met à  jour  un  crc à  partir du  crc  précédent  et  d'un
+caractère. (je ne vais pas vous expliquer ici comment fonctionne le crc :p )
+
+Décryptage du header
+--------------------
+Donc on modifie nos clés avec le mot de passe. On décrypte ensuite le header (on
+suppose que le header se trouve dans la variable buffer) :
+
+loop for i <- 0 to 11
+    C <- buffer(i) ^ decrypt_byte()        <-- '^' correspond au XOR
+    update_keys(C)
+    buffer(i) <- C
+end loop
+
+Où decrypt_byte() est défini de cette façon :
+
+unsigned char decrypt_byte()
+    local unsigned short temp
+    temp <- Key(2) | 2                  <-- '|' correspond à un OR
+    decrypt_byte <- (temp * (temp ^ 1)) >> 8     <-- '>>' correspond à un
+end decrypt_byte                                      décalage des bits à droite
+
+On a alors le header décrypté.
+Dans notre cas, en utilisant le bon mot de passe,  on arrive à un header qui une
+fois décrypté vaut : D607CFCA528A13060910AAA6.
+
+Là on se dit que  la suite est simple : on décrypte les données, on lance l'algo
+du CRC dessus et si le CRC  correspond à celui donnée dans le  local file header
+alors c'est bon...
+Evidemment si le  fichier est compressé il faudrait  aussi le décompresser avant
+de pouvoir calculer son CRC.
+Pour une attaque  par brute-force ou  par dictionnaire  ce ne  serais  pas 'top'
+puisque  le  décryptage  des  données,  la  décompression  et le calcul  du  CRC
+prendrait énormément de temps :(
+Heureusement la spécification rajoute :
+
+--cut--cut--
+After the header is decrypted,  the last 1 or 2 bytes in Buffer
+should be the high-order word/byte of the CRC for the file being
+decrypted, stored in Intel low-byte/high-byte order.  Versions of
+PKZIP prior to 2.0 used a 2 byte CRC check; a 1 byte CRC check is
+used on versions after 2.0.  This can be used to test if the password
+supplied is correct or not.
+--cut--cut--
+
+On apprend que la validité  d'un mot de passe peut  (en partie) se vérifier avec
+le header décrypté.  En effet les derniers octets  du header décrypté correspon-
+dent à des octets se trouvant dans le local file header.
+
+Note : la spécification se contredit puisque tout à l'heure  elle prétendait que
+le header contenait des données aléatoires. En fait la spécification donne juste
+de quoi  déchiffrer les  données avec  le bon mot de  passe mais  n'explique pas
+comment on  peut casser  le cryptage bien qu'il est répété  à plusieurs reprises
+que l'encryptage de PKWare n'est pas sûr...
+J'ai donc du étudier  les sources de plusieurs  logiciels de cassage de zip pour
+combler les lacunes de la spécification.
+
+Reprenons le début du dump hexadécimal du fichier crypté :
+00000000  50 4b 03 04 0a 00 09 00  00 00 aa a6 62 32 d3 4f  |PK........ª¦b2ÓO|
+00000010  b8 86 7b 00 00 00 6f 00  00 00 0b 00 15 00 66 6f  |¸.{...o.......fo|
+
+Le '09' correspond aux flags. Ici le bit 0 et le bit 3 sont activés.
+'AAA6' correspond à l'heure de dernière modification.
+'6232' correspond à la date (jour/mois/années) de dernière modification.
+'D34FB886' correspond au CRC.
+
+Et notre header décrypté vaut : D607CFCA528A13060910AAA6
+On a effectivement une  correspondance entre les deux derniers octets et l'heure
+donnée dans le local file header.
+Comme la  spécification le précise on ne doit prendre en compte qu'un octet  (le
+dernier), ici c'est l'octet A6.
+On peut donc  brute-forcer le mot de passe,  décrypter le header  et pour chaque
+cas voir si on a cet octet (12ème octet du local file header)  qui correspond au
+dernier octet du header décrypté...
+Mais si on s'en tient là on risque de trouver plusieurs mots de passe car il y a
+un bon nombre de colisions.  Il faut alors valider ce  mot de passe en calculant
+le CRC du fichier décrypté.
+
+Une autre info dont la spécification ne parle  pas du tout et sur laquelle je me
+suis arraché  les cheveux  c'est que  des fois l'octet  correspondant  n'est pas
+celui de l'heure mais le dernier octet du CRC...
+En étudiant les sources de zipcracker je suis parvenu à la conclusion suivante :
+
+si le bit 3 du flag est activé alors on prend l'octet de l'heure
+sinon on prend en compte l'octet du CRC.
+
+Décryptage des données
+----------------------
+La dernière étape consiste alors à décrypter les données et à calculer le crc.
+Décryptage :
+
+loop until done
+    read a character into C
+    Temp <- C ^ decrypt_byte()
+    update_keys(temp)
+    output Temp
+end loop
+
+Voici un code un C qui décrypte nos données avec le mot de passe :
+--cut--cut--
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+/* ceci est un dump du fichier crypté tel qu'il était dans le fichier zip */
+char buff[]="\x09\xbf\xc2\x2a\x8a\x09\x88\x09\xfe\xdd\x7f\x02\xe2\xca\x42\x3a"
+            "\xb1\x75\x70\xf5\x80\x37\x16\xc6\x18\x77\x28\x95\x7d\xc9\x2d\x53"
+            "\x22\x6a\x77\x0a\xb1\x22\x52\xd8\xed\x58\xb7\x33\xdf\x95\xcc\xd9"
+            "\x03\x56\x3e\xca\x34\x38\x10\xe0\x66\xaf\xc5\x45\xb2\x82\x36\x1f"
+            "\xd6\x1d\x83\x49\x31\x47\xdb\xcf\xff\xac\x93\x76\x3e\x41\x0f\x10"
+            "\x78\x77\x83\xb1\x68\xbf\x20\x8f\x22\x33\xc1\xb6\x8b\x8c\x9b\xe6"
+            "\xfb\xc3\x35\x34\x9a\x40\x83\xe1\xe2\xc9\x08\x7f\xc0\x12\x52\x51"
+            "\x3b\x80\xd4\x2c\x1d\xa4\x68\x7d\xd8\x7b\x24";
+
+extern unsigned long mycrc32(unsigned long k,char c);
+
+/* Nos trois clès */
+unsigned long k0,k1,k2;
+
+void update_keys(char c)
+{
+  k0 = mycrc32(k0,c);
+  k1 = k1 + (k0 & 0x000000ff);
+  k1 = k1 * 134775813L + 1;
+  k2 = mycrc32(k2,(char)(k1>>24));
+}
+
+unsigned char decrypt_byte(void)
+{
+  unsigned char res;
+  unsigned short temp;
+  temp=(unsigned short)(k2|2);
+  res=(unsigned char)((temp * (temp ^ 1)) >> 8);
+  return res;
+}
+
+int main(int argc,char *argv[])
+{
+  char result[112];
+  int i;
+  char pass[]="test";
+  unsigned char c;
+  char buffer[12];
+
+  /* Les valeurs initiales pour les clés, elles sont définiées dans la spécif */
+  k0=305419896L;
+  k1=591751049L;
+  k2=878082192L;
+
+  for(i=0;i<strlen(pass);i++)
+    update_keys(pass[i]);
+
+  for(i=0;i<12;i++)
+  {
+    c=buff[i] ^ decrypt_byte();
+    update_keys(c);
+    buffer[i]=c;
+  }
+
+  printf("Decrypted header: ");
+  for(i=0;i<12;i++)
+    printf("%.2hhX",buffer[i]);
+  printf("\n---------\n");
+	
+  for(i=0;i<sizeof(result);i++)
+  {
+    c = buff[i+12];
+    c = c ^ decrypt_byte();
+    update_keys(c);
+    result[i]=c;
+  }
+  
+  for(i=0;i<sizeof(result)-1;i++)
+    printf("%c",result[i]);
+  return 0;
+}
+--cut--cut--
+
+(sirius@lotfree) (exemples) $ ./decrypt
+Generating crc table...
+Decrypted header: D607CFCA528A13060910AAA6
+---------
+La science est asymptote à la vérité, elle l'approche sans cesse et ne
+la touche jamais.
+        -+- Hugo, Victor -+-
+
+Mission accomplished.  Par contre à  vous d'inclure  des fonctions  de CRC  (par
+exemple en utilisant la zlib).
+
+Une attaque par brute-force suit donc l'algo suivant :
+pour tout password
+{
+  initialiser les clés
+  décrypter le header
+  si le dernier octet du header correspond à l'octet du local file header
+  {
+    décrypter les données
+    calculer le crc
+    si le crc est le bon on affiche le pass et on quitte
+  }
+}
+
+Infection d'un fichier zip
+--------------------------
+Pourquoi infecter un fichier zip ? Et comment ?
+C'est vrai que l'infection de fichier zip n'est pas vraiment intéressante.  Il y
+a quand même eu quelques cas de virii qui se propageaient par fichiers zip. Tout
+le monde a  entendu parlé de  ce virus qui se propageait  par mail sous la forme
+d'un fichier zip protégé par mot de passe. Le corps du mail contenait un message
+qui disais à peut près "Pour ouvrir l'archive, entre le mot de passe abcd".
+Pourquoi de telles complications alors que un exécutable aurait pu être lancé de
+façon automatique sous Outlook ?
+Ce qui a poussé le créateur de  ce virus à crypter l'exécutable c'est sans doute
+le fait que les antivirus ne peuvent pas scanner le zip s'il n'ont pas le mot de
+passe (tous les antivirus récents peuvent ouvrir les archives tar.gz,  zip,  rar
+et même les fichiers uuencodés.)
+Ensuite le  créateur du virus  a joué sur  la curiosité des  personnes qui rece-
+vaient le mail.  Pour  l'anecdote  je connais quelqu'un  qui a fait un  stage au
+CNRS et  qui travaillait avec l'admin réseau.  L'admin a fait circulé un mail en
+interne prévenant  qu'un virus se  propageait  sous la  forme d'une  archive zip
+cryptée et  qu'il ne fallait  surtout pas l'ouvrir...  Le problème semblait donc
+résolu pourtant quelques jours plus tard,  l'admin reçoit un mail de l'un de ses
+collègues qui disait à peu près :
+"Je suis désolé j'ai reçu le virus  et j'ai pas pu m'empêcher de regarder ce qu'
+il y avait dans l'archive..."
+
+Evidemment il s'agit peut-être d'un cas de gros boulet :D
+Mais au final  le créateur de  virus a bien réussi  à utiliser la  curiosité des
+gens :p
+
+L'infection que  je vais décrire  dans la suite  de cet article  n'est pas  très
+avancée.  On pourrait par exemple scanner des  fichiers zip et infecter tous les
+exécutables dans ces fichiers zip,  ou tout simplement remplacer  une entrée par
+une autre.
+Ici on va simplement  ajouter une entrée  à une archive zip,  cette méthode peut
+donc marcher en utilisant la curiosité des gens.
+
+L'ajout d'un  fichier dans une  archive  zip sous  Linux se  fait normalement en
+utilisant  l'option -g.  Ici nous allons juste  rajouter une  deuxième fortune à
+notre archive.
+
+(sirius@lotfree) (exemples) $ fortune > fortune2.txt
+(sirius@lotfree) (exemples) $ cat fortune2.txt 
+Le vrai moyen d'être trompé, c'est de se croire plus fin que les autres.
+        -+- François de La Rochefoucauld (1613-1680), Maximes 127 -+-
+(sirius@lotfree) (exemples) $ ls -l fortune2.txt 
+-rw-r--r--    1 sirius   sirius        136 2005-03-03 11:13 fortune2.txt
+(sirius@lotfree) (exemples) $ crc32 fortune2.txt
+3c253319
+
+(sirius@lotfree) (exemples) $ zip fortune.zip -g -0 fortune2.txt 
+  adding: fortune2.txt (stored 0%)
+(sirius@lotfree) (exemples) $ zipinfo fortune.zip 
+Archive:  fortune.zip   535 bytes   2 files
+-rw-r--r--  2.3 unx      111 bx stor  2-Mar-05 20:53 fortune.txt
+-rw-r--r--  2.3 unx      136 bx stor  3-Mar-05 11:13 fortune2.txt
+2 files, 247 bytes uncompressed, 247 bytes compressed:  0.0%
+
+Une étude approfondie nous prouve que le fichier fortune2.txt a bien été rajouté
+en fin de l'archive.
+Le local file header de fortune.txt n'a évidemment pas changé.  Cela est évident
+puisque les infos de  ce header sont spécifiques à l'entrée et ne comportant pas
+par exemple  d'adresses relatives etc.  Toutefois la structure central directory
+de ce  même fichier  n'a  pas  changé non  plus.  Le seul  attribut  extérieur à
+l'entrée est  l'adresse relative  du local  header à partir du début du fichier,
+hors cette adresse n'a pas changé  car nous avons ajouté un fichier après et non
+avant.
+
+Ajouter une entrée en  fin d'archive nous  facilite donc fortement la tache.  Si
+nous  avions  du la  placer au  début,  nous aurions  du recalculer  toutes  les
+adresses relatives :(
+
+Le plus  gros du  travail  se  fera sur  l'enregistrement  de fin  du répertoire
+central (end of central directory record).
+On supposera que nous infectons une archive complète (non splittée).
+Les valeurs à modifier dans cette structure sont les suivantes :
+
+Total number of entries in the central directory of this disk
+Total number of entries in the central directory
+
+Ces deux valeurs sont à incrémenter de une unité.
+
+Size of the central directory
+Nouvelle valeur = ancienne valeur + 46 + length(nom fichier)
+avec 46 = taille d'une structure central directory
+Evidemment on n'utilisera ni champ optionnel ni commentaires pour simplifier les
+choses.
+
+
+Offset of start  of central directory  with respect to the  starting disk number
+Nouvelle valeur = ancienne valeur + 30 + usize + length(nom fichier)
+avec 30 = longeur d'un local header et usize la taille des données  (les données
+ne sont pas compressées)
+
+Dans la pratique
+----------------
+La modification d'un  fichier zip  poserait trop  de problèmes comme on souhaite
+ajouter des données en plein milieu du fichier...
+Le plus simple est de créer un  fichier en écriture (.inject.zip) et d'ouvrir le
+fichier à infecter (fortune.zip) en lecture. 
+Nous lisons ensuite le fichier fortune.zip sections après sections.
+L'alorithme est à peu près le suivant :
+
+Tant qu'on tombe sur des structures Local File Header, on copie les données en
+brut d'un fichier à l'autre.
+
+Dès qu'on est sur une autre structure on injecte notre Local File Header à nous.
+On note aussi  l'emplacement car il  faudra le spécifier  dans le CDIR  que nous
+allons créer.
+
+On recopie les CDIRs présents dans le fichier tout comme on a recopié les LFH.
+
+Dès qu'on tombe sur la signature de  l'enregistrement de fin de CDIR, on injecte
+notre Central Directory,  en oubliant pas de mettre l'offset récupéré  précédem-
+ment.
+
+On enregistre alors la structure de fin pour la modifier (nombre d'entrées, etc)
+et on l'écrit dans notre fichier.
+
+Note: pour les structures ayant des champs variables  (nom de fichier,  données,
+commentaires...)  il faut bien évidemment décrypter  les headers et recopier les
+données en brut.
+
+Voici un petit code qui illustre le processus d'infection :
+
+--cut--cut--
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <string.h>
+
+/* Les autres fichiers sont dans le repertoire zinfect */
+#include "zip.h"
+
+/* dans cet exemple la plupart des valeurs sont en dur */
+#define FORTUNE "Le vrai moyen d'être trompé, c'est de se croire plus fin que les autres.\n\
+\t-+- François de La Rochefoucauld (1613-1680), Maximes 127 -+-\n"
+#define FILE_NAME "fortune2.txt"
+#define TMP_FILE ".infect.zip"
+#define VICTIM "fortune.zip"
+
+int main(int argc,char *argv[])
+{
+  struct lfh z;
+  struct lfh head;
+  struct cdir cd;
+  struct cdir cds;
+  struct eocdir eocd;
+  int fdin, fdout;
+  unsigned long sign;
+  char *s;
+  char buf[CDIR_LEN+1];
+  unsigned long reste, x;
+  unsigned long pos_lfh;
+  
+  /* On remplit les structures de l'entrée à rajouter */
+  z.version=cd.vmadeby=cd.vneeded=10; /* v1.0 */
+  z.gpf=cd.gpf=0;                     /* pas de cryptage... */
+  z.comp=cd.comp=0;                   /* pas de compression */
+  z.time=cd.time=22963;
+  z.date=cd.date=12899;
+  z.crc=cd.crc=0x3c253319L;           /* ! le CRC doit être exact ! */
+  z.usize=cd.usize=sizeof(FORTUNE)-1;
+  z.zsize=cd.zsize=sizeof(FORTUNE)-1;
+  z.name_len=cd.name_len=strlen(FILE_NAME);
+  z.xtra_len=cd.xtra_len=0;
+
+  cd.comm_len=0;  /* pas besoin de s'emmerder avec les champs optionnels */
+  cd.disk_num=0;
+  cd.int_attr=1;  /* 1 pour ascii, 0 pour binaire */
+  cd.ext_attr=32; /* euh pas le courage de savoir pourquoi */
+
+  /* Cette variable contiendra l'ofset où injecter le Local File Header */
+  pos_lfh=0L;
+  fdin=open(VICTIM,O_RDONLY);
+  fdout=creat(TMP_FILE,S_IRUSR|S_IWUSR);
+  while(1)
+  {
+    /* On lit 4 octets (taille d'une signature zip) */
+    if((x=read(fdin,buf,sizeof(LFH_SIGN)))==-1)
+    {
+      exit(1);
+    }
+    bcopy(buf,&sign,sizeof(LFH_SIGN));
+    /* S'il s'agit d'un LFH ou d'une structure Special Spanning : copie brute */
+    if(sign==LFH_SIGN || sign==SPSPAN_SIGN)
+    {
+      write(fdout,&sign,sizeof(LFH_SIGN));
+      if(sign==LFH_SIGN)
+      {
+	if((x=read(fdin,buf,LFH_LEN-sizeof(LFH_SIGN)))==-1)
+	{
+	  perror("read");
+	  exit(1);
+	}
+	/* On doit lire les headers pour gérer les noms de fichiers etc */
+	buff2lfh(buf,&head);
+	write(fdout,buf,x);
+	if(head.name_len!=0)
+	{
+	  s=(char*)malloc(head.name_len);
+	  if(read(fdin,s,head.name_len)==-1)
+	  {
+	    perror("read");
+	    exit(1);
+	  }
+	  write(fdout,s,head.name_len);
+	  free(s);
+	}
+	if(head.xtra_len!=0)
+	{
+	  s=(char*)malloc(head.xtra_len);
+	  if(read(fdin,s,head.xtra_len)==-1)
+	  {
+	    perror("read");
+	    exit(1);
+	  }
+	  write(fdout,s,head.xtra_len);
+	  free(s);
+	}
+	if(head.zsize!=0)
+	{
+	  reste=head.zsize;
+	  while((x=read(fdin,buf,(reste>sizeof(buf))?sizeof(buf):reste)))
+	  {
+	    reste-=x;
+	    write(fdout,buf,x);
+	  }
+	}
+      }
+      /* Special Spanning : 12 octets de données */
+      else
+      {
+	read(fdin,buf,12);
+	write(fdout,buf,12);
+      }
+    }
+    else
+    {
+      /* Pour savoir si on a déjà infecté le LFH */
+      if(!pos_lfh)
+      {
+        /* On injecte notre header + filename + data */
+	pos_lfh=lseek(fdin,0,SEEK_CUR)-4;
+	writelfh(fdout,z);
+	write(fdout,FILE_NAME,strlen(FILE_NAME));
+	write(fdout,FORTUNE,sizeof(FORTUNE)-1);
+      }
+      if(sign==CDIR_SIGN)
+      {
+        /* recopie... */
+	write(fdout,&sign,sizeof(CDIR_SIGN));
+	if((x=read(fdin,buf,CDIR_LEN-sizeof(CDIR_SIGN)))==-1)
+	{
+	  perror("read");
+	  exit(1);
+	}
+	buff2cdir(buf,&cds);
+	write(fdout,buf,x);
+	if(cds.name_len!=0)
+	{
+	  s=(char*)malloc(cds.name_len);
+	  if(read(fdin,s,cds.name_len)==-1)
+	  {
+	    perror("read");
+	    exit(1);
+	  }
+	  write(fdout,s,cds.name_len);
+	  free(s);
+	}
+	if(cds.xtra_len!=0)
+	{
+	  s=(char*)malloc(cds.xtra_len);
+	  if(read(fdin,s,cds.xtra_len)==-1)
+	  {
+	    perror("read");
+	    exit(1);
+	  }
+	  write(fdout,s,cds.xtra_len);
+	  free(s);
+	}
+	if(cds.comm_len!=0)
+	{
+	  s=(char*)malloc(cds.comm_len);
+	  if(read(fdin,s,cds.comm_len)==-1)
+	  {
+	    perror("read");
+	    exit(1);
+	  }
+	  write(fdout,s,cds.comm_len);
+	  free(s);
+	}
+      }
+      else if(sign==EOCDIR_SIGN) /* c'est le moment d'insérer notre cdir */
+      {
+	cd.roffset=pos_lfh;
+	writecdir(fdout,cd);
+	write(fdout,FILE_NAME,strlen(FILE_NAME));
+	if((x=read(fdin,buf,EOCDIR_LEN-sizeof(EOCDIR_SIGN)))==-1)
+	{
+	  perror("read");
+	  exit(1);
+	}
+	/* Le plus dur du code... */
+	buff2eocdir(buf,&eocd); /* On décode le header */
+	eocd.nb_cd++;           /* On incrémente le nombre d'entrées */
+	eocd.nb_ent_cd++;       /* pareil */
+	eocd.cd_size+=CDIR_LEN+strlen(FILE_NAME); /* 46 + longeur nom fichier */
+	/* L'offset du Central Directory a changé... on le met à jour */
+	eocd.first_disk+=LFH_LEN+strlen(FILE_NAME)+sizeof(FORTUNE)-1;
+	/* On écrit le nomveau EOCDIR */
+	writeeocdir(fdout,eocd);
+	break;
+      }
+      else /* l'appot con pris ! (un header qu'on ne gère pas) */
+      {
+	break;
+      }
+    }
+  }
+  /* Terminus, tout le monde descend */
+  close(fdout);
+  close(fdin);
+
+  /* On remplace le fichier original par la version infectée */
+  unlink(VICTIM);
+  link(TMP_FILE,VICTIM);
+  unlink(TMP_FILE);
+  return 0;
+}
+--cut--cut--
+
+(sirius@lotfree) (infect) $ gcc -c zinfect.c
+(sirius@lotfree) (infect) $ gcc -c lzutil.c
+(sirius@lotfree) (infect) $ gcc -o zinfect *.o
+(sirius@lotfree) (infect) $ ls -l fortune.zip 
+-rw-r--r--    1 sirius   sirius        265 2005-03-06 13:13 fortune.zip
+(sirius@lotfree) (infect) $ unzip -l fortune.zip 
+Archive:  fortune.zip
+  Length     Date   Time    Name
+--------    ----   ----    ----
+     111  03-02-05 20:53   fortune.txt
+--------                   -------
+     111                   1 file
+(sirius@lotfree) (infect) $ ./zinfect 
+(sirius@lotfree) (infect) $ ls -l fortune.zip 
+-rw-------    1 sirius   sirius        501 2005-03-09 23:47 fortune.zip
+(sirius@lotfree) (infect) $ unzip -l fortune.zip 
+Archive:  fortune.zip
+  Length     Date   Time    Name
+--------    ----   ----    ----
+     111  03-02-05 20:53   fortune.txt
+     136  03-03-05 11:13   fortune2.txt
+--------                   -------
+     247                   2 files
+
+w00t !! ;)
