@@ -6,10 +6,9 @@
  * @author Sébastien Lucas <sebastien@slucas.fr>
  */
 
-define('METADATA_FILE', 'META-INF/container.xml');
-
 class EPub
 {
+    public const METADATA_FILE = 'META-INF/container.xml';
     public $xml; //FIXME: change to protected, later
     public $toc;
     protected $xpath;
@@ -38,11 +37,11 @@ class EPub
         }
 
         // read container data
-        if (!$this->zip->FileExists(METADATA_FILE)) {
+        if (!$this->zip->FileExists(self::METADATA_FILE)) {
             throw new Exception('Unable to find metadata.xml');
         }
 
-        $data = $this->zip->FileRead(METADATA_FILE);
+        $data = $this->zip->FileRead(self::METADATA_FILE);
         if ($data == false) {
             throw new Exception('Failed to access epub container data');
         }

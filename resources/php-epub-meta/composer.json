@@ -20,9 +20,10 @@
     ],
     "license": "MIT",
     "require": {
+        "ext-dom": "*",
         "ext-xml": "*",
         "ext-zip": "*",
-        "seblucas/tbszip": "~2.16.0"
+        "seblucas/tbszip": "~2.16.1"
     },
     "require-dev": {
         "phpunit/phpunit": "9.*"
