@@ -119,6 +119,7 @@ I only have one limit (I may have more but that one is the worse) : COPS' goal i
  * Thanks to all testers, translators and contributors.
  * Feed icons made by Freepik from Flaticon website licensed under Creative Commons BY 3.0 http://www.flaticon.com and http://www.freepik.com
  * A huge thanks to Jetbrains for supporting COPS by providing a set of free licenses to their products for several years now!
+ * This project is tested with BrowserStack.
 
 External libraries used :
  * JQuery : http://jquery.com/
