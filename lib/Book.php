@@ -58,6 +58,8 @@ define ('SQL_BOOKS_RECENT', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
 define ('SQL_BOOKS_BY_RATING', 'select {0} from books ' . SQL_BOOKS_LEFT_JOIN . '
                                                     where books_ratings_link.book = books.id and ratings.id = ? {1} order by sort');
 
+require('Identifier.php');
+
 class Book extends Base
 {
     const ALL_BOOKS_UUID = 'urn:uuid';
@@ -104,6 +106,7 @@ class Book extends Base
     public $publisher = NULL;
     public $serie = NULL;
     public $tags = NULL;
+    public $identifiers = NULL;
     public $languages = NULL;
     public $format = array ();
 
@@ -228,6 +231,28 @@ class Book extends Base
         return implode(', ', array_map(function ($tag) { return $tag->name; }, $this->getTags()));
     }
 
+
+    /**
+     * @return Identifiers[]
+     */
+    public function getIdentifiers() {
+        if (is_null ($this->identifiers)) {
+            $this->identifiers = array();
+
+            $result = parent::getDb()->prepare('select type, val, id
+                from identifiers
+                where book = ?
+                order by type');
+            $result->execute(array($this->id));
+            while ($post = $result->fetchObject())
+            {
+                array_push($this->identifiers, new Identifier($post));
+            }
+            
+        }
+        return $this->identifiers;
+    }
+
     /**
      * @return Data[]
      */
@@ -314,14 +339,7 @@ class Book extends Base
         if (!is_null ($se) && $withSerie) {
             $addition = $addition . '<strong>' . localize('content.series') . '</strong>' . str_format(localize('content.series.data'), $this->seriesIndex, htmlspecialchars($se->name)) . "<br />\n";
         }
-        if (preg_match('/<\/(div|p|a|span)>/', $this->comment))
-        {
-            return $addition . html2xhtml($this->comment);
-        }
-        else
-        {
-            return $addition . htmlspecialchars($this->comment);
-        }
+        return $addition . html2xhtml($this->comment);
     }
 
     public function getDataFormat($format) {
