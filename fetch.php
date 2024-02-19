@@ -3,7 +3,7 @@
  * COPS (Calibre OPDS PHP Server)
  *
  * @license    GPL 2 (http://www.gnu.org/licenses/gpl.html)
- * @author     Sébastien Lucas <sebastien@slucas.fr>
+ * @author     SÃ©bastien Lucas <sebastien@slucas.fr>
  */
 
     require_once dirname(__FILE__) . '/config.php';
@@ -98,7 +98,7 @@
             header('Content-Type: ' . $data->getMimeType());
             break;
     }
-    $file = $book->getFilePath($type, $idData, true);
+    $file = $book->getFilePath($type, $idData);
     if (!$viewOnly && $type == 'epub' && $config['cops_update_epub-metadata']) {
         $book->getUpdatedEpub($idData);
         return;
@@ -111,16 +111,10 @@
         header('Content-Disposition: attachment; filename="' . basename($file) . '"');
     }
 
-    $dir = $config['calibre_internal_directory'];
-    if (empty($config['calibre_internal_directory'])) {
-        $dir = Base::getDbDirectory();
-    }
-
     if (empty($config['cops_x_accel_redirect'])) {
-        $filename = $dir . $file;
-        $fp = fopen($filename, 'rb');
-        header('Content-Length: ' . filesize($filename));
+        $fp = fopen($file, 'rb');
+        header('Content-Length: ' . filesize($file));
         fpassthru($fp);
     } else {
-        header($config['cops_x_accel_redirect'] . ': ' . $dir . $file);
+        header($config['cops_x_accel_redirect'] . ': ' . $file);
     }
